@@ -220,6 +220,9 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 footer{margin-top:26px;font-size:11px;color:var(--ink3);line-height:1.7;max-width:90ch}
 footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding:1px 4px}
 .hidden{display:none}
+/* mark tự động từ tin (tier=auto): mờ, xám — phân biệt với mốc curated */
+.mk.tier-auto{background:var(--ink3)!important;opacity:.42}
+.mk.done.tier-auto{background:transparent!important;border-bottom-color:var(--ink3)!important;opacity:.42}
 /* ---------- tabs + newsflow ---------- */
 .tabs{display:flex;gap:4px;margin:18px 0 14px;border-bottom:1px solid var(--rule2)}
 .tab{font-family:inherit;font-size:13px;font-weight:500;padding:8px 16px;border:none;
@@ -321,9 +324,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 const T0 = 2024, T1 = 2034;              // trục thời gian
 const TODAY = 2026 + (7/12);             // 3/8/2026
 
-const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, superseded:0};
+const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, superseded:0, auto:0};
 const SCHED_CLS = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late','chưa đánh giá được':'unknown'};
-const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi'};
+const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi', auto:'tự động từ tin (chưa kiểm chứng)'};
 
 const NEWSFLOW = [];
 const GROUPS = [

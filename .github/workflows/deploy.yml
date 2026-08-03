@@ -34,11 +34,11 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python newsflow_ingest.py --days 30 || echo "newsflow skipped"
 
-      # Cập nhật mark ứng viên từ tin tức (regex, không cần LLM)
-      - name: Propose marks
+      # Tự động đưa tin cột mốc thành mark 'auto' trên Gantt (deterministic)
+      - name: Promote newsflow to tracker
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python propose_marks.py || echo "propose skipped"
+        run: python promote_newsflow.py || echo "promote skipped"
 
       # Dựng site chính thức (chỉ mark đã duyệt) từ DB
       - name: Build site
