@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 1 * * 1'      # 01:00 UTC thứ Hai = 08:00 giờ VN
+    - cron: '0 1 * * *'      # 01:00 UTC MỖI NGÀY = 08:00 giờ VN
   workflow_dispatch:          # cho phép bấm chạy tay
 
 permissions:
@@ -27,6 +27,12 @@ jobs:
           python-version: '3.12'
 
       - run: pip install -r requirements.txt
+
+      # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
+      - name: Ingest newsflow
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python newsflow_ingest.py --days 30 || echo "newsflow skipped"
 
       # Cập nhật mark ứng viên từ tin tức (regex, không cần LLM)
       - name: Propose marks
