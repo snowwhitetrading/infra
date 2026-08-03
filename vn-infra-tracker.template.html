@@ -220,6 +220,32 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 footer{margin-top:26px;font-size:11px;color:var(--ink3);line-height:1.7;max-width:90ch}
 footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding:1px 4px}
 .hidden{display:none}
+/* ---------- tabs + newsflow ---------- */
+.tabs{display:flex;gap:4px;margin:18px 0 14px;border-bottom:1px solid var(--rule2)}
+.tab{font-family:inherit;font-size:13px;font-weight:500;padding:8px 16px;border:none;
+  background:transparent;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--build)}
+.tab:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.nf-filters{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
+.nf-filters .grp{display:flex;align-items:center;gap:6px}
+.nf-filters .grp>span{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;
+  text-transform:uppercase;letter-spacing:.08em}
+.nf-filters select{font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--rule2);
+  background:var(--card);color:var(--ink);border-radius:2px}
+.nf-count{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink3)}
+.nf-list{display:flex;flex-direction:column;max-width:920px}
+.nf-item{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:12px 4px;border-top:1px solid var(--rule)}
+.nf-item:first-child{border-top:none}
+.nf-date{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink2);
+  font-variant-numeric:tabular-nums;padding-top:1px}
+.nf-body{min-width:0}
+.nf-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:3px}
+.nf-proj{font-size:11px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--build-bg);color:var(--build)}
+.nf-src{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em}
+.nf-text{font-size:13px;color:var(--ink);line-height:1.5}
+.nf-link{font-size:11px;color:var(--build);text-decoration:none;white-space:nowrap;margin-top:3px;display:inline-block}
+.nf-link:hover{text-decoration:underline}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -234,6 +260,12 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 <div class="strip" id="strip"></div>
 
+<div class="tabs">
+  <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
+  <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
+</div>
+
+<div id="view-gantt">
 <div class="bar">
   <div class="grp"><span>Nhóm</span><div id="f-group"></div></div>
   <div class="grp"><span>Độ tin cậy tối thiểu</span><div id="f-tier"></div></div>
@@ -256,6 +288,16 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 <div class="scroller">
   <div class="chart" id="chart"></div>
+</div>
+</div><!-- /view-gantt -->
+
+<div id="view-news" class="hidden">
+  <div class="nf-filters">
+    <div class="grp"><span>Dự án</span><select id="nf-proj"></select></div>
+    <div class="grp"><span>Nguồn</span><select id="nf-src"></select></div>
+    <span class="nf-count" id="nf-count"></span>
+  </div>
+  <div class="nf-list" id="nf-list"></div>
 </div>
 
 <footer>
@@ -283,6 +325,7 @@ const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, sup
 const SCHED_CLS = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late','chưa đánh giá được':'unknown'};
 const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi'};
 
+const NEWSFLOW = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -880,6 +923,37 @@ document.getElementById('expandAll').onclick = e=>{
   else {P.forEach(p=>open.add(p.id));e.target.textContent='Đóng tất cả';}
   render();
 };
+
+/* ---------- newsflow (tab Dòng tin) ---------- */
+function nfDate(d){const p=(d||'').split('-');return (p[2]||'01')+'/'+(p[1]||'01')+'/'+(p[0]||'');}
+function renderNews(){
+  const ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src');
+  if(!ps.dataset.init){
+    const projs=[...new Set(NEWSFLOW.map(n=>n.pname))].sort((a,b)=>a.localeCompare(b,'vi'));
+    ps.innerHTML='<option value="">Tất cả dự án</option>'+projs.map(p=>`<option>${esc(p)}</option>`).join('');
+    const srcs=[...new Set(NEWSFLOW.map(n=>n.source))].sort();
+    ss.innerHTML='<option value="">Tất cả nguồn</option>'+srcs.map(s=>`<option>${esc(s)}</option>`).join('');
+    ps.dataset.init='1'; ps.onchange=ss.onchange=renderNews;
+  }
+  const fp=ps.value, fs=ss.value;
+  const items=NEWSFLOW.filter(n=>(!fp||n.pname===fp)&&(!fs||n.source===fs))
+    .sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  document.getElementById('nf-count').textContent=items.length+' tin';
+  document.getElementById('nf-list').innerHTML = items.length ? items.map(n=>`<div class="nf-item">
+    <div class="nf-date">${nfDate(n.date)}</div>
+    <div class="nf-body">
+      <div class="nf-head"><span class="nf-proj">${esc(n.pname)}</span><span class="nf-src">${esc(n.source)}</span></div>
+      <div class="nf-text">${esc(n.summary)}</div>
+      ${n.url?`<a class="nf-link" href="${esc(n.url)}" target="_blank" rel="noopener">xem bài →</a>`:''}
+    </div></div>`).join('') : '<p class="cap" style="padding:20px 0">Không có tin khớp bộ lọc.</p>';
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  const v=t.dataset.view;
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed', x===t));
+  document.getElementById('view-gantt').classList.toggle('hidden', v!=='gantt');
+  document.getElementById('view-news').classList.toggle('hidden', v!=='news');
+  if(v==='news') renderNews();
+});
 
 render();
 </script>

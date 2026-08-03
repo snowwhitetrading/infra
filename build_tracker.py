@@ -17,6 +17,42 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "vn-infra-tracker.template.html")
 MONGO_URI = mongo_uri()
 DB, COLL = "dc_commodity", "Infra_Project_Tracker"
+WEEKLY = "Infra_News_Collection_Weekly_Digest"
+
+# Map project_id (news) -> id số tracker (cho tab Dòng tin)
+PID2TID = {
+    "apec_center": 1, "phu_quoc_airport": 2, "bai_dat_do": 3, "nui_ong": 4,
+    "phu_quoc_tram": 5, "rach_chiec": 6, "road_giabinh_hanoi": 7,
+    "road_giabinh_bacninh": 8, "rail_benthanh_cangio": 9, "rail_hanoi_quangninh": 10,
+    "giabinh_airport": 11, "atc_tower": 12, "bt1": 13, "bt2": 14, "bt3": 15,
+    "bt1_doiung": 16, "bt2_doiung": 17, "bt3_doiung": 18,
+}
+
+
+def fetch_newsflow(client, projects):
+    """Dòng tin từng bài từ project_status.events của Weekly_Digest."""
+    tid2name = {p["id"]: p["name"] for p in projects}
+    src = client[DB][WEEKLY]
+    seen, out = set(), []
+    for doc in src.find({"segment": "vsb_projects"}):
+        for ps in doc.get("project_status", []) or []:
+            tid = PID2TID.get(ps.get("project_id"))
+            if not tid:
+                continue
+            for ev in ps.get("events", []) or []:
+                date = (ev.get("date") or "")[:10]
+                if len(date) < 7:
+                    continue
+                summ = ev.get("summary", "")
+                key = (tid, date, summ[:60])
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append({"date": date, "pname": tid2name.get(tid, ""),
+                            "summary": summ, "source": ev.get("source", "?"),
+                            "url": ev.get("url", "")})
+    out.sort(key=lambda n: n["date"], reverse=True)
+    return out
 
 
 def extract_array(text, anchor):
@@ -100,7 +136,11 @@ def main():
     new_g = json.dumps(groups, ensure_ascii=False)
     new_p = json.dumps(projects, ensure_ascii=False)
 
+    newsflow = fetch_newsflow(c, projects)
+    print(f"Newsflow: {len(newsflow)} tin")
+
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
+    out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 
