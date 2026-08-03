@@ -77,7 +77,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .scroller{overflow-x:auto;border:1px solid var(--rule);border-top:none;background:var(--card)}
 .chart{min-width:1180px}
 .LBL{width:290px}
-.row{display:flex;border-top:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:290px 1fr;border-top:1px solid var(--rule)}
 .row:first-child{border-top:none}
 .lbl{width:290px;flex:none;padding:9px 12px 9px 14px;border-right:1px solid var(--rule2);
   position:relative}
@@ -112,7 +112,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .gl.dec{background:var(--rule2)}
 .today{position:absolute;top:0;bottom:0;width:1px;background:var(--alert);opacity:.7}
 
-.axis{display:flex;border-top:1px solid var(--rule2);background:var(--sunk)}
+.axis{display:grid;grid-template-columns:290px 1fr;border-top:1px solid var(--rule2);background:var(--sunk)}
 .axis .track{min-height:26px}
 .ylab{position:absolute;top:6px;font-size:10px;font-family:"IBM Plex Mono",monospace;
   color:var(--ink3);padding-left:5px;letter-spacing:.05em}
@@ -161,7 +161,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .mk.done.lane-gpmb{top:9px}
 
 /* sub rows (hạng mục) */
-.sub-row{display:flex;border-top:1px dotted var(--rule2);background:var(--card)}
+.sub-row{display:grid;grid-template-columns:290px 1fr;border-top:1px dotted var(--rule2);background:var(--card)}
 .sub-row .lbl{padding:5px 12px 5px 34px;border-right:1px solid var(--rule2)}
 .sub-row .track{min-height:26px}
 .sub-row .lbl{display:flex;flex-direction:column;justify-content:center}
