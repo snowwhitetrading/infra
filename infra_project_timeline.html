@@ -1,0 +1,314 @@
+<title>Tiến độ GPMB & Hạn hoàn thành — Dự án hạ tầng VSB</title>
+<style>
+  :root{
+    --paper:#e9edf1; --card:#ffffff; --ink:#16212c; --muted:#5b6b7a;
+    --line:#d3dbe2; --line-soft:#e4e9ee; --track:#eef2f5;
+    --gpmb:#c07617; --gpmb-soft:#e7d3b3; --teal:#0e7c6b; --start:#d5692a;
+    --s-propose:#8b97a4; --s-policy:#6f8cae; --s-plan:#4c76bf;
+    --s-gpmb:#c07617; --s-bid:#a5771f; --s-start:#d5692a; --s-build:#dd8a37;
+    --s-done:#12876e; --today:#c33b52;
+    --shadow:0 1px 2px rgba(16,33,44,.06),0 6px 20px rgba(16,33,44,.07);
+    --mono:ui-monospace,"SFMono-Regular","Cascadia Code","Consolas",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --label-col:288px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0e151d; --card:#161f2a; --ink:#e7edf3; --muted:#93a3b2;
+      --line:#26333f; --line-soft:#1d2833; --track:#1b2530;
+      --gpmb:#e0983b; --gpmb-soft:#4a3a22; --teal:#3aa892; --start:#e07d45;
+      --s-propose:#7c8896; --s-policy:#7d97b6; --s-plan:#6b93de;
+      --s-gpmb:#e0983b; --s-bid:#c79a4a; --s-start:#e07d45; --s-build:#e5a25a;
+      --s-done:#2fb397; --today:#e26076;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#e9edf1; --card:#ffffff; --ink:#16212c; --muted:#5b6b7a;
+    --line:#d3dbe2; --line-soft:#e4e9ee; --track:#eef2f5;
+    --gpmb:#c07617; --gpmb-soft:#e7d3b3; --teal:#0e7c6b; --start:#d5692a;
+    --s-propose:#8b97a4; --s-policy:#6f8cae; --s-plan:#4c76bf;
+    --s-gpmb:#c07617; --s-bid:#a5771f; --s-start:#d5692a; --s-build:#dd8a37;
+    --s-done:#12876e; --today:#c33b52;
+    --shadow:0 1px 2px rgba(16,33,44,.06),0 6px 20px rgba(16,33,44,.07);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0e151d; --card:#161f2a; --ink:#e7edf3; --muted:#93a3b2;
+    --line:#26333f; --line-soft:#1d2833; --track:#1b2530;
+    --gpmb:#e0983b; --gpmb-soft:#4a3a22; --teal:#3aa892; --start:#e07d45;
+    --s-propose:#7c8896; --s-policy:#7d97b6; --s-plan:#6b93de;
+    --s-gpmb:#e0983b; --s-bid:#c79a4a; --s-start:#e07d45; --s-build:#e5a25a;
+    --s-done:#2fb397; --today:#e26076;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1140px;margin:0 auto;padding:32px 22px 72px}
+  header.top{margin-bottom:26px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--gpmb);font-weight:600}
+  h1{font-size:clamp(24px,3.4vw,34px);line-height:1.12;margin:.32em 0 .12em;
+    letter-spacing:-.02em;text-wrap:balance;font-weight:750}
+  .sub{color:var(--muted);max-width:70ch;font-size:15px}
+  .meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+  .meta span{font-family:var(--mono);font-size:11.5px;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--card)}
+
+  .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 8px}
+  .scard{background:var(--card);border:1px solid var(--line);border-radius:13px;
+    padding:15px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .scard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal)}
+  .scard .yr{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-.01em}
+  .scard .lb{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .scard ul{margin:9px 0 0;padding-left:16px;font-size:12.7px;color:var(--ink)}
+  .scard li{margin:2px 0}
+  .scard li b{font-weight:650}
+
+  .legend{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 16px;margin:20px 0;font-size:12.5px;color:var(--muted)}
+  .legend .grp{display:flex;gap:8px;align-items:center}
+  .legend b{color:var(--ink);font-weight:600}
+  .lg-dot{width:12px;height:12px;border-radius:50%;flex:none}
+  .lg-ring{width:12px;height:12px;border-radius:50%;border:2px solid var(--gpmb);flex:none}
+  .lg-dia{width:11px;height:11px;transform:rotate(45deg);flex:none}
+  .lg-flag{width:0;height:0;border-left:9px solid var(--teal);
+    border-top:5px solid transparent;border-bottom:5px solid transparent;flex:none}
+
+  .board{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .scroller{overflow-x:auto}
+  .grid{min-width:940px}
+  /* axis */
+  .axis{display:grid;grid-template-columns:var(--label-col) 1fr;align-items:stretch;
+    border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:5}
+  .axis .corner{padding:10px 16px;border-right:1px solid var(--line-soft);
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);display:flex;align-items:flex-end}
+  .axis .years{position:relative;height:46px}
+  .ytick{position:absolute;top:0;bottom:0;border-left:1px solid var(--line-soft)}
+  .ytick .yl{font-family:var(--mono);font-size:12px;font-weight:650;color:var(--ink);
+    padding:6px 0 0 7px}
+  .qtick{position:absolute;top:24px;bottom:0;border-left:1px dashed var(--line-soft)}
+  .qtick .ql{font-family:var(--mono);font-size:9.5px;color:var(--muted);padding:2px 0 0 4px}
+
+  .clg{grid-column:1/-1;display:flex;align-items:center;gap:10px;
+    padding:11px 16px;background:var(--track);border-top:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft)}
+  .clg h2{font-size:13.5px;margin:0;letter-spacing:.01em;font-weight:700}
+  .clg .dev{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  .lane{display:grid;grid-template-columns:var(--label-col) 1fr;align-items:stretch;
+    border-top:1px solid var(--line-soft)}
+  .lane:hover{background:color-mix(in srgb,var(--track) 55%,transparent)}
+  .lbl{padding:12px 14px 12px 16px;border-right:1px solid var(--line-soft);
+    display:flex;flex-direction:column;gap:5px;justify-content:center}
+  .pname{font-size:13.5px;font-weight:600;line-height:1.25;text-wrap:balance}
+  .prow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .pill{font-family:var(--mono);font-size:10px;letter-spacing:.03em;font-weight:600;
+    padding:2px 7px;border-radius:5px;color:#fff;white-space:nowrap}
+  .cnt{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+  .track{position:relative;height:58px}
+  .today{position:absolute;top:0;bottom:0;width:2px;background:var(--today);opacity:.85;z-index:3}
+  .qline{position:absolute;top:0;bottom:0;border-left:1px solid var(--line-soft);z-index:0}
+  .yline{position:absolute;top:0;bottom:0;border-left:1px solid var(--line);z-index:1}
+  .mk{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:4;cursor:default}
+  .mk .dot{width:13px;height:13px;border-radius:50%;background:var(--gpmb);
+    border:2px solid var(--card);box-shadow:0 0 0 1px var(--gpmb)}
+  .mk.ring .dot{background:transparent;box-shadow:0 0 0 2px var(--gpmb) inset,0 0 0 2px var(--card)}
+  .mk.start .dot{width:13px;height:13px;border-radius:2px;transform:rotate(45deg);
+    background:var(--start);box-shadow:0 0 0 1px var(--start)}
+  .mk.mile .dot{width:10px;height:10px;border-radius:2px;background:var(--s-plan);
+    box-shadow:0 0 0 1px var(--s-plan)}
+  .flag{position:absolute;top:50%;transform:translateY(-50%);z-index:4;display:flex;
+    align-items:center;gap:5px}
+  .flag .pole{width:2px;height:30px;background:var(--teal)}
+  .flag .ft{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--teal);
+    background:var(--card);border:1px solid var(--teal);border-radius:5px;padding:2px 6px;
+    white-space:nowrap}
+  .flag.soft .ft{color:var(--muted);border-color:var(--line);border-style:dashed}
+  .flag.soft .pole{background:var(--muted);opacity:.6}
+  .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink);color:var(--paper);font-size:11.5px;line-height:1.35;
+    padding:7px 9px;border-radius:7px;width:max-content;max-width:230px;
+    opacity:0;pointer-events:none;transition:opacity .12s;z-index:20;box-shadow:var(--shadow)}
+  .tip .d{font-family:var(--mono);font-size:10px;opacity:.8;display:block;margin-bottom:2px}
+  .mk:hover .tip,.mk:focus .tip{opacity:1}
+  .mk:focus{outline:none}
+  .mk:focus .dot{box-shadow:0 0 0 3px var(--today)}
+
+  footer{margin-top:20px;color:var(--muted);font-size:12px;font-family:var(--mono)}
+  footer b{color:var(--ink)}
+  @media (max-width:620px){ .summary{grid-template-columns:1fr} .wrap{padding:22px 12px 60px} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Theo dõi tiến độ · Vingroup · Sun Group · Masterise</div>
+    <h1>Giải phóng mặt bằng & hạn hoàn thành các dự án hạ tầng</h1>
+    <p class="sub">Tổng hợp từ 31 tuần tin tức (W01–W31/2026, 708 bài từ cafef · vietstock · vneconomy · nguoiquansat). Mốc là <em>theo tin báo chí</em> — kế hoạch/chỉ tiêu, không phải cam kết pháp lý.</p>
+    <div class="meta">
+      <span>Nguồn: dc_commodity.Infra_News_Collection_Weekly_Digest</span>
+      <span>Cập nhật mốc: 31/07/2026</span>
+    </div>
+  </header>
+
+  <section class="summary">
+    <div class="scard">
+      <div class="yr">2026</div><div class="lb">Hạn trong năm</div>
+      <ul>
+        <li>Đường băng Phú Quốc — <b>đã xong T7</b></li>
+        <li>GPMB Rạch Chiếc — <b>trước 31/10</b></li>
+        <li>GPMB HN–Quảng Ninh — <b>trước T9</b></li>
+      </ul>
+    </div>
+    <div class="scard">
+      <div class="yr">2027</div><div class="lb">Phục vụ hội nghị APEC</div>
+      <ul>
+        <li>Trung tâm hội nghị APEC</li>
+        <li>Mở rộng sân bay Phú Quốc</li>
+        <li>Đường kết nối sân bay Gia Bình</li>
+      </ul>
+    </div>
+    <div class="scard">
+      <div class="yr">2028</div><div class="lb">Vận hành / dự kiến</div>
+      <ul>
+        <li>Sân bay Gia Bình — <b>vận hành TM cuối 2028</b></li>
+        <li>Đường sắt HN–Quảng Ninh — <b>dự kiến ~2028</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="legend" id="legend">
+    <div class="grp"><span class="lg-dot"></span><b>GPMB</b> đã thực hiện</div>
+    <div class="grp"><span class="lg-ring"></span><b>Hạn GPMB</b> (sắp tới)</div>
+    <div class="grp"><span class="lg-dia" style="background:var(--start)"></span><b>Khởi công</b></div>
+    <div class="grp"><span class="lg-dot" style="background:var(--s-plan);width:10px;height:10px;border-radius:2px"></span><b>Cột mốc</b> pháp lý/thi công</div>
+    <div class="grp"><span class="lg-flag"></span><b>Hạn hoàn thành</b> (nét đứt = chưa công bố)</div>
+    <div class="grp"><span style="width:14px;height:2px;background:var(--today);display:inline-block"></span><b>Hôm nay</b></div>
+  </div>
+
+  <div class="board"><div class="scroller"><div class="grid" id="grid"></div></div></div>
+
+  <footer>Bản đồ tiến độ dựng tự động từ trường <b>project_status.events</b> · di chuột vào mốc để xem chi tiết ngày &amp; sự kiện.</footer>
+</div>
+
+<script>
+const A0=Date.UTC(2026,0,1), A1=Date.UTC(2029,0,1), TODAY=Date.UTC(2026,7,1);
+const pct=d=>((d-A0)/(A1-A0))*100;
+const D=(y,m,day=1)=>Date.UTC(y,m-1,day);
+const fmt=d=>{const x=new Date(d);return String(x.getUTCDate()).padStart(2,'0')+'/'+String(x.getUTCMonth()+1).padStart(2,'0')+'/'+x.getUTCFullYear();};
+
+const STAGE={
+ 'đề xuất':'--s-propose','chủ trương đầu tư':'--s-policy','quy hoạch/phê duyệt':'--s-plan',
+ 'giải phóng mặt bằng':'--s-gpmb','đấu thầu':'--s-bid','khởi công':'--s-start',
+ 'thi công':'--s-build','hoàn thành':'--s-done','khai thác':'--s-done'
+};
+const stColor=s=>`var(${STAGE[s]||'--s-propose'})`;
+
+// e:[date,type,label]  type: gpmb | ring | start | mile
+const clusters=[
+ {name:'Cụm sân bay Gia Bình', dev:'Vingroup · Masterise', projects:[
+   {n:'Cảng HKQT Gia Bình', st:'đấu thầu', cnt:'≈120 tin',
+    tgt:[D(2028,12),'Vận hành cuối 2028',true],
+    e:[[D(2026,3,14),'gpmb','Đền bù thêm đất cho hộ bị thu hồi'],
+       [D(2026,4,5),'gpmb','Thưởng "nóng" 200 triệu cho hộ giao đất sớm'],
+       [D(2026,5,3),'gpmb','258 hộ dân giao mặt bằng sớm'],
+       [D(2026,5,28),'gpmb','Thu hồi 260ha của 1.400 hộ tại Hải Phòng'],
+       [D(2026,6,10),'mile','Cất nóc tháp biểu tượng cao 127m'],
+       [D(2026,6,16),'gpmb','Quân đội được huy động hỗ trợ GPMB'],
+       [D(2026,6,30),'gpmb','1.400 hộ bàn giao mặt bằng chỉ sau 38 ngày'],
+       [D(2027,11),'mile','Phục vụ APEC 2027']]},
+   {n:'Đường kết nối Gia Bình – Hà Nội (đoạn Bắc Ninh)', st:'khởi công', cnt:'≈20 tin',
+    tgt:[D(2027,11),'APEC 2027',false],
+    e:[[D(2026,5,5),'gpmb','Hà Nội dồn lực tuyến ~29.000 tỷ'],
+       [D(2026,5,18),'gpmb','Hàng trăm hộ bốc thăm tái định cư'],
+       [D(2026,5,27),'gpmb','Bắc Ninh thu hồi đất hơn 2.500 hộ'],
+       [D(2026,5,31),'start','Sun Group thi công (công trình khẩn cấp)'],
+       [D(2026,6,19),'mile','CC1 phê duyệt hợp đồng dự án']]},
+ ]},
+ {name:'Cụm APEC Phú Quốc', dev:'Sun Group', projects:[
+   {n:'Trung tâm tổ chức hội nghị APEC', st:'thi công', cnt:'≈150 tin',
+    tgt:[D(2027,11),'APEC 2027',false],
+    e:[[D(2026,1,13),'gpmb','"Khát" mặt bằng sạch'],
+       [D(2026,1,28),'start','Sun Group khởi công 2 KĐT phục vụ APEC'],
+       [D(2026,3,19),'gpmb','Ách tắc GPMB — "căng như dây đàn"'],
+       [D(2026,6,12),'gpmb','Tháo gỡ thu hồi đất cụm 137.000 tỷ'],
+       [D(2026,7,26),'mile','Mái thép 12.000 tấn lắp đủ 13/13 nhịp']]},
+   {n:'Mở rộng sân bay Phú Quốc', st:'thi công', cnt:'≈70 tin',
+    tgt:[D(2027,11),'APEC 2027',false],
+    e:[[D(2026,4,14),'mile','ACV bàn giao sân bay cho Sun Group'],
+       [D(2026,7,26),'mile','Đường băng số 2 dài 3.300m HOÀN THÀNH']]},
+   {n:'KĐT hỗn hợp Bãi Đất Đỏ', st:'khởi công', cnt:'≈19 tin',
+    tgt:[D(2027,11),'APEC 2027',false],
+    e:[[D(2026,1,28),'start','Khởi công cùng cụm KĐT APEC'],
+       [D(2026,5,13),'gpmb','Phú Quốc cưỡng chế 6 hộ chưa giao đất'],
+       [D(2026,5,26),'gpmb','Sun Group được giao đất dự án 64.000 tỷ']]},
+ ]},
+ {name:'Cụm TP.HCM', dev:'Sun Group · Vingroup', projects:[
+   {n:'Khu Liên hợp thể thao Rạch Chiếc', st:'giải phóng mặt bằng', cnt:'≈90 tin',
+    tgt:[D(2026,10,31),'GPMB xong 31/10 · hoàn thành: chưa công bố',true],
+    e:[[D(2026,1,15),'start','TP.HCM động thổ SVĐ 75.000 chỗ'],
+       [D(2026,3,24),'gpmb','TP.HCM thu hồi đất khu liên hợp'],
+       [D(2026,3,26),'gpmb','Chốt lộ trình thu hồi đất'],
+       [D(2026,6,4),'ring','Hạn GPMB xong trước 31/10']]},
+   {n:'Đường sắt Bến Thành – Cần Giờ', st:'giải phóng mặt bằng', cnt:'≈100 tin',
+    tgt:[D(2026,6,30),'Khởi công trước 30/6 · hoàn thành: chưa công bố',true],
+    e:[[D(2026,1,2),'mile','TP.HCM chấp thuận nghiên cứu đầu tư'],
+       [D(2026,3,17),'gpmb','Ban hành kế hoạch GPMB toàn tuyến'],
+       [D(2026,5,21),'mile','Phê duyệt tuyến & vị trí công trình'],
+       [D(2026,5,30),'gpmb','Vốn GPMB điều chỉnh giảm 23%']]},
+ ]},
+ {name:'Đường sắt tốc độ cao', dev:'VinSpeed (Vingroup)', projects:[
+   {n:'Đường sắt Hà Nội – Quảng Ninh', st:'thi công', cnt:'≈130 tin',
+    tgt:[D(2028,12),'Dự kiến ~2028 (≈2 năm)',true],
+    e:[[D(2026,4,6),'gpmb','Quảng Ninh chi 2.500 tỷ GPMB'],
+       [D(2026,4,12),'start','Thủ tướng bấm nút KHỞI CÔNG (147.000 tỷ)'],
+       [D(2026,6,4),'gpmb','Hoàn thành kiểm kê trong tháng 6'],
+       [D(2026,9,1),'ring','Hạn hoàn tất GPMB trước tháng 9'],
+       [D(2026,7,30),'gpmb','Dồn lực GPMB toàn tuyến']]},
+ ]},
+];
+
+function yearsHeader(){
+  let h='';
+  for(let y=2026;y<=2028;y++){
+    const L=pct(D(y,1)); h+=`<div class="ytick" style="left:${L}%"><div class="yl">${y}</div></div>`;
+    for(let q=2;q<=4;q++){const L2=pct(D(y,(q-1)*3+1));h+=`<div class="qtick" style="left:${L2}%"><div class="ql">Q${q}</div></div>`;}
+  }
+  return h;
+}
+function gridlines(){
+  let h='';
+  for(let y=2026;y<=2028;y++){
+    h+=`<div class="yline" style="left:${pct(D(y,1))}%"></div>`;
+    for(let q=2;q<=4;q++) h+=`<div class="qline" style="left:${pct(D(y,(q-1)*3+1))}%"></div>`;
+  }
+  h+=`<div class="today" style="left:${pct(TODAY)}%"></div>`;
+  return h;
+}
+function marker(e){
+  const[d,t,lab]=e; const cls=t==='ring'?'mk ring':t==='start'?'mk start':t==='mile'?'mk mile':'mk';
+  const tip=`<div class="tip"><span class="d">${fmt(d)}</span>${lab}</div>`;
+  return `<div class="${cls}" tabindex="0" style="left:${pct(d)}%"><div class="dot"></div>${tip}</div>`;
+}
+function flag(tgt){
+  if(!tgt) return '';
+  const[d,lab,firm]=tgt;
+  return `<div class="flag ${firm?'':'soft'}" style="left:${pct(d)}%"><div class="pole"></div><div class="ft">${lab}</div></div>`;
+}
+
+let html=`<div class="axis"><div class="corner">Dự án</div><div class="years">${yearsHeader()}</div></div>`;
+for(const c of clusters){
+  html+=`<div class="clg"><h2>${c.name}</h2><span class="dev">${c.dev}</span></div>`;
+  for(const p of c.projects){
+    const pill=`<span class="pill" style="background:${stColor(p.st)}">${p.st}</span>`;
+    const mks=p.e.map(marker).join('');
+    html+=`<div class="lane"><div class="lbl"><div class="pname">${p.n}</div>`+
+          `<div class="prow">${pill}<span class="cnt">${p.cnt}</span></div></div>`+
+          `<div class="track">${gridlines()}${mks}${flag(p.tgt)}</div></div>`;
+  }
+}
+document.getElementById('grid').innerHTML=html;
+</script>

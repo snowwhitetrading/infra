@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theo dõi tiến độ · 18 dự án theo CV 5386/NHNN-TD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF2F1; --card:#FBFCFC; --sunk:#E6EAE9;
+  --ink:#14181A; --ink2:#565E62; --ink3:#8A9296;
+  --rule:#D7DDDB; --rule2:#C3CBC8;
+  --gpmb:#B9762C;      /* đất */
+  --build:#2A5C84;     /* thi công */
+  --swap:#6B5B8E;      /* dự án đối ứng bằng quỹ đất */
+  --done:#2A6F51;
+  --alert:#AC3A38;
+  --gpmb-bg:#F3E5D3; --build-bg:#DCE6EF; --swap-bg:#E5E1EE;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#131617; --card:#1B1F20; --sunk:#0E1112;
+    --ink:#EDF1F0; --ink2:#A3ACAF; --ink3:#6E777A;
+    --rule:#2A2F31; --rule2:#3A4143;
+    --gpmb:#D6954E; --build:#5E9AC8; --swap:#9B8BC4; --done:#4E9E7A; --alert:#D96361;
+    --gpmb-bg:#3A2D1C; --build-bg:#1D3348; --swap-bg:#2E2842;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:1560px;margin:0 auto;padding:28px 20px 80px}
+
+/* ---------- header ---------- */
+header{border-bottom:1px solid var(--rule2);padding-bottom:18px;margin-bottom:20px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+h1{font-size:26px;font-weight:600;letter-spacing:-.015em;margin:0 0 6px}
+.sub{color:var(--ink2);font-size:13px;margin:0;max-width:76ch}
+.sub b{font-weight:500;color:var(--ink)}
+
+/* ---------- summary strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:20px 0 22px}
+.cell{background:var(--card);padding:12px 14px}
+.cell .k{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;
+  font-family:"IBM Plex Mono",monospace}
+.cell .v{font-size:21px;font-weight:600;margin-top:3px;letter-spacing:-.02em}
+.cell .u{font-size:11px;color:var(--ink3);font-weight:400;margin-left:3px}
+
+/* ---------- controls ---------- */
+.bar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:16px}
+.grp{display:flex;align-items:center;gap:6px}
+.grp>span{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;
+  text-transform:uppercase;letter-spacing:.08em}
+button.chip{font-family:inherit;font-size:12px;padding:4px 10px;border:1px solid var(--rule2);
+  background:transparent;color:var(--ink2);cursor:pointer;border-radius:2px}
+button.chip:hover{border-color:var(--ink3);color:var(--ink)}
+button.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+
+/* ---------- legend ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px 14px;background:var(--card);
+  border:1px solid var(--rule);margin-bottom:0;font-size:12px;color:var(--ink2)}
+.lg{display:flex;align-items:center;gap:7px}
+.lgbar{width:20px;height:8px;border-radius:1px}
+.lgtxt b{font-weight:500;color:var(--ink)}
+
+/* ---------- gantt ---------- */
+.scroller{overflow-x:auto;border:1px solid var(--rule);border-top:none;background:var(--card)}
+.chart{min-width:1180px}
+.LBL{width:290px}
+.row{display:flex;border-top:1px solid var(--rule)}
+.row:first-child{border-top:none}
+.lbl{width:290px;flex:none;padding:9px 12px 9px 14px;border-right:1px solid var(--rule2);
+  position:relative}
+.track{flex:1;position:relative;min-height:44px}
+
+.grp-row{background:var(--sunk);border-top:1px solid var(--rule2)}
+.grp-row .lbl{padding:7px 14px;border-right:1px solid var(--rule2)}
+.grp-name{font-size:12px;font-weight:600;letter-spacing:.01em}
+.grp-meta{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;margin-top:1px}
+.grp-row .track{min-height:0;display:flex;align-items:center;padding-left:8px}
+.grp-sum{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace}
+
+.pname{font-size:13px;font-weight:500;line-height:1.3;display:flex;gap:6px;align-items:flex-start;
+  cursor:pointer;background:none;border:none;padding:0;text-align:left;color:inherit;font-family:inherit;width:100%}
+.pname:hover .ptxt{text-decoration:underline;text-underline-offset:2px}
+.pname:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.caret{font-size:9px;color:var(--ink3);margin-top:4px;transition:transform .15s;flex:none;width:8px}
+.open .caret{transform:rotate(90deg)}
+.pmeta{display:flex;gap:8px;align-items:center;margin-top:5px;padding-left:14px;flex-wrap:wrap}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
+  letter-spacing:.03em}
+.t-gpmb{background:var(--gpmb-bg);color:var(--gpmb)}
+.t-build{background:var(--build-bg);color:var(--build)}
+.t-swap{background:var(--swap-bg);color:var(--swap)}
+.t-done{background:var(--build-bg);color:var(--done)}
+.cap{font-size:10px;color:var(--ink3);font-family:"IBM Plex Mono",monospace}
+.loc{font-size:10px;color:var(--ink3);margin-top:3px;padding-left:14px;line-height:1.35}
+
+/* year grid */
+.grid{position:absolute;inset:0;pointer-events:none}
+.gl{position:absolute;top:0;bottom:0;width:1px;background:var(--rule)}
+.gl.dec{background:var(--rule2)}
+.today{position:absolute;top:0;bottom:0;width:1px;background:var(--alert);opacity:.7}
+
+.axis{display:flex;border-top:1px solid var(--rule2);background:var(--sunk)}
+.axis .track{min-height:26px}
+.ylab{position:absolute;top:6px;font-size:10px;font-family:"IBM Plex Mono",monospace;
+  color:var(--ink3);padding-left:5px;letter-spacing:.05em}
+
+/* bars */
+.bar-g,.bar-b,.bar-s{position:absolute;border-radius:2px}
+.opn{background:transparent!important;border:1px dashed currentColor;opacity:.85}
+.bar-g.opn{color:var(--gpmb)} .bar-b.opn{color:var(--build)} .bar-s.opn{color:var(--swap)}
+.chev{position:absolute;font-size:11px;line-height:1;font-family:"IBM Plex Mono",monospace}
+.chev.g{color:var(--gpmb);top:9px} .chev.b{color:var(--build);top:19px}
+.est{position:absolute;font-size:12px;line-height:1;font-family:"IBM Plex Mono",monospace;
+  transform:translateX(-50%);opacity:.75}
+.est.g{color:var(--gpmb);top:8px} .est.b{color:var(--build);top:18px}
+.covchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:2px;
+  border:1px solid var(--rule2);color:var(--ink3);letter-spacing:.03em}
+.covchip.lo{border-color:var(--alert);color:var(--alert)}
+.sched{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
+  letter-spacing:.03em;border:1px solid}
+.s-ahead{color:var(--done);border-color:var(--done);background:transparent}
+.s-ontime{color:var(--ink2);border-color:var(--rule2);background:transparent}
+.s-late{color:var(--alert);border-color:var(--alert);background:transparent}
+.s-unknown{color:var(--ink3);border-color:var(--rule2);border-style:dashed;background:transparent}
+.pctchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:2px;
+  background:var(--gpmb-bg);color:var(--gpmb);letter-spacing:.03em}
+.bar-g{height:6px;top:11px;background:var(--gpmb)}
+.bar-b{height:10px;top:20px;background:var(--build)}
+.bar-s{height:8px;top:21px;background:var(--swap)}
+.fut{opacity:.34}
+.bar-b.fut,.bar-g.fut,.bar-s.fut{border:1px dashed currentColor}
+
+/* markers — 3 hình, mỗi hình một kiểu duy nhất.
+   tròn = bắt đầu · kim cương = tiến độ · tam giác = dự kiến kết thúc
+   Độ tin cậy KHÔNG mã hoá bằng hình; xem tooltip hoặc bảng chi tiết. */
+.mk{position:absolute;cursor:default;background:var(--ink);border:none;box-shadow:none}
+
+.mk{width:9px;height:9px;transform:translateX(-50%) rotate(45deg);top:20px}
+.mk.lane-gpmb{top:9px}
+.mk.lane-swap{top:21px}
+
+.mk.start{width:9px;height:9px;border-radius:50%;transform:translateX(-50%);top:20px}
+.mk.start.lane-gpmb{top:9px}
+
+.mk.done{width:0;height:0;border-radius:0;background:transparent;transform:translateX(-50%);
+  border-left:6px solid transparent;border-right:6px solid transparent;
+  border-bottom:10px solid var(--ink);border-top:none;top:20px}
+.mk.done.lane-gpmb{top:9px}
+
+/* sub rows (hạng mục) */
+.sub-row{display:flex;border-top:1px dotted var(--rule2);background:var(--card)}
+.sub-row .lbl{padding:5px 12px 5px 34px;border-right:1px solid var(--rule2)}
+.sub-row .track{min-height:26px}
+.sub-row .lbl{display:flex;flex-direction:column;justify-content:center}
+.sname{font-size:12px;color:var(--ink2)}
+.sprog{font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px}
+.sub .bar-b{height:6px;top:9px;opacity:.55}
+.sub .bar-g{height:5px;top:2px}
+.sub .mk{top:8px;width:7px;height:7px}
+.sub .mk.start{top:8px;width:7px;height:7px}
+.sub .mk.done{top:8px;width:0;height:0;
+  border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--ink)}
+.sub .mk.lane-gpmb{top:0}
+
+/* detail */
+.detail{display:flex;border-top:1px solid var(--rule2);background:var(--sunk)}
+.detail .pad{padding:16px 18px 18px 34px;width:100%}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:900px){.dgrid{grid-template-columns:1fr}}
+.dh{font-size:11px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 9px}
+table.hm{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;margin-bottom:4px}
+table.hm th{text-align:left;font-weight:500;font-size:10px;color:var(--ink3);
+  font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;
+  padding:0 10px 5px 0;border-bottom:1px solid var(--rule2)}
+table.hm td{padding:7px 10px 7px 0;border-bottom:1px dotted var(--rule2);vertical-align:top}
+table.hm th:nth-child(1),table.hm td:nth-child(1){width:74px}
+table.hm th:nth-child(2),table.hm td:nth-child(2){width:32%}
+.hm-l{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3)}
+.hm-n{color:var(--ink);font-weight:500}
+.hm-p{color:var(--ink2);line-height:1.55}
+table.fin{width:100%;border-collapse:collapse;font-size:12px}
+table.fin td{padding:3px 0;border-bottom:1px dotted var(--rule2)}
+table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;font-weight:500}
+.ms-list{list-style:none;margin:0;padding:0;font-size:12px}
+.ms-list li{display:flex;gap:9px;padding:5px 0;border-bottom:1px dotted var(--rule2);align-items:baseline}
+.ms-date{font-family:"IBM Plex Mono",monospace;color:var(--ink2);flex:none;width:74px;font-size:11px}
+.ms-body{flex:1}
+.ms-src{font-size:10px;color:var(--ink3);display:block;margin-top:1px}
+.pill{font-family:"IBM Plex Mono",monospace;font-size:9px;padding:1px 5px;border:1px solid var(--rule2);
+  color:var(--ink3);border-radius:2px;flex:none;letter-spacing:.03em}
+.capex{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
+.capex .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.capex .b{width:100%;background:var(--build);border-radius:1px 1px 0 0;min-height:1px}
+.capex .y{font-size:9px;color:var(--ink3);font-family:"IBM Plex Mono",monospace}
+.capex .n{font-size:9px;color:var(--ink2);font-family:"IBM Plex Mono",monospace}
+.schedbox{padding:10px 12px;border:1px solid var(--rule2);border-radius:var(--radius);
+  font-size:12px;color:var(--ink2);line-height:1.6;background:var(--card);margin-bottom:4px}
+.schedbox b{font-weight:500}
+.schedbox.s-ahead{border-color:var(--done)} .schedbox.s-ahead b{color:var(--done)}
+.schedbox.s-late{border-color:var(--alert)} .schedbox.s-late b{color:var(--alert)}
+.schedbox.s-unknown{border-style:dashed}
+.warn{margin-top:12px;padding:9px 11px;border-left:2px solid var(--alert);background:var(--card);
+  font-size:12px;color:var(--ink2)}
+.warn b{color:var(--ink);font-weight:500}
+
+footer{margin-top:26px;font-size:11px;color:var(--ink3);line-height:1.7;max-width:90ch}
+footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding:1px 4px}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Công văn 5386/NHNN-TD · 22/6/2026</p>
+  <h1>Tiến độ 18 dự án đề nghị loại trừ dư nợ tín dụng</h1>
+  <p class="sub">Ba lớp thời gian: <b>giải phóng mặt bằng</b>, <b>thi công</b>, <b>hạn hoàn thành</b>. Mốc thời gian là <b>ngày sự kiện</b>, không phải ngày đăng tin. Mỗi mốc gắn một cấp độ tin cậy tuỳ nguồn — hợp đồng, chỉ đạo, doanh nghiệp công bố, hoặc suy từ lịch giải ngân.</p>
+</header>
+
+<div class="strip" id="strip"></div>
+
+<div class="bar">
+  <div class="grp"><span>Nhóm</span><div id="f-group"></div></div>
+  <div class="grp"><span>Độ tin cậy tối thiểu</span><div id="f-tier"></div></div>
+  <div class="grp"><button class="chip" id="expandAll">Mở tất cả hạng mục</button></div>
+</div>
+
+<div class="legend">
+  <div class="lg"><span class="lgbar" style="background:var(--gpmb)"></span><span class="lgtxt"><b>Giải phóng mặt bằng</b></span></div>
+  <div class="lg"><span class="lgbar" style="background:var(--build)"></span><span class="lgtxt"><b>Thi công</b></span></div>
+  <div class="lg"><span class="lgbar" style="background:var(--swap)"></span><span class="lgtxt"><b>Dự án đối ứng</b> (quỹ đất trả nhà đầu tư)</span></div>
+  <div class="lg"><span class="mk start" style="position:static;transform:none"></span><span class="lgtxt"><b>Tròn</b> bắt đầu</span></div>
+  <div class="lg"><span class="mk" style="position:static;transform:rotate(45deg);margin:0 3px"></span><span class="lgtxt"><b>Kim cương</b> tiến độ</span></div>
+  <div class="lg"><span class="mk done" style="position:static;transform:none;margin:0 3px"></span><span class="lgtxt"><b>Tam giác</b> dự kiến kết thúc</span></div>
+  <div class="lg"><span class="lgtxt">Marker nằm trên đúng thanh của loại mốc — GPMB ở thanh nâu, thi công ở thanh xanh</span></div>
+  <div class="lg"><span class="lgbar" style="background:transparent;border:1px dashed var(--gpmb)"></span><span class="lgtxt">Thanh rỗng + dấu <b>&#8250;</b> = <b>chưa chốt</b>, mốc kết thúc chỉ là hạn đặt ra</span></div>
+  <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">so với mốc đã công bố trước đó — rê chuột để xem căn cứ</span></div>
+  <div class="lg"><span class="lgtxt">Dấu <b>~</b> ở đầu thanh = ngày đó là <b>ước lượng</b>, không khớp mốc nào có nguồn</span></div>
+  <div class="lg"><span class="lgtxt">Độ tin cậy xem ở tooltip và bảng chi tiết; dùng bộ lọc bên trên để ẩn bớt mốc yếu</span></div>
+</div>
+
+<div class="scroller">
+  <div class="chart" id="chart"></div>
+</div>
+
+<footer>
+  <p><b>Cách đọc.</b> Thanh mờ + viền đứt = phần nằm sau ngày hôm nay (kế hoạch). Vạch đỏ dọc = 3/8/2026. Bấm tên dự án để mở hạng mục con và bảng tài chính theo Phụ lục I.</p>
+  <p><b>Độ phủ nguồn.</b> Chỉ số <code>căn cứ N%</code> đo tỷ lệ đầu mút thanh giai đoạn trùng ngày với một mốc có nguồn dẫn. Phần còn lại là ước lượng của người lập bảng để vẽ được thanh, đánh dấu bằng <code>~</code>. Chỉ số này do chương trình tự tính từ dữ liệu, không nhập tay — thêm một mốc có nguồn là nó tự tăng.</p>
+  <p><b>Cấp độ tin cậy.</b> <code>hợp đồng</code> mốc ghi trong hợp đồng dự án hoặc quyết định phê duyệt · <code>chỉ đạo</code> mốc trong kết luận họp của Chính phủ/UBND · <code>doanh nghiệp</code> chủ đầu tư tự công bố · <code>suy đoán</code> nội suy từ lịch giải ngân trong Phụ lục I, không có nguồn công bố.</p>
+  <p><b>Nguồn số liệu tài chính.</b> Phụ lục I công văn 5386/NHNN-TD ngày 22/6/2026. Đơn vị tỷ đồng. TMĐT điều chỉnh của các dự án Sungroup là số doanh nghiệp báo cáo, chưa được phê duyệt (theo chú thích 3 của công văn). Mốc tiến độ tổng hợp từ báo chí và thông báo của Chính phủ/địa phương, cập nhật đến 3/8/2026.</p>
+</footer>
+
+</div>
+
+<script>
+/* ============================================================
+   SCHEMA
+   phases: {kind:'gpmb'|'build'|'swap', from:'YYYY-MM', to:'YYYY-MM'}
+   marks:  {date:'YYYY-MM', type:'start'|'ms'|'done', label, tier, src}
+   tier:   'contract' | 'directive' | 'company' | 'inferred'
+   capex:  {2026:..,2027:..}  (vốn huy động, tỷ đồng — Phụ lục I)
+   ============================================================ */
+
+const T0 = 2024, T1 = 2034;              // trục thời gian
+const TODAY = 2026 + (7/12);             // 3/8/2026
+
+const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, superseded:0};
+const SCHED_CLS = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late','chưa đánh giá được':'unknown'};
+const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi'};
+
+const GROUPS = [
+  {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
+  {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
+  {id:'III', name:'III · Đường sắt tốc độ cao', meta:'VinSpeed (Vingroup)', huyDong:212330},
+  {id:'IV',  name:'IV · Các dự án tại Cảng HKQT Gia Bình', meta:'MAI — Masterise hạ tầng hàng không', huyDong:207782}
+];
+
+const P = [
+/* ---------------- NHÓM I ---------------- */
+{
+ id:1, g:'I', name:'Trung tâm tổ chức hội nghị APEC', owner:'Sungroup', loc:'Khu lấn biển Bãi Đất Đỏ, Khu phố 7, đặc khu Phú Quốc',
+ gpmbNote:'báo cáo gộp với Bãi Đất Đỏ',
+ tmdt:21860, tmdtDc:25030, tuCo:5006, huyDong:20024, capex:{2026:9334,2027:10690},
+ sched:'đúng tiến độ', schedWhy:'Trung tâm hội nghị – triển lãm chạy tốt: 31% thô (12/2025) lên hơn 90% thô và 12/13 nhịp mái (4/2026), hoàn thiện toàn bộ kết cấu thép giữa 7/2026. Mốc nội thất 31/1/2027 chưa từng thay đổi qua mọi bản tin, trong khi địa phương chỉ yêu cầu xong chậm nhất 31/5/2027 và APEC diễn ra tháng 11/2027. Hạng mục chậm là nhà biểu diễn đa năng, không phải trung tâm hội nghị.',
+ status:'thi công',
+ phases:[{kind:'gpmb',from:'2025-01',to:'2027-03',state:'ongoing'},{kind:'build',from:'2025-06',to:'2027-01'}],
+ marks:[
+  {date:'2025-06',type:'start',label:'Khởi công — quy mô hơn 16 ha, gồm 3 hạng mục',tier:'actual',src:'VnExpress'},
+  {date:'2025-12',type:'ms',label:'80% san lấp và xây kè, đóng hơn 3.600 cọc; hội nghị + nhà hát đạt 33%',tier:'actual',src:'VnExpress 12/2025'},
+  {date:'2026-01',type:'ms',label:'Lắp dựng kết cấu thép hoàn thành (kế hoạch 31/1/2026)',tier:'actual',src:'VietnamNet 12/2025'},
+  {date:'2026-04',type:'ms',label:'Hơn 90% kết cấu thô; thép mái 12/13 nhịp trục U',tier:'actual',src:'Sungroup 2/4/2026'},
+  {date:'2026-07',type:'ms',label:'Hoàn thiện toàn bộ kết cấu thép, bắt đầu lợp mái 13 con sóng',tier:'actual',src:'VnExpress 7/2026'},
+  {date:'2026-06',type:'ms',label:'Mặt ngoài trung tâm hội nghị — hạn 30/6/2026',tier:'company',src:'Kế hoạch 12/2025, còn được dẫn lại 24/4/2026'},
+  {date:'2027-01',type:'done',label:'Hoàn thiện nội thất 31/1/2027 — mốc chưa từng thay đổi',tier:'company',src:'Nhà đầu tư, nhất quán từ 12/2025 tới 7/2026'},
+  {date:'2027-05',type:'done',label:'Hạn chót địa phương cho mọi công trình APEC: 31/5/2027',tier:'directive',src:'UBND đặc khu Phú Quốc 6/2026'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Nằm trong ranh dự án KĐT Bãi Đất Đỏ nên GPMB được báo cáo gộp, không tách riêng. Phần đất xây trung tâm thuộc khu đầu tư công 28 ha đã hoàn thành ~94% kè chắn, san lấp, bơm cát (7/2025) nên khởi công được sớm; phần xung quanh vẫn đang thu hồi',phases:[{kind:'gpmb',from:'2025-01',to:'2027-03',state:'ongoing'}],marks:[]},
+  {name:'San lấp, xây kè, đóng cọc',prog:'80% san lấp và kè, đã đóng hơn 3.600 cọc (12/2025)',phases:[{kind:'build',from:'2025-06',to:'2026-03'}],marks:[{date:'2025-12',type:'ms',label:'80%, 3.600 cọc',tier:'actual'}]},
+  {name:'Trung tâm hội nghị – triển lãm (phân khu S3)',prog:'ĐÚNG TIẾN ĐỘ. 100% móng và 31% phần thô (12/2025) · hơn 90% kết cấu thô, lắp dựng 12/13 rồi 13/13 nhịp mái trục U (4/2026) · hoàn thiện toàn bộ kết cấu thép, đang lợp mái cuốn chiếu 13 con sóng (7/2026). Hạn mặt ngoài 30/6/2026, nội thất 31/1/2027',phases:[{kind:'build',from:'2025-06',to:'2027-01'}],marks:[{date:'2025-12',type:'ms',label:'100% móng, 31% thô',tier:'actual'},{date:'2026-04',type:'ms',label:'Hơn 90% thô, 13/13 nhịp mái',tier:'actual'},{date:'2026-07',type:'ms',label:'Xong kết cấu thép, đang lợp mái',tier:'actual'}]},
+  {name:'Nhà biểu diễn đa năng, khu S2 (~4.030 chỗ, SOM + Apeiro)',prog:'CHẬM. Kế hoạch 12/2025 ghi xong kết cấu thép 31/1/2026, nhưng tới cuối tháng 4/2026 những cấu kiện thép đầu tiên mới được đưa về công trường — trượt khoảng 3 tháng ở khâu này. Tiến độ: 95% móng và 20,5% thô (12/2025) · 80–85% kết cấu bê tông cốt thép (4/2026) · vẫn đang thi công kết cấu bê tông cốt thép (7/2026). Hạn mặt ngoài lùi sang 30/10/2026',phases:[{kind:'build',from:'2025-06',to:'2027-01'}],marks:[{date:'2025-12',type:'ms',label:'95% móng, 20,5% thô',tier:'actual'},{date:'2026-01',type:'ms',label:'Hạn xong kết cấu thép 31/1/2026 — không đạt',tier:'superseded'},{date:'2026-04',type:'ms',label:'Cấu kiện thép đầu tiên mới về công trường',tier:'actual'},{date:'2026-10',type:'ms',label:'Hạn mặt ngoài mới 30/10/2026',tier:'company'}]},
+  {name:'Công viên APEC',prog:'Chưa có số liệu công bố',phases:[{kind:'build',from:'2026-01',to:'2027-01'}],marks:[]}
+ ],
+ note:'BÀI HỌC GÁN NHẦM HẠNG MỤC: mốc mặt ngoài 30/10/2026 xuất hiện trên báo là mốc của NHÀ BIỂU DIỄN ĐA NĂNG, không phải của trung tâm hội nghị — câu này luôn đứng ngay sau đoạn mô tả nhà hát. Ban đầu bảng này đã gán nhầm và xếp cả dự án là chậm tiến độ. Khi hai hạng mục cùng một cụm, phải bám đoạn văn liền kề để phân giải chủ ngữ. Nằm TRONG khu lấn biển Bãi Đất Đỏ nhưng là dự án riêng với dự án số 3 — mọi tin có chữ "Bãi Đất Đỏ" sẽ khớp cả hai dòng, phải phân giải bằng TMĐT hoặc pháp nhân chủ đầu tư. Mốc mặt ngoài đã trượt từ 30/6 sang 30/10/2026 trong khi mốc nội thất giữ nguyên 31/1/2027: đệm thời gian bị nuốt từ 7 tháng còn 3 tháng. APEC diễn ra tháng 11/2027. Diện tích công bố không nhất quán giữa các nguồn (16 ha / 28 ha; sàn 95.200 m2 / 157.375 m2).'
+},
+{
+ id:2, g:'I', name:'Mở rộng CHKQT Phú Quốc', owner:'CTCP Cảng hàng không Mặt Trời (Sungroup)', loc:'Đặc khu Phú Quốc, An Giang — 1.050 ha',
+ tmdt:21998, tmdtDc:59351, tuCo:8903, huyDong:50448, capex:{2026:23000,2027:22448,2028:5000},
+ sched:'đúng tiến độ', schedWhy:'Bằng chứng hai chiều. Vượt: sân đỗ C1 xong sau 3 tháng thay vì 9–12 tháng thông lệ; nhà ga VIP đã 100% thô và 100% kết cấu thép, đang làm cơ điện (7/2026); UBND tỉnh từng xếp vào nhóm 7 dự án đạt và vượt tiến độ (11/2025). Chưa đạt: nhà ga T2 cam kết xong mặt ngoài 30/7/2026, nhưng báo cáo 1/7/2026 đặt mục tiêu hoàn thiện toàn bộ hạng mục mái giữa tháng 8/2026 — mái chưa xong thì mặt ngoài không thể xong đúng hạn. Toàn dự án 18 tháng vẫn là tốc độ kỷ lục ngành hàng không.',
+ status:'thi công',
+ phases:[{kind:'build',from:'2025-07',to:'2027-06'}],
+ marks:[
+  {date:'2025-07',type:'start',label:'Khởi công đồng loạt đường CHC số 2, nhà ga T2, nhà ga VIP — 1.050 ha',tier:'actual',src:'VnExpress'},
+  {date:'2026-04',type:'ms',label:'Sân đỗ C1 (5 vị trí đỗ) đưa vào khai thác 16/4/2026',tier:'actual',src:'VTC / CafeF'},
+  {date:'2026-06',type:'ms',label:'Đường cất hạ cánh số 2 — cam kết hoàn thành 30/6/2026',tier:'company',src:'Kế hoạch 12/2025'},
+  {date:'2026-07',type:'ms',label:'Nhà ga T2 — cam kết xong mặt ngoài 30/7/2026',tier:'company',src:'Kế hoạch 12/2025'},
+  {date:'2026-08',type:'ms',label:'Mục tiêu mới: hoàn thiện toàn bộ mái T2 giữa tháng 8/2026',tier:'company',src:'Báo cáo công trường 1/7/2026'},
+  {date:'2026-10',type:'ms',label:'Nhà ga VIP — cam kết hoàn thành 15/10/2026',tier:'company',src:'Kế hoạch 12/2025'},
+  {date:'2027-03',type:'done',label:'Nhà ga T2 hoàn tất toàn bộ 30/3/2027, vận hành quý I/2027',tier:'company',src:'Kế hoạch 12/2025'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa có số liệu công bố riêng cho phần mở rộng 1.050 ha',phases:[],marks:[]},
+  {name:'Đường cất hạ cánh số 2 (3.300 m)',prog:'Bê tông xi măng lớp nền 58%, lớp chất lượng cao bắt đầu sau 4 tháng đắp nền (3/2026) · khoảng 95% khối lượng (5/2026). Cam kết hoàn thành 30/6/2026, chưa thấy xác nhận đã xong. Thi công trên nền đất yếu, cạnh đường CHC số 1 vẫn đang khai thác',phases:[{kind:'build',from:'2025-07',to:'2026-06'}],marks:[{date:'2026-03',type:'ms',label:'58% lớp nền',tier:'actual'},{date:'2026-05',type:'ms',label:'95% khối lượng',tier:'directive'},{date:'2026-06',type:'done',label:'Cam kết 30/6/2026',tier:'company'}]},
+  {name:'Sân đỗ C1 (5 vị trí đỗ)',prog:'Đã hoàn thành và đưa vào khai thác 16/4/2026, sau 3 tháng thi công',phases:[{kind:'build',from:'2026-01',to:'2026-04'}],marks:[{date:'2026-04',type:'done',label:'Khai thác 16/4',tier:'actual'}]},
+  {name:'Nhà ga VIP (đón nguyên thủ)',prog:'ĐÚNG HOẶC VƯỢT. 100% thô, 100% kết cấu thép, 100% cơ điện dự kiến hết 2025 · 70% tổng thể, mái 60% (5/2026) · 100% phần thô và kết cấu thép, đang làm cơ điện và nội thất (7/2026). Cam kết 15/10/2026',phases:[{kind:'build',from:'2025-07',to:'2026-10'}],marks:[{date:'2026-05',type:'ms',label:'70%, mái 60%',tier:'directive'},{date:'2026-07',type:'ms',label:'100% thô và thép, đang làm cơ điện',tier:'actual'},{date:'2026-10',type:'done',label:'Cam kết 15/10/2026',tier:'company'}]},
+  {name:'Nhà ga hành khách T2 (CPG Singapore + Artelia)',prog:'CÓ DẤU HIỆU CHẬM Ở PHẦN MÁI. Lên tầng 4 sau 4 tháng (11/2025) · 85% kết cấu thô, bắt đầu lắp thép mái từ đầu 3/2026 · 38,8% kế hoạch tổng thể, tương ứng 87% thô (4–5/2026) · duy trì 3.600 kỹ sư và công nhân, mái là hạng mục kỹ thuật phức tạp nhất dự án, mục tiêu xong thép mái chính đầu 7/2026 và toàn bộ mái giữa 8/2026 (7/2026). Cam kết ban đầu: mặt ngoài 30/7/2026, hoàn tất toàn bộ 30/3/2027',phases:[{kind:'build',from:'2025-07',to:'2027-03'}],marks:[{date:'2026-03',type:'ms',label:'85% thô, bắt đầu lắp thép mái',tier:'actual'},{date:'2026-05',type:'ms',label:'38,8% kế hoạch tổng thể',tier:'directive'},{date:'2026-07',type:'ms',label:'Cam kết mặt ngoài 30/7/2026',tier:'superseded'},{date:'2026-08',type:'ms',label:'Mục tiêu mới: toàn bộ mái giữa 8/2026',tier:'company'},{date:'2027-03',type:'done',label:'Hoàn tất 30/3/2027',tier:'company'}]},
+  {name:'Mở rộng sân đỗ lên ~45 vị trí',prog:'Đang trình Bộ Xây dựng thẩm định điều chỉnh quy hoạch (5/2026) — chưa thi công',phases:[{kind:'build',from:'2026-06',to:'2027-06'}],marks:[]}
+ ],
+ note:'Nhà ga T2 được báo 87% kết cấu phần thô (4/2026) nhưng 38,8% kế hoạch tổng thể (5/2026). Hai mẫu số khác nhau, không mâu thuẫn — luôn lưu kèm mẫu số khi ghi %. Bản trước của bảng này ghi nhầm hạn T2 là cuối 2026; mốc cam kết thật là mặt ngoài 30/7/2026 và hoàn tất toàn bộ 30/3/2027, vận hành quý I/2027.'
+},
+{
+ id:3, g:'I', name:'KĐT hỗn hợp Bãi Đất Đỏ', owner:'Cty TNHH Mặt Trời Phú Quốc (Sungroup)', loc:'Bãi Đất Đỏ, trục Đại lộ APEC, đặc khu Phú Quốc',
+ tmdt:64000, tmdtDc:101400, tuCo:20280, huyDong:81120, capex:{2026:39767,2027:41353},
+ sched:'chậm tiến độ', schedWhy:'Sau hơn một năm, GPMB mới đạt 35,83/88,4 ha (40,5% tại 3/2026) và vẫn phải cưỡng chế tới cuối tháng 7/2026. Giai đoạn 1 phải xong quý II/2027 để kịp APEC tháng 11/2027.',
+ status:'thi công',
+ gpmbNote:'35,8/88,4 ha = 40,5% (3/2026)',
+ phases:[{kind:'gpmb',from:'2025-07',to:'2027-03',state:'ongoing'},{kind:'build',from:'2025-07',to:'2027-06'}],
+ marks:[
+  {date:'2025-07',type:'start',label:'Giai đoạn 1 khởi động từ quý III/2025 — hạ tầng kỹ thuật, lấn biển, kè',tier:'actual',src:'CafeF 25/8/2025'},
+  {date:'2026-01',type:'ms',label:'Lễ khởi công chính thức 28/1/2026 — 88,4 ha (57 ha lấn biển)',tier:'actual',src:'UBND đặc khu Phú Quốc'},
+  {date:'2026-05',type:'ms',label:'QĐ 2212 UBND An Giang giao và cho thuê đất',tier:'actual',src:'CafeF 26/5/2026'},
+  {date:'2026-05',type:'ms',label:'Phú Quốc đặt mục tiêu bàn giao trên 70% mặt bằng',tier:'directive',src:'Tuổi Trẻ 13/5/2026'},
+  {date:'2027-06',type:'done',label:'Giai đoạn 1 kết thúc quý II/2027 — kịp phục vụ APEC tháng 11/2027',tier:'company',src:'CafeF 25/8/2025'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chuỗi số liệu: 8/2025 mới đo đạc hơn 24 ha (158 thửa gốc tách thành 331 thửa của 250 hộ) · 15/1/2026 bàn giao 19,2% · 29/1/2026 17,65/88,5 ha · 19/3/2026 lên 35,83 ha, còn 3,72 ha kẹt phải kiểm đếm bắt buộc · 13/5, 29/6 và 30–31/7/2026 tiếp tục cưỡng chế nhiều đợt tại khu phố 7 An Thới. CHƯA XONG',phases:[{kind:'gpmb',from:'2025-07',to:'2027-03',state:'ongoing',doneTo:'2026-03'}],marks:[{date:'2025-08',type:'ms',label:'Đo đạc, kiểm đếm 158 thửa gốc của 250 hộ',tier:'actual'},{date:'2026-01',type:'ms',label:'Bàn giao 17,65/88,5 ha (19,2%)',tier:'actual'},{date:'2026-03',type:'ms',label:'Bàn giao 35,83 ha (40,5%), còn 3,72 ha kẹt',tier:'actual'},{date:'2026-05',type:'ms',label:'QĐ 2212 giao và cho thuê đất',tier:'actual'},{date:'2026-06',type:'ms',label:'31 quyết định cưỡng chế; 24/31 hộ tự nguyện bàn giao trước giờ cưỡng chế',tier:'actual'},{date:'2026-07',type:'ms',label:'Cưỡng chế tiếp 13 trường hợp (chung với ĐT.975)',tier:'actual'}]},
+  {name:'Hạ tầng kỹ thuật, lấn biển, kè',prog:'Triển khai từ quý III/2025, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2025-07',to:'2026-09'}],marks:[]},
+  {name:'Công viên, bãi tắm, quảng trường ven biển',prog:'Thuộc giai đoạn 1, hạn quý II/2027 — chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-02',to:'2027-06'}],marks:[]},
+  {name:'Cụm 15 tòa khách sạn ven biển (~6.500 phòng)',prog:'Chưa công bố tỷ lệ. Đây là hạng mục quyết định năng lực lưu trú cho APEC 11/2027',phases:[{kind:'build',from:'2026-02',to:'2027-06'}],marks:[]},
+  {name:'Tháp cao tầng dọc Đại lộ APEC (tới 40 tầng)',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-04',to:'2027-12'}],marks:[]}
+ ],
+ note:'BẪY SỐ LIỆU GỘP: bản tin 2/7/2026 nói đặc khu Phú Quốc đã bàn giao hơn 90% mặt bằng, nhưng đó là con số cho toàn bộ 21 dự án APEC, không phải riêng dự án này — số riêng chỉ khoảng 40% tại thời điểm 3/2026. Hai mốc "khởi công" khác nhau: giai đoạn 1 thực tế bắt đầu quý III/2025 (san lấp, lấn biển), lễ khởi công chính thức 28/1/2026 cùng ngày với Núi Ông Quán. Schema cần phân biệt khởi động thi công và lễ khởi công. TMĐT điều chỉnh 64.000 tới 101.400 tỷ chưa được phê duyệt (chú thích 3 công văn).'
+},
+{
+ id:4, g:'I', name:'KĐT du lịch sinh thái Núi Ông Quán', owner:'Sungroup', loc:'Sườn đồi núi Ông Quán, liền kề Bãi Đất Đỏ và Thị trấn Hoàng Hôn',
+ tmdt:5500, tmdtDc:19316, tuCo:3863, huyDong:15453, capex:{2026:9026,2027:6427},
+ sched:'chậm tiến độ', schedWhy:'GPMB gần như đứng yên: 6,83 ha (1/2026) lên 6,97 ha (3/2026) trên tổng 22 ha, tức nhích 0,14 ha trong hai tháng. Đây là dự án chậm rõ nhất trong nhóm APEC.',
+ status:'thi công',
+ gpmbNote:'6,97/22 ha = 31,7% (3/2026), gần đứng yên',
+ phases:[{kind:'gpmb',from:'2025-08',to:'2027-03',state:'ongoing'},{kind:'build',from:'2026-01',to:'2027-08'}],
+ marks:[
+  {date:'2026-01',type:'start',label:'Lễ khởi công 28/1/2026, cùng ngày Bãi Đất Đỏ — hơn 21 ha',tier:'actual',src:'UBND đặc khu Phú Quốc'},
+  {date:'2026-05',type:'ms',label:'UBND đặc khu cưỡng chế thu hồi đất tại núi Ông Quán',tier:'directive',src:'Tuổi Trẻ 13/5/2026'},
+  {date:'2027-08',type:'done',label:'Suy từ lịch giải ngân dứt điểm năm 2027',tier:'inferred',src:'Phụ lục I'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chuỗi số liệu: 8/2025 đo đạc hơn 9 ha (37 thửa gốc tách thành 98 thửa của 61 hộ) · 15/1/2026 hoàn thành 19% · 29/1/2026 6,83/22 ha · 19/3/2026 6,97/22 ha. Chỉ nhích 0,14 ha trong gần 2 tháng, tức gần như đứng yên. Vẫn phải cưỡng chế thu hồi tháng 5/2026. CHƯA XONG',phases:[{kind:'gpmb',from:'2025-08',to:'2027-03',state:'ongoing',doneTo:'2026-03'}],marks:[{date:'2025-08',type:'ms',label:'Đo đạc 37 thửa gốc của 61 hộ, hơn 9/21,2 ha',tier:'actual'},{date:'2026-01',type:'ms',label:'Bàn giao 6,83/22 ha (31%)',tier:'actual'},{date:'2026-03',type:'ms',label:'Bàn giao 6,97/22 ha (31,7%) — gần như không đổi',tier:'actual'},{date:'2026-05',type:'ms',label:'Cưỡng chế thu hồi đất 6 hộ',tier:'actual'}]},
+  {name:'Hạ tầng kỹ thuật trên sườn đồi',prog:'Khởi công 28/1/2026, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-01',to:'2027-03'}],marks:[]},
+  {name:'Khối lưu trú, dịch vụ, thương mại',prog:'Chưa công bố tỷ lệ. Cùng Bãi Đất Đỏ cung cấp khoảng 12.000 phòng cho APEC',phases:[{kind:'build',from:'2026-04',to:'2027-08'}],marks:[]}
+ ],
+ note:'TMĐT điều chỉnh 5.500 → 19.316 tỷ (+251%), mức tăng lớn nhất trong 18 dự án. Chưa được phê duyệt.'
+},
+{
+ id:5, g:'I', name:'Tuyến tàu điện đô thị đoạn 1 (LRT)', owner:'BOT · Phú Quốc', loc:'Sân bay Phú Quốc – Đại lộ APEC – TT hội nghị, 17,7 km',
+ tmdt:8950, tmdtDc:10506, tuCo:403, huyDong:2679, capex:{2026:1500,2027:1179},
+ sched:'chưa đánh giá được', schedWhy:'Khởi công 12/2025 nhưng không có số liệu khối lượng công bố. Đang điều chỉnh chủ trương đầu tư giai đoạn 1 (7/2026) trong khi đã thi công — dấu hiệu cần theo dõi nhưng chưa đủ để kết luận.',
+ status:'thi công',
+ phases:[{kind:'build',from:'2025-12',to:'2027-08'}],
+ marks:[
+  {date:'2025-12',type:'start',label:'Khởi công — 17,7 km, 6 nhà ga, hình thức BOT',tier:'actual',src:'An Giang 16/5/2026'},
+  {date:'2026-07',type:'ms',label:'Điều chỉnh chủ trương đầu tư giai đoạn 1',tier:'directive',src:'Tuổi Trẻ 28/7/2026'},
+  {date:'2027-08',type:'done',label:'Trước APEC 2027 — suy từ lịch giải ngân',tier:'inferred',src:'Phụ lục I'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa có số liệu công bố',phases:[],marks:[]},
+  {name:'Đoạn kết nối sân bay – Đại lộ APEC (trên cao và mặt đất)',prog:'Khởi công 12/2025, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2025-12',to:'2027-08'}],marks:[]},
+  {name:'Ga ngầm tại Trung tâm hội nghị APEC',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-02',to:'2027-06'}],marks:[]},
+  {name:'Thủ tục đầu tư',prog:'Đang điều chỉnh chủ trương đầu tư giai đoạn 1 (7/2026) trong khi đã thi công',phases:[],marks:[{date:'2026-07',type:'ms',label:'Điều chỉnh chủ trương',tier:'directive'}]}
+ ],
+ note:'Vốn tự có chỉ 403 tỷ trên TMĐT 10.506 tỷ — đòn bẩy cực cao, phụ thuộc hoàn toàn vào tín dụng. Đang điều chỉnh chủ trương đầu tư giữa lúc thi công.'
+},
+/* ---------------- NHÓM II ---------------- */
+{
+ id:6, g:'II', name:'Khu liên hợp TDTT Quốc gia Rạch Chiếc', owner:'Cty TNHH Mặt Trời Vũng Tàu (Sungroup)', loc:'Phường Bình Trưng, TP.HCM — 186,78 ha',
+ tmdt:145629, tuCo:29126, huyDong:116503,
+ capex:{2026:21600,2027:17475,2028:17475,2029:17475,2030:11650,2031:11650,2032:11650,2033:7526},
+ sched:'đúng tiến độ', schedWhy:'Động thổ 15/1/2026 theo QĐ 269/QĐ-UBND. Hạn bàn giao mặt bằng 10/2026 chưa tới nên chưa có bằng chứng trượt. Lưu ý mục tiêu rút từ 8 năm xuống 5 năm là kỳ vọng, không phải cam kết hợp đồng. Cảnh báo: nhãn đúng tiến độ ở đây chỉ nghĩa là CHƯA CÓ MỐC NÀO BỊ TRƯỢT, không phải có bằng chứng chạy tốt — dự án mới động thổ, GPMB chưa giao và chưa có số liệu khối lượng nào được công bố.',
+ status:'giải phóng mặt bằng',
+ gpmbNote:'hạn bàn giao 10/2026',
+ phases:[{kind:'gpmb',from:'2026-01',to:'2026-10',state:'ongoing'},{kind:'build',from:'2026-01',to:'2034-01'}],
+ marks:[
+  {date:'2026-01',type:'start',label:'Động thổ 15/1/2026 sau hơn 30 năm quy hoạch treo — 186,78 ha',tier:'actual',src:'QĐ 269/QĐ-UBND 13/1/2026'},
+  {date:'2026-10',type:'ms',label:'Hạn hoàn tất bàn giao mặt bằng cho chủ đầu tư',tier:'directive',src:'UBND TP.HCM 2/6/2026'},
+  {date:'2031-01',type:'done',label:'Mục tiêu rút ngắn còn ~5 năm',tier:'directive',src:'TP.HCM & nhà đầu tư'},
+  {date:'2034-01',type:'done',label:'Hợp đồng BT: ~8 năm kể từ ngày ký',tier:'contract',src:'QĐ 269/QĐ-UBND'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa xong. UBND TP.HCM yêu cầu hoàn tất bàn giao trong tháng 10/2026; đang rà soát quỹ nền và căn hộ tái định cư',phases:[{kind:'gpmb',from:'2026-01',to:'2026-10',state:'ongoing'}],marks:[{date:'2026-10',type:'done',label:'Hạn bàn giao',tier:'directive'}]},
+  {name:'Hạ tầng kỹ thuật toàn khu 186,78 ha',prog:'Chưa công bố tỷ lệ — phụ thuộc bàn giao mặt bằng',phases:[{kind:'build',from:'2026-11',to:'2028-12'}],marks:[]},
+  {name:'Sân vận động 70.000 chỗ có mái che',prog:'Chưa khởi công phần thân. Mới động thổ 15/1/2026',phases:[{kind:'build',from:'2026-11',to:'2031-06'}],marks:[]}
+ ],
+ note:'Ba mốc hoàn thành khác nhau: hợp đồng BT 8 năm (≈2034), chính quyền phấn đấu 5 năm (≈2031), lịch giải ngân doanh nghiệp báo cáo kéo tới 2033. Số gửi ngân hàng thường sát thực tế nhất — nên mô hình hoá theo 8 năm.'
+},
+{
+ id:7, g:'II', name:'Đường kết nối sân bay Gia Bình – Hà Nội (đoạn Hà Nội)', owner:'PPP · hợp đồng BT',
+ tmdt:28794, tuCo:4319, huyDong:24475, capex:{2026:6784,2027:14153,2028:3539},
+ sched:'chậm tiến độ', schedWhy:'Thủ tướng yêu cầu hoàn thành GPMB trước 30/6/2025; tới 7/2026 mới đạt 85% diện tích bàn giao, tức trượt hơn một năm. Cầu vượt sông Đuống chưa xong thủ tục cấp phép thi công.',
+ status:'thi công',
+ gpmbNote:'85% bàn giao (7/2026)',
+ phases:[{kind:'gpmb',from:'2025-01',to:'2026-12',state:'ongoing',doneTo:'2026-07'},{kind:'build',from:'2026-06',to:'2027-12'}],
+ marks:[
+  {date:'2025-06',type:'ms',label:'TTg yêu cầu hoàn thành GPMB trước 30/6/2025',tier:'directive',src:'Thông báo VPCP 27/2/2025'},
+  {date:'2026-06',type:'start',label:'Khởi công các hạng mục chính — 13,55 km, mặt cắt 120 m',tier:'directive',src:'Sở Xây dựng HN 5/2026'},
+  {date:'2026-07',type:'ms',label:'GPMB đạt 95,7% chi trả, 85% diện tích bàn giao',tier:'directive',src:'Họp PTTg 23/7/2026'},
+  {date:'2026-12',type:'ms',label:'Phấn đấu thông xe kỹ thuật trước 31/12/2026',tier:'directive',src:'UBND Bắc Ninh'},
+  {date:'2027-12',type:'done',label:'Hoàn thành toàn tuyến cuối 2027',tier:'directive',src:'Sở Xây dựng HN'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'95,7% về thu hồi và chi trả, 85% về diện tích bàn giao (7/2026). Xã Phù Đổng đã bàn giao 158 ha, đạt 98%, di dời xong 696 ngôi mộ',phases:[{kind:'gpmb',from:'2025-01',to:'2026-12',state:'ongoing',doneTo:'2026-07'}],marks:[{date:'2026-07',type:'ms',label:'85% bàn giao',tier:'directive'}]},
+  {name:'7 km làm mới',prog:'Khởi công hạng mục chính từ 6/2026, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-06',to:'2027-09'}],marks:[]},
+  {name:'6,55 km nâng cấp trùng cao tốc hiện hữu (mở lên 120 m)',prog:'Chưa công bố tỷ lệ. Có thể phải đóng tạm một đoạn cao tốc Hà Nội – Thái Nguyên để thi công',phases:[{kind:'build',from:'2026-08',to:'2027-12'}],marks:[]},
+  {name:'Cầu vượt sông Đuống',prog:'Chưa hoàn tất thủ tục cấp phép thi công (5/2026) — đường găng của toàn tuyến',phases:[{kind:'build',from:'2026-09',to:'2027-12'}],marks:[{date:'2026-05',type:'ms',label:'Chưa xong thủ tục cấp phép',tier:'directive'}]},
+  {name:'Di dời điện 220kV và 500kV',prog:'Hà Nội đã kiến nghị Thủ tướng chỉ đạo đẩy nhanh — chưa hoàn thành',phases:[{kind:'build',from:'2026-03',to:'2027-06'}],marks:[]}
+ ],
+ note:'Ngân sách Hà Nội bố trí ~8.656 tỷ riêng cho GPMB giai đoạn 2025–2026, tách khỏi TMĐT 28.794 tỷ phần xây lắp BT.'
+},
+{
+ id:8, g:'II', name:'Đường kết nối Gia Bình – Hà Nội (đoạn Bắc Ninh, Km9+000–Km27+766)', owner:'PPP · hợp đồng BT',
+ tmdt:25087, tuCo:3763, huyDong:21324, capex:{2026:7496,2027:6162,2028:7666},
+ sched:'chậm tiến độ', schedWhy:'Chỉ đạo ban đầu là hoàn thành đồng bộ cả sân bay và đường kết nối chậm nhất năm 2026; đoạn Bắc Ninh mới khởi công cuối 5/2026 với mốc hoàn thành giữa 2027. GPMB còn hơn 17,5 ha.',
+ status:'thi công',
+ gpmbNote:'còn hơn 17,5 ha',
+ phases:[{kind:'gpmb',from:'2025-03',to:'2027-01',state:'ongoing'},{kind:'build',from:'2026-05',to:'2027-06'}],
+ marks:[
+  {date:'2026-05',type:'start',label:'Khởi công cuối tháng 5/2026',tier:'directive',src:'VietnamPlus 22/5/2026'},
+  {date:'2026-05',type:'ms',lane:'gpmb',label:'Còn hơn 17,5 ha đang hoàn thiện thủ tục bồi thường',tier:'directive',src:'Báo cáo tỉnh'},
+  {date:'2027-06',type:'done',label:'Yêu cầu hoàn thành trong 12 tháng kể từ khởi công',tier:'directive',src:'UBND Bắc Ninh'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa xong, còn hơn 17,5 ha đang hoàn thiện thủ tục bồi thường. Riêng phường Trí Quả thu hồi ~120 ha trên 6,4 km, ảnh hưởng 8 tổ dân phố',phases:[{kind:'gpmb',from:'2025-03',to:'2027-01',state:'ongoing'}],marks:[{date:'2026-05',type:'ms',label:'Còn 17,5 ha',tier:'directive'}]},
+  {name:'Xây lắp tuyến Km9+000 – Km27+766',prog:'Khởi công cuối 5/2026, chưa công bố tỷ lệ. Yêu cầu hoàn thành trong 12 tháng',phases:[{kind:'build',from:'2026-05',to:'2027-06'}],marks:[]},
+  {name:'Công viên nghĩa trang Tư Thế và Trà Lâm (phục vụ di dời)',prog:'Đang triển khai — điều kiện để di dời mồ mả',phases:[{kind:'build',from:'2025-09',to:'2026-12'}],marks:[]}
+ ],
+ note:'GPMB Bắc Ninh chậm hơn đoạn Hà Nội. Tuyến thiết kế tích hợp cả đường sắt đô thị và đường sắt tốc độ cao — rủi ro xung đột tiến độ với dự án đường sắt Lào Cai – Hà Nội – Hải Phòng tại điểm giao cắt.'
+},
+/* ---------------- NHÓM III ---------------- */
+{
+ id:9, g:'III', name:'Đường sắt tốc độ cao Bến Thành – Cần Giờ', owner:'VinSpeed', loc:'Bến Thành – Vinhomes Green Paradise Cần Giờ, ~54 km',
+ tmdt:102430, tuCo:15364, huyDong:87066, capex:{2026:14748,2027:21445,2028:50872},
+ sched:'chậm tiến độ', schedWhy:'Động thổ 19/12/2025 nhưng tới 6/2026 mới khoan địa chất và tập kết máy móc — sáu tháng gần như chưa vào khối lượng chính. GPMB còn vướng và chưa có mốc. Giải ngân dồn 58% vào 2028, đúng năm phải bàn giao.',
+ status:'giải phóng mặt bằng',
+ gpmbNote:'vướng, chưa có mốc',
+ phases:[{kind:'gpmb',from:'2026-01',to:'2027-09',state:'ongoing'},{kind:'build',from:'2025-12',to:'2028-12'}],
+ marks:[
+  {date:'2025-12',type:'start',label:'Động thổ 19/12/2025 — ~54 km, thiết kế 350 km/h',tier:'actual',src:'PLO 19/12/2025'},
+  {date:'2026-06',type:'ms',label:'Khoan địa chất trung tâm, tập kết máy móc tại depot',tier:'actual',src:'MarketTimes 6/2026'},
+  {date:'2026-04',type:'ms',lane:'gpmb',label:'Vướng 6,06/76 ha khu nuôi trồng thuỷ sản công nghệ cao',tier:'directive',src:'Thanh Niên 18/4/2026'},
+  {date:'2028-12',type:'done',label:'Vận hành thương mại quý IV/2028',tier:'company',src:'VinSpeed'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa xong và chưa có mốc. Phụ thuộc TP.HCM bố trí mặt bằng; vướng 6,06/76 ha thuộc khu nuôi trồng thuỷ sản công nghệ cao. Chủ đầu tư cần các khu đất 12–15 ha cách nhau 9–11 km để thi công',phases:[{kind:'gpmb',from:'2026-01',to:'2027-09',state:'ongoing'}],marks:[{date:'2026-04',lane:'gpmb',type:'ms',label:'Vướng 6,06/76 ha',tier:'directive'}]},
+  {name:'Khảo sát địa chất',prog:'Đang khoan địa chất khu vực trung tâm, tập kết máy móc tại depot (6/2026)',phases:[{kind:'build',from:'2026-04',to:'2026-12'}],marks:[{date:'2026-06',type:'ms',label:'Khoan địa chất',tier:'actual'}]},
+  {name:'Kết cấu cầu cạn toàn tuyến (~54 km)',prog:'Chưa bắt đầu. Tuyến chủ yếu đi trên cầu cạn, không giao cắt đường bộ',phases:[{kind:'build',from:'2026-09',to:'2028-06'}],marks:[]},
+  {name:'Depot',prog:'Đang tập kết thiết bị (6/2026)',phases:[{kind:'build',from:'2026-06',to:'2028-03'}],marks:[]},
+  {name:'Ray, điện khí hoá, hệ thống tín hiệu',prog:'Chưa bắt đầu',phases:[{kind:'build',from:'2027-06',to:'2028-10'}],marks:[]},
+  {name:'Chạy thử',prog:'Kế hoạch quý IV/2028',phases:[{kind:'build',from:'2028-08',to:'2028-12'}],marks:[{date:'2028-12',type:'done',label:'Q4/2028',tier:'company'}]}
+ ],
+ note:'Động thổ 12/2025 nhưng đến giữa 2026 mới khoan địa chất — phần đầu thanh thi công gần như chưa có khối lượng thật. Giải ngân 2028 chiếm 58% tổng vốn vay của dự án, tức toàn bộ khối lượng dồn vào năm phải bàn giao.'
+},
+{
+ id:10, g:'III', name:'Đường sắt tốc độ cao Hà Nội – Quảng Ninh', owner:'VinSpeed', loc:'Cổ Loa – Gia Bình – Ninh Xá – Yên Tử – Hạ Long, 120 km',
+ tmdt:147370, tuCo:22105, huyDong:125265, capex:{2026:17887,2027:37188,2028:70189},
+ sched:'chậm tiến độ', schedWhy:'Kế hoạch VinSpeed ban đầu: khởi công quý IV/2025, thi công 24 tháng, chạy thử cuối 2027, vận hành thương mại quý I/2028. Thực tế khởi công 12/4/2026 và mốc hoàn thành lùi về cuối 2028 — trượt khoảng một năm ngay từ đầu.',
+ status:'thi công',
+ gpmbNote:'chưa công bố %',
+ phases:[{kind:'gpmb',from:'2025-08',to:'2027-03',state:'ongoing'},{kind:'build',from:'2026-04',to:'2028-12'}],
+ marks:[
+  {date:'2026-04',type:'start',label:'Khởi công 12/4/2026 — 120 km qua Hà Nội, Bắc Ninh, Hải Phòng, Quảng Ninh',tier:'actual',src:'Vingroup 12/4/2026'},
+  {date:'2026-04',type:'ms',label:'Coteccons (CTD) công bố tham gia thi công',tier:'actual',src:'CBTT CTD 12/4/2026'},
+  {date:'2028-12',type:'done',label:'Hoàn thành và khai thác thương mại cuối 2028',tier:'company',src:'VinSpeed'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa công bố tỷ lệ. Chi phí 10.270 tỷ do Nhà nước bảo đảm toàn bộ, nằm ngoài TMĐT 147.370 tỷ',phases:[{kind:'gpmb',from:'2025-08',to:'2027-03',state:'ongoing'}],marks:[]},
+  {name:'Đoạn Cổ Loa – Gia Bình',prog:'Khởi công 12/4/2026, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-04',to:'2028-06'}],marks:[]},
+  {name:'Đoạn Ninh Xá – Yên Tử',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-06',to:'2028-06'}],marks:[]},
+  {name:'Depot ga Hạ Long',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-05',to:'2028-03'}],marks:[]},
+  {name:'Thiết bị đoàn tàu, tín hiệu (Siemens Mobility)',prog:'Chưa bắt đầu lắp đặt. Công nghệ chuyển giao từng bước cho phía Việt Nam',phases:[{kind:'build',from:'2027-06',to:'2028-11'}],marks:[]}
+ ],
+ note:'Chi phí GPMB 10.270 tỷ do Nhà nước bảo đảm toàn bộ, nằm ngoài TMĐT 147.370 tỷ. Đây là dòng có mắt xích cổ phiếu rõ nhất trong toàn bộ danh mục: CTD đã CBTT tham gia thi công.'
+},
+/* ---------------- NHÓM IV ---------------- */
+{
+ id:11, g:'IV', name:'Dự án CHKQT Gia Bình', owner:'MAI · Masterise 80%, Hạ tầng Gelex 20%', loc:'Xã Gia Bình, Lương Tài, Lâm Thao, Nhân Thắng — Bắc Ninh, ~1.960 ha',
+ huyDong:112998, capex:{2026:34577,2027:47085,2028:17660,2029:9798,2030:3879},
+ sched:'đúng tiến độ', schedWhy:'Vẫn giữ mốc đón chuyến bay quốc tế đầu tiên 31/12/2026 theo chỉ đạo Thủ tướng. Đất nông nghiệp đã thu hồi xong toàn bộ, tháp ATC cất nóc sau 6 tháng. Rủi ro nằm ở phần đất ở còn di dời và ở nhà ga hành khách chưa công bố tỷ lệ.',
+ status:'thi công',
+ gpmbNote:'đất nông nghiệp xong; đất ở còn di dời',
+ phases:[{kind:'gpmb',from:'2024-12',to:'2026-10',state:'ongoing',doneTo:'2026-06'},{kind:'build',from:'2025-08',to:'2028-12'}],
+ marks:[
+  {date:'2024-12',type:'start',label:'Lễ động thổ 10/12/2024 — sân bay cấp 4E, hơn 1.960 ha',tier:'actual',src:'Chính phủ'},
+  {date:'2025-08',type:'ms',label:'Khởi công giai đoạn 1 ngày 19/8/2025',tier:'actual',src:'VOV'},
+  {date:'2025-12',type:'ms',label:'Quốc hội thông qua chủ trương đầu tư — TMĐT hơn 196.378 tỷ',tier:'contract',src:'Quốc hội 12/2025'},
+  {date:'2026-06',type:'ms',label:'Coteccons cất nóc tháp ATC 127 m ngày 8/6/2026',tier:'actual',src:'CTD'},
+  {date:'2026-04',type:'ms',label:'GPMB giai đoạn 1 hạn 30/4/2026',tier:'directive',src:'TTg 7/3/2026'},
+  {date:'2026-06',type:'ms',label:'GPMB giai đoạn 2 hạn 30/6/2026; đã di dời hơn 3.400 ngôi mộ',tier:'directive',src:'TTg 7/3/2026'},
+  {date:'2026-12',type:'done',label:'Cơ bản hoàn thành, đón chuyến bay quốc tế đầu tiên 31/12/2026',tier:'directive',src:'TTg — phục vụ APEC 2027'},
+  {date:'2028-12',type:'done',label:'Giai đoạn 2 — suy từ lịch giải ngân kéo tới 2030',tier:'inferred',src:'Phụ lục I'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Đất nông nghiệp đã thu hồi xong toàn bộ. Đất ở còn di dời: thôn Thủ Pháp và Lương Pháp hạn 15/6/2026, Mỹ Thôn hạn 20/6/2026. Đã di dời hơn 3.400 ngôi mộ',phases:[{kind:'gpmb',from:'2024-12',to:'2026-10',state:'ongoing',doneTo:'2026-06'}],marks:[{date:'2026-06',type:'ms',label:'Hạn di dời đất ở',tier:'directive'}]},
+  {name:'San nền, xử lý móng khu đường băng số 1',prog:'Đang thi công cọc xi măng đất gia cố nền móng (6/2026)',phases:[{kind:'build',from:'2025-08',to:'2026-08'}],marks:[]},
+  {name:'Hai đường cất hạ cánh (3.500–4.000 m)',prog:'Đang thi công nền móng, chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-01',to:'2026-12'}],marks:[]},
+  {name:'Nhà ga hành khách',prog:'Chưa công bố tỷ lệ. Hạn phục vụ chuyến bay quốc tế đầu tiên 31/12/2026',phases:[{kind:'build',from:'2025-10',to:'2026-12'}],marks:[{date:'2026-12',type:'done',label:'31/12/2026',tier:'directive'}]},
+  {name:'Khu logistics',prog:'Chưa bắt đầu',phases:[{kind:'build',from:'2026-06',to:'2028-06'}],marks:[]},
+  {name:'Giai đoạn 2 — mở rộng nhà ga, đường băng',prog:'Chưa bắt đầu. Giải ngân kéo tới 2030',phases:[{kind:'build',from:'2027-01',to:'2030-06'}],marks:[]}
+ ],
+ note:'Mốc 31/12/2026 là chỉ đạo Thủ tướng, không phải kế hoạch kỹ thuật. Lịch giải ngân lại kéo tới 2030 — tức "cơ bản hoàn thành" cho APEC và "hoàn thành dự án" là hai việc khác nhau, cần hai trường riêng.'
+},
+{
+ id:12, g:'IV', name:'Đài kiểm soát không lưu ATC', owner:'MAI', loc:'Trong ranh CHKQT Gia Bình, Bắc Ninh',
+ huyDong:1583, capex:{2026:745,2027:838},
+ sched:'đúng tiến độ', schedWhy:'Cất nóc 8/6/2026 sau khoảng 6 tháng thi công, đạt 127 m. Chưa có mốc kế hoạch công bố để so sánh nên không xếp là vượt. Phần MEP và thiết bị điều hành bay còn lại phải xong trước 31/12/2026.',
+ status:'thi công',
+ phases:[{kind:'build',from:'2025-12',to:'2026-12'}],
+ marks:[
+  {date:'2025-12',type:'start',label:'Khởi công tháp — nhà thầu Coteccons (CTD)',tier:'actual',src:'CTD, suy từ mốc cất nóc sau 6 tháng'},
+  {date:'2026-06',type:'ms',label:'Cất nóc 8/6/2026 — đạt chiều cao 127 m, hoàn thành phần thô',tier:'actual',src:'Coteccons 8/6/2026'},
+  {date:'2026-12',type:'done',label:'Phải xong trước khi sân bay đón chuyến bay đầu tiên 31/12/2026',tier:'directive',src:'Ràng buộc từ mốc CHKQT Gia Bình'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Nằm trong ranh CHKQT Gia Bình, không có GPMB riêng',phases:[],marks:[]},
+  {name:'Kết cấu thân tháp (127 m)',prog:'Đã cất nóc 8/6/2026 sau khoảng 6 tháng thi công — hoàn thành phần thô, nhà thầu Coteccons',phases:[{kind:'build',from:'2025-12',to:'2026-06'}],marks:[{date:'2026-06',type:'ms',label:'Cất nóc 8/6/2026',tier:'actual'}]},
+  {name:'MEP và hoàn thiện cabin điều hành',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-06',to:'2026-11'}],marks:[]},
+  {name:'Lắp đặt thiết bị điều hành bay, hiệu chuẩn',prog:'Chưa bắt đầu. Là điều kiện để sân bay được cấp phép khai thác',phases:[{kind:'build',from:'2026-09',to:'2026-12'}],marks:[{date:'2026-12',type:'done',label:'Điều kiện cấp phép',tier:'directive'}]}
+ ],
+ note:'Cất nóc không phải hoàn thành — mới xong phần thô, còn MEP, thiết bị điều hành bay và hiệu chuẩn. Đây là hạng mục điều kiện: không có ATC được nghiệm thu thì sân bay không được cấp phép khai thác, nên mốc 31/12/2026 của CHKQT Gia Bình phụ thuộc trực tiếp vào dòng này. Lịch giải ngân kéo sang 2027 nhưng đó là thanh toán trễ, không phải khối lượng còn lại — bài học: không suy tiến độ từ dòng tiền.'
+},
+{
+ id:13, g:'IV', name:'BT1 — Đường kết nối trực tiếp sân bay', owner:'MAI · hợp đồng BT',
+ huyDong:3221, capex:{2026:2586,2027:635},
+ sched:'đúng tiến độ', schedWhy:'Dự án duy nhất trong danh mục đã hoàn thành GPMB dứt điểm — hơn 82 ha tại thời điểm 5/2026.',
+ status:'thi công',
+ gpmbNote:'đã xong 82 ha',
+ phases:[{kind:'gpmb',from:'2025-03',to:'2026-05',state:'done'},{kind:'build',from:'2026-01',to:'2027-09'}],
+ marks:[
+  {date:'2026-05',type:'ms',label:'Đã hoàn thành GPMB hơn 82 ha',tier:'actual',src:'VietnamPlus 22/5/2026'},
+  {date:'2027-09',type:'done',label:'Suy từ lịch giải ngân dứt 2027',tier:'inferred',src:'Phụ lục I'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Đã hoàn thành hơn 82 ha (5/2026) — dự án duy nhất trong danh mục có GPMB xong dứt điểm',phases:[{kind:'gpmb',from:'2025-03',to:'2026-05',state:'done'}],marks:[{date:'2026-05',type:'done',label:'Xong 82 ha',tier:'actual'}]},
+  {name:'Xây lắp tuyến kết nối trực tiếp sân bay',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-01',to:'2027-09'}],marks:[]}
+ ],
+ note:''
+},
+{
+ id:14, g:'IV', name:'BT2 — Khu tái định cư', owner:'MAI · hợp đồng BT',
+ huyDong:8990, capex:{2026:5682,2027:3308},
+ sched:'chậm tiến độ', schedWhy:'Tới 7/2026 vẫn phải mở rộng quỹ đất tái định cư thêm hơn 165 ha và chuyển sang nhà lắp ghép bê tông đúc sẵn để rút ngắn thời gian, trong khi hạn GPMB sân bay giai đoạn 2 là 30/6/2026. Đây là đường găng thực sự của cả cụm Gia Bình.',
+ status:'thi công',
+ phases:[{kind:'build',from:'2025-10',to:'2027-09'}],
+ marks:[
+  {date:'2026-06',lane:'build',type:'ms',label:'Quỹ đất tái định cư mở rộng thêm hơn 165 ha; áp dụng nhà lắp ghép bê tông đúc sẵn',tier:'directive',src:'UBND Bắc Ninh'},
+  {date:'2027-09',type:'done',label:'Suy từ lịch giải ngân dứt 2027',tier:'inferred',src:'Phụ lục I'}
+ ],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Quỹ đất tái định cư vừa mở rộng thêm hơn 165 ha (7/2026)',phases:[{kind:'gpmb',from:'2025-08',to:'2026-12',state:'ongoing'}],marks:[]},
+  {name:'Xây dựng khu tái định cư',prog:'Áp dụng nhà lắp ghép bê tông đúc sẵn để rút ngắn thời gian. Đây là đường găng thực sự của GPMB sân bay Gia Bình',phases:[{kind:'build',from:'2025-10',to:'2027-09'}],marks:[]}
+ ],
+ note:'Đây là đường găng thực sự của GPMB sân bay Gia Bình: không có nhà tái định cư thì không di dời được dân.'
+},
+{
+ id:15, g:'IV', name:'BT3 — Công trình hoàn trả hạ tầng (sông, điện, trường học)', owner:'MAI · hợp đồng BT',
+ huyDong:7544, capex:{2026:5425,2027:2120},
+ sched:'chưa đánh giá được', schedWhy:'Không có số liệu khối lượng hay mốc trung gian nào được công bố.',
+ status:'thi công',
+ phases:[{kind:'build',from:'2025-11',to:'2027-09'}],
+ marks:[{date:'2027-09',type:'done',label:'Suy từ lịch giải ngân dứt 2027',tier:'inferred',src:'Phụ lục I'}],
+ items:[
+  {name:'Giải phóng mặt bằng',prog:'Chưa có số liệu công bố',phases:[],marks:[]},
+  {name:'Hoàn trả hệ thống sông, kênh',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2025-11',to:'2027-06'}],marks:[]},
+  {name:'Hoàn trả lưới điện',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2025-11',to:'2027-06'}],marks:[]},
+  {name:'Hoàn trả trường học và công trình công cộng',prog:'Chưa công bố tỷ lệ',phases:[{kind:'build',from:'2026-01',to:'2027-09'}],marks:[]}
+ ],
+ note:''
+},
+{
+ id:16, g:'IV', name:'Dự án đối ứng BT1', owner:'MAI · quỹ đất đối ứng',
+ huyDong:19679, capex:{2026:3219,2027:6064,2028:5198,2029:5198},
+ sched:'chưa đánh giá được', schedWhy:'Không có thông tin triển khai. Tiến độ phụ thuộc thời điểm nghiệm thu công trình BT1.',
+ status:'đối ứng',
+ phases:[{kind:'swap',from:'2026-01',to:'2029-12'}],
+ marks:[{date:'2029-12',type:'done',label:'Suy từ lịch giải ngân 2026–2029',tier:'inferred',src:'Phụ lục I'}],
+ items:[
+  {name:'Giao quỹ đất đối ứng',prog:'Chưa có thông tin công bố. Phụ thuộc nghiệm thu công trình BT1',phases:[{kind:'swap',from:'2026-01',to:'2029-12'}],marks:[]}
+ ],
+ note:'Quỹ đất trả cho nhà đầu tư khi bàn giao công trình BT1. Tiến độ giao đất phụ thuộc nghiệm thu BT1 — nối cặp hai dòng này khi phân tích.'
+},
+{
+ id:17, g:'IV', name:'Dự án đối ứng BT2', owner:'MAI · quỹ đất đối ứng',
+ huyDong:25935, capex:{2026:4175,2027:4352,2028:4352,2029:8704,2030:4352},
+ sched:'chưa đánh giá được', schedWhy:'Không có thông tin triển khai. Tiến độ phụ thuộc thời điểm nghiệm thu khu tái định cư BT2.',
+ status:'đối ứng',
+ phases:[{kind:'swap',from:'2026-01',to:'2030-12'}],
+ marks:[{date:'2030-12',type:'done',label:'Suy từ lịch giải ngân 2026–2030',tier:'inferred',src:'Phụ lục I'}],
+ items:[
+  {name:'Giao quỹ đất đối ứng',prog:'Chưa có thông tin công bố. Phụ thuộc nghiệm thu công trình BT2 (khu tái định cư)',phases:[{kind:'swap',from:'2026-01',to:'2030-12'}],marks:[]}
+ ],
+ note:''
+},
+{
+ id:18, g:'IV', name:'Dự án đối ứng BT3', owner:'MAI · quỹ đất đối ứng',
+ huyDong:27832, capex:{2026:2497,2027:1267,2028:5067,2029:10134,2030:8867},
+ sched:'chưa đánh giá được', schedWhy:'Không có thông tin triển khai. Giải ngân dồn 68% vào 2029–2030, muộn hơn hẳn hai dự án đối ứng còn lại.',
+ status:'đối ứng',
+ phases:[{kind:'swap',from:'2026-01',to:'2030-12'}],
+ marks:[{date:'2030-12',type:'done',label:'Suy từ lịch giải ngân 2026–2030',tier:'inferred',src:'Phụ lục I'}],
+ items:[
+  {name:'Giao quỹ đất đối ứng',prog:'Chưa có thông tin công bố. Giải ngân dồn về 2029–2030 (68%), muộn hơn hẳn BT1 và BT2',phases:[{kind:'swap',from:'2026-01',to:'2030-12'}],marks:[]}
+ ],
+ note:'Giải ngân dồn về cuối (2029–2030 chiếm 68%) — khác hẳn BT1/BT2. Có thể là quỹ đất bàn giao muộn hoặc dự án phát triển dài hơn.'
+}
+];
+
+/* ---------- helpers ---------- */
+const toY = s => {const [y,m]=s.split('-').map(Number); return y + (m-1)/12;};
+const pct = y => ((y - T0) / (T1 - T0)) * 100;
+const nf  = n => n==null ? '—' : n.toLocaleString('vi-VN');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MONTH_VN = d => {const [y,m]=d.split('-'); return m+'/'+y;};
+
+/* Từ điển ánh xạ nội dung mốc sang làn hiển thị.
+   Ưu tiên trường lane khai báo tường minh; nếu không có thì suy theo từ khoá. */
+const LANE_KW = {
+  gpmb:['gpmb','giải phóng mặt bằng','mặt bằng','thu hồi đất','giao đất','cho thuê đất',
+        'bồi thường','tái định cư','di dời','cưỡng chế','ngôi mộ','mồ mả','kiểm đếm'],
+  swap:['đối ứng','quỹ đất trả']
+};
+function laneOf(mark, proj){
+  if(mark.lane) return mark.lane;
+  const t = (mark.label||'').toLowerCase();
+  for(const k of LANE_KW.gpmb) if(t.includes(k)) return 'gpmb';
+  for(const k of LANE_KW.swap) if(t.includes(k)) return 'swap';
+  if(proj && proj.status==='đối ứng') return 'swap';
+  return 'build';
+}
+
+let activeGroups = new Set(GROUPS.map(g=>g.id));
+let minTier = 0;
+let open = new Set();
+
+/* ---------- summary ---------- */
+function renderStrip(){
+  const list = P.filter(p=>activeGroups.has(p.g));
+  const huy = list.reduce((a,p)=>a+(p.huyDong||0),0);
+  const y26 = list.reduce((a,p)=>a+(p.capex[2026]||0),0);
+  const y27 = list.reduce((a,p)=>a+(p.capex[2027]||0),0);
+  const inferred = list.reduce((a,p)=>a+p.marks.filter(m=>m.type==='done'&&m.tier==='inferred').length,0);
+  const cells = [
+    ['Dự án', list.length, ''],
+    ['Vốn huy động', nf(huy), 'tỷ đ'],
+    ['Giải ngân 2026', nf(y26), 'tỷ đ'],
+    ['Giải ngân 2027', nf(y27), 'tỷ đ'],
+    ['Dồn 2026–27', Math.round((y26+y27)/huy*100)+'%', 'tổng vốn vay'],
+    ['Chậm tiến độ', list.filter(x=>x.sched==='chậm tiến độ').length + '/' + list.length, 'dự án'],
+    ['Độ phủ nguồn', (()=>{const v=list.map(coverage).filter(x=>x!==null);
+       return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length)+'%':'—';})(), 'đầu mút có căn cứ']
+  ];
+  document.getElementById('strip').innerHTML = cells.map(([k,v,u])=>
+    `<div class="cell"><div class="k">${k}</div><div class="v mono">${v}<span class="u">${u}</span></div></div>`).join('');
+}
+
+/* ---------- grid ---------- */
+function gridHTML(){
+  let h = '<div class="grid">';
+  for(let y=T0+1;y<T1;y++){
+    h += `<div class="gl${y%2===0?' dec':''}" style="left:${pct(y)}%"></div>`;
+  }
+  h += `<div class="today" style="left:${pct(TODAY)}%"></div></div>`;
+  return h;
+}
+
+/* Một đầu mút chỉ được coi là có căn cứ khi trùng ngày với một mốc CÓ NGUỒN.
+   Không gán tay — chương trình tự suy từ dữ liệu. */
+function anchors(proj){
+  return new Set((proj && proj.marks || []).filter(m=>m.src).map(m=>m.date));
+}
+function coverage(proj){
+  const A = anchors(proj); let ok=0, all=0;
+  (proj.phases||[]).forEach(ph=>{
+    all+=2;
+    if(A.has(ph.from)) ok++;
+    if(A.has(ph.to) || ph.state==='ongoing') ok++;
+  });
+  return all ? Math.round(ok/all*100) : null;
+}
+
+function barsHTML(phases, marks, proj){
+  let h = ''; const A = anchors(proj);
+  (phases||[]).forEach(ph=>{
+    const a = toY(ph.from), b = toY(ph.to);
+    const cls = ph.kind==='gpmb'?'bar-g':ph.kind==='swap'?'bar-s':'bar-b';
+    const ongoing = ph.state === 'ongoing';
+    // Mốc kết thúc phần ĐÃ XÁC NHẬN. Với giai đoạn chưa chốt, mặc định dừng ở hôm nay.
+    const solidEnd = ongoing ? Math.min(ph.doneTo ? toY(ph.doneTo) : TODAY, b) : b;
+
+    if(solidEnd > a){
+      if(solidEnd <= TODAY){
+        h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(solidEnd)-pct(a)}%"></div>`;
+      } else {
+        h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(TODAY)-pct(a)}%"></div>`;
+        h += `<div class="${cls} fut" style="left:${pct(TODAY)}%;width:${pct(solidEnd)-pct(TODAY)}%"></div>`;
+      }
+    }
+    if(b > solidEnd){
+      const t = ongoing ? 'opn' : 'fut';
+      h += `<div class="${cls} ${t}" style="left:${pct(solidEnd)}%;width:${pct(b)-pct(solidEnd)}%"></div>`;
+    }
+    if(ongoing){
+      h += `<span class="chev ${ph.kind==='gpmb'?'g':'b'}" style="left:${pct(b)}%">&#8250;</span>`;
+    }
+    const lane = ph.kind==='gpmb'?'g':'b';
+    if(!A.has(ph.from))
+      h += `<span class="est ${lane}" style="left:${pct(a)}%" title="Ngày bắt đầu là ước lượng, không có nguồn">~</span>`;
+    if(!ongoing && !A.has(ph.to))
+      h += `<span class="est ${lane}" style="left:${pct(b)}%" title="Ngày kết thúc là ước lượng, không có nguồn">~</span>`;
+  });
+  (marks||[]).filter(m=>TIER_RANK[m.tier]>=minTier).forEach(m=>{
+    const t = m.type==='start'?'start':m.type==='done'?'done':'';
+    const ln = laneOf(m, proj);
+    const LN = {gpmb:'GPMB', build:'thi công', swap:'đối ứng'}[ln];
+    const title = `[${LN}] ${MONTH_VN(m.date)} — ${m.label}${m.src?' · '+m.src:''} (${TIER_VN[m.tier]})`;
+    h += `<div class="mk ${t} lane-${ln} tier-${m.tier}" style="left:${pct(toY(m.date))}%" title="${esc(title)}"></div>`;
+  });
+  return h;
+}
+
+function capexHTML(cap){
+  const years = Object.keys(cap).map(Number).sort();
+  if(!years.length) return '<p class="cap">Không có dữ liệu giải ngân.</p>';
+  const max = Math.max(...years.map(y=>cap[y]));
+  return '<div class="capex">' + years.map(y=>
+    `<div class="col"><div class="n">${Math.round(cap[y]/1000)}k</div>`+
+    `<div class="b" style="height:${Math.max(2,cap[y]/max*44)}px"></div>`+
+    `<div class="y">${String(y).slice(2)}</div></div>`).join('') + '</div>';
+}
+
+function detailHTML(p){
+  const ms = p.marks.slice().sort((a,b)=>a.date<b.date?-1:1);
+  const rowsHM = (p.items||[]).map(it=>{
+    const kinds = new Set((it.phases||[]).map(x=>x.kind));
+    const lane = kinds.has('gpmb') ? 'GPMB' : kinds.has('swap') ? 'Đối ứng' : kinds.size ? 'Thi công' : '—';
+    return `<tr><td class="hm-l">${lane}</td><td class="hm-n">${esc(it.name)}</td>`+
+           `<td class="hm-p">${esc(it.prog||'Chưa có ghi nhận')}</td></tr>`;
+  }).join('');
+  return `<div class="detail"><div class="pad">
+    ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
+      <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
+      <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>`:''}
+    <p class="dh" style="margin-top:18px">Hạng mục và tiến độ đến nay</p>
+    <table class="hm"><thead><tr><th>Loại</th><th>Hạng mục</th><th>Tiến độ ghi nhận</th></tr></thead>
+    <tbody>${rowsHM || '<tr><td colspan="3" class="hm-p">Chưa có dữ liệu hạng mục</td></tr>'}</tbody></table>
+    <div class="dgrid" style="margin-top:20px">
+    <div>
+      <p class="dh">Vốn — Phụ lục I (tỷ đồng)</p>
+      <table class="fin">
+        ${p.tmdt?`<tr><td>Tổng mức đầu tư</td><td>${nf(p.tmdt)}</td></tr>`:''}
+        ${p.tmdtDc?`<tr><td>TMĐT điều chỉnh <span class="cap">(chưa duyệt)</span></td><td>${nf(p.tmdtDc)}</td></tr>`:''}
+        ${p.tuCo?`<tr><td>Vốn tự có</td><td>${nf(p.tuCo)}</td></tr>`:''}
+        <tr><td>Vốn huy động</td><td>${nf(p.huyDong)}</td></tr>
+        ${p.tuCo&&p.huyDong?`<tr><td>Tỷ lệ vay / (tự có + vay)</td><td>${Math.round(p.huyDong/(p.huyDong+p.tuCo)*100)}%</td></tr>`:''}
+      </table>
+      <p class="dh" style="margin-top:16px">Lịch giải ngân vốn vay</p>
+      ${capexHTML(p.capex)}
+      ${p.note?`<div class="warn"><b>Ghi chú phân tích.</b> ${esc(p.note)}</div>`:''}
+    </div>
+    <div>
+      <p class="dh">Mốc thời gian &amp; nguồn</p>
+      <ul class="ms-list">${ms.map(m=>`<li>
+        <span class="ms-date">${MONTH_VN(m.date)}</span>
+        <span class="ms-body">${esc(m.label)}${m.src?`<span class="ms-src">${esc(m.src)}</span>`:''}</span>
+        <span class="pill">${TIER_VN[m.tier]}</span></li>`).join('')}</ul>
+    </div>
+  </div></div></div>`;
+}
+
+function render(){
+  renderStrip();
+  let h = '';
+  GROUPS.filter(g=>activeGroups.has(g.id)).forEach(g=>{
+    const rows = P.filter(p=>p.g===g.id);
+    h += `<div class="row grp-row"><div class="lbl">
+        <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta}</div></div>
+      <div class="track"><span class="grp-sum">${rows.length} dự án · huy động ${nf(g.huyDong)} tỷ đ</span></div></div>`;
+
+    rows.forEach(p=>{
+      const isOpen = open.has(p.id);
+      const tagCls = p.status==='giải phóng mặt bằng'?'t-gpmb':p.status==='đối ứng'?'t-swap':'t-build';
+      h += `<div class="row"><div class="lbl">
+          <button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
+            <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>
+          <div class="pmeta">${p.sched?`<span class="sched s-${SCHED_CLS[p.sched]}" title="${esc(p.schedWhy||'')}">${p.sched}</span>`:''}
+            <span class="cap">${esc(p.owner)}</span></div>
+          ${p.loc?`<div class="loc">${esc(p.loc)}</div>`:''}
+        </div>
+        <div class="track">${gridHTML()}${barsHTML(p.phases,p.marks,p)}</div></div>`;
+
+      if(isOpen){
+        if(p.items.length){
+          p.items.forEach(it=>{
+            h += `<div class="sub-row sub"><div class="lbl"><span class="sname">${esc(it.name)}</span>${it.prog?`<div class="sprog">${esc(it.prog)}</div>`:''}</div>
+              <div class="track">${gridHTML()}${barsHTML(it.phases,it.marks,p)}</div></div>`;
+          });
+        } else {
+          h += `<div class="sub-row sub"><div class="lbl"><span class="sname cap">Chưa có dữ liệu hạng mục công bố</span></div>
+            <div class="track">${gridHTML()}</div></div>`;
+        }
+        h += detailHTML(p);
+      }
+    });
+  });
+
+  h += `<div class="row axis"><div class="lbl"></div><div class="track">${gridHTML()}` +
+       Array.from({length:T1-T0},(_,i)=>`<span class="ylab" style="left:${pct(T0+i)}%">${T0+i}</span>`).join('') +
+       `</div></div>`;
+
+  document.getElementById('chart').innerHTML = h;
+  document.querySelectorAll('.pname').forEach(b=>b.onclick=()=>{
+    const id = +b.dataset.id;
+    open.has(id) ? open.delete(id) : open.add(id);
+    render();
+  });
+}
+
+/* ---------- filters ---------- */
+const fg = document.getElementById('f-group');
+fg.innerHTML = GROUPS.map(g=>`<button class="chip" data-g="${g.id}" aria-pressed="true">${g.id}</button>`).join('');
+fg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  const id=b.dataset.g;
+  if(activeGroups.has(id) && activeGroups.size>1){activeGroups.delete(id);b.setAttribute('aria-pressed','false');}
+  else {activeGroups.add(id);b.setAttribute('aria-pressed','true');}
+  render();
+});
+
+const ft = document.getElementById('f-tier');
+const TIERS = [['0','tất cả'],['1','≥ doanh nghiệp'],['2','≥ chỉ đạo'],['3','≥ hợp đồng'],['4','chỉ việc đã xảy ra']];
+ft.innerHTML = TIERS.map(([v,l],i)=>`<button class="chip" data-t="${v}" aria-pressed="${i===0}">${l}</button>`).join('');
+ft.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  minTier = +b.dataset.t;
+  ft.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  render();
+});
+
+document.getElementById('expandAll').onclick = e=>{
+  if(open.size){open.clear();e.target.textContent='Mở tất cả hạng mục';}
+  else {P.forEach(p=>open.add(p.id));e.target.textContent='Đóng tất cả';}
+  render();
+};
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# --- BÍ MẬT: tuyệt đối không commit ---
+mongo_uri.txt
+*.local
+.env
+
+# file build ra (site được CI dựng lại từ DB)
+dist/
+vn-infra-tracker.built.html
+vn-infra-tracker.proposed.html
+project_news_preview_*.json
+
+# rác
+__pycache__/
+*.pyc
