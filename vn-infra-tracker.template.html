@@ -249,6 +249,21 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .nf-text{font-size:13px;color:var(--ink);line-height:1.5}
 .nf-link{font-size:11px;color:var(--build);text-decoration:none;white-space:nowrap;margin-top:3px;display:inline-block}
 .nf-link:hover{text-decoration:underline}
+/* satellite */
+.sat-top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:12px}
+.sat-top .grp{display:flex;align-items:center;gap:6px}
+.sat-top .grp>span{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+.sat-top select{font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--rule2);background:var(--card);color:var(--ink);border-radius:2px}
+.sat-cap{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink2)}
+.sat-cap .cloudy{color:var(--alert);font-weight:500}
+.sat-stage{width:100%;max-width:620px;aspect-ratio:1/1;background:var(--sunk);border:1px solid var(--rule2);
+  border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.sat-stage img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto}
+#sat-slider{width:100%;max-width:620px;margin:14px 0 4px;accent-color:var(--build);cursor:pointer}
+.sat-ticks{display:flex;justify-content:space-between;max-width:620px;font-family:"IBM Plex Mono",monospace;
+  font-size:10px;color:var(--ink3)}
+.sat-note{max-width:620px;font-size:11px;color:var(--ink3);line-height:1.6;margin-top:14px}
+.sat-note b{color:var(--ink2);font-weight:500}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -266,6 +281,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <div class="tabs">
   <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
   <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
+  <button class="tab" data-view="sat" aria-pressed="false">Vệ tinh</button>
 </div>
 
 <div id="view-gantt">
@@ -303,6 +319,17 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <div class="nf-list" id="nf-list"></div>
 </div>
 
+<div id="view-sat" class="hidden">
+  <div class="sat-top">
+    <div class="grp"><span>Dự án</span><select id="sat-proj"></select></div>
+    <span class="sat-cap" id="sat-cap"></span>
+  </div>
+  <div class="sat-stage"><img id="sat-img" alt="Ảnh vệ tinh công trường" loading="lazy"></div>
+  <input type="range" id="sat-slider" min="0" max="0" value="0" step="1">
+  <div class="sat-ticks" id="sat-ticks"></div>
+  <p class="sat-note">Nguồn: <b>Copernicus Sentinel-2 (ESA)</b> · pixel 10m, mỗi tháng 1 ảnh ít mây nhất (không ghép). Ảnh <b>CLOUDY</b> (mây ≥30%) chỉ để tham khảo liên tục. Biến động màu phần lớn do <b>mùa vụ</b> — nên so cùng tháng năm khác thay vì tháng liền kề. Các tuyến (đường Gia Bình, đường sắt Cần Giờ / Hạ Long) chỉ là <b>một điểm đại diện</b> (nút giao/depot), không phải cả hành lang.</p>
+</div>
+
 <footer>
   <p><b>Cách đọc.</b> Thanh mờ + viền đứt = phần nằm sau ngày hôm nay (kế hoạch). Vạch đỏ dọc = 3/8/2026. Bấm tên dự án để mở hạng mục con và bảng tài chính theo Phụ lục I.</p>
   <p><b>Độ phủ nguồn.</b> Chỉ số <code>căn cứ N%</code> đo tỷ lệ đầu mút thanh giai đoạn trùng ngày với một mốc có nguồn dẫn. Phần còn lại là ước lượng của người lập bảng để vẽ được thanh, đánh dấu bằng <code>~</code>. Chỉ số này do chương trình tự tính từ dữ liệu, không nhập tay — thêm một mốc có nguồn là nó tự tăng.</p>
@@ -329,6 +356,7 @@ const SCHED_CLS = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime'
 const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi', auto:'tự động từ tin (chưa kiểm chứng)'};
 
 const NEWSFLOW = [];
+const SATELLITE = {};
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -950,12 +978,42 @@ function renderNews(){
       ${n.url?`<a class="nf-link" href="${esc(n.url)}" target="_blank" rel="noopener">xem bài →</a>`:''}
     </div></div>`).join('') : '<p class="cap" style="padding:20px 0">Không có tin khớp bộ lọc.</p>';
 }
+/* ---------- satellite (tab Vệ tinh) ---------- */
+function satName(tid){const p=P.find(x=>x.id==tid);return p?p.name:('Dự án '+tid);}
+function renderSat(){
+  const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
+  if(!sel.dataset.init){
+    const tids=Object.keys(SATELLITE).sort((a,b)=>a-b);
+    sel.innerHTML=tids.map(t=>`<option value="${t}">${esc(satName(t))}</option>`).join('');
+    sel.dataset.init='1';
+    sel.onchange=()=>{slider.value=(SATELLITE[sel.value]||[]).length-1; drawSat();};
+    slider.oninput=drawSat;
+    slider.value=(SATELLITE[sel.value]||[]).length-1;
+  }
+  drawSat();
+}
+function drawSat(){
+  const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
+  const arr=SATELLITE[sel.value]||[];
+  slider.max=Math.max(0,arr.length-1);
+  const m=arr[Math.min(+slider.value, arr.length-1)];
+  const cap=document.getElementById('sat-cap'), img=document.getElementById('sat-img');
+  if(!m){cap.textContent='Chưa có ảnh vệ tinh cho dự án này'; img.removeAttribute('src'); return;}
+  img.src=m.file;
+  const [y,mo]=m.month.split('-'); const dd=(m.date||'').split('-');
+  const capd=dd.length===3?(' · chụp '+dd[2]+'/'+dd[1]):'';
+  cap.innerHTML=`Tháng ${mo}/${y}${capd} · mây ${m.cloud}%`+(m.ok?'':' <span class="cloudy">CLOUDY</span>');
+  const tk=document.getElementById('sat-ticks');
+  tk.innerHTML=arr.length?`<span>${arr[0].month}</span><span>${arr[arr.length-1].month}</span>`:'';
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   const v=t.dataset.view;
   document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed', x===t));
   document.getElementById('view-gantt').classList.toggle('hidden', v!=='gantt');
   document.getElementById('view-news').classList.toggle('hidden', v!=='news');
+  document.getElementById('view-sat').classList.toggle('hidden', v!=='sat');
   if(v==='news') renderNews();
+  if(v==='sat') renderSat();
 });
 
 render();

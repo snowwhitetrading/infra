@@ -47,6 +47,8 @@ jobs:
         run: |
           mkdir -p dist
           python build_tracker.py --out dist/index.html
+          # ảnh vệ tinh (nếu có) để Pages phục vụ cùng trang
+          if [ -d satellite_export ]; then cp -r satellite_export dist/satellite_export; fi
           # tên miền riêng (GitHub Pages đọc file CNAME)
           if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
             echo "${{ vars.CUSTOM_DOMAIN }}" > dist/CNAME
