@@ -75,6 +75,7 @@ OUT_DB = os.environ.get("INFRA_OUT_DB", "dc_commodity")
 # collection nguồn -> tên field chứa ngày đăng (ưu tiên), có fallback bên dưới
 SOURCE_COLLECTIONS = {
     "cafef_raw_ticker_news": "date",
+    "cafef_project_news": "date",      # scrape_project_news.py (tìm theo tên dự án)
     "vneconomy_raw_news": "pub_date",
     "nguoiquansat_raw_news": "pub_date",
     "vietstock_raw_news": "pub_date",

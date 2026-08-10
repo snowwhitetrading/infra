@@ -28,6 +28,12 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # Tìm tin dự án trực tiếp trên cafef (bắt tin chính sách bị sót) → cafef_project_news
+      - name: Scrape project news
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python scrape_project_news.py --pages 2 || echo "scrape skipped"
+
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
         env:
