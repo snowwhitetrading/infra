@@ -28,14 +28,14 @@ from bs4 import BeautifulSoup
 from pymongo import MongoClient, UpdateOne
 
 from lib_db import mongo_uri
-from lib_projects import build_alias_regex
-from lib_marks import PID2TID
+from lib_projects import build_alias_regex, pid2tid
 
 DB, COLL = "dc_news", "project_news_raw"
 CUTOFF = "2025-01-01"   # chỉ giữ tin từ đầu 2025 trở đi (tránh tin quá cũ)
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
 ALIAS = build_alias_regex()
+PID2TID = pid2tid()
 CONTENT_NS = {"content": "http://purl.org/rss/1.0/modules/content/"}
 
 SEARCH_KEYWORDS = [

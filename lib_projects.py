@@ -313,12 +313,60 @@ def doc_date(doc, primary_field):
 # Dò & so khớp tin với dự án
 # --------------------------------------------------------------------------- #
 
+# --------------------------------------------------------------------------- #
+# Registry động: đọc danh mục dự án từ DB (thêm dự án = thêm doc, không sửa code)
+# Fallback về PROJECTS hardcode nếu registry rỗng/không kết nối được.
+# --------------------------------------------------------------------------- #
+REGISTRY_DB, REGISTRY_COLL = "dc_commodity", "Infra_Projects_Registry"
+_REG_CACHE = None
+# tid dự phòng cho 18 dự án gốc (khi registry chưa có)
+_FALLBACK_TID = {
+    "apec_center": 1, "phu_quoc_airport": 2, "bai_dat_do": 3, "nui_ong": 4,
+    "phu_quoc_tram": 5, "rach_chiec": 6, "road_giabinh_hanoi": 7,
+    "road_giabinh_bacninh": 8, "rail_benthanh_cangio": 9, "rail_hanoi_quangninh": 10,
+    "giabinh_airport": 11, "atc_tower": 12, "bt1": 13, "bt2": 14, "bt3": 15,
+    "bt1_doiung": 16, "bt2_doiung": 17, "bt3_doiung": 18,
+}
+
+
+def load_registry(force=False):
+    """Danh mục dự án đang theo dõi: [{id, tid, name, group, aliases}] từ DB (cache)."""
+    global _REG_CACHE
+    if _REG_CACHE is not None and not force:
+        return _REG_CACHE
+    try:
+        from pymongo import MongoClient
+        c = MongoClient(MONGO_URI, serverSelectionTimeoutMS=8000)
+        docs = list(c[REGISTRY_DB][REGISTRY_COLL].find({"active": True}))
+        if docs:
+            _REG_CACHE = [{"id": d["id"], "tid": d.get("tid"), "name": d.get("name", ""),
+                           "group": d.get("group", ""), "aliases": d.get("aliases", [])}
+                          for d in docs if d.get("aliases")]
+            return _REG_CACHE
+    except Exception:
+        pass
+    _REG_CACHE = [{"id": p["id"], "tid": _FALLBACK_TID.get(p["id"]), "name": p["name"],
+                   "group": p.get("group", ""), "aliases": p["aliases"]} for p in PROJECTS]
+    return _REG_CACHE
+
+
+def pid2tid():
+    """map project_id -> tid (id số) từ registry."""
+    return {p["id"]: p["tid"] for p in load_registry() if p.get("tid")}
+
+
+def project_names_by_tid():
+    """map tid -> tên dự án (cho hiển thị newsflow, gồm cả dự án mới ngoài Gantt)."""
+    return {p["tid"]: p["name"] for p in load_registry() if p.get("tid")}
+
+
 def build_alias_regex():
-    """Trả về {project_id: compiled_regex} dò bất kỳ alias nào của dự án."""
+    """Trả về {project_id: compiled_regex} dò bất kỳ alias nào của dự án (từ registry)."""
     out = {}
-    for p in PROJECTS:
+    for p in load_registry():
         parts = sorted({re.escape(a) for a in p["aliases"]}, key=len, reverse=True)
-        out[p["id"]] = re.compile("|".join(parts), re.IGNORECASE)
+        if parts:
+            out[p["id"]] = re.compile("|".join(parts), re.IGNORECASE)
     return out
 
 

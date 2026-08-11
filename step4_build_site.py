@@ -50,7 +50,9 @@ def fetch_satellite():
 
 def fetch_newsflow(client, projects):
     """Dòng tin từng bài — đọc thẳng từ Infra_Newsflow (tách khỏi progress/digest)."""
-    tid2name = {p["id"]: p["name"] for p in projects}
+    from lib_projects import project_names_by_tid
+    tid2name = dict(project_names_by_tid())              # registry (gồm dự án mới ngoài Gantt)
+    tid2name.update({p["id"]: p["name"] for p in projects})   # tên curated trên tracker ưu tiên
     out = []
     for doc in client[DB][NEWSFLOW_COLL].find({}):
         for tid in doc.get("projects", []):
