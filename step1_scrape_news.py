@@ -58,6 +58,8 @@ RSS_FEEDS = {
     "baoxaydung": ["https://baoxaydung.com.vn/rss/home.rss"],
     "baochinhphu": ["https://baochinhphu.vn/kinh-te.rss", "https://baochinhphu.vn/chinh-tri.rss",
                     "https://baochinhphu.vn/chinh-sach-va-cuoc-song.rss"],
+    "sggp": ["https://www.sggp.org.vn/rss/home.rss"],                     # TP.HCM: Cần Giờ, Rạch Chiếc
+    "nld": ["https://nld.com.vn/rss/home.rss", "https://nld.com.vn/rss/thoi-su.rss"],
 }
 
 # ── SEARCH sources ───────────────────────────────────────────────────────────
