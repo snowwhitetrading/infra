@@ -32,6 +32,7 @@ from lib_projects import build_alias_regex
 from lib_marks import PID2TID
 
 DB, COLL = "dc_news", "project_news_raw"
+CUTOFF = "2025-01-01"   # chỉ giữ tin từ đầu 2025 trở đi (tránh tin quá cũ)
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
 ALIAS = build_alias_regex()
@@ -284,9 +285,12 @@ async def run(pages, dry, sources):
     docs = {}
     for lst in results:
         for d in lst:
-            if d.get("url"):
-                d["scraped_at"] = now
-                docs.setdefault(d["url"], d)
+            if not d.get("url"):
+                continue
+            if d.get("date") and d["date"][:10] < CUTOFF:   # bỏ tin trước 2025
+                continue
+            d["scraped_at"] = now
+            docs.setdefault(d["url"], d)
     per = {}
     for d in docs.values():
         per[d["source"]] = per.get(d["source"], 0) + 1
