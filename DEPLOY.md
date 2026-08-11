@@ -5,7 +5,7 @@ Mỗi lần `git push` hoặc mỗi sáng thứ Hai, CI tự dựng lại `index
 
 ```
    sửa DB (duyệt mark)  ─┐
-   git push             ─┼─►  GitHub Actions  ──►  build_tracker.py  ──►  Pages  ──►  yourdomain.com
+   git push             ─┼─►  GitHub Actions  ──►  step4_build_site.py  ──►  Pages  ──►  yourdomain.com
    cron thứ Hai 08:00   ─┘        (đọc secret IRIS_MONGO_URI)
 ```
 
@@ -57,11 +57,11 @@ Xong: mở `https://<domain>` là thấy trang.
 ---
 
 ## Vận hành hằng ngày
-- **Cập nhật tiến độ:** chạy local `python propose_marks.py` → xem đề xuất → `python propose_marks.py --promote <id> <YYYY-MM>` để duyệt mốc vào `Infra_Project_Tracker.marks`.
+- **Cập nhật tiến độ:** chạy local `python lib_marks.py` → xem đề xuất → `python lib_marks.py --promote <id> <YYYY-MM>` để duyệt mốc vào `Infra_Project_Tracker.marks`.
 - Sau đó `git commit --allow-empty -m "refresh" && git push` (hoặc đợi cron thứ Hai) → site tự dựng lại từ DB.
 - Nội dung trang chỉ đổi khi **mark curated** trong DB đổi (bạn duyệt). CI chỉ build + deploy, **không tự sửa nội dung** — đúng nguyên tắc "máy đề xuất, người duyệt".
 
 ## Giới hạn của "tự động hoàn toàn"
 - ✅ Tự động: build tracker từ DB + deploy (cron + push).
-- ⚠️ Bán tự động: bước **tin tức → weekly digest** (`update_project_news.py`) cần Claude viết narrative → hoặc mở phiên Claude Code (gói Max), hoặc đặt `ANTHROPIC_API_KEY` để chạy hẳn không người.
+- ⚠️ Bán tự động: bước **tin tức → weekly digest** (`lib_projects.py`) cần Claude viết narrative → hoặc mở phiên Claude Code (gói Max), hoặc đặt `ANTHROPIC_API_KEY` để chạy hẳn không người.
 - ⚠️ Theo thiết kế: **promote mark là bước người duyệt** (không auto, vì là dữ liệu tín dụng — cần kiểm chứng nguồn/tier).

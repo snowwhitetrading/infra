@@ -32,19 +32,19 @@ jobs:
       - name: Scrape project news
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python scrape_project_news.py --pages 2 || echo "scrape skipped"
+        run: python step1_scrape_news.py --pages 2 || echo "scrape skipped"
 
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python newsflow_ingest.py --days 30 || echo "newsflow skipped"
+        run: python step2_newsflow.py --days 30 || echo "newsflow skipped"
 
       # Tự động đưa tin cột mốc thành mark 'auto' trên Gantt (deterministic)
       - name: Promote newsflow to tracker
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python promote_newsflow.py || echo "promote skipped"
+        run: python step3_promote_marks.py || echo "promote skipped"
 
       # Dựng site chính thức (chỉ mark đã duyệt) từ DB
       - name: Build site
@@ -52,7 +52,7 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: |
           mkdir -p dist
-          python build_tracker.py --out dist/index.html
+          python step4_build_site.py --out dist/index.html
           # ảnh vệ tinh (nếu có) để Pages phục vụ cùng trang
           if [ -d satellite_export ]; then cp -r satellite_export dist/satellite_export; fi
           # tên miền riêng (GitHub Pages đọc file CNAME)

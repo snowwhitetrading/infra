@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-newsflow_ingest.py — Dòng tin infra ĐỘC LẬP với progress. Deterministic, KHÔNG cần AI.
+step2_newsflow.py — Dòng tin infra ĐỘC LẬP với progress. Deterministic, KHÔNG cần AI.
 
 Quét dc_news (4 báo) → dò 18 dự án theo alias → lọc CỘT MỐC tiến độ (RX_PROGRESS/RX_NOISE)
 → ghi dc_commodity.Infra_Newsflow (1 doc/bài, upsert theo url, không đè bài cũ).
 
 Chạy được daily trong CI (chỉ đọc dc_news + ghi 1 collection, không gọi LLM).
 
-  python newsflow_ingest.py            # quét toàn bộ
-  python newsflow_ingest.py --days 30  # chỉ 30 ngày gần đây (cho CI daily cho nhanh)
+  python step2_newsflow.py            # quét toàn bộ
+  python step2_newsflow.py --days 30  # chỉ 30 ngày gần đây (cho CI daily cho nhanh)
 """
 import argparse, datetime as dt, re
 from pymongo import MongoClient
-from infra_db import mongo_uri
-from update_project_news import (build_alias_regex, article_text, doc_date,
+from lib_db import mongo_uri
+from lib_projects import (build_alias_regex, article_text, doc_date,
                                  SOURCE_COLLECTIONS, CONTEXT_TERMS, NEWS_DB)
-from propose_marks import is_progress, PID2TID
+from lib_marks import is_progress, PID2TID
 
 OUT_DB, OUT_COLL = "dc_commodity", "Infra_Newsflow"
 

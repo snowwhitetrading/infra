@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-propose_marks.py — Sinh MARK ứng viên cho tracker từ tin tức tuần.
+lib_marks.py — Sinh MARK ứng viên cho tracker từ tin tức tuần.
 
 Nguồn: dc_commodity.Infra_News_Collection_Weekly_Digest (project_status.events,
         đã quét từ 4 báo cafef/vietstock/vneconomy/nguoiquansat).
@@ -10,13 +10,13 @@ Nguồn: dc_commodity.Infra_News_Collection_Weekly_Digest (project_status.events
 Nguyên tắc: MÁY chỉ đề xuất (tier company/directive), NGƯỜI duyệt nâng tier
 rồi promote sang Infra_Project_Tracker.marks.
 
-  python propose_marks.py                 # sinh đề xuất + in báo cáo
-  python propose_marks.py --report-only   # chỉ in, không ghi DB
-  python propose_marks.py --promote 11 2026-07  # đưa 1 đề xuất (id,tháng) vào tracker
+  python lib_marks.py                 # sinh đề xuất + in báo cáo
+  python lib_marks.py --report-only   # chỉ in, không ghi DB
+  python lib_marks.py --promote 11 2026-07  # đưa 1 đề xuất (id,tháng) vào tracker
 """
 import argparse, os, re, sys, datetime as dt
 from pymongo import MongoClient
-from infra_db import mongo_uri
+from lib_db import mongo_uri
 
 MONGO_URI = mongo_uri()
 DB = "dc_commodity"
@@ -178,7 +178,7 @@ def main():
           f"{total_new} thuộc tháng chưa có mark curated (★)")
     if not args.report_only:
         print(f"Đã ghi -> {DB}.{PROPOSED}. Duyệt xong dùng: "
-              f"python propose_marks.py --promote <id> <YYYY-MM>")
+              f"python lib_marks.py --promote <id> <YYYY-MM>")
 
 
 def promote(c, tid, month):
@@ -198,7 +198,7 @@ def promote(c, tid, month):
             {"$push": {"marks": mark}})
         added += res.modified_count
     print(f"Đã promote {added} mark (id {tid}, tháng {month}) vào {TRACKER}.marks. "
-          f"Chạy build_tracker.py để cập nhật trang.")
+          f"Chạy step4_build_site.py để cập nhật trang.")
 
 
 if __name__ == "__main__":

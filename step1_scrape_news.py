@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-scrape_project_news.py — Tìm tin về 18 dự án hạ tầng TRỰC TIẾP trên cafef.vn theo TÊN DỰ ÁN.
+step1_scrape_news.py — Tìm tin về 18 dự án hạ tầng TRỰC TIẾP trên cafef.vn theo TÊN DỰ ÁN.
 
 Bắt cả tin CHÍNH SÁCH/THỜI SỰ mà scraper-theo-mã-cổ-phiếu bỏ sót
 (vd "Đẩy nhanh tiến độ các dự án phục vụ APEC 2027" — không gắn mã CK nên không được thu).
@@ -10,9 +10,9 @@ fetch nội dung → chỉ giữ bài KHỚP alias dự án → upsert vào coll
 dc_news.cafef_project_news (KHÔNG đụng collection cafef_raw_ticker_news của vnnews).
 Collection này đã được thêm vào SOURCE_COLLECTIONS nên pipeline infra tự đọc.
 
-  python scrape_project_news.py                 # 2 trang mỗi keyword, ghi DB
-  python scrape_project_news.py --pages 3
-  python scrape_project_news.py --dry-run       # chỉ in, không ghi
+  python step1_scrape_news.py                 # 2 trang mỗi keyword, ghi DB
+  python step1_scrape_news.py --pages 3
+  python step1_scrape_news.py --dry-run       # chỉ in, không ghi
 
 Nguồn khác (vietstock/vneconomy/nguoiquansat): search không trả kết quả qua HTTP đơn giản
 (JS/Cloudflare) — nhưng đã có RSS scraper riêng đổ vào dc_news, pipeline đã đọc.
@@ -27,8 +27,8 @@ import httpx
 from bs4 import BeautifulSoup
 from pymongo import MongoClient, UpdateOne
 
-from infra_db import mongo_uri
-from update_project_news import PROJECTS, build_alias_regex
+from lib_db import mongo_uri
+from lib_projects import PROJECTS, build_alias_regex
 
 DB, COLL = "dc_news", "cafef_project_news"
 BASE = "https://cafef.vn"
@@ -174,7 +174,7 @@ async def run(pages, dry, keywords):
         ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in docs]
         res = coll.bulk_write(ops)
         print(f"Ghi mới {res.upserted_count} bài vào {DB}.{COLL} (feeds=project_search). "
-              f"Chạy newsflow_ingest.py + build để lên web.")
+              f"Chạy step2_newsflow.py + build để lên web.")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-promote_newsflow.py — Tự động biến tin cột mốc (Infra_Newsflow) thành MARK trên Gantt.
+step3_promote_marks.py — Tự động biến tin cột mốc (Infra_Newsflow) thành MARK trên Gantt.
 
 KHÔNG cần người duyệt, KHÔNG cần AI. Mark gắn tier='auto' → hiển thị MỜ trên web,
 lọc ẩn được bằng bộ lọc độ tin cậy. Mark curated (tier khác 'auto') KHÔNG bị đụng.
@@ -8,13 +8,13 @@ lọc ẩn được bằng bộ lọc độ tin cậy. Mark curated (tier khác 
 Idempotent: mỗi lần chạy XOÁ hết mark tier='auto' rồi ghi lại từ Infra_Newsflow hiện tại
 → chạy daily trong CI, không sinh trùng.
 
-  python promote_newsflow.py
+  python step3_promote_marks.py
 """
 import re
 from collections import defaultdict
 from pymongo import MongoClient
-from infra_db import mongo_uri
-from propose_marks import infer_type
+from lib_db import mongo_uri
+from lib_marks import infer_type
 
 DB = "dc_commodity"
 TRACKER = "Infra_Project_Tracker"
@@ -65,7 +65,7 @@ def run():
         total += len(fresh)
 
     print(f"Đã ghi {total} mark tier='auto' vào {TRACKER} "
-          f"(xoá auto cũ, giữ nguyên curated). Chạy build_tracker.py để cập nhật web.")
+          f"(xoá auto cũ, giữ nguyên curated). Chạy step4_build_site.py để cập nhật web.")
 
 
 if __name__ == "__main__":

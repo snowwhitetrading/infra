@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-update_project_news.py
+lib_projects.py
 ======================
 
 Cập nhật tin tức cho danh mục dự án do Vingroup / Sungroup / BIM đề xuất
@@ -26,19 +26,19 @@ trường ANTHROPIC_API_KEY.
 Cách dùng
 ---------
     # tạo cả weekly + daily cho ngày hôm nay
-    python update_project_news.py --mode both
+    python lib_projects.py --mode both
 
     # chỉ daily cho một ngày cụ thể
-    python update_project_news.py --mode daily --date 2026-07-30
+    python lib_projects.py --mode daily --date 2026-07-30
 
     # weekly cho tuần chứa ngày chỉ định
-    python update_project_news.py --mode weekly --date 2026-07-25
+    python lib_projects.py --mode weekly --date 2026-07-25
 
     # xem trước, không ghi DB (in JSON ra stdout / file)
-    python update_project_news.py --mode both --dry-run
+    python lib_projects.py --mode both --dry-run
 
     # chỉ ghép tin, KHÔNG gọi LLM (điền narrative theo quy tắc)
-    python update_project_news.py --mode both --no-llm
+    python lib_projects.py --mode both --no-llm
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ except ImportError:
 # Cấu hình
 # --------------------------------------------------------------------------- #
 
-from infra_db import mongo_uri
+from lib_db import mongo_uri
 MONGO_URI = mongo_uri()
 
 NEWS_DB = "dc_news"          # nguồn tin thô
@@ -75,7 +75,7 @@ OUT_DB = os.environ.get("INFRA_OUT_DB", "dc_commodity")
 # collection nguồn -> tên field chứa ngày đăng (ưu tiên), có fallback bên dưới
 SOURCE_COLLECTIONS = {
     "cafef_raw_ticker_news": "date",
-    "cafef_project_news": "date",      # scrape_project_news.py (tìm theo tên dự án)
+    "cafef_project_news": "date",      # step1_scrape_news.py (tìm theo tên dự án)
     "vneconomy_raw_news": "pub_date",
     "nguoiquansat_raw_news": "pub_date",
     "vietstock_raw_news": "pub_date",
@@ -722,9 +722,9 @@ def upsert(client, coll_name, key_filter, doc, dry_run):
 # --------------------------------------------------------------------------- #
 # Export / Ingest — dùng khi sinh narrative bằng Claude Code (gói Max), không
 # cần ANTHROPIC_API_KEY.
-#   Bước 1:  python update_project_news.py --export bundle.json --date ...
+#   Bước 1:  python lib_projects.py --export bundle.json --date ...
 #   Bước 2:  Claude Code đọc bundle.json, viết 'digest' cho weekly/daily
-#   Bước 3:  python update_project_news.py --ingest bundle.json
+#   Bước 3:  python lib_projects.py --ingest bundle.json
 # --------------------------------------------------------------------------- #
 
 EXPORT_BODY_CHARS = 1200
