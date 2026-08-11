@@ -40,6 +40,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step2_newsflow.py --days 30 || echo "newsflow skipped"
 
+      # Radar: phát hiện dự án hạ tầng quan trọng chưa có trong registry
+      - name: Radar candidates
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python step5_radar.py --top 0 || echo "radar skipped"
+
       # Tự động đưa tin cột mốc thành mark 'auto' trên Gantt (deterministic)
       - name: Promote newsflow to tracker
         env:
