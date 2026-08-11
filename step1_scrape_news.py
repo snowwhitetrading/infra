@@ -53,9 +53,12 @@ VIETSTOCK = "https://vietstock.vn"
 VIETSTOCK_RSS = ["/761/kinh-te/vi-mo.rss", "/143/chung-khoan/chinh-sach.rss",
                  "/4220/bat-dong-san/thi-truong-nha-dat.rss"]
 VIETSTOCK_CHANNELS = {"vi_mo": 761, "chinh_sach": 143, "thi_truong_nha_dat": 4220}
-VNECONOMY_RSS = ["https://vneconomy.vn/dau-tu.rss", "https://vneconomy.vn/dia-oc.rss",
+VNECONOMY_RSS = ["https://vneconomy.vn/tin-moi.rss",          # GỘP mọi chuyên mục (chống sót do chủ đề)
+                 "https://vneconomy.vn/tieu-diem.rss",
+                 "https://vneconomy.vn/dau-tu.rss", "https://vneconomy.vn/dia-oc.rss",
                  "https://vneconomy.vn/dau-tu-ha-tang.rss", "https://vneconomy.vn/thi-truong.rss"]
-NQS_RSS = ["https://nguoiquansat.vn/rss/doanh-nghiep", "https://nguoiquansat.vn/rss/tai-chinh-ngan-hang"]
+NQS_RSS = ["https://nguoiquansat.vn/rss/trang-chu",           # GỘP trang chủ (chống sót do chủ đề)
+           "https://nguoiquansat.vn/rss/doanh-nghiep", "https://nguoiquansat.vn/rss/tai-chinh-ngan-hang"]
 CONTENT_NS = {"content": "http://purl.org/rss/1.0/modules/content/"}
 
 
