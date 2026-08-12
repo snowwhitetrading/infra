@@ -18,8 +18,8 @@ FEEDS = [
     "https://baoxaydung.com.vn/rss/home.rss", "https://www.baogiaothong.vn/rss/home.rss",
     "https://baochinhphu.vn/kinh-te.rss", "https://vietstock.vn/761/kinh-te/vi-mo.rss",
 ]
-INFRA = re.compile(r"cao tốc|đường sắt|sân bay|cảng|metro|vành đai|khu công nghiệp|"
-                   r"nhà máy điện|thủy điện|nhiệt điện|điện gió|điện mặt trời|hầm |cầu |dự án", re.I)
+# chỉ hạ tầng giao thông (bỏ điện/nước)
+INFRA = re.compile(r"cao tốc|đường sắt|tàu điện|sân bay|cảng|metro|vành đai|hầm |cầu ", re.I)
 
 known = build_alias_regex()
 seen, out = set(), []
