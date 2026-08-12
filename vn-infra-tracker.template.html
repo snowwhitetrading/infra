@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{
   --paper:#EFF2F1; --card:#FBFCFC; --sunk:#E6EAE9;
@@ -264,6 +266,12 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   font-size:10px;color:var(--ink3)}
 .sat-note{max-width:620px;font-size:11px;color:var(--ink3);line-height:1.6;margin-top:14px}
 .sat-note b{color:var(--ink2);font-weight:500}
+/* map */
+#map{height:72vh;min-height:460px;width:100%;border:1px solid var(--rule2);border-radius:3px;z-index:0}
+.map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--ink2)}
+.map-legend span{display:flex;align-items:center;gap:5px}
+.map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--rule2)}
+.leaflet-popup-content{font-family:inherit;font-size:13px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -282,6 +290,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
   <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
   <button class="tab" data-view="sat" aria-pressed="false">Vệ tinh</button>
+  <button class="tab" data-view="map" aria-pressed="false">Bản đồ</button>
 </div>
 
 <div id="view-gantt">
@@ -327,7 +336,19 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <div class="sat-stage"><img id="sat-img" alt="Ảnh vệ tinh công trường" loading="lazy"></div>
   <input type="range" id="sat-slider" min="0" max="0" value="0" step="1">
   <div class="sat-ticks" id="sat-ticks"></div>
-  <p class="sat-note">Nguồn: <b>Copernicus Sentinel-2 (ESA)</b> · pixel 10m, mỗi tháng 1 ảnh ít mây nhất (không ghép). Ảnh <b>CLOUDY</b> (mây ≥30%) chỉ để tham khảo liên tục. Biến động màu phần lớn do <b>mùa vụ</b> — nên so cùng tháng năm khác thay vì tháng liền kề. Các tuyến (đường Gia Bình, đường sắt Cần Giờ / Hạ Long) chỉ là <b>một điểm đại diện</b> (nút giao/depot), không phải cả hành lang.</p>
+  <p class="sat-note" id="__satnote">Nguồn: <b>Copernicus Sentinel-2 (ESA)</b> · pixel 10m, mỗi tháng 1 ảnh ít mây nhất (không ghép). Ảnh <b>CLOUDY</b> (mây ≥30%) chỉ để tham khảo liên tục. Biến động màu phần lớn do <b>mùa vụ</b> — nên so cùng tháng năm khác thay vì tháng liền kề. Các tuyến (đường Gia Bình, đường sắt Cần Giờ / Hạ Long) chỉ là <b>một điểm đại diện</b> (nút giao/depot), không phải cả hành lang.</p>
+</div>
+
+<div id="view-map" class="hidden">
+  <div class="map-legend">
+    <span><i style="background:#e11d48"></i>Sân bay</span>
+    <span><i style="background:#7c3aed"></i>Đường sắt / Metro</span>
+    <span><i style="background:#2563eb"></i>Cao tốc / Vành đai</span>
+    <span><i style="background:#0891b2"></i>Cảng</span>
+    <span><i style="background:#d97706"></i>Cầu / Hầm</span>
+  </div>
+  <div id="map"></div>
+  <p class="sat-note">Vị trí là <b>điểm đại diện</b> (tỉnh/thành hoặc điểm chính của tuyến), không phải toàn tuyến. Bấm chấm để xem tên dự án. Bản đồ © OpenStreetMap.</p>
 </div>
 
 <footer>
@@ -357,6 +378,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 
 const NEWSFLOW = [];
 const SATELLITE = {};
+const MAPPTS = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -1006,14 +1028,37 @@ function drawSat(){
   const tk=document.getElementById('sat-ticks');
   tk.innerHTML=arr.length?`<span>${arr[0].month}</span><span>${arr[arr.length-1].month}</span>`:'';
 }
+/* ---------- bản đồ (tab Bản đồ) ---------- */
+let _map = null;
+const MAP_COLOR = {airport:'#e11d48', rail:'#7c3aed', road:'#2563eb', port:'#0891b2', bridge:'#d97706', other:'#64748b'};
+function renderMap(){
+  const el = document.getElementById('map');
+  if(typeof L === 'undefined'){
+    el.innerHTML = '<p class="cap" style="padding:24px">Bản đồ chỉ hiển thị trên site trực tuyến (cần internet để tải bản đồ).</p>';
+    return;
+  }
+  if(!_map){
+    _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
+    MAPPTS.forEach(p=>{
+      L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
+        fillColor: MAP_COLOR[p.kind]||MAP_COLOR.other, fillOpacity:.9})
+       .addTo(_map).bindPopup('<b>'+esc(p.name)+'</b>');
+    });
+  }
+  setTimeout(()=>_map.invalidateSize(), 60);
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   const v=t.dataset.view;
   document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed', x===t));
   document.getElementById('view-gantt').classList.toggle('hidden', v!=='gantt');
   document.getElementById('view-news').classList.toggle('hidden', v!=='news');
   document.getElementById('view-sat').classList.toggle('hidden', v!=='sat');
+  document.getElementById('view-map').classList.toggle('hidden', v!=='map');
   if(v==='news') renderNews();
   if(v==='sat') renderSat();
+  if(v==='map') renderMap();
 });
 
 render();

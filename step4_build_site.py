@@ -119,6 +119,29 @@ def apply_proposed(out, client):
     return out
 
 
+def fetch_mappts(client):
+    """Điểm bản đồ cho các dự án có toạ độ trong registry."""
+    def kind(n):
+        n = n.lower()
+        if "sân bay" in n or "hàng không" in n:
+            return "airport"
+        if "metro" in n or "đường sắt" in n or "tàu điện" in n:
+            return "rail"
+        if "cảng" in n:
+            return "port"
+        if "cầu" in n or "hầm" in n:
+            return "bridge"
+        if "cao tốc" in n or "vành đai" in n or "đường" in n:
+            return "road"
+        return "other"
+    out = []
+    for p in client["dc_commodity"]["Infra_Projects_Registry"].find(
+            {"active": True, "lat": {"$exists": True}}):
+        out.append({"lat": p["lat"], "lon": p["lon"], "name": p.get("name", ""),
+                    "tid": p.get("tid"), "kind": kind(p.get("name", ""))})
+    return out
+
+
 def build_auto_rows(client, projects):
     """Sinh dòng Gantt SƠ BỘ cho dự án trong registry chưa có trên Gantt (từ newsflow).
     1 thanh 'thi công' theo khoảng tin + mốc 'auto' từ tiêu đề tin (dedup theo tháng)."""
@@ -191,10 +214,13 @@ def main():
     print(f"Newsflow: {len(newsflow)} tin")
     satellite = fetch_satellite()
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
+    mappts = fetch_mappts(c)
+    print(f"Bản đồ: {len(mappts)} điểm dự án")
 
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     out = out.replace("const SATELLITE = {}", "const SATELLITE = " + json.dumps(satellite, ensure_ascii=False), 1)
+    out = out.replace("const MAPPTS = []", "const MAPPTS = " + json.dumps(mappts, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 
