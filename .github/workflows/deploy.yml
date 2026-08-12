@@ -40,6 +40,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step1_scrape_news.py --pages 2 || echo "scrape skipped"
 
+      # Radar: quét từ khóa hạ tầng chung → ứng viên dự án MỚI (deterministic, không Claude)
+      - name: Radar candidates
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python step5_radar.py --top 0 || echo "radar skipped"
+
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
         env:
