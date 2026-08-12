@@ -54,6 +54,9 @@ RSS_FEEDS = {
                     "https://baochinhphu.vn/chinh-sach-va-cuoc-song.rss"],
     "sggp": ["https://www.sggp.org.vn/rss/home.rss"],                     # TP.HCM: Cần Giờ, Rạch Chiếc
     "nld": ["https://nld.com.vn/rss/home.rss", "https://nld.com.vn/rss/thoi-su.rss"],
+    "tinnhanhck": ["https://www.tinnhanhchungkhoan.vn/rss/home.rss"],
+    "vietnambiz": ["https://vietnambiz.vn/tin-moi-nhat.rss"],
+    "markettimes": ["https://markettimes.vn/rss/home.rss"],
 }
 
 # ── SEARCH sources ───────────────────────────────────────────────────────────
