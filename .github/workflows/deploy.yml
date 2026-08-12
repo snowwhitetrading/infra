@@ -28,6 +28,12 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # Nạp dự án mới do routine hằng tuần đề xuất (registry_additions.json) vào registry
+      - name: Ingest project additions
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python ingest_additions.py || echo "no additions"
+
       # Tìm tin dự án trực tiếp trên cafef (bắt tin chính sách bị sót) → cafef_project_news
       - name: Scrape project news
         env:
