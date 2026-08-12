@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 */3 * * *'    # MỖI 3 GIỜ (00,03,06,09,12,15,18,21 UTC = 07,10,13,16,19,22,01,04 giờ VN)
+    - cron: '0 * * * *'      # MỖI GIỜ (24 lần/ngày) — RSS chỉ có tin mới nên quét dày cho chắc
   workflow_dispatch:          # cho phép bấm chạy tay
 
 permissions:
