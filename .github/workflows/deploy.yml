@@ -38,13 +38,13 @@ jobs:
       - name: Scrape project news
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python step1_scrape_news.py --pages 2 || echo "scrape skipped"
+        run: timeout 780 python step1_scrape_news.py --pages 1 || echo "scrape skipped/timeout"
 
       # Radar: quét từ khóa hạ tầng chung → ứng viên dự án MỚI (deterministic, không Claude)
       - name: Radar candidates
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python step5_radar.py --top 0 || echo "radar skipped"
+        run: timeout 180 python step5_radar.py --top 0 || echo "radar skipped/timeout"
 
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
