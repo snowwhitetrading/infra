@@ -360,6 +360,16 @@ def project_names_by_tid():
     return {p["tid"]: p["name"] for p in load_registry() if p.get("tid")}
 
 
+def search_keywords():
+    """Từ khóa để SEARCH trên cafef/vnexpress: 2 alias dài nhất (đặc trưng nhất) mỗi dự án."""
+    kws = []
+    for p in load_registry():
+        for a in sorted(set(p["aliases"]), key=len, reverse=True)[:2]:
+            if a not in kws:
+                kws.append(a)
+    return kws
+
+
 def build_alias_regex():
     """Trả về {project_id: compiled_regex} dò bất kỳ alias nào của dự án (từ registry)."""
     out = {}

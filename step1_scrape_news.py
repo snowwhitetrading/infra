@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from pymongo import MongoClient, UpdateOne
 
 from lib_db import mongo_uri
-from lib_projects import build_alias_regex, pid2tid
+from lib_projects import build_alias_regex, pid2tid, search_keywords
 
 DB, COLL = "dc_news", "project_news_raw"
 CUTOFF = "2025-01-01"   # chỉ giữ tin từ đầu 2025 trở đi (tránh tin quá cũ)
@@ -38,13 +38,7 @@ ALIAS = build_alias_regex()
 PID2TID = pid2tid()
 CONTENT_NS = {"content": "http://purl.org/rss/1.0/modules/content/"}
 
-SEARCH_KEYWORDS = [
-    "sân bay Gia Bình", "đường kết nối sân bay Gia Bình", "tái định cư sân bay Gia Bình",
-    "khu đô thị Gia Bình", "Trung tâm hội nghị APEC", "dự án APEC Phú Quốc",
-    "mở rộng sân bay Phú Quốc", "Bãi Đất Đỏ", "Núi Ông", "tàu điện Phú Quốc",
-    "Khu liên hợp thể thao Rạch Chiếc", "đường sắt Bến Thành Cần Giờ", "metro Cần Giờ",
-    "đường sắt Hà Nội Quảng Ninh", "VinSpeed", "đường sắt tốc độ cao Quảng Ninh",
-]
+SEARCH_KEYWORDS = search_keywords()   # động theo registry (thêm dự án → tự search)
 
 # ── RSS sources: {source: [feed urls]} ───────────────────────────────────────
 RSS_FEEDS = {
