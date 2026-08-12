@@ -119,6 +119,42 @@ def apply_proposed(out, client):
     return out
 
 
+def build_auto_rows(client, projects):
+    """Sinh dòng Gantt SƠ BỘ cho dự án trong registry chưa có trên Gantt (từ newsflow).
+    1 thanh 'thi công' theo khoảng tin + mốc 'auto' từ tiêu đề tin (dedup theo tháng)."""
+    from collections import defaultdict
+    from lib_projects import load_registry
+    curated = {p["id"] for p in projects}
+    nf = defaultdict(list)
+    for d in client[DB][NEWSFLOW_COLL].find({}):
+        m = (d.get("date") or "")[:7]
+        if len(m) != 7:
+            continue
+        for tid in d.get("projects", []):
+            nf[tid].append({"date": m, "title": d.get("title", ""), "src": d.get("source", "?")})
+    auto = []
+    for p in load_registry(force=True):
+        tid = p.get("tid")
+        if not tid or tid in curated or tid not in nf:
+            continue
+        items = sorted(nf[tid], key=lambda x: x["date"])
+        seen, marks = set(), []
+        for x in items:
+            if x["date"] in seen:
+                continue
+            seen.add(x["date"])
+            marks.append({"date": x["date"], "type": "ms", "label": x["title"],
+                          "tier": "auto", "src": x["src"] + " · tự động"})
+        auto.append({
+            "id": tid, "g": "K", "name": p["name"], "status": "thi công",
+            "owner": p.get("group", ""), "loc": "",
+            "phases": [{"kind": "build", "from": items[0]["date"], "to": items[-1]["date"],
+                        "state": "ongoing", "doneTo": items[-1]["date"]}],
+            "marks": marks[-30:], "items": [], "huyDong": 0, "capex": [],
+        })
+    return auto
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(HERE, "vn-infra-tracker.built.html"))
@@ -136,7 +172,14 @@ def main():
     groups = gdoc["groups"]
 
     projects = list(col.find({"_key": "project"}, {"_id": 0, "_key": 0}).sort("id", 1))
-    print(f"Đọc từ DB: {len(groups)} nhóm · {len(projects)} dự án")
+    print(f"Đọc từ DB: {len(groups)} nhóm · {len(projects)} dự án curated")
+
+    auto = build_auto_rows(c, projects)
+    if auto:
+        groups = groups + [{"id": "K", "name": "K · Dự án hạ tầng khác (theo dõi qua tin)",
+                            "meta": "tự động phát hiện", "huyDong": 0}]
+        projects = projects + auto
+        print(f"  + {len(auto)} dòng Gantt tự động cho dự án mới")
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
     old_g = extract_array(tpl, "const GROUPS")
