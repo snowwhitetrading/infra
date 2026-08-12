@@ -12,3 +12,5 @@ project_news_preview_*.json
 # rác
 __pycache__/
 *.pyc
+.claude/settings.local.json
+facebook_posts.json

@@ -36,8 +36,9 @@ def run(days=None, dry=False):
             continue
         title = (doc.get("title") or "").strip()
         desc = doc.get("description") or ""
-        # lọc cột mốc: xét tiêu đề + mô tả (chặt, tránh bắt nhầm)
-        if not is_progress("", title + " " + desc):
+        # lọc cột mốc: xét tiêu đề + mô tả (chặt, tránh bắt nhầm).
+        # Post Facebook đã được lọc tay lúc thu thập → miễn lọc is_progress.
+        if doc.get("source") != "facebook" and not is_progress("", title + " " + desc):
             continue
         tids = doc.get("projects") or []
         if not tids:
