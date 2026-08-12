@@ -137,8 +137,11 @@ def fetch_mappts(client):
     out = []
     for p in client["dc_commodity"]["Infra_Projects_Registry"].find(
             {"active": True, "lat": {"$exists": True}}):
-        out.append({"lat": p["lat"], "lon": p["lon"], "name": p.get("name", ""),
-                    "tid": p.get("tid"), "kind": kind(p.get("name", ""))})
+        rec = {"lat": p["lat"], "lon": p["lon"], "name": p.get("name", ""),
+               "tid": p.get("tid"), "kind": kind(p.get("name", ""))}
+        if p.get("geo"):                       # line/area khoanh vùng (nếu đã nhập toạ độ)
+            rec["geo"] = p["geo"]
+        out.append(rec)
     return out
 
 

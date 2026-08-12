@@ -1042,9 +1042,18 @@ function renderMap(){
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
     MAPPTS.forEach(p=>{
-      L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
-        fillColor: MAP_COLOR[p.kind]||MAP_COLOR.other, fillOpacity:.9})
-       .addTo(_map).bindPopup('<b>'+esc(p.name)+'</b>');
+      const col = MAP_COLOR[p.kind]||MAP_COLOR.other;
+      const g = p.geo;
+      let layer;
+      if(g && g.type==='line' && g.coords && g.coords.length>1){
+        layer = L.polyline(g.coords, {color:col, weight:4, opacity:.85});
+      } else if(g && g.type==='area' && g.coords && g.coords.length>2){
+        layer = L.polygon(g.coords, {color:col, weight:2, fillColor:col, fillOpacity:.22});
+      } else {
+        layer = L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
+          fillColor:col, fillOpacity:.9});
+      }
+      layer.addTo(_map).bindPopup('<b>'+esc(p.name)+'</b>');
     });
   }
   setTimeout(()=>_map.invalidateSize(), 60);
