@@ -40,20 +40,6 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step2_newsflow.py --days 30 || echo "newsflow skipped"
 
-      # Phát hiện dự án mới bằng LLM (chỉ chạy nếu đã có secret CLAUDE_TOKEN)
-      - name: Radar LLM
-        env:
-          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_TOKEN }}
-        run: |
-          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then python step5b_radar_llm.py || echo "radar-llm failed"; else echo "chưa có CLAUDE_TOKEN — bỏ qua radar LLM"; fi
-
-      # Mức C: TỰ ĐỘNG thêm ứng viên đủ mạnh (★★+, do LLM chấm) vào registry — khỏi duyệt tay
-      - name: Auto-promote candidates
-        env:
-          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python promote_candidates.py || echo "promote-candidates skipped"
-
       # Tự động đưa tin cột mốc thành mark 'auto' trên Gantt (deterministic)
       - name: Promote newsflow to tracker
         env:
