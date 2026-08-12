@@ -38,7 +38,7 @@ FEEDS = [
 # loại công trình + TÊN (tên phải là danh từ riêng: nối địa danh "A - B" hoặc "Tên + số/riêng")
 # CHỈ hạ tầng giao thông (bỏ điện/nước; 'tàu điện/metro' vẫn giữ vì là giao thông)
 TYPE = (r"(cao tốc|đường sắt tốc độ cao|đường sắt|tàu điện|đường vành đai|vành đai|sân bay|"
-        r"cảng hàng không|cảng biển|cảng|metro|tuyến metro|hầm đường bộ|hầm|cầu)")
+        r"cảng hàng không|cảng biển|cảng|metro|tuyến metro|hầm đường bộ)")   # bỏ 'cầu' (dính nhu/yêu cầu)
 # tên hợp lệ: có nối địa danh (Châu Đốc - Cần Thơ) HOẶC danh từ riêng + số/riêng (Đông Hải 1)
 NAME = (r"([A-ZĐÀ-Ỹ][\wÀ-ỹ]+(?:\s+[A-ZĐÀ-Ỹ0-9][\wÀ-ỹ]*)*"
         r"(?:\s*[-–]\s*[A-ZĐÀ-Ỹ][\wÀ-ỹ]+(?:\s+[\wÀ-ỹ]+)*)*)")
