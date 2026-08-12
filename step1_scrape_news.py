@@ -57,6 +57,9 @@ RSS_FEEDS = {
     "tinnhanhck": ["https://www.tinnhanhchungkhoan.vn/rss/home.rss"],
     "vietnambiz": ["https://vietnambiz.vn/tin-moi-nhat.rss"],
     "markettimes": ["https://markettimes.vn/rss/home.rss"],
+    "congthuong": ["https://congthuong.vn/rss/thi-truong.rss", "https://congthuong.vn/rss/nang-luong.rss",
+                   "https://congthuong.vn/rss/dia-phuong.rss"],       # Bộ Công Thương: điện/công nghiệp
+    "nhandan": ["https://nhandan.vn/rss/kinhte-1017.rss"],            # Báo Nhân Dân
 }
 
 # ── SEARCH sources ───────────────────────────────────────────────────────────
