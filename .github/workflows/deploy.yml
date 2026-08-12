@@ -40,13 +40,7 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step2_newsflow.py --days 30 || echo "newsflow skipped"
 
-      # Radar: phát hiện dự án hạ tầng quan trọng chưa có trong registry (deterministic)
-      - name: Radar candidates
-        env:
-          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python step5_radar.py --top 0 || echo "radar skipped"
-
-      # Radar mức B (LLM) — chỉ chạy nếu đã cấu hình secret CLAUDE_TOKEN
+      # Phát hiện dự án mới bằng LLM (chỉ chạy nếu đã có secret CLAUDE_TOKEN)
       - name: Radar LLM
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
