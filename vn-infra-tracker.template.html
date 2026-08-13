@@ -300,7 +300,6 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <div id="view-gantt">
 <div class="bar">
   <div class="grp"><span>Nhóm</span><div id="f-group"></div></div>
-  <div class="grp"><span>Độ tin cậy tối thiểu</span><div id="f-tier"></div></div>
   <div class="grp"><button class="chip" id="expandAll">Mở tất cả hạng mục</button></div>
 </div>
 
@@ -965,15 +964,6 @@ document.getElementById('f-group-sel').onchange = e=>{
   activeGroups = v==='__all' ? new Set(GROUPS.map(g=>g.id)) : new Set([v]);
   render();
 };
-
-const ft = document.getElementById('f-tier');
-const TIERS = [['0','tất cả'],['1','≥ doanh nghiệp'],['2','≥ chỉ đạo'],['3','≥ hợp đồng'],['4','chỉ việc đã xảy ra']];
-ft.innerHTML = TIERS.map(([v,l],i)=>`<button class="chip" data-t="${v}" aria-pressed="${i===0}">${l}</button>`).join('');
-ft.querySelectorAll('button').forEach(b=>b.onclick=()=>{
-  minTier = +b.dataset.t;
-  ft.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
-  render();
-});
 
 document.getElementById('expandAll').onclick = e=>{
   if(open.size){open.clear();e.target.textContent='Mở tất cả hạng mục';}
