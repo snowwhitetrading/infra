@@ -25,16 +25,21 @@ SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan
                "cangio_depot": 9, "halong_depot": 10, "gia_binh": 11}
 
 
-def fetch_satellite():
-    """Đọc satellite_export/manifest.csv -> {tid: [{month,date,cloud,ok,file}]}."""
+def fetch_satellite(client):
+    """Đọc satellite_export/manifest.csv -> {tid: [{month,date,cloud,ok,file}]}.
+    site_key khớp id registry (ảnh mới từ export_satellite.py) hoặc SITEKEY2TID (11 site cũ)."""
     path = os.path.join(HERE, "satellite_export", "manifest.csv")
     if not os.path.exists(path):
         print("  (không có satellite_export/manifest.csv — bỏ qua tab Vệ tinh)")
         return {}
+    reg_id2tid = {d["id"]: d["tid"] for d in
+                  client["dc_commodity"]["Infra_Projects_Registry"].find({}, {"id": 1, "tid": 1})
+                  if d.get("tid")}
     data = {}
     with open(path, encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            tid = SITEKEY2TID.get(row.get("site_key"))
+            sk = row.get("site_key")
+            tid = reg_id2tid.get(sk) or SITEKEY2TID.get(sk)
             if not tid:
                 continue
             data.setdefault(str(tid), []).append({
@@ -215,7 +220,7 @@ def main():
 
     newsflow = fetch_newsflow(c, projects)
     print(f"Newsflow: {len(newsflow)} tin")
-    satellite = fetch_satellite()
+    satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
     mappts = fetch_mappts(c)
     print(f"Bản đồ: {len(mappts)} điểm dự án")

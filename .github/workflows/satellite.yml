@@ -1,0 +1,53 @@
+name: Satellite export (monthly)
+
+on:
+  schedule:
+    - cron: '0 3 5 * *'       # ngày 5 hằng tháng (scene tháng trước thường đã có)
+  workflow_dispatch:
+    inputs:
+      from:
+        description: 'Từ tháng (YYYY-MM), bỏ trống = 6 tháng gần nhất'
+        required: false
+      radius_km:
+        description: 'Bán kính AOI (km)'
+        required: false
+        default: '1.5'
+
+permissions:
+  contents: write            # để commit ảnh mới
+
+concurrency:
+  group: satellite
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install -r requirements.txt -r requirements-satellite.txt
+
+      - name: Export Sentinel-2
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: |
+          ARGS="--radius-km ${{ github.event.inputs.radius_km || '1.5' }}"
+          if [ -n "${{ github.event.inputs.from }}" ]; then ARGS="$ARGS --from ${{ github.event.inputs.from }}"; fi
+          timeout 5400 python export_satellite.py $ARGS || echo "export dừng/timeout (incremental, tháng sau tiếp tục)"
+
+      - name: Commit ảnh mới
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add satellite_export
+          if git diff --cached --quiet; then
+            echo "Không có ảnh mới."
+          else
+            git commit -m "Vệ tinh: cập nhật ảnh Sentinel-2 (tự động hằng tháng)"
+            git push
+          fi

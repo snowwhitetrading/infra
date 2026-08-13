@@ -19,26 +19,6 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-06,2026-06-16,1.8,OK,01_apec_center/2026-06_2026-06-16_cloud2pct_OK.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-07,2026-07-16,1.1,OK,01_apec_center/2026-07_2026-07-16_cloud1pct_OK.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-08,2026-08-02,12.7,OK,01_apec_center/2026-08_2026-08-02_cloud13pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-01,2025-01-27,0.0,OK,02_pq_airport/2025-01_2025-01-27_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-02,2025-02-08,0.0,OK,02_pq_airport/2025-02_2025-02-08_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-03,2025-03-10,0.0,OK,02_pq_airport/2025-03_2025-03-10_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-04,2025-04-04,0.0,OK,02_pq_airport/2025-04_2025-04-04_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-05,2025-05-01,13.9,OK,02_pq_airport/2025-05_2025-05-01_cloud14pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-06,2025-06-21,18.5,OK,02_pq_airport/2025-06_2025-06-21_cloud18pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-07,2025-07-01,8.3,OK,02_pq_airport/2025-07_2025-07-01_cloud8pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-08,2025-08-09,0.0,OK,02_pq_airport/2025-08_2025-08-09_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-09,2025-09-11,5.9,OK,02_pq_airport/2025-09_2025-09-11_cloud6pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-10,2025-10-08,3.2,OK,02_pq_airport/2025-10_2025-10-08_cloud3pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-11,2025-11-30,0.0,OK,02_pq_airport/2025-11_2025-11-30_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-12,2025-12-23,0.0,OK,02_pq_airport/2025-12_2025-12-23_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-01,2026-01-09,0.0,OK,02_pq_airport/2026-01_2026-01-09_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-02,2026-02-18,31.5,CLOUDY,02_pq_airport/2026-02_2026-02-18_cloud32pct_CLOUDY.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-03,2026-03-23,23.9,OK,02_pq_airport/2026-03_2026-03-23_cloud24pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-04,2026-04-07,0.1,OK,02_pq_airport/2026-04_2026-04-07_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-05,2026-05-27,0.4,OK,02_pq_airport/2026-05_2026-05-27_cloud0pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-06,2026-06-13,9.1,OK,02_pq_airport/2026-06_2026-06-13_cloud9pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-07,2026-07-18,12.2,OK,02_pq_airport/2026-07_2026-07-18_cloud12pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-08,2026-08-02,38.1,CLOUDY,02_pq_airport/2026-08_2026-08-02_cloud38pct_CLOUDY.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-01,2025-01-27,0.0,OK,03_bai_dat_do/2025-01_2025-01-27_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-02,2025-02-08,0.0,OK,03_bai_dat_do/2025-02_2025-02-08_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-03,2025-03-10,0.0,OK,03_bai_dat_do/2025-03_2025-03-10_cloud0pct_OK.png
@@ -59,6 +39,105 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-06,2026-06-28,1.4,OK,03_bai_dat_do/2026-06_2026-06-28_cloud1pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-07,2026-07-16,1.0,OK,03_bai_dat_do/2026-07_2026-07-16_cloud1pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-08,2026-08-02,7.2,OK,03_bai_dat_do/2026-08_2026-08-02_cloud7pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-01,2025-01-16,0.6,OK,08_cangio_depot/2025-01_2025-01-16_cloud1pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-02,2025-02-10,13.4,OK,08_cangio_depot/2025-02_2025-02-10_cloud13pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-03,2025-03-12,0.0,OK,08_cangio_depot/2025-03_2025-03-12_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-04,2025-04-06,0.2,OK,08_cangio_depot/2025-04_2025-04-06_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-05,2025-05-11,14.6,OK,08_cangio_depot/2025-05_2025-05-11_cloud15pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-06,2025-06-30,0.0,OK,08_cangio_depot/2025-06_2025-06-30_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-07,2025-07-25,0.0,OK,08_cangio_depot/2025-07_2025-07-25_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-08,2025-08-19,23.6,OK,08_cangio_depot/2025-08_2025-08-19_cloud24pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-09,2025-09-15,36.4,CLOUDY,08_cangio_depot/2025-09_2025-09-15_cloud36pct_CLOUDY.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-10,2025-10-15,3.0,OK,08_cangio_depot/2025-10_2025-10-15_cloud3pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-11,2025-11-24,23.8,OK,08_cangio_depot/2025-11_2025-11-24_cloud24pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-12,2025-12-07,1.9,OK,08_cangio_depot/2025-12_2025-12-07_cloud2pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-01,2026-01-26,0.0,OK,08_cangio_depot/2026-01_2026-01-26_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-02,2026-02-10,35.9,CLOUDY,08_cangio_depot/2026-02_2026-02-10_cloud36pct_CLOUDY.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-03,2026-03-22,0.0,OK,08_cangio_depot/2026-03_2026-03-22_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-04,2026-04-26,0.0,OK,08_cangio_depot/2026-04_2026-04-26_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-05,2026-05-01,0.0,OK,08_cangio_depot/2026-05_2026-05-01_cloud0pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-06,2026-06-15,26.6,OK,08_cangio_depot/2026-06_2026-06-15_cloud27pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-07,2026-07-20,27.0,OK,08_cangio_depot/2026-07_2026-07-20_cloud27pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-08,2026-08-01,100.0,CLOUDY,08_cangio_depot/2026-08_2026-08-01_cloud100pct_CLOUDY.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-01,2025-01-27,0.0,OK,07b_gb_road_bn/2025-01_2025-01-27_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-02,2025-02-11,0.1,OK,07b_gb_road_bn/2025-02_2025-02-11_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-03,2025-03-23,18.5,OK,07b_gb_road_bn/2025-03_2025-03-23_cloud18pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-04,2025-04-27,93.5,CLOUDY,07b_gb_road_bn/2025-04_2025-04-27_cloud94pct_CLOUDY.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-05,2025-05-12,0.0,OK,07b_gb_road_bn/2025-05_2025-05-12_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-06,2025-06-11,8.2,OK,07b_gb_road_bn/2025-06_2025-06-11_cloud8pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-07,2025-07-26,84.5,CLOUDY,07b_gb_road_bn/2025-07_2025-07-26_cloud84pct_CLOUDY.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-08,2025-08-12,20.9,OK,07b_gb_road_bn/2025-08_2025-08-12_cloud21pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-09,2025-09-24,19.3,OK,07b_gb_road_bn/2025-09_2025-09-24_cloud19pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-10,2025-10-19,11.4,OK,07b_gb_road_bn/2025-10_2025-10-19_cloud11pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-11,2025-11-28,0.0,OK,07b_gb_road_bn/2025-11_2025-11-28_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-12,2025-12-18,0.0,OK,07b_gb_road_bn/2025-12_2025-12-18_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-01,2026-01-07,0.0,OK,07b_gb_road_bn/2026-01_2026-01-07_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-02,2026-02-16,70.4,CLOUDY,07b_gb_road_bn/2026-02_2026-02-16_cloud70pct_CLOUDY.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-03,2026-03-13,0.0,OK,07b_gb_road_bn/2026-03_2026-03-13_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-04,2026-04-12,0.3,OK,07b_gb_road_bn/2026-04_2026-04-12_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-05,2026-05-27,0.3,OK,07b_gb_road_bn/2026-05_2026-05-27_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-06,2026-06-01,19.7,OK,07b_gb_road_bn/2026-06_2026-06-01_cloud20pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-07,2026-07-26,39.1,CLOUDY,07b_gb_road_bn/2026-07_2026-07-26_cloud39pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-01,2025-01-27,0.0,OK,07a_gb_road_hn/2025-01_2025-01-27_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-02,2025-02-11,0.0,OK,07a_gb_road_hn/2025-02_2025-02-11_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-03,2025-03-23,59.8,CLOUDY,07a_gb_road_hn/2025-03_2025-03-23_cloud60pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-04,2025-04-14,73.3,CLOUDY,07a_gb_road_hn/2025-04_2025-04-14_cloud73pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-05,2025-05-12,0.0,OK,07a_gb_road_hn/2025-05_2025-05-12_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-06,2025-06-11,15.0,OK,07a_gb_road_hn/2025-06_2025-06-11_cloud15pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-07,2025-07-26,86.0,CLOUDY,07a_gb_road_hn/2025-07_2025-07-26_cloud86pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-08,2025-08-12,37.5,CLOUDY,07a_gb_road_hn/2025-08_2025-08-12_cloud38pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-09,2025-09-24,30.4,CLOUDY,07a_gb_road_hn/2025-09_2025-09-24_cloud30pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-10,2025-10-19,28.2,OK,07a_gb_road_hn/2025-10_2025-10-19_cloud28pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-11,2025-11-13,0.0,OK,07a_gb_road_hn/2025-11_2025-11-13_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-12,2025-12-18,0.0,OK,07a_gb_road_hn/2025-12_2025-12-18_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-01,2026-01-07,0.0,OK,07a_gb_road_hn/2026-01_2026-01-07_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-02,2026-02-16,58.2,CLOUDY,07a_gb_road_hn/2026-02_2026-02-16_cloud58pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-03,2026-03-13,1.6,OK,07a_gb_road_hn/2026-03_2026-03-13_cloud2pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-04,2026-04-12,3.9,OK,07a_gb_road_hn/2026-04_2026-04-12_cloud4pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-05,2026-05-27,55.7,CLOUDY,07a_gb_road_hn/2026-05_2026-05-27_cloud56pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-06,2026-06-21,20.8,OK,07a_gb_road_hn/2026-06_2026-06-21_cloud21pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-07,2026-07-18,63.0,CLOUDY,07a_gb_road_hn/2026-07_2026-07-18_cloud63pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-01,2025-01-27,0.0,OK,10_gia_binh/2025-01_2025-01-27_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-02,2025-02-11,3.5,OK,10_gia_binh/2025-02_2025-02-11_cloud4pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-03,2025-03-23,14.5,OK,10_gia_binh/2025-03_2025-03-23_cloud14pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-04,2025-04-12,100.0,CLOUDY,10_gia_binh/2025-04_2025-04-12_cloud100pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-05,2025-05-12,22.8,OK,10_gia_binh/2025-05_2025-05-12_cloud23pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-06,2025-06-11,2.4,OK,10_gia_binh/2025-06_2025-06-11_cloud2pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-07,2025-07-26,62.6,CLOUDY,10_gia_binh/2025-07_2025-07-26_cloud63pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-08,2025-08-12,59.9,CLOUDY,10_gia_binh/2025-08_2025-08-12_cloud60pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-09,2025-09-21,17.8,OK,10_gia_binh/2025-09_2025-09-21_cloud18pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-10,2025-10-19,0.0,OK,10_gia_binh/2025-10_2025-10-19_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-11,2025-11-13,0.0,OK,10_gia_binh/2025-11_2025-11-13_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-12,2025-12-18,0.0,OK,10_gia_binh/2025-12_2025-12-18_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-01,2026-01-07,0.0,OK,10_gia_binh/2026-01_2026-01-07_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-02,2026-02-16,91.8,CLOUDY,10_gia_binh/2026-02_2026-02-16_cloud92pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-03,2026-03-13,0.0,OK,10_gia_binh/2026-03_2026-03-13_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-04,2026-04-12,0.8,OK,10_gia_binh/2026-04_2026-04-12_cloud1pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-05,2026-05-27,31.0,CLOUDY,10_gia_binh/2026-05_2026-05-27_cloud31pct_CLOUDY.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-06,2026-06-21,22.3,OK,10_gia_binh/2026-06_2026-06-21_cloud22pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-07,2026-07-26,48.8,CLOUDY,10_gia_binh/2026-07_2026-07-26_cloud49pct_CLOUDY.png
+11,Cảng hàng không quốc tế Gia Bình,giabinh_airport,21.05,106.28,2026-06,2026-06-01,25.0,OK,giabinh_airport/2026-06_2026-06-01_cloud25pct_OK.png
+11,Cảng hàng không quốc tế Gia Bình,giabinh_airport,21.05,106.28,2026-07,2026-07-26,72.2,CLOUDY,giabinh_airport/2026-07_2026-07-26_cloud72pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-01,2025-01-04,0.0,OK,09_halong_depot/2025-01_2025-01-04_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-02,2025-02-13,76.3,CLOUDY,09_halong_depot/2025-02_2025-02-13_cloud76pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-03,2025-03-25,5.2,OK,09_halong_depot/2025-03_2025-03-25_cloud5pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-04,2025-04-29,2.1,OK,09_halong_depot/2025-04_2025-04-29_cloud2pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-05,2025-05-01,99.9,CLOUDY,09_halong_depot/2025-05_2025-05-01_cloud100pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-06,2025-06-10,86.2,CLOUDY,09_halong_depot/2025-06_2025-06-10_cloud86pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-07,2025-07-28,5.3,OK,09_halong_depot/2025-07_2025-07-28_cloud5pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-08,2025-08-02,2.3,OK,09_halong_depot/2025-08_2025-08-02_cloud2pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-09,2025-09-16,4.2,OK,09_halong_depot/2025-09_2025-09-16_cloud4pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-10,2025-10-16,9.1,OK,09_halong_depot/2025-10_2025-10-16_cloud9pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-11,2025-11-15,0.1,OK,09_halong_depot/2025-11_2025-11-15_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-12,2025-12-20,57.6,CLOUDY,09_halong_depot/2025-12_2025-12-20_cloud58pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-01,2026-01-14,0.1,OK,09_halong_depot/2026-01_2026-01-14_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-02,2026-02-13,90.9,CLOUDY,09_halong_depot/2026-02_2026-02-13_cloud91pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-03,2026-03-10,14.6,OK,09_halong_depot/2026-03_2026-03-10_cloud15pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-04,2026-04-09,56.9,CLOUDY,09_halong_depot/2026-04_2026-04-09_cloud57pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-05,2026-05-26,0.0,OK,09_halong_depot/2026-05_2026-05-26_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-06,2026-06-23,82.1,CLOUDY,09_halong_depot/2026-06_2026-06-23_cloud82pct_CLOUDY.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-07,2026-07-13,0.3,OK,09_halong_depot/2026-07_2026-07-13_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-08,2026-08-02,100.0,CLOUDY,09_halong_depot/2026-08_2026-08-02_cloud100pct_CLOUDY.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2025-01,2025-01-27,0.0,OK,04_nui_ong_quan/2025-01_2025-01-27_cloud0pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2025-02,2025-02-08,0.0,OK,04_nui_ong_quan/2025-02_2025-02-08_cloud0pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2025-03,2025-03-10,0.0,OK,04_nui_ong_quan/2025-03_2025-03-10_cloud0pct_OK.png
@@ -79,6 +158,26 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-06,2026-06-16,0.2,OK,04_nui_ong_quan/2026-06_2026-06-16_cloud0pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-07,2026-07-16,1.5,OK,04_nui_ong_quan/2026-07_2026-07-16_cloud2pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-08,2026-08-02,13.2,OK,04_nui_ong_quan/2026-08_2026-08-02_cloud13pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-01,2025-01-27,0.0,OK,02_pq_airport/2025-01_2025-01-27_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-02,2025-02-08,0.0,OK,02_pq_airport/2025-02_2025-02-08_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-03,2025-03-10,0.0,OK,02_pq_airport/2025-03_2025-03-10_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-04,2025-04-04,0.0,OK,02_pq_airport/2025-04_2025-04-04_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-05,2025-05-01,13.9,OK,02_pq_airport/2025-05_2025-05-01_cloud14pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-06,2025-06-21,18.5,OK,02_pq_airport/2025-06_2025-06-21_cloud18pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-07,2025-07-01,8.3,OK,02_pq_airport/2025-07_2025-07-01_cloud8pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-08,2025-08-09,0.0,OK,02_pq_airport/2025-08_2025-08-09_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-09,2025-09-11,5.9,OK,02_pq_airport/2025-09_2025-09-11_cloud6pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-10,2025-10-08,3.2,OK,02_pq_airport/2025-10_2025-10-08_cloud3pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-11,2025-11-30,0.0,OK,02_pq_airport/2025-11_2025-11-30_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-12,2025-12-23,0.0,OK,02_pq_airport/2025-12_2025-12-23_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-01,2026-01-09,0.0,OK,02_pq_airport/2026-01_2026-01-09_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-02,2026-02-18,31.5,CLOUDY,02_pq_airport/2026-02_2026-02-18_cloud32pct_CLOUDY.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-03,2026-03-23,23.9,OK,02_pq_airport/2026-03_2026-03-23_cloud24pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-04,2026-04-07,0.1,OK,02_pq_airport/2026-04_2026-04-07_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-05,2026-05-27,0.4,OK,02_pq_airport/2026-05_2026-05-27_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-06,2026-06-13,9.1,OK,02_pq_airport/2026-06_2026-06-13_cloud9pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-07,2026-07-18,12.2,OK,02_pq_airport/2026-07_2026-07-18_cloud12pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-08,2026-08-02,38.1,CLOUDY,02_pq_airport/2026-08_2026-08-02_cloud38pct_CLOUDY.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-01,2025-01-07,0.0,OK,05_pq_tram/2025-01_2025-01-07_cloud0pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-02,2025-02-08,0.0,OK,05_pq_tram/2025-02_2025-02-08_cloud0pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-03,2025-03-10,0.1,OK,05_pq_tram/2025-03_2025-03-10_cloud0pct_OK.png
@@ -119,100 +218,5 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-06,2026-06-05,44.0,CLOUDY,06_rach_chiec/2026-06_2026-06-05_cloud44pct_CLOUDY.png
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-07,2026-07-20,48.7,CLOUDY,06_rach_chiec/2026-07_2026-07-20_cloud49pct_CLOUDY.png
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-08,2026-08-02,95.1,CLOUDY,06_rach_chiec/2026-08_2026-08-02_cloud95pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-01,2025-01-27,0.0,OK,07a_gb_road_hn/2025-01_2025-01-27_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-02,2025-02-11,0.0,OK,07a_gb_road_hn/2025-02_2025-02-11_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-03,2025-03-23,59.8,CLOUDY,07a_gb_road_hn/2025-03_2025-03-23_cloud60pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-04,2025-04-14,73.3,CLOUDY,07a_gb_road_hn/2025-04_2025-04-14_cloud73pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-05,2025-05-12,0.0,OK,07a_gb_road_hn/2025-05_2025-05-12_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-06,2025-06-11,15.0,OK,07a_gb_road_hn/2025-06_2025-06-11_cloud15pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-07,2025-07-26,86.0,CLOUDY,07a_gb_road_hn/2025-07_2025-07-26_cloud86pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-08,2025-08-12,37.5,CLOUDY,07a_gb_road_hn/2025-08_2025-08-12_cloud38pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-09,2025-09-24,30.4,CLOUDY,07a_gb_road_hn/2025-09_2025-09-24_cloud30pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-10,2025-10-19,28.2,OK,07a_gb_road_hn/2025-10_2025-10-19_cloud28pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-11,2025-11-13,0.0,OK,07a_gb_road_hn/2025-11_2025-11-13_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-12,2025-12-18,0.0,OK,07a_gb_road_hn/2025-12_2025-12-18_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-01,2026-01-07,0.0,OK,07a_gb_road_hn/2026-01_2026-01-07_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-02,2026-02-16,58.2,CLOUDY,07a_gb_road_hn/2026-02_2026-02-16_cloud58pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-03,2026-03-13,1.6,OK,07a_gb_road_hn/2026-03_2026-03-13_cloud2pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-04,2026-04-12,3.9,OK,07a_gb_road_hn/2026-04_2026-04-12_cloud4pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-05,2026-05-27,55.7,CLOUDY,07a_gb_road_hn/2026-05_2026-05-27_cloud56pct_CLOUDY.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-06,2026-06-21,20.8,OK,07a_gb_road_hn/2026-06_2026-06-21_cloud21pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-07,2026-07-18,63.0,CLOUDY,07a_gb_road_hn/2026-07_2026-07-18_cloud63pct_CLOUDY.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-01,2025-01-27,0.0,OK,07b_gb_road_bn/2025-01_2025-01-27_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-02,2025-02-11,0.1,OK,07b_gb_road_bn/2025-02_2025-02-11_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-03,2025-03-23,18.5,OK,07b_gb_road_bn/2025-03_2025-03-23_cloud18pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-04,2025-04-27,93.5,CLOUDY,07b_gb_road_bn/2025-04_2025-04-27_cloud94pct_CLOUDY.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-05,2025-05-12,0.0,OK,07b_gb_road_bn/2025-05_2025-05-12_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-06,2025-06-11,8.2,OK,07b_gb_road_bn/2025-06_2025-06-11_cloud8pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-07,2025-07-26,84.5,CLOUDY,07b_gb_road_bn/2025-07_2025-07-26_cloud84pct_CLOUDY.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-08,2025-08-12,20.9,OK,07b_gb_road_bn/2025-08_2025-08-12_cloud21pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-09,2025-09-24,19.3,OK,07b_gb_road_bn/2025-09_2025-09-24_cloud19pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-10,2025-10-19,11.4,OK,07b_gb_road_bn/2025-10_2025-10-19_cloud11pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-11,2025-11-28,0.0,OK,07b_gb_road_bn/2025-11_2025-11-28_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-12,2025-12-18,0.0,OK,07b_gb_road_bn/2025-12_2025-12-18_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-01,2026-01-07,0.0,OK,07b_gb_road_bn/2026-01_2026-01-07_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-02,2026-02-16,70.4,CLOUDY,07b_gb_road_bn/2026-02_2026-02-16_cloud70pct_CLOUDY.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-03,2026-03-13,0.0,OK,07b_gb_road_bn/2026-03_2026-03-13_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-04,2026-04-12,0.3,OK,07b_gb_road_bn/2026-04_2026-04-12_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-05,2026-05-27,0.3,OK,07b_gb_road_bn/2026-05_2026-05-27_cloud0pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-06,2026-06-01,19.7,OK,07b_gb_road_bn/2026-06_2026-06-01_cloud20pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-07,2026-07-26,39.1,CLOUDY,07b_gb_road_bn/2026-07_2026-07-26_cloud39pct_CLOUDY.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-01,2025-01-16,0.6,OK,08_cangio_depot/2025-01_2025-01-16_cloud1pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-02,2025-02-10,13.4,OK,08_cangio_depot/2025-02_2025-02-10_cloud13pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-03,2025-03-12,0.0,OK,08_cangio_depot/2025-03_2025-03-12_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-04,2025-04-06,0.2,OK,08_cangio_depot/2025-04_2025-04-06_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-05,2025-05-11,14.6,OK,08_cangio_depot/2025-05_2025-05-11_cloud15pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-06,2025-06-30,0.0,OK,08_cangio_depot/2025-06_2025-06-30_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-07,2025-07-25,0.0,OK,08_cangio_depot/2025-07_2025-07-25_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-08,2025-08-19,23.6,OK,08_cangio_depot/2025-08_2025-08-19_cloud24pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-09,2025-09-15,36.4,CLOUDY,08_cangio_depot/2025-09_2025-09-15_cloud36pct_CLOUDY.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-10,2025-10-15,3.0,OK,08_cangio_depot/2025-10_2025-10-15_cloud3pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-11,2025-11-24,23.8,OK,08_cangio_depot/2025-11_2025-11-24_cloud24pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2025-12,2025-12-07,1.9,OK,08_cangio_depot/2025-12_2025-12-07_cloud2pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-01,2026-01-26,0.0,OK,08_cangio_depot/2026-01_2026-01-26_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-02,2026-02-10,35.9,CLOUDY,08_cangio_depot/2026-02_2026-02-10_cloud36pct_CLOUDY.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-03,2026-03-22,0.0,OK,08_cangio_depot/2026-03_2026-03-22_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-04,2026-04-26,0.0,OK,08_cangio_depot/2026-04_2026-04-26_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-05,2026-05-01,0.0,OK,08_cangio_depot/2026-05_2026-05-01_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-06,2026-06-15,26.6,OK,08_cangio_depot/2026-06_2026-06-15_cloud27pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-07,2026-07-20,27.0,OK,08_cangio_depot/2026-07_2026-07-20_cloud27pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-08,2026-08-01,100.0,CLOUDY,08_cangio_depot/2026-08_2026-08-01_cloud100pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-01,2025-01-04,0.0,OK,09_halong_depot/2025-01_2025-01-04_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-02,2025-02-13,76.3,CLOUDY,09_halong_depot/2025-02_2025-02-13_cloud76pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-03,2025-03-25,5.2,OK,09_halong_depot/2025-03_2025-03-25_cloud5pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-04,2025-04-29,2.1,OK,09_halong_depot/2025-04_2025-04-29_cloud2pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-05,2025-05-01,99.9,CLOUDY,09_halong_depot/2025-05_2025-05-01_cloud100pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-06,2025-06-10,86.2,CLOUDY,09_halong_depot/2025-06_2025-06-10_cloud86pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-07,2025-07-28,5.3,OK,09_halong_depot/2025-07_2025-07-28_cloud5pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-08,2025-08-02,2.3,OK,09_halong_depot/2025-08_2025-08-02_cloud2pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-09,2025-09-16,4.2,OK,09_halong_depot/2025-09_2025-09-16_cloud4pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-10,2025-10-16,9.1,OK,09_halong_depot/2025-10_2025-10-16_cloud9pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-11,2025-11-15,0.1,OK,09_halong_depot/2025-11_2025-11-15_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2025-12,2025-12-20,57.6,CLOUDY,09_halong_depot/2025-12_2025-12-20_cloud58pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-01,2026-01-14,0.1,OK,09_halong_depot/2026-01_2026-01-14_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-02,2026-02-13,90.9,CLOUDY,09_halong_depot/2026-02_2026-02-13_cloud91pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-03,2026-03-10,14.6,OK,09_halong_depot/2026-03_2026-03-10_cloud15pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-04,2026-04-09,56.9,CLOUDY,09_halong_depot/2026-04_2026-04-09_cloud57pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-05,2026-05-26,0.0,OK,09_halong_depot/2026-05_2026-05-26_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-06,2026-06-23,82.1,CLOUDY,09_halong_depot/2026-06_2026-06-23_cloud82pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-07,2026-07-13,0.3,OK,09_halong_depot/2026-07_2026-07-13_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-08,2026-08-02,100.0,CLOUDY,09_halong_depot/2026-08_2026-08-02_cloud100pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-01,2025-01-27,0.0,OK,10_gia_binh/2025-01_2025-01-27_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-02,2025-02-11,3.5,OK,10_gia_binh/2025-02_2025-02-11_cloud4pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-03,2025-03-23,14.5,OK,10_gia_binh/2025-03_2025-03-23_cloud14pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-04,2025-04-12,100.0,CLOUDY,10_gia_binh/2025-04_2025-04-12_cloud100pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-05,2025-05-12,22.8,OK,10_gia_binh/2025-05_2025-05-12_cloud23pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-06,2025-06-11,2.4,OK,10_gia_binh/2025-06_2025-06-11_cloud2pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-07,2025-07-26,62.6,CLOUDY,10_gia_binh/2025-07_2025-07-26_cloud63pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-08,2025-08-12,59.9,CLOUDY,10_gia_binh/2025-08_2025-08-12_cloud60pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-09,2025-09-21,17.8,OK,10_gia_binh/2025-09_2025-09-21_cloud18pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-10,2025-10-19,0.0,OK,10_gia_binh/2025-10_2025-10-19_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-11,2025-11-13,0.0,OK,10_gia_binh/2025-11_2025-11-13_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-12,2025-12-18,0.0,OK,10_gia_binh/2025-12_2025-12-18_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-01,2026-01-07,0.0,OK,10_gia_binh/2026-01_2026-01-07_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-02,2026-02-16,91.8,CLOUDY,10_gia_binh/2026-02_2026-02-16_cloud92pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-03,2026-03-13,0.0,OK,10_gia_binh/2026-03_2026-03-13_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-04,2026-04-12,0.8,OK,10_gia_binh/2026-04_2026-04-12_cloud1pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-05,2026-05-27,31.0,CLOUDY,10_gia_binh/2026-05_2026-05-27_cloud31pct_CLOUDY.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-06,2026-06-21,22.3,OK,10_gia_binh/2026-06_2026-06-21_cloud22pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-07,2026-07-26,48.8,CLOUDY,10_gia_binh/2026-07_2026-07-26_cloud49pct_CLOUDY.png
+23,Vành đai 4 TP.HCM,ring4_hcmc,10.85,106.62,2026-06,2026-06-22,40.0,CLOUDY,ring4_hcmc/2026-06_2026-06-22_cloud40pct_CLOUDY.png
+23,Vành đai 4 TP.HCM,ring4_hcmc,10.85,106.62,2026-07,2026-07-20,30.2,CLOUDY,ring4_hcmc/2026-07_2026-07-20_cloud30pct_CLOUDY.png

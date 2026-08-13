@@ -1,0 +1,5 @@
+# Chỉ cho export_satellite.py (workflow vệ tinh hằng tháng) — KHÔNG cần cho build mỗi giờ
+pystac-client>=0.8
+rasterio>=1.3
+pillow>=10
+numpy>=1.26
