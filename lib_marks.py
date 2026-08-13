@@ -46,10 +46,13 @@ RX_DONE = re.compile(r"hoàn thành|khánh thành|vận hành|về đích|thông
 RX_PROGRESS = re.compile(
     r"khởi công|động thổ|bấm nút|"
     r"cất nóc|hợp long|thông xe|khánh thành|nghiệm thu|hoàn thành|hoàn tất|về đích|"
+    r"thi công|mũi thi công|đẩy nhanh|tăng tốc|tiến độ|lao dầm|đúc dầm|hầm|"
     r"đường băng|lắp đủ|\d+\s*/\s*\d+\s*nhịp|mái thép.*(nhịp|lắp)|cọc khoan nhồi|"
+    r"đạt\s*\d+\s*%|\d+\s*%\s*(khối lượng|tiến độ|hoàn thành|kế hoạch|thô)|"
     r"giải phóng mặt bằng|gpmb|thu hồi đất|bàn giao (mặt bằng|\d)|tái định cư|cưỡng chế|"
     r"bồi thường|đền bù|bốc thăm|kiểm kê|dỡ nhà|nhường đất|di dời|\d+[\.,]?\d*\s*/\s*\d+[\.,]?\d*\s*ha|"
-    r"phê duyệt|chủ trương đầu tư|điều chỉnh quy hoạch|quy hoạch phân khu|duyệt quy hoạch|"
+    r"phê duyệt|chủ trương đầu tư|điều chỉnh (quy hoạch|dự án|chủ trương|tổng mức)|quy hoạch phân khu|duyệt quy hoạch|"
+    r"định mức|dự toán|khởi động|"
     r"ký hợp đồng|đấu thầu|chọn nhà (thầu|đầu tư)|trúng thầu|chốt (doanh nghiệp|nhà đầu tư)|"
     r"chốt hạn|yêu cầu hoàn thành|góp \d+% vốn|góp vốn|chấp thuận nhà đầu tư|"
     r"triển khai (theo hình thức|tuyến|siêu dự án)",
@@ -61,7 +64,9 @@ RX_NOISE = re.compile(
     r"lợi nhuận|báo lãi|lãi kỷ lục|cổ phiếu|tài sản.*(triệu tỷ|tỷ usd)|tỷ phú|"
     r"kỷ lục|chứng minh năng lực|kỳ tích|made in vietnam|đô thị toàn cầu|"
     r"thương hiệu|nghỉ dưỡng|du lịch|đường bay|đón (chuyến bay|tàu bay)|"
-    r"room tín dụng|năng lực tài chính|hưởng lợi|đẹp nhất|sức hút",
+    r"room tín dụng|năng lực tài chính|hưởng lợi|đẹp nhất|sức hút|"
+    r"tai nạn|va chạm|lật xe|tông|bốc cháy|cháy xe|tử vong|thương vong|"
+    r"bắt tạm giam|bạo hành|khởi tố|truy tố|trộm|cướp|đánh nhau|bạo lực",
     re.I)
 
 
