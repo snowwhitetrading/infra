@@ -172,6 +172,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .sub-row .track{min-height:26px}
 .sub-row .lbl{display:flex;flex-direction:column;justify-content:center}
 .sname{font-size:12px;color:var(--ink2)}
+.sname-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .sprog{font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px}
 .sprog-d{margin-top:3px}
 .sprog-d summary{font-size:11px;color:var(--build);cursor:pointer;list-style:none;width:fit-content;
@@ -373,6 +374,13 @@ const TODAY = 2026 + (7/12);             // 3/8/2026
 
 const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, superseded:0, auto:0};
 const SCHED_CLS = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late','chưa đánh giá được':'unknown'};
+function itemSched(prog){
+  const s=(prog||'').trimStart().toUpperCase();
+  if(s.startsWith('CHẬM')) return 'chậm tiến độ';
+  if(s.startsWith('VƯỢT')) return 'vượt tiến độ';
+  if(s.startsWith('ĐÚNG TIẾN ĐỘ')) return 'đúng tiến độ';
+  return '';
+}
 const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'chỉ đạo', company:'doanh nghiệp', inferred:'suy đoán', superseded:'mốc cũ đã lùi', auto:'tự động từ tin (chưa kiểm chứng)'};
 
 const NEWSFLOW = [];
@@ -845,19 +853,10 @@ function capexHTML(cap){
 
 function detailHTML(p){
   const ms = p.marks.slice().sort((a,b)=>a.date<b.date?-1:1);
-  const rowsHM = (p.items||[]).map(it=>{
-    const kinds = new Set((it.phases||[]).map(x=>x.kind));
-    const lane = kinds.has('gpmb') ? 'GPMB' : kinds.has('swap') ? 'Đối ứng' : kinds.size ? 'Thi công' : '—';
-    return `<tr><td class="hm-l">${lane}</td><td class="hm-n">${esc(it.name)}</td>`+
-           `<td class="hm-p">${esc(it.prog||'Chưa có ghi nhận')}</td></tr>`;
-  }).join('');
   return `<div class="detail"><div class="pad">
     ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
       <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
       <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>`:''}
-    <p class="dh" style="margin-top:18px">Hạng mục và tiến độ đến nay</p>
-    <table class="hm"><thead><tr><th>Loại</th><th>Hạng mục</th><th>Tiến độ ghi nhận</th></tr></thead>
-    <tbody>${rowsHM || '<tr><td colspan="3" class="hm-p">Chưa có dữ liệu hạng mục</td></tr>'}</tbody></table>
     <div class="dgrid" style="margin-top:20px">
     <div>
       <p class="dh">Vốn — Phụ lục I (tỷ đồng)</p>
@@ -906,7 +905,10 @@ function render(){
       if(isOpen){
         if(p.items.length){
           p.items.forEach(it=>{
-            h += `<div class="sub-row sub"><div class="lbl"><span class="sname">${esc(it.name)}</span>${it.prog?`<details class="sprog-d"><summary>chi tiết</summary><div class="sprog">${esc(it.prog)}</div></details>`:''}</div>
+            const isc = itemSched(it.prog);
+            h += `<div class="sub-row sub"><div class="lbl">
+                <div class="sname-row"><span class="sname">${esc(it.name)}</span>${isc?`<span class="sched s-${SCHED_CLS[isc]}">${isc.replace(' tiến độ','')}</span>`:''}</div>
+                ${it.prog?`<details class="sprog-d"><summary>chi tiết</summary><div class="sprog">${esc(it.prog)}</div></details>`:''}</div>
               <div class="track">${gridHTML()}${barsHTML(it.phases,it.marks,p)}</div></div>`;
           });
         } else {
