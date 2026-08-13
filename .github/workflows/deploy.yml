@@ -1,11 +1,10 @@
-name: Build & Deploy tracker
+name: Data pipeline + deploy (hourly)
 
 on:
-  push:
-    branches: [main]
   schedule:
-    - cron: '0 * * * *'      # MỖI GIỜ (24 lần/ngày) — RSS chỉ có tin mới nên quét dày cho chắc
+    - cron: '0 * * * *'      # MỖI GIỜ — scrape 16 báo → radar → newsflow → promote → build → deploy
   workflow_dispatch:          # cho phép bấm chạy tay
+  # KHÔNG chạy theo push nữa: push (sửa UI/template) do site.yml lo, deploy nhanh ~1 phút
 
 permissions:
   contents: read

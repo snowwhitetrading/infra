@@ -1,0 +1,53 @@
+name: Deploy site (fast, on push)
+
+on:
+  push:
+    branches: [main]           # mỗi lần sửa template/code/ảnh → build lại trang từ DB + deploy
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install -r requirements.txt
+
+      # CHỈ dựng trang từ DB (không scrape) → nhanh ~30s
+      - name: Build site
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: |
+          mkdir -p dist
+          python step5_build_site.py --out dist/index.html
+          if [ -d satellite_export ]; then cp -r satellite_export dist/satellite_export; fi
+          if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
+            echo "${{ vars.CUSTOM_DOMAIN }}" > dist/CNAME
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
