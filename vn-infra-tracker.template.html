@@ -323,6 +323,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 <div id="view-news" class="hidden">
   <div class="nf-filters">
+    <div class="grp"><span>Nhóm</span><select id="nf-grp"></select></div>
     <div class="grp"><span>Dự án</span><select id="nf-proj"></select></div>
     <div class="grp"><span>Nguồn</span><select id="nf-src"></select></div>
     <div class="grp"><span>Thời gian</span><select id="nf-date"></select></div>
@@ -343,6 +344,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
+  <div class="nf-filters"><div class="grp"><span>Nhóm</span><select id="map-grp"></select></div></div>
   <div class="map-legend">
     <span><i style="background:#e11d48"></i>Sân bay</span>
     <span><i style="background:#7c3aed"></i>Đường sắt / Metro</span>
@@ -389,6 +391,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 const NEWSFLOW = [];
 const SATELLITE = {};
 const MAPPTS = [];
+const CAT_ORDER = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -948,20 +951,23 @@ document.getElementById('expandAll').onclick = e=>{
 /* ---------- newsflow (tab Dòng tin) ---------- */
 function nfDate(d){const p=(d||'').split('-');return (p[2]||'01')+'/'+(p[1]||'01')+'/'+(p[0]||'');}
 function renderNews(){
-  const ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src'), ds=document.getElementById('nf-date');
+  const gs=document.getElementById('nf-grp'), ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src'), ds=document.getElementById('nf-date');
   if(!ps.dataset.init){
+    const grps=CAT_ORDER.filter(g=>NEWSFLOW.some(n=>n.g===g));
+    gs.innerHTML='<option value="">Tất cả nhóm</option>'+grps.map(g=>`<option>${esc(g)}</option>`).join('');
     const projs=[...new Set(NEWSFLOW.map(n=>n.pname))].sort((a,b)=>a.localeCompare(b,'vi'));
     ps.innerHTML='<option value="">Tất cả dự án</option>'+projs.map(p=>`<option>${esc(p)}</option>`).join('');
     const srcs=[...new Set(NEWSFLOW.map(n=>n.source))].sort();
     ss.innerHTML='<option value="">Tất cả nguồn</option>'+srcs.map(s=>`<option>${esc(s)}</option>`).join('');
     ds.innerHTML='<option value="">Mọi thời gian</option><option value="7">7 ngày qua</option>'+
       '<option value="30">30 ngày qua</option><option value="90">90 ngày qua</option><option value="365">12 tháng qua</option>';
-    ps.dataset.init='1'; ps.onchange=ss.onchange=ds.onchange=renderNews;
+    ps.dataset.init='1'; gs.onchange=ps.onchange=ss.onchange=ds.onchange=renderNews;
   }
-  const fp=ps.value, fs=ss.value, fd=ds.value;
+  const fg=gs.value, fp=ps.value, fs=ss.value, fd=ds.value;
   let cutoff='';
   if(fd){const t=new Date(); t.setDate(t.getDate()-(+fd)); cutoff=t.toISOString().slice(0,10);}
   const items=NEWSFLOW.filter(n=>{
+    if(fg&&n.g!==fg) return false;
     if(fp&&n.pname!==fp) return false;
     if(fs&&n.source!==fs) return false;
     if(cutoff){const d=(n.date||'').length===7?n.date+'-15':(n.date||''); if(d<cutoff) return false;}
@@ -1007,31 +1013,44 @@ function drawSat(){
 /* ---------- bản đồ (tab Bản đồ) ---------- */
 let _map = null;
 const MAP_COLOR = {airport:'#e11d48', rail:'#7c3aed', road:'#2563eb', port:'#0891b2', bridge:'#d97706', other:'#64748b'};
+let _mapLayer;
+function drawMapPts(){
+  const fg=document.getElementById('map-grp').value;
+  _mapLayer.clearLayers();
+  MAPPTS.filter(p=>!fg||p.g===fg).forEach(p=>{
+    const col = MAP_COLOR[p.kind]||MAP_COLOR.other;
+    const g = p.geo;
+    let layer;
+    if(g && g.type==='line' && g.coords && g.coords.length>1){
+      layer = L.polyline(g.coords, {color:col, weight:4, opacity:.85});
+    } else if(g && g.type==='area' && g.coords && g.coords.length>2){
+      layer = L.polygon(g.coords, {color:col, weight:2, fillColor:col, fillOpacity:.22});
+    } else {
+      layer = L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
+        fillColor:col, fillOpacity:.9});
+    }
+    layer.addTo(_mapLayer).bindPopup('<b>'+esc(p.name)+'</b>');
+  });
+}
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
     el.innerHTML = '<p class="cap" style="padding:24px">Bản đồ chỉ hiển thị trên site trực tuyến (cần internet để tải bản đồ).</p>';
     return;
   }
+  const gs=document.getElementById('map-grp');
+  if(!gs.dataset.init){
+    const grps=CAT_ORDER.filter(g=>MAPPTS.some(p=>p.g===g));
+    gs.innerHTML='<option value="">Tất cả nhóm</option>'+grps.map(g=>`<option>${esc(g)}</option>`).join('');
+    gs.dataset.init='1'; gs.onchange=drawMapPts;
+  }
   if(!_map){
     _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
-    MAPPTS.forEach(p=>{
-      const col = MAP_COLOR[p.kind]||MAP_COLOR.other;
-      const g = p.geo;
-      let layer;
-      if(g && g.type==='line' && g.coords && g.coords.length>1){
-        layer = L.polyline(g.coords, {color:col, weight:4, opacity:.85});
-      } else if(g && g.type==='area' && g.coords && g.coords.length>2){
-        layer = L.polygon(g.coords, {color:col, weight:2, fillColor:col, fillOpacity:.22});
-      } else {
-        layer = L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
-          fillColor:col, fillOpacity:.9});
-      }
-      layer.addTo(_map).bindPopup('<b>'+esc(p.name)+'</b>');
-    });
+    _mapLayer = L.layerGroup().addTo(_map);
   }
+  drawMapPts();
   setTimeout(()=>_map.invalidateSize(), 60);
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{

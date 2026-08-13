@@ -57,6 +57,16 @@ def categorize(name, loc=""):
     return "Khác"
 
 
+def category_map(client):
+    """tid -> nhóm droplist (categorize theo name+location trong registry)."""
+    out = {}
+    for d in client["dc_commodity"]["Infra_Projects_Registry"].find(
+            {}, {"tid": 1, "name": 1, "location": 1}):
+        if d.get("tid"):
+            out[d["tid"]] = categorize(d.get("name", ""), d.get("location", ""))
+    return out
+
+
 def fetch_satellite(client):
     """Đọc satellite_export/manifest.csv -> {tid: [{month,date,cloud,ok,file}]}.
     site_key khớp id registry (ảnh mới từ export_satellite.py) hoặc SITEKEY2TID (11 site cũ)."""
@@ -85,7 +95,7 @@ def fetch_satellite(client):
     return data
 
 
-def fetch_newsflow(client, projects):
+def fetch_newsflow(client, projects, tid2cat):
     """Dòng tin từng bài — đọc thẳng từ Infra_Newsflow (tách khỏi progress/digest)."""
     from lib_projects import project_names_by_tid
     tid2name = dict(project_names_by_tid())              # registry (gồm dự án mới ngoài Gantt)
@@ -95,7 +105,7 @@ def fetch_newsflow(client, projects):
         for tid in doc.get("projects", []):
             out.append({"date": doc.get("date", ""), "pname": tid2name.get(tid, ""),
                         "summary": doc.get("title", ""), "source": doc.get("source", "?"),
-                        "url": doc.get("url", "")})
+                        "url": doc.get("url", ""), "g": tid2cat.get(tid, "Khác")})
     out.sort(key=lambda n: n["date"], reverse=True)
     return out
 
@@ -175,7 +185,8 @@ def fetch_mappts(client):
     for p in client["dc_commodity"]["Infra_Projects_Registry"].find(
             {"active": True, "lat": {"$exists": True}}):
         rec = {"lat": p["lat"], "lon": p["lon"], "name": p.get("name", ""),
-               "tid": p.get("tid"), "kind": kind(p.get("name", ""))}
+               "tid": p.get("tid"), "kind": kind(p.get("name", "")),
+               "g": categorize(p.get("name", ""), p.get("location", ""))}
         if p.get("geo"):                       # line/area khoanh vùng (nếu đã nhập toạ độ)
             rec["geo"] = p["geo"]
         out.append(rec)
@@ -237,22 +248,19 @@ def main():
     c.admin.command("ping")
     col = c[DB][COLL]
 
-    gdoc = col.find_one({"_key": "groups"})
-    if not gdoc:
-        sys.exit("Chưa có groups trong DB — chạy nạp dữ liệu trước.")
-    groups = gdoc["groups"]
-
     projects = list(col.find({"_key": "project"}, {"_id": 0, "_key": 0}).sort("id", 1))
-    print(f"Đọc từ DB: {len(groups)} nhóm · {len(projects)} dự án curated")
+    if not projects:
+        sys.exit("Chưa có dự án trong DB — chạy nạp dữ liệu trước.")
+    tid2cat = category_map(c)
+    for p in projects:                    # phân 18 dự án gốc vào 8 nhóm như các dự án khác (bỏ I-IV)
+        p["g"] = tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
+    print(f"Đọc từ DB: {len(projects)} dự án curated")
 
-    auto = build_auto_rows(c, projects)
-    if auto:
-        used = {p["g"] for p in auto}
-        for cid, cname, cmeta in CAT_META:
-            if cid in used:
-                groups = groups + [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}]
-        projects = projects + auto
-        print(f"  + {len(auto)} dòng Gantt tự động ({len(used)} nhóm: {', '.join(sorted(used))})")
+    projects = projects + build_auto_rows(c, projects)
+    used = {p["g"] for p in projects}
+    groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
+              for cid, cname, cmeta in CAT_META if cid in used]
+    print(f"  {len(projects)} dòng · {len(groups)} nhóm: {', '.join(g['id'] for g in groups)}")
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
     old_g = extract_array(tpl, "const GROUPS")
@@ -260,7 +268,7 @@ def main():
     new_g = json.dumps(groups, ensure_ascii=False)
     new_p = json.dumps(projects, ensure_ascii=False)
 
-    newsflow = fetch_newsflow(c, projects)
+    newsflow = fetch_newsflow(c, projects, tid2cat)
     print(f"Newsflow: {len(newsflow)} tin")
     satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
@@ -271,6 +279,7 @@ def main():
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     out = out.replace("const SATELLITE = {}", "const SATELLITE = " + json.dumps(satellite, ensure_ascii=False), 1)
     out = out.replace("const MAPPTS = []", "const MAPPTS = " + json.dumps(mappts, ensure_ascii=False), 1)
+    out = out.replace("const CAT_ORDER = []", "const CAT_ORDER = " + json.dumps([c[0] for c in CAT_META], ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 
