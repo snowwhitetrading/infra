@@ -173,6 +173,13 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .sub-row .lbl{display:flex;flex-direction:column;justify-content:center}
 .sname{font-size:12px;color:var(--ink2)}
 .sprog{font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px}
+.sprog-d{margin-top:3px}
+.sprog-d summary{font-size:11px;color:var(--build);cursor:pointer;list-style:none;width:fit-content;
+  font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
+.sprog-d summary::-webkit-details-marker{display:none}
+.sprog-d summary::before{content:"▸ ";}
+.sprog-d[open] summary::before{content:"▾ ";}
+.sprog-d[open] summary{color:var(--ink3)}
 .sub .bar-b{height:6px;top:9px;opacity:.55}
 .sub .bar-g{height:5px;top:2px}
 .sub .mk{top:8px;width:7px;height:7px}
@@ -303,17 +310,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div class="legend">
-  <div class="lg"><span class="lgbar" style="background:var(--gpmb)"></span><span class="lgtxt"><b>Giải phóng mặt bằng</b></span></div>
-  <div class="lg"><span class="lgbar" style="background:var(--build)"></span><span class="lgtxt"><b>Thi công</b></span></div>
-  <div class="lg"><span class="lgbar" style="background:var(--swap)"></span><span class="lgtxt"><b>Dự án đối ứng</b> (quỹ đất trả nhà đầu tư)</span></div>
-  <div class="lg"><span class="mk start" style="position:static;transform:none"></span><span class="lgtxt"><b>Tròn</b> bắt đầu</span></div>
-  <div class="lg"><span class="mk" style="position:static;transform:rotate(45deg);margin:0 3px"></span><span class="lgtxt"><b>Kim cương</b> tiến độ</span></div>
-  <div class="lg"><span class="mk done" style="position:static;transform:none;margin:0 3px"></span><span class="lgtxt"><b>Tam giác</b> dự kiến kết thúc</span></div>
-  <div class="lg"><span class="lgtxt">Marker nằm trên đúng thanh của loại mốc — GPMB ở thanh nâu, thi công ở thanh xanh</span></div>
-  <div class="lg"><span class="lgbar" style="background:transparent;border:1px dashed var(--gpmb)"></span><span class="lgtxt">Thanh rỗng + dấu <b>&#8250;</b> = <b>chưa chốt</b>, mốc kết thúc chỉ là hạn đặt ra</span></div>
-  <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">so với mốc đã công bố trước đó — rê chuột để xem căn cứ</span></div>
-  <div class="lg"><span class="lgtxt">Dấu <b>~</b> ở đầu thanh = ngày đó là <b>ước lượng</b>, không khớp mốc nào có nguồn</span></div>
-  <div class="lg"><span class="lgtxt">Độ tin cậy xem ở tooltip và bảng chi tiết; dùng bộ lọc bên trên để ẩn bớt mốc yếu</span></div>
+  <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">tiến độ so với mốc đã công bố trước đó — rê chuột để xem căn cứ</span></div>
 </div>
 
 <div class="scroller">
@@ -909,7 +906,7 @@ function render(){
       if(isOpen){
         if(p.items.length){
           p.items.forEach(it=>{
-            h += `<div class="sub-row sub"><div class="lbl"><span class="sname">${esc(it.name)}</span>${it.prog?`<div class="sprog">${esc(it.prog)}</div>`:''}</div>
+            h += `<div class="sub-row sub"><div class="lbl"><span class="sname">${esc(it.name)}</span>${it.prog?`<details class="sprog-d"><summary>chi tiết</summary><div class="sprog">${esc(it.prog)}</div></details>`:''}</div>
               <div class="track">${gridHTML()}${barsHTML(it.phases,it.marks,p)}</div></div>`;
           });
         } else {
