@@ -756,7 +756,7 @@ const toY = s => {const [y,m]=s.split('-').map(Number); return y + (m-1)/12;};
 const pct = y => ((y - T0) / (T1 - T0)) * 100;
 const nf  = n => n==null ? '—' : n.toLocaleString('vi-VN');
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const MONTH_VN = d => {const [y,m]=d.split('-'); return m+'/'+y;};
+const MONTH_VN = d => {const [y,m,day]=String(d).split('-'); return day ? day+'/'+m+'/'+y : m+'/'+y;};
 
 /* Từ điển ánh xạ nội dung mốc sang làn hiển thị.
    Ưu tiên trường lane khai báo tường minh; nếu không có thì suy theo từ khoá. */
@@ -833,13 +833,7 @@ function barsHTML(phases, marks, proj){
     if(!ongoing && !A.has(ph.to))
       h += `<span class="est ${lane}" style="left:${pct(b)}%" title="Ngày kết thúc là ước lượng, không có nguồn">~</span>`;
   });
-  (marks||[]).filter(m=>TIER_RANK[m.tier]>=minTier).forEach(m=>{
-    const t = m.type==='start'?'start':m.type==='done'?'done':'';
-    const ln = laneOf(m, proj);
-    const LN = {gpmb:'GPMB', build:'thi công', swap:'đối ứng'}[ln];
-    const title = `[${LN}] ${MONTH_VN(m.date)} — ${m.label}${m.src?' · '+m.src:''} (${TIER_VN[m.tier]})`;
-    h += `<div class="mk ${t} lane-${ln} tier-${m.tier}" style="left:${pct(toY(m.date))}%" title="${esc(title)}"></div>`;
-  });
+  // Mark hình (tròn/kim cương/tam giác) đã bỏ — mốc chỉ liệt kê ở "Mốc thời gian & nguồn".
   return h;
 }
 
