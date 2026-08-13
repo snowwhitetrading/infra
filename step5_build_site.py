@@ -11,14 +11,6 @@ xuất vn-infra-tracker.built.html (self-contained, mở trực tiếp được)
 import argparse, csv, datetime as dt, json, os, sys
 from pymongo import MongoClient
 
-
-def _add_months(ym, n):
-    y, m = int(ym[:4]), int(ym[5:7])
-    m += n
-    y += (m - 1) // 12
-    m = (m - 1) % 12 + 1
-    return f"{y:04d}-{m:02d}"
-
 from lib_db import mongo_uri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -221,9 +213,9 @@ def build_auto_rows(client, projects):
         loc = reg_loc.get(p["id"], "")
         first, last = items[0]["date"], items[-1]["date"]
         today = dt.date.today().strftime("%Y-%m")
-        # Chưa có hạn hoàn thành → thanh MỞ (dashed) kéo tới quá hiện tại + chevron,
-        # để không trông như đã xong. Phần đặc chỉ tới mốc tin gần nhất (doneTo).
-        end = _add_months(max(last, today), 4)
+        # KHÔNG có dữ liệu hạn hoàn thành → thanh chỉ kéo tới HIỆN TẠI (không bịa endpoint tương lai).
+        # Đặc tới mốc tin gần nhất (doneTo=last), dashed tới nay + chevron › = đang thi công, chưa rõ hạn.
+        end = max(last, today)
         auto.append({
             "id": tid, "g": categorize(p["name"], loc), "name": p["name"], "status": "thi công",
             "owner": p.get("group", ""), "loc": loc,
