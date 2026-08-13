@@ -325,6 +325,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <div class="nf-filters">
     <div class="grp"><span>Dự án</span><select id="nf-proj"></select></div>
     <div class="grp"><span>Nguồn</span><select id="nf-src"></select></div>
+    <div class="grp"><span>Thời gian</span><select id="nf-date"></select></div>
     <span class="nf-count" id="nf-count"></span>
   </div>
   <div class="nf-list" id="nf-list"></div>
@@ -947,17 +948,25 @@ document.getElementById('expandAll').onclick = e=>{
 /* ---------- newsflow (tab Dòng tin) ---------- */
 function nfDate(d){const p=(d||'').split('-');return (p[2]||'01')+'/'+(p[1]||'01')+'/'+(p[0]||'');}
 function renderNews(){
-  const ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src');
+  const ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src'), ds=document.getElementById('nf-date');
   if(!ps.dataset.init){
     const projs=[...new Set(NEWSFLOW.map(n=>n.pname))].sort((a,b)=>a.localeCompare(b,'vi'));
     ps.innerHTML='<option value="">Tất cả dự án</option>'+projs.map(p=>`<option>${esc(p)}</option>`).join('');
     const srcs=[...new Set(NEWSFLOW.map(n=>n.source))].sort();
     ss.innerHTML='<option value="">Tất cả nguồn</option>'+srcs.map(s=>`<option>${esc(s)}</option>`).join('');
-    ps.dataset.init='1'; ps.onchange=ss.onchange=renderNews;
+    ds.innerHTML='<option value="">Mọi thời gian</option><option value="7">7 ngày qua</option>'+
+      '<option value="30">30 ngày qua</option><option value="90">90 ngày qua</option><option value="365">12 tháng qua</option>';
+    ps.dataset.init='1'; ps.onchange=ss.onchange=ds.onchange=renderNews;
   }
-  const fp=ps.value, fs=ss.value;
-  const items=NEWSFLOW.filter(n=>(!fp||n.pname===fp)&&(!fs||n.source===fs))
-    .sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  const fp=ps.value, fs=ss.value, fd=ds.value;
+  let cutoff='';
+  if(fd){const t=new Date(); t.setDate(t.getDate()-(+fd)); cutoff=t.toISOString().slice(0,10);}
+  const items=NEWSFLOW.filter(n=>{
+    if(fp&&n.pname!==fp) return false;
+    if(fs&&n.source!==fs) return false;
+    if(cutoff){const d=(n.date||'').length===7?n.date+'-15':(n.date||''); if(d<cutoff) return false;}
+    return true;
+  }).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
   document.getElementById('nf-count').textContent=items.length+' tin';
   document.getElementById('nf-list').innerHTML = items.length ? items.map(n=>`<div class="nf-item">
     <div class="nf-date">${nfDate(n.date)}</div>
