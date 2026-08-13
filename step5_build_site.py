@@ -24,6 +24,38 @@ SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan
                "pq_tram": 5, "rach_chiec": 6, "gb_road_hn": 7, "gb_road_bn": 8,
                "cangio_depot": 9, "halong_depot": 10, "gia_binh": 11}
 
+# Nhóm cho dự án NGOÀI 18 curated (I–IV giữ nguyên) — droplist tab Tiến độ.
+CAT_META = [   # (id, tên hiển thị, meta) — thứ tự trong droplist
+    ("Hà Nội", "Hà Nội / Vùng Thủ đô", "dự án tại Hà Nội"),
+    ("TP.HCM", "TP.HCM", "dự án tại TP.HCM"),
+    ("Hải Phòng", "Hải Phòng – Quảng Ninh", "dự án tại Hải Phòng"),
+    ("Long Thành", "Cụm Long Thành", "sân bay Long Thành & kết nối"),
+    ("Cao tốc", "Cao tốc & vành đai", "cao tốc liên tỉnh"),
+    ("Cầu cảng", "Cầu & cảng", "cầu, hầm, cảng biển"),
+    ("Sân bay", "Sân bay", "cảng hàng không"),
+    ("Khác", "Khác", "hạ tầng khác"),
+]
+
+
+def categorize(name, loc=""):
+    """Gán dự án (ngoài curated) vào 1 nhóm droplist: hub địa lý ưu tiên, rồi theo loại."""
+    t = (name + " " + (loc or "")).lower()
+    if "long thành" in t:
+        return "Long Thành"
+    if "hà nội" in t or "thủ đô" in t:
+        return "Hà Nội"
+    if "tp.hcm" in t or "tphcm" in t or "hồ chí minh" in t:
+        return "TP.HCM"
+    if "hải phòng" in t:
+        return "Hải Phòng"
+    if "sân bay" in t or "hàng không" in t:
+        return "Sân bay"
+    if "cầu" in t or "hầm" in t or "cảng" in t:
+        return "Cầu cảng"
+    if "cao tốc" in t or "vành đai" in t:
+        return "Cao tốc"
+    return "Khác"
+
 
 def fetch_satellite(client):
     """Đọc satellite_export/manifest.csv -> {tid: [{month,date,cloud,ok,file}]}.
@@ -156,6 +188,8 @@ def build_auto_rows(client, projects):
     from collections import defaultdict
     from lib_projects import load_registry
     curated = {p["id"] for p in projects}
+    reg_loc = {d["id"]: d.get("location", "") for d in
+               client["dc_commodity"]["Infra_Projects_Registry"].find({}, {"id": 1, "location": 1})}
     nf = defaultdict(list)
     for d in client[DB][NEWSFLOW_COLL].find({}):
         m = (d.get("date") or "")[:7]
@@ -176,9 +210,10 @@ def build_auto_rows(client, projects):
             seen.add(x["date"])
             marks.append({"date": x["date"], "type": "ms", "label": x["title"],
                           "tier": "auto", "src": x["src"] + " · tự động"})
+        loc = reg_loc.get(p["id"], "")
         auto.append({
-            "id": tid, "g": "K", "name": p["name"], "status": "thi công",
-            "owner": p.get("group", ""), "loc": "",
+            "id": tid, "g": categorize(p["name"], loc), "name": p["name"], "status": "thi công",
+            "owner": p.get("group", ""), "loc": loc,
             "phases": [{"kind": "build", "from": items[0]["date"], "to": items[-1]["date"],
                         "state": "ongoing", "doneTo": items[-1]["date"]}],
             "marks": marks[-30:], "items": [], "huyDong": 0, "capex": [],
@@ -207,10 +242,12 @@ def main():
 
     auto = build_auto_rows(c, projects)
     if auto:
-        groups = groups + [{"id": "K", "name": "K · Dự án hạ tầng khác (theo dõi qua tin)",
-                            "meta": "tự động phát hiện", "huyDong": 0}]
+        used = {p["g"] for p in auto}
+        for cid, cname, cmeta in CAT_META:
+            if cid in used:
+                groups = groups + [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}]
         projects = projects + auto
-        print(f"  + {len(auto)} dòng Gantt tự động cho dự án mới")
+        print(f"  + {len(auto)} dòng Gantt tự động ({len(used)} nhóm: {', '.join(sorted(used))})")
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
     old_g = extract_array(tpl, "const GROUPS")

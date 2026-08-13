@@ -67,6 +67,10 @@ button.chip{font-family:inherit;font-size:12px;padding:4px 10px;border:1px solid
 button.chip:hover{border-color:var(--ink3);color:var(--ink)}
 button.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.bar select{font-family:inherit;font-size:13px;padding:5px 26px 5px 10px;border:1px solid var(--rule2);
+  border-radius:6px;background:var(--card);color:var(--ink);cursor:pointer;min-width:200px}
+.bar select:hover{border-color:var(--ink3)}
+.bar select:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 
 /* ---------- legend ---------- */
 .legend{display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px 14px;background:var(--card);
@@ -954,13 +958,13 @@ function render(){
 
 /* ---------- filters ---------- */
 const fg = document.getElementById('f-group');
-fg.innerHTML = GROUPS.map(g=>`<button class="chip" data-g="${g.id}" aria-pressed="true">${g.id}</button>`).join('');
-fg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
-  const id=b.dataset.g;
-  if(activeGroups.has(id) && activeGroups.size>1){activeGroups.delete(id);b.setAttribute('aria-pressed','false');}
-  else {activeGroups.add(id);b.setAttribute('aria-pressed','true');}
+fg.innerHTML = '<select id="f-group-sel"><option value="__all">Tất cả nhóm</option>' +
+  GROUPS.map(g=>`<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('') + '</select>';
+document.getElementById('f-group-sel').onchange = e=>{
+  const v = e.target.value;
+  activeGroups = v==='__all' ? new Set(GROUPS.map(g=>g.id)) : new Set([v]);
   render();
-});
+};
 
 const ft = document.getElementById('f-tier');
 const TIERS = [['0','tất cả'],['1','≥ doanh nghiệp'],['2','≥ chỉ đạo'],['3','≥ hợp đồng'],['4','chỉ việc đã xảy ra']];
