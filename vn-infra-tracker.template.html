@@ -771,17 +771,6 @@ let activeGroups = new Set(GROUPS.map(g=>g.id));
 let minTier = 0;
 let open = new Set();
 
-/* khoảng năm hoạt động của 1 nhóm (từ phases + marks) */
-function groupYears(rows){
-  let mn=9999, mx=0;
-  const add=d=>{ if(d){const y=+String(d).slice(0,4); if(y>1990){mn=Math.min(mn,y);mx=Math.max(mx,y);}} };
-  rows.forEach(p=>{
-    (p.phases||[]).forEach(ph=>{ add(ph.from); add(ph.to); add(ph.doneTo); });
-    (p.marks||[]).forEach(m=>add(m.date));
-  });
-  return mx===0 ? '' : (mn===mx ? String(mn) : mn+'–'+mx);
-}
-
 /* ---------- grid ---------- */
 function gridHTML(){
   let h = '<div class="grid">';
@@ -898,11 +887,12 @@ function detailHTML(p){
 
 function render(){
   let h = '';
+  const YEARLABELS = Array.from({length:T1-T0},(_,i)=>`<span class="ylab" style="left:${pct(T0+i)}%">${T0+i}</span>`).join('');
   GROUPS.filter(g=>activeGroups.has(g.id)).forEach(g=>{
     const rows = P.filter(p=>p.g===g.id);
     h += `<div class="row grp-row"><div class="lbl">
-        <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta}</div></div>
-      <div class="track"><span class="grp-sum">${rows.length} dự án${groupYears(rows)?` · ${groupYears(rows)}`:''}</span></div></div>`;
+        <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta} · ${rows.length} dự án</div></div>
+      <div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
 
     rows.forEach(p=>{
       const isOpen = open.has(p.id);
