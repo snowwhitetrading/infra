@@ -8,8 +8,16 @@ xuất vn-infra-tracker.built.html (self-contained, mở trực tiếp được)
   python step5_build_site.py                 # dựng lại từ DB
   python step5_build_site.py --out foo.html  # đổi tên file ra
 """
-import argparse, csv, json, os, sys
+import argparse, csv, datetime as dt, json, os, sys
 from pymongo import MongoClient
+
+
+def _add_months(ym, n):
+    y, m = int(ym[:4]), int(ym[5:7])
+    m += n
+    y += (m - 1) // 12
+    m = (m - 1) % 12 + 1
+    return f"{y:04d}-{m:02d}"
 
 from lib_db import mongo_uri
 
@@ -211,11 +219,16 @@ def build_auto_rows(client, projects):
             marks.append({"date": x["date"], "type": "ms", "label": x["title"],
                           "tier": "auto", "src": x["src"] + " · tự động"})
         loc = reg_loc.get(p["id"], "")
+        first, last = items[0]["date"], items[-1]["date"]
+        today = dt.date.today().strftime("%Y-%m")
+        # Chưa có hạn hoàn thành → thanh MỞ (dashed) kéo tới quá hiện tại + chevron,
+        # để không trông như đã xong. Phần đặc chỉ tới mốc tin gần nhất (doneTo).
+        end = _add_months(max(last, today), 4)
         auto.append({
             "id": tid, "g": categorize(p["name"], loc), "name": p["name"], "status": "thi công",
             "owner": p.get("group", ""), "loc": loc,
-            "phases": [{"kind": "build", "from": items[0]["date"], "to": items[-1]["date"],
-                        "state": "ongoing", "doneTo": items[-1]["date"]}],
+            "phases": [{"kind": "build", "from": first, "to": end,
+                        "state": "ongoing", "doneTo": last}],
             "marks": marks[-30:], "items": [], "huyDong": 0, "capex": [],
         })
     return auto
