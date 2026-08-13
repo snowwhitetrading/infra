@@ -198,7 +198,7 @@ def promote(c, tid, month):
             {"$push": {"marks": mark}})
         added += res.modified_count
     print(f"Đã promote {added} mark (id {tid}, tháng {month}) vào {TRACKER}.marks. "
-          f"Chạy step4_build_site.py để cập nhật trang.")
+          f"Chạy step5_build_site.py để cập nhật trang.")
 
 
 if __name__ == "__main__":

@@ -34,23 +34,23 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: timeout 780 python step1_scrape_news.py --pages 1 || echo "scrape skipped/timeout"
 
-      # Radar: quét từ khóa hạ tầng chung → ứng viên dự án MỚI (deterministic, không Claude)
+      # Radar: đọc pool tin chưa khớp (unmatched_raw) → ứng viên dự án MỚI (deterministic)
       - name: Radar candidates
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: timeout 180 python step5_radar.py --top 0 || echo "radar skipped/timeout"
+        run: timeout 180 python step2_radar.py --top 0 || echo "radar skipped/timeout"
 
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python step2_newsflow.py --days 30 || echo "newsflow skipped"
+        run: python step3_newsflow.py --days 30 || echo "newsflow skipped"
 
       # Tự động đưa tin cột mốc thành mark 'auto' trên Gantt (deterministic)
       - name: Promote newsflow to tracker
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python step3_promote_marks.py || echo "promote skipped"
+        run: python step4_promote_marks.py || echo "promote skipped"
 
       # Dựng site chính thức (chỉ mark đã duyệt) từ DB
       - name: Build site
@@ -58,7 +58,7 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: |
           mkdir -p dist
-          python step4_build_site.py --out dist/index.html
+          python step5_build_site.py --out dist/index.html
           # ảnh vệ tinh (nếu có) để Pages phục vụ cùng trang
           if [ -d satellite_export ]; then cp -r satellite_export dist/satellite_export; fi
           # tên miền riêng (GitHub Pages đọc file CNAME)

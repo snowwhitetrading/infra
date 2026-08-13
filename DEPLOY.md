@@ -5,7 +5,7 @@ Mỗi lần `git push` hoặc mỗi sáng thứ Hai, CI tự dựng lại `index
 
 ```
    sửa DB (duyệt mark)  ─┐
-   git push             ─┼─►  GitHub Actions  ──►  step4_build_site.py  ──►  Pages  ──►  yourdomain.com
+   git push             ─┼─►  GitHub Actions  ──►  step5_build_site.py  ──►  Pages  ──►  yourdomain.com
    cron thứ Hai 08:00   ─┘        (đọc secret IRIS_MONGO_URI)
 ```
 

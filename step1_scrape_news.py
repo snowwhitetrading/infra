@@ -2,8 +2,8 @@
 """
 step1_scrape_news.py — Scrape tin dự án TRỰC TIẾP từ nhiều báo (KHÔNG qua dc_news).
 
-Khớp alias → tin dự án ĐÃ biết → dc_news.project_news_raw (step2_newsflow.py đọc).
-KHÔNG khớp → dc_news.unmatched_raw (pool cho step5_radar soi dự án MỚI; TTL 14 ngày).
+Khớp alias → tin dự án ĐÃ biết → dc_news.project_news_raw (step3_newsflow.py đọc).
+KHÔNG khớp → dc_news.unmatched_raw (pool cho step2_radar soi dự án MỚI; TTL 14 ngày).
 → Quét 1 lần, dùng chung dòng tin cho cả 2 mục đích.
 
 3 kiểu lấy:
@@ -317,9 +317,9 @@ async def run(pages, dry, sources):
     if ops:
         res = coll.bulk_write(ops)
         print(f"Ghi mới {res.upserted_count} bài vào {DB}.{COLL} "
-              f"(tổng {coll.estimated_document_count()}). Chạy step2_newsflow.py để lên web.")
+              f"(tổng {coll.estimated_document_count()}). Chạy step3_newsflow.py để lên web.")
 
-    # pool tin CHƯA khớp → step5_radar soi dự án mới; TTL tự dọn sau 14 ngày
+    # pool tin CHƯA khớp → step2_radar soi dự án mới; TTL tự dọn sau 14 ngày
     pool = db["unmatched_raw"]
     pool.create_index("url", unique=True)
     pool.create_index("_ts", expireAfterSeconds=14 * 24 * 3600)

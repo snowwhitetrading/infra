@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-step4_build_site.py — Dựng trang theo dõi tiến độ từ DB (nguồn sự thật).
+step5_build_site.py — Dựng trang theo dõi tiến độ từ DB (nguồn sự thật).
 
 Đọc dc_commodity.Infra_Project_Tracker → chèn GROUPS + P vào template HTML →
 xuất vn-infra-tracker.built.html (self-contained, mở trực tiếp được).
 
-  python step4_build_site.py                 # dựng lại từ DB
-  python step4_build_site.py --out foo.html  # đổi tên file ra
+  python step5_build_site.py                 # dựng lại từ DB
+  python step5_build_site.py --out foo.html  # đổi tên file ra
 """
 import argparse, csv, json, os, sys
 from pymongo import MongoClient
@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "vn-infra-tracker.template.html")
 MONGO_URI = mongo_uri()
 DB, COLL = "dc_commodity", "Infra_Project_Tracker"
-NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step2_newsflow.py ghi)
+NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
 
 SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan": 4,

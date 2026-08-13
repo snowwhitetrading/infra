@@ -5,7 +5,7 @@ ingest_facebook.py — Nạp post Facebook (thu thập qua Claude for Chrome) v�
 Đầu vào: file JSON danh sách post, mỗi post:
   {"date":"YYYY-MM-DD", "text":"nội dung post", "url":"https://facebook.com/...", "page":"tên trang"}
 Khớp alias 52 dự án (từ registry) → ghi dc_news.project_news_raw (source='facebook')
-→ step2_newsflow.py đưa lên Dòng tin (badge 'facebook', để phân biệt tin báo chí).
+→ step3_newsflow.py đưa lên Dòng tin (badge 'facebook', để phân biệt tin báo chí).
 
   python ingest_facebook.py posts.json
   python ingest_facebook.py posts.json --dry-run
@@ -48,7 +48,7 @@ def run(path, dry):
     coll = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)["dc_news"]["project_news_raw"]
     ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in docs]
     res = coll.bulk_write(ops)
-    print(f"Nạp {res.upserted_count} post FB mới vào project_news_raw. Chạy step2_newsflow.py để lên web.")
+    print(f"Nạp {res.upserted_count} post FB mới vào project_news_raw. Chạy step3_newsflow.py để lên web.")
 
 
 if __name__ == "__main__":

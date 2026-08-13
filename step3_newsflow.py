@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-step2_newsflow.py — Dòng tin infra từ project_news_raw (do step1 scrape trực tiếp 4 báo).
+step3_newsflow.py — Dòng tin infra từ project_news_raw (do step1 scrape trực tiếp 16 báo).
 
 ĐỘC LẬP với dc_news. Deterministic, KHÔNG cần AI. Đọc dc_news.project_news_raw (đã khớp
 dự án, có field `projects`=[id tracker]) → lọc CỘT MỐC tiến độ (is_progress) →
 ghi dc_commodity.Infra_Newsflow (1 doc/bài, upsert theo url).
 
-  python step2_newsflow.py            # toàn bộ project_news_raw
-  python step2_newsflow.py --days 30  # chỉ 30 ngày gần đây
+  python step3_newsflow.py            # toàn bộ project_news_raw
+  python step3_newsflow.py --days 30  # chỉ 30 ngày gần đây
 """
 import argparse
 import datetime as dt

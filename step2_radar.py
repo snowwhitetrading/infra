@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-step5_radar.py — RADAR dự án mới (deterministic, KHÔNG cần Claude).
+step2_radar.py — RADAR dự án mới (deterministic, KHÔNG cần Claude).
 
 Ý tưởng: đọc POOL tin CHƯA khớp dự án (dc_news.unmatched_raw, do step1 để lại khi scrape
 16 báo) → trích "LOẠI + Tên Riêng" bằng regex → cái nào ngoài registry = ỨNG VIÊN dự án mới.
@@ -10,9 +10,9 @@ Ghi dc_commodity.Infra_Project_Candidates.
 KHÔNG tự quét feed nữa — dùng chung dòng tin với step1 (chạy SAU step1 trong CI).
 Deterministic, không LLM. Bạn liếc bảng candidates, thấy dự án lớn thật thì add_project.py.
 
-  python step5_radar.py            # quét + ghi + in top
-  python step5_radar.py --top 40
-  python step5_radar.py --dry-run
+  python step2_radar.py            # quét + ghi + in top
+  python step2_radar.py --top 40
+  python step2_radar.py --dry-run
 """
 import argparse
 import datetime as dt
