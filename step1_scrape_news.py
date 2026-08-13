@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-step1_scrape_news.py — Scrape tin 18 dự án TRỰC TIẾP từ nhiều báo (KHÔNG qua dc_news).
+step1_scrape_news.py — Scrape tin dự án TRỰC TIẾP từ nhiều báo (KHÔNG qua dc_news).
 
-Lọc theo TÊN dự án (alias) → ghi dc_news.project_news_raw. step2_newsflow.py đọc collection này.
+Khớp alias → tin dự án ĐÃ biết → dc_news.project_news_raw (step2_newsflow.py đọc).
+KHÔNG khớp → dc_news.unmatched_raw (pool cho step5_radar soi dự án MỚI; TTL 14 ngày).
+→ Quét 1 lần, dùng chung dòng tin cho cả 2 mục đích.
 
 3 kiểu lấy:
   SEARCH (có lịch sử, bất kể chủ đề): cafef, vnexpress
@@ -60,6 +62,8 @@ RSS_FEEDS = {
     "congthuong": ["https://congthuong.vn/rss/thi-truong.rss", "https://congthuong.vn/rss/nang-luong.rss",
                    "https://congthuong.vn/rss/dia-phuong.rss"],       # Bộ Công Thương: điện/công nghiệp
     "nhandan": ["https://nhandan.vn/rss/kinhte-1017.rss"],            # Báo Nhân Dân
+    "baogiaothong": ["https://www.baogiaothong.vn/rss/home.rss",
+                     "https://www.baogiaothong.vn/rss/thoi-su-giao-thong.rss"],  # Báo Giao Thông
 }
 
 # ── SEARCH sources ───────────────────────────────────────────────────────────
@@ -115,10 +119,10 @@ async def scrape_rss(client, source):
             if ce:
                 body = re.sub(r"\s+", " ", BeautifulSoup(ce, "html.parser").get_text(" ", strip=True))[:2000]
             tids = match_tids(f"{title} {desc} {body}")
-            if tids:
-                out.append({"url": (it.findtext("link") or "").strip(), "source": source,
-                            "title": title, "description": desc, "body": body[:1000],
-                            "date": rss_date(it.findtext("pubDate", "")), "projects": tids})
+            # GIỮ cả tin không khớp (projects=[]) → run() tách sang pool cho radar
+            out.append({"url": (it.findtext("link") or "").strip(), "source": source,
+                        "title": title, "description": desc, "body": body[:1000],
+                        "date": rss_date(it.findtext("pubDate", "")), "projects": tids})
     return out
 
 
@@ -220,9 +224,8 @@ async def scrape_vnexpress(client, pages):
 # ── vietstock: RSS + phân trang ──────────────────────────────────────────────
 
 def _vs(url, title, desc, date):
-    tids = match_tids(f"{title} {desc}")
     return {"url": url, "source": "vietstock", "title": title, "description": desc,
-            "body": "", "date": date, "projects": tids} if tids else None
+            "body": "", "date": date, "projects": match_tids(f"{title} {desc}")}
 
 
 async def scrape_vietstock(client, pages):
@@ -293,25 +296,42 @@ async def run(pages, dry, sources):
                 continue
             d["scraped_at"] = now
             docs.setdefault(d["url"], d)
+    matched = {u: d for u, d in docs.items() if d["projects"]}
+    unmatched = {u: d for u, d in docs.items() if not d["projects"]}   # cho radar soi tên mới
     per = {}
-    for d in docs.values():
+    for d in matched.values():
         per[d["source"]] = per.get(d["source"], 0) + 1
-    print("Khớp dự án theo nguồn:", per, "· tổng", len(docs))
+    print(f"Khớp dự án: {per} · tổng {len(matched)} · chưa khớp (pool radar): {len(unmatched)}")
 
     if dry:
-        for d in sorted(docs.values(), key=lambda x: x["date"], reverse=True)[:30]:
+        for d in sorted(matched.values(), key=lambda x: x["date"], reverse=True)[:30]:
             print(f"  {d['date'][:10]:10}  {d['source']:12}  {d['title'][:58]}")
         return
 
-    coll = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB][COLL]
+    db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
+    coll = db[COLL]
     coll.create_index("url", unique=True)
     coll.create_index("date")
     coll.create_index("projects")
-    ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in docs.values()]
+    ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in matched.values()]
     if ops:
         res = coll.bulk_write(ops)
         print(f"Ghi mới {res.upserted_count} bài vào {DB}.{COLL} "
               f"(tổng {coll.estimated_document_count()}). Chạy step2_newsflow.py để lên web.")
+
+    # pool tin CHƯA khớp → step5_radar soi dự án mới; TTL tự dọn sau 14 ngày
+    pool = db["unmatched_raw"]
+    pool.create_index("url", unique=True)
+    pool.create_index("_ts", expireAfterSeconds=14 * 24 * 3600)
+    ts = dt.datetime.now(dt.timezone.utc)
+    uops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": {
+                "url": d["url"], "source": d["source"], "title": d["title"],
+                "description": d.get("description", ""), "date": d.get("date", ""),
+                "scraped_at": now, "_ts": ts}}, upsert=True)
+            for d in unmatched.values()]
+    if uops:
+        r2 = pool.bulk_write(uops)
+        print(f"Pool chưa khớp: +{r2.upserted_count} (tổng {pool.estimated_document_count()}).")
 
 
 if __name__ == "__main__":

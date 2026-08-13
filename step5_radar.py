@@ -2,13 +2,13 @@
 """
 step5_radar.py — RADAR dự án mới (deterministic, KHÔNG cần Claude).
 
-Ý tưởng: quét feed theo TỪ KHÓA HẠ TẦNG CHUNG (không theo tên dự án) → mọi tin hạ tầng →
-cái nào KHÔNG khớp dự án đang theo dõi (registry) = ỨNG VIÊN dự án mới. Trích tên bằng regex,
-gộp trùng, xếp theo độ nóng (số lần nhắc × số báo × tín hiệu 'tỷ USD/nghìn tỷ').
+Ý tưởng: đọc POOL tin CHƯA khớp dự án (dc_news.unmatched_raw, do step1 để lại khi scrape
+16 báo) → trích "LOẠI + Tên Riêng" bằng regex → cái nào ngoài registry = ỨNG VIÊN dự án mới.
+Gộp trùng, xếp theo độ nóng (số lần nhắc × số báo × tín hiệu 'tỷ USD/nghìn tỷ').
 Ghi dc_commodity.Infra_Project_Candidates.
 
-Chạy được trong CI (regex, không LLM, GitHub quét báo VN OK). Bạn liếc bảng candidates,
-thấy dự án lớn thật thì thêm bằng add_project.py.
+KHÔNG tự quét feed nữa — dùng chung dòng tin với step1 (chạy SAU step1 trong CI).
+Deterministic, không LLM. Bạn liếc bảng candidates, thấy dự án lớn thật thì add_project.py.
 
   python step5_radar.py            # quét + ghi + in top
   python step5_radar.py --top 40
@@ -17,23 +17,15 @@ thấy dự án lớn thật thì thêm bằng add_project.py.
 import argparse
 import datetime as dt
 import re
-import xml.etree.ElementTree as ET
 from collections import defaultdict
 
-import httpx
 from pymongo import MongoClient, UpdateOne
 
 from lib_db import mongo_uri
 from lib_projects import build_alias_regex
 
 OUT_DB, OUT_COLL = "dc_commodity", "Infra_Project_Candidates"
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/131.0.0.0"}
-FEEDS = [
-    "https://vneconomy.vn/tin-moi.rss", "https://vneconomy.vn/dau-tu-ha-tang.rss",
-    "https://baodauthau.vn/rss/home.rss", "https://baodauthau.vn/rss/dau-tu.rss",
-    "https://baoxaydung.com.vn/rss/home.rss", "https://www.baogiaothong.vn/rss/home.rss",
-    "https://baochinhphu.vn/kinh-te.rss", "https://vietstock.vn/761/kinh-te/vi-mo.rss",
-]
+POOL_DB, POOL_COLL = "dc_news", "unmatched_raw"   # do step1 để lại (tin chưa khớp dự án)
 
 # loại công trình + TÊN (tên phải là danh từ riêng: nối địa danh "A - B" hoặc "Tên + số/riêng")
 # CHỈ hạ tầng giao thông (bỏ điện/nước; 'tàu điện/metro' vẫn giữ vì là giao thông)
@@ -65,32 +57,31 @@ def run(dry, top):
     known = build_alias_regex()
     cand = defaultdict(lambda: {"label": "", "count": 0, "sources": set(),
                                 "important": False, "samples": []})
-    with httpx.Client(headers=UA, timeout=15, follow_redirects=True) as cl:
-        for u in FEEDS:
-            try:
-                items = ET.fromstring(cl.get(u).text).findall(".//item")
-            except Exception:
+    client = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)
+    pool = client[POOL_DB][POOL_COLL]
+    n = 0
+    for it in pool.find({}, {"title": 1, "description": 1, "source": 1}):
+        n += 1
+        title = (it.get("title") or "").strip()
+        desc = re.sub("<[^>]+>", "", it.get("description") or "")
+        src = it.get("source", "?")
+        text = title + ". " + desc
+        for m in RX.finditer(text):
+            label = f"{m.group(1).strip()} {m.group(2).strip()}"
+            name = m.group(2).strip()
+            if not is_proper(name) or STOP.search(name):
                 continue
-            src = re.sub(r"^https?://(www\.)?", "", u).split("/")[0]
-            for it in items:
-                title = (it.findtext("title") or "").strip()
-                desc = re.sub("<[^>]+>", "", it.findtext("description") or "")
-                text = title + ". " + desc
-                for m in RX.finditer(text):
-                    label = f"{m.group(1).strip()} {m.group(2).strip()}"
-                    name = m.group(2).strip()
-                    if not is_proper(name) or STOP.search(name):
-                        continue
-                    if any(rx.search(label) for rx in known.values()):   # đã theo dõi
-                        continue
-                    c = cand[norm(label)]
-                    c["label"] = c["label"] or label
-                    c["count"] += 1
-                    c["sources"].add(src)
-                    if IMPORTANT.search(text):
-                        c["important"] = True
-                    if len(c["samples"]) < 2:
-                        c["samples"].append(title[:80])
+            if any(rx.search(label) for rx in known.values()):   # đã theo dõi
+                continue
+            c = cand[norm(label)]
+            c["label"] = c["label"] or label
+            c["count"] += 1
+            c["sources"].add(src)
+            if IMPORTANT.search(text):
+                c["important"] = True
+            if len(c["samples"]) < 2:
+                c["samples"].append(title[:80])
+    print(f"Đọc {n} tin chưa khớp từ {POOL_DB}.{POOL_COLL}")
 
     rows = []
     for key, c in cand.items():
@@ -108,7 +99,7 @@ def run(dry, top):
 
     if dry or not rows:
         return
-    coll = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[OUT_DB][OUT_COLL]
+    coll = client[OUT_DB][OUT_COLL]
     coll.create_index("key", unique=True)
     now = dt.datetime.now().isoformat()
     ops = [UpdateOne({"key": r["key"]}, {"$set": {**r, "updated": now}}, upsert=True) for r in rows]
