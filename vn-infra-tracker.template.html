@@ -288,7 +288,6 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <p class="sub">Ba lớp thời gian: <b>giải phóng mặt bằng</b>, <b>thi công</b>, <b>hạn hoàn thành</b>. Mốc thời gian là <b>ngày sự kiện</b>, không phải ngày đăng tin.</p>
 </header>
 
-<div class="strip" id="strip"></div>
 
 <div class="tabs">
   <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
@@ -772,27 +771,6 @@ let activeGroups = new Set(GROUPS.map(g=>g.id));
 let minTier = 0;
 let open = new Set();
 
-/* ---------- summary ---------- */
-function renderStrip(){
-  const list = P.filter(p=>activeGroups.has(p.g));
-  const huy = list.reduce((a,p)=>a+(p.huyDong||0),0);
-  const y26 = list.reduce((a,p)=>a+(p.capex[2026]||0),0);
-  const y27 = list.reduce((a,p)=>a+(p.capex[2027]||0),0);
-  const inferred = list.reduce((a,p)=>a+p.marks.filter(m=>m.type==='done'&&m.tier==='inferred').length,0);
-  const cells = [
-    ['Dự án', list.length, ''],
-    ['Vốn huy động', nf(huy), 'tỷ đ'],
-    ['Giải ngân 2026', nf(y26), 'tỷ đ'],
-    ['Giải ngân 2027', nf(y27), 'tỷ đ'],
-    ['Dồn 2026–27', Math.round((y26+y27)/huy*100)+'%', 'tổng vốn vay'],
-    ['Chậm tiến độ', list.filter(x=>x.sched==='chậm tiến độ').length + '/' + list.length, 'dự án'],
-    ['Độ phủ nguồn', (()=>{const v=list.map(coverage).filter(x=>x!==null);
-       return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length)+'%':'—';})(), 'đầu mút có căn cứ']
-  ];
-  document.getElementById('strip').innerHTML = cells.map(([k,v,u])=>
-    `<div class="cell"><div class="k">${k}</div><div class="v mono">${v}<span class="u">${u}</span></div></div>`).join('');
-}
-
 /* ---------- grid ---------- */
 function gridHTML(){
   let h = '<div class="grid">';
@@ -908,7 +886,6 @@ function detailHTML(p){
 }
 
 function render(){
-  renderStrip();
   let h = '';
   GROUPS.filter(g=>activeGroups.has(g.id)).forEach(g=>{
     const rows = P.filter(p=>p.g===g.id);
