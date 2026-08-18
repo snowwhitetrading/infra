@@ -51,22 +51,28 @@ def _get(client, path, tries=3):
 
 
 def fetch_infra(client):
-    j = _get(client, "ha-tang/get-list-line")
-    out = []
-    for x in (j or {}).get("result", []):
-        try:
-            coors = json.loads(x.get("coors") or "[]")
-        except (ValueError, TypeError):
-            coors = []
-        coords = [[_f(c.get("lat")), _f(c.get("lng"))] for c in coors
-                  if _f(c.get("lat")) and _f(c.get("lng"))]
-        out.append({"caf_id": x.get("id"), "title": (x.get("title") or "").strip(),
-                    "slug": x.get("slug"), "lat": _f(x.get("lat")), "lng": _f(x.get("lng")),
-                    "line_type": x.get("line_type"), "line_color": x.get("line_color"),
-                    "line_status": x.get("line_status"), "type": x.get("type"),
-                    "province_id": x.get("province_id"), "n_points": len(coords),
-                    "coords": coords})
-    return out, "Cafeland_Infra", "caf_id"
+    """Quét MỌI tỉnh qua ?getIdProvince=N (1..119) → gom tuyến toàn quốc (dedup theo id)."""
+    seen = {}
+    for pid in range(1, 120):
+        j = _get(client, f"ha-tang/get-list-line?getIdProvince={pid}")
+        for x in (j or {}).get("result", []):
+            cid = x.get("id")
+            if cid in seen:
+                continue
+            try:
+                coors = json.loads(x.get("coors") or "[]")
+            except (ValueError, TypeError):
+                coors = []
+            coords = [[_f(c.get("lat")), _f(c.get("lng"))] for c in coors
+                      if _f(c.get("lat")) and _f(c.get("lng"))]
+            seen[cid] = {"caf_id": cid, "title": (x.get("title") or "").strip(),
+                         "slug": x.get("slug"), "lat": _f(x.get("lat")), "lng": _f(x.get("lng")),
+                         "line_type": x.get("line_type"), "line_color": x.get("line_color"),
+                         "line_status": x.get("line_status"), "type": x.get("type"),
+                         "province_id": x.get("province_id"), "getIdProvince": pid,
+                         "n_points": len(coords), "coords": coords}
+        time.sleep(0.05)
+    return list(seen.values()), "Cafeland_Infra", "caf_id"
 
 
 def _paginate(client, path, extract, label):
@@ -137,7 +143,7 @@ def run(what, dry):
             col.create_index(key, unique=True)
             col.bulk_write([UpdateOne({key: d[key]}, {"$set": {**d, "fetched_at": now}},
                                       upsert=True) for d in docs if d.get(key) is not None])
-            print(f"  → cafeland_{name}.json + {DB}.{coll} ({col.estimated_document_count()} doc)")
+            print(f"  → cafeland_{name}.jsonl + {DB}.{coll} ({col.estimated_document_count()} doc)")
 
 
 if __name__ == "__main__":
