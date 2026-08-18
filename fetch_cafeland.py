@@ -2,15 +2,15 @@
 """
 fetch_cafeland.py — Lấy TẤT CẢ data từ map.cafeland.vn (API mở, không cần auth).
 
-Endpoint:
-  /ha-tang/get-list-line  → 24 tuyến hạ tầng TP.HCM (polyline coords)  → Cafeland_Infra
-  /get-duan?page=N        → ~5.240 dự án BĐS (262 trang × 20)          → Cafeland_Duan
-  /get-kcn?page=N         → ~7.600 khu/cụm CN (38 trang × 200)         → Cafeland_KCN
-Lưu: cafeland_*.json (soi tay) + dc_commodity.Cafeland_* (dùng/match).
+Endpoint → collection (dc_commodity):
+  /ha-tang/get-list-line  → 24 tuyến hạ tầng TP.HCM (polyline)  → Cafeland_Infra
+  /get-duan?page=N        → ~5.220 dự án BĐS                    → Infra_RealEstate
+  /get-kcn?page=N         → ~760 khu/cụm CN                     → Infra_IndustrialPark
+Lưu: cafeland_*.jsonl (soi tay) + dc_commodity.<collection> (dùng/match).
 
-  python fetch_cafeland.py                 # lấy tất cả
-  python fetch_cafeland.py --what infra    # chỉ tuyến hạ tầng
-  python fetch_cafeland.py --what duan kcn
+  python fetch_cafeland.py                          # lấy tất cả
+  python fetch_cafeland.py --what infra
+  python fetch_cafeland.py --what realestate industrialpark
   python fetch_cafeland.py --dry-run
 """
 import argparse
@@ -99,7 +99,7 @@ def fetch_duan(client):
                       "city": x.get("city_name"), "district": x.get("district_name"),
                       "ward": x.get("ward_name")})
         return r
-    return _paginate(client, "get-duan", ex, "duan"), "Cafeland_Duan", "caf_id"
+    return _paginate(client, "get-duan", ex, "realestate"), "Infra_RealEstate", "caf_id"
 
 
 def fetch_kcn(client):
@@ -113,10 +113,10 @@ def fetch_kcn(client):
                       "price": x.get("price"), "status": x.get("icon_status_name"),
                       "url": x.get("url")})
         return r
-    return _paginate(client, "get-kcn", ex, "kcn"), "Cafeland_KCN", "caf_id"
+    return _paginate(client, "get-kcn", ex, "industrialpark"), "Infra_IndustrialPark", "caf_id"
 
 
-JOBS = {"infra": fetch_infra, "duan": fetch_duan, "kcn": fetch_kcn}
+JOBS = {"infra": fetch_infra, "realestate": fetch_duan, "industrialpark": fetch_kcn}
 
 
 def run(what, dry):
