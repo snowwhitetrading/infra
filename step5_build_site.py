@@ -277,11 +277,12 @@ def fetch_cafeland_map(client):
     projects = []
     for d in db["Infra_RealEstate"].find(
             {"lat": {"$ne": None}},
-            {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_min": 1, "city": 1}):
+            {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1,
+             "price_min": 1, "price_m2": 1, "city": 1}):
         projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
                          "cat": _DUAN_LABEL.get(d.get("type_name"), "Khác"),
                          "prov": cp(d.get("city")), "s": d.get("status_name", ""),
-                         "p": d.get("price_min", "")})
+                         "pm2": (d.get("price_m2") or "").strip(), "p": (d.get("price_min") or "").strip()})
     for d in db["Infra_IndustrialPark"].find(
             {"lat": {"$ne": None}},
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1, "address": 1}):
