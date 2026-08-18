@@ -345,14 +345,13 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-gantt">
-<div class="bar">
-  <div class="grp"><span>Nhóm theo</span><select id="f-mode">
-    <option value="g">Loại hình</option>
-    <option value="prov">Tỉnh thành</option>
-    <option value="none">Không nhóm</option>
-  </select></div>
-  <div class="grp"><button class="chip" id="expandAll">Mở tất cả hạng mục</button></div>
+<div class="map-bar">
+  <div class="mf"><span>Vùng</span><select id="g-region"></select></div>
+  <div class="mf"><span>Tỉnh thành</span><select id="g-prov"></select></div>
+  <span class="mf-count" id="g-count"></span>
+  <button class="chip" id="expandAll" style="align-self:flex-end">Mở tất cả hạng mục</button>
 </div>
+<div class="mf-row"><span class="mf-lbl">Loại hình</span><div class="mf-chips" id="g-cat"></div></div>
 
 <div class="legend">
   <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">tiến độ so với mốc đã công bố trước đó — rê chuột để xem căn cứ</span></div>
@@ -826,7 +825,8 @@ function laneOf(mark, proj){
   return 'build';
 }
 
-let groupMode = 'g';               // nhóm hàng Gantt theo: g=loại hình · prov=tỉnh · region=vùng
+const _catSel = new Set();         // loại hình đang bật (chip) — lọc kiểu Bản đồ
+let gRegion = '', gProv = '';      // vùng · tỉnh đang chọn
 let minTier = 0;
 let open = new Set();
 
@@ -931,29 +931,22 @@ function detailHTML(p){
   </div></div></div>`;
 }
 
-function sections(){                          // [{name, meta, rows}] theo groupMode
-  if(groupMode==='none')                      // không nhóm → 1 danh sách phẳng, không header
-    return [{name:null, meta:'', rows:P.slice()}];
-  if(groupMode==='g')
-    return GROUPS.map(g=>({name:g.name, meta:g.meta, rows:P.filter(p=>p.g===g.id)}));
-  const keyOrder = [...new Set(P.map(p=>p.prov).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
-  const secs = keyOrder.map(k=>({name:k, meta:'', rows:P.filter(p=>p.prov===k)}));
-  const rest = P.filter(p=>!p.prov);          // dòng chưa rõ tỉnh → cuối
-  if(rest.length) secs.push({name:'Chưa rõ', meta:'', rows:rest});
-  return secs;
+function _grow(p){ return (!gRegion||p.region===gRegion) && (!gProv||p.prov===gProv); }
+function sections(){                          // nhóm dưới header LOẠI HÌNH, lọc theo chip+vùng+tỉnh
+  return GROUPS.filter(g=>_catSel.has(g.id))
+    .map(g=>({name:g.name, meta:g.meta, rows:P.filter(p=>p.g===g.id && _grow(p))}));
 }
 
 function render(){
-  let h = '';
+  let h = '', shown = 0;
   const YEARLABELS = Array.from({length:T1-T0},(_,i)=>`<span class="ylab" style="left:${pct(T0+i)}%">${T0+i}</span>`).join('');
   sections().forEach(g=>{
     const rows = g.rows;
     if(!rows.length) return;                 // ẩn nhóm rỗng
-    h += g.name!==null
-      ? `<div class="row grp-row"><div class="lbl">
+    shown += rows.length;
+    h += `<div class="row grp-row"><div class="lbl">
           <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta?g.meta+' · ':''}${rows.length} dự án</div></div>
-        <div class="track">${gridHTML()}${YEARLABELS}</div></div>`
-      : `<div class="row grp-row"><div class="lbl"></div><div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
+        <div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
 
     rows.forEach(p=>{
       const isOpen = open.has(p.id);
@@ -990,6 +983,7 @@ function render(){
        `</div></div>`;
 
   document.getElementById('chart').innerHTML = h;
+  const gc = document.getElementById('g-count'); if(gc) gc.textContent = shown + ' dự án';
   document.querySelectorAll('.pname').forEach(b=>b.onclick=()=>{
     const id = +b.dataset.id;
     open.has(id) ? open.delete(id) : open.add(id);
@@ -997,8 +991,28 @@ function render(){
   });
 }
 
-/* ---------- nhóm theo (loại hình / tỉnh / vùng) ---------- */
-document.getElementById('f-mode').onchange = e=>{ groupMode = e.target.value; render(); };
+/* ---------- filter kiểu Bản đồ: Vùng + Tỉnh + chip Loại hình ---------- */
+(function initGanttFilters(){
+  const RORDER = ['Miền Bắc','Miền Trung','Miền Nam'];
+  const reg = document.getElementById('g-region');
+  reg.innerHTML = '<option value="">Toàn quốc</option>' +
+    [...new Set(P.map(p=>p.region).filter(Boolean))].sort((a,b)=>RORDER.indexOf(a)-RORDER.indexOf(b))
+      .map(r=>`<option>${esc(r)}</option>`).join('');
+  function fillProv(){
+    const provs=[...new Set(P.map(p=>p.prov).filter(p=>p&&(!gRegion||PROV_REGION[p]===gRegion)))].sort((a,b)=>a.localeCompare(b,'vi'));
+    document.getElementById('g-prov').innerHTML='<option value="">Tất cả tỉnh</option>'+provs.map(p=>`<option>${esc(p)}</option>`).join('');
+  }
+  fillProv();
+  // chip Loại hình (theo GROUPS đang có), mặc định bật hết — như "Hạ tầng" bên map
+  GROUPS.forEach(g=>_catSel.add(g.id));
+  document.getElementById('g-cat').innerHTML =
+    GROUPS.map(g=>`<button class="mchip on" data-c="${esc(g.id)}">${esc(g.name)}</button>`).join('');
+  document.querySelectorAll('#g-cat .mchip').forEach(b=>b.onclick=()=>{
+    const c=b.dataset.c; b.classList.toggle('on') ? _catSel.add(c) : _catSel.delete(c); render();
+  });
+  reg.onchange=e=>{ gRegion=e.target.value; gProv=''; fillProv(); render(); };
+  document.getElementById('g-prov').onchange=e=>{ gProv=e.target.value; render(); };
+})();
 
 document.getElementById('expandAll').onclick = e=>{
   if(open.size){open.clear();e.target.textContent='Mở tất cả hạng mục';}
