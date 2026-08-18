@@ -37,7 +37,7 @@ def _slug(s, used):
 
 
 def main(dry):
-    from step5_build_site import _point_class, _prov_norm, _infra_cat
+    from step5_build_site import _point_class, _prov_norm, _infra_cat, _titlecase
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
     reg = c["Infra_Projects_Registry"]
     existing = list(reg.find({}, {"name": 1, "aliases": 1, "id": 1, "tid": 1}))
@@ -76,8 +76,8 @@ def main(dry):
             continue
         seen_new.add(n)
         tid += 1
-        doc = {"id": _slug(title, used_ids), "tid": tid, "name": title.strip(),
-               "aliases": [title.strip()], "active": True, "origin": "cafeland",
+        doc = {"id": _slug(title, used_ids), "tid": tid, "name": _titlecase(title.strip()),
+               "aliases": [_titlecase(title.strip())], "active": True, "origin": "cafeland",
                "group": cat, "location": prov,
                "lat": lat, "lng": lng, "lon": lng}
         if kind == "line" and coords:

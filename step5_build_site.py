@@ -8,7 +8,7 @@ xuất vn-infra-tracker.built.html (self-contained, mở trực tiếp được)
   python step5_build_site.py                 # dựng lại từ DB
   python step5_build_site.py --out foo.html  # đổi tên file ra
 """
-import argparse, csv, datetime as dt, html, json, os, sys
+import argparse, csv, datetime as dt, html, json, os, re, sys
 from pymongo import MongoClient
 
 
@@ -212,6 +212,22 @@ def fetch_mappts(client):
     return out
 
 
+_TC_KEEP = {"TPHCM", "TP.HCM", "QL", "ĐT", "HN", "KCN", "CCN", "ATC", "LRT", "BRT", "HCM", "APEC", "SLP"}
+
+
+def _titlecase(s):
+    """Chuẩn hoá tên IN HOA cafeland → Title Case (giữ viết tắt QL/ĐT/TPHCM + mã có số)."""
+    out = []
+    for w in (s or "").split():
+        if w.upper() in _TC_KEEP:
+            out.append(w.upper())
+        elif re.search(r"\d", w):          # mã số: QL22, ĐT.983C, 2A → giữ nguyên
+            out.append(w)
+        else:
+            out.append(w[:1].upper() + w[1:].lower())
+    return " ".join(out)
+
+
 def _prov_norm(s):
     s = (s or "").strip()
     for p in ("TP. ", "TP.", "Thành phố ", "thành phố ", "Tỉnh ", "tỉnh "):
@@ -297,7 +313,7 @@ def fetch_cafeland_map(client):
         if d0:
             canon[d0.lower()] = d0
     cp = lambda raw: canon.get(_prov_norm(raw).lower(), "")
-    lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
+    lines = [{"title": _titlecase(d.get("title", "")), "coords": d.get("coords", []),
               "color": d.get("line_color") or "#e67e22", "detail": _dec(d.get("detail")),
               "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
              for d in db["Cafeland_Lines"].find(
@@ -306,7 +322,7 @@ def fetch_cafeland_map(client):
     for d in db["OSM_Infra"].find({}):                     # bổ sung tuyến cafeland thiếu (từ OSM)
         for seg in d.get("segments", []):
             if len(seg) > 1:
-                lines.append({"title": d.get("title", ""), "coords": seg, "color": "#0d9488",
+                lines.append({"title": _titlecase(d.get("title", "")), "coords": seg, "color": "#0d9488",
                               "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
                                          "Trạng thái": "đã khai thác"},
                               "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")})
@@ -317,23 +333,23 @@ def fetch_cafeland_map(client):
         prov = cp(pm.get(d.get("getIdProvince"), ""))
         kind, cat = _point_class(d.get("title"))
         if kind == "infra":
-            points.append({"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
+            points.append({"title": _titlecase(d.get("title", "")), "lat": d.get("lat"), "lng": d.get("lng"),
                            "detail": _dec(d.get("detail")), "prov": prov, "cat": cat})
         else:      # điểm là DỰ ÁN → đưa sang lớp dự án (kèm detail chi tiết)
-            projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+            projects.append({"t": _titlecase((d.get("title") or ""))[:90], "a": d.get("lat"), "o": d.get("lng"),
                              "cat": cat, "prov": prov, "detail": _dec(d.get("detail"))})
     for d in db["Infra_RealEstate"].find(
             {"lat": {"$ne": None}},
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1,
              "price_min": 1, "price_m2": 1, "city": 1}):
-        projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+        projects.append({"t": _titlecase((d.get("title") or ""))[:90], "a": d.get("lat"), "o": d.get("lng"),
                          "cat": _DUAN_LABEL.get(d.get("type_name"), "Khác"),
                          "prov": cp(d.get("city")), "s": d.get("status_name", ""),
                          "pm2": (d.get("price_m2") or "").strip(), "p": (d.get("price_min") or "").strip()})
     for d in db["Infra_IndustrialPark"].find(
             {"lat": {"$ne": None}},
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1, "address": 1}):
-        projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+        projects.append({"t": _titlecase((d.get("title") or ""))[:90], "a": d.get("lat"), "o": d.get("lng"),
                          "cat": "Khu công nghiệp",
                          "prov": cp((d.get("address") or "").split(",")[-1]),
                          "s": d.get("status", ""), "ac": d.get("acreage", "")})
