@@ -16,6 +16,8 @@ KHÔNG khớp → dc_news.unmatched_raw (pool cho step2_radar soi dự án MỚI
   python step1_scrape_news.py --pages 5       # sâu hơn cho cafef/vnexpress/vietstock
   python step1_scrape_news.py --sources cafef vnexpress baodauthau
   python step1_scrape_news.py --dry-run
+  # BACKFILL lịch sử (báo có kho lưu trữ: cafef/vnexpress/vietstock):
+  python step1_scrape_news.py --sources cafef vnexpress vietstock --pages 12 --since 2020-01-01
 """
 import argparse
 import asyncio
@@ -33,7 +35,7 @@ from lib_db import mongo_uri
 from lib_projects import build_alias_regex, pid2tid, search_keywords
 
 DB, COLL = "dc_news", "project_news_raw"
-CUTOFF = "2025-01-01"   # chỉ giữ tin từ đầu 2025 trở đi (tránh tin quá cũ)
+CUTOFF = "2025-01-01"   # mặc định (chạy hằng giờ); backfill dùng --since để lùi sâu hơn
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
 ALIAS = build_alias_regex()
@@ -283,7 +285,7 @@ async def scrape_one(client, source, pages):
     return []
 
 
-async def run(pages, dry, sources):
+async def run(pages, dry, sources, since=CUTOFF):
     now = dt.datetime.now().isoformat()
     async with httpx.AsyncClient() as client:
         results = await asyncio.gather(*[scrape_one(client, s, pages) for s in sources])
@@ -292,7 +294,7 @@ async def run(pages, dry, sources):
         for d in lst:
             if not d.get("url"):
                 continue
-            if d.get("date") and d["date"][:10] < CUTOFF:   # bỏ tin trước 2025
+            if d.get("date") and d["date"][:10] < since:   # bỏ tin trước mốc --since
                 continue
             d["scraped_at"] = now
             docs.setdefault(d["url"], d)
@@ -339,6 +341,7 @@ if __name__ == "__main__":
     ap.add_argument("--pages", type=int, default=2, help="Số trang cho cafef/vnexpress/vietstock")
     ap.add_argument("--sources", nargs="*", default=ALL_SOURCES,
                     help=f"Nguồn (mặc định tất cả): {', '.join(ALL_SOURCES)}")
+    ap.add_argument("--since", default=CUTOFF, help="Chỉ giữ tin từ ngày này (YYYY-MM-DD); backfill lùi sâu hơn")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    asyncio.run(run(a.pages, a.dry_run, [s for s in a.sources if s in ALL_SOURCES]))
+    asyncio.run(run(a.pages, a.dry_run, [s for s in a.sources if s in ALL_SOURCES], a.since))
