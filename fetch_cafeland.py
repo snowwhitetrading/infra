@@ -129,8 +129,10 @@ def run(what, dry):
             print(f"  Tổng {len(docs)} bản ghi.")
             if dry or not docs:
                 continue
-            with open(os.path.join(HERE, f"cafeland_{name}.json"), "w", encoding="utf-8") as f:
-                json.dump(docs, f, ensure_ascii=False)
+            # JSONL: mỗi bản ghi 1 dòng — dễ đọc/grep, mở nhẹ hơn 1 mảng khổng lồ
+            with open(os.path.join(HERE, f"cafeland_{name}.jsonl"), "w", encoding="utf-8") as f:
+                for d in docs:
+                    f.write(json.dumps(d, ensure_ascii=False) + "\n")
             col = mc[DB][coll]
             col.create_index(key, unique=True)
             col.bulk_write([UpdateOne({key: d[key]}, {"$set": {**d, "fetched_at": now}},
