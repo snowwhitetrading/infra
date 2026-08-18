@@ -18,6 +18,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import time
 
 import httpx
@@ -66,11 +67,13 @@ def fetch_infra(client):
                 coors = []
             coords = [[_f(c.get("lat")), _f(c.get("lng"))] for c in coors
                       if _f(c.get("lat")) and _f(c.get("lng"))]
+            content = re.sub(r"\s+", " ", re.sub("<[^>]+>", " ", x.get("content") or "")).strip()
             seen[cid] = {"caf_id": cid, "title": (x.get("title") or "").strip(),
                          "slug": x.get("slug"), "lat": _f(x.get("lat")), "lng": _f(x.get("lng")),
                          "line_type": x.get("line_type"), "line_color": x.get("line_color"),
                          "line_status": x.get("line_status"), "type": x.get("type"),
                          "province_id": x.get("province_id"), "getIdProvince": pid,
+                         "content": content,          # chi tiết: chủ đầu tư·vốn·tiến độ·số ga (đã bỏ HTML)
                          "n_points": len(coords), "coords": coords}
         time.sleep(0.05)
     return list(seen.values()), "Cafeland_Infra", "caf_id"
