@@ -284,7 +284,21 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .sat-note{max-width:620px;font-size:11px;color:var(--ink3);line-height:1.6;margin-top:14px}
 .sat-note b{color:var(--ink2);font-weight:500}
 /* map */
-#map{height:72vh;min-height:460px;width:100%;border:1px solid var(--rule2);border-radius:3px;z-index:0}
+.map-wrap{display:flex;gap:12px;align-items:stretch}
+#map{height:72vh;min-height:460px;flex:1;border:1px solid var(--rule2);border-radius:3px;z-index:0}
+.map-panel{width:330px;flex-shrink:0;border:1px solid var(--rule2);border-radius:3px;background:var(--card);
+  padding:16px 16px 20px;overflow-y:auto;height:72vh;min-height:460px;position:relative}
+.mp-empty{color:var(--ink3);font-size:13px;line-height:1.6;padding-top:8px}
+.mp-close{position:absolute;top:10px;right:12px;border:none;background:none;color:var(--ink3);font-size:15px;cursor:pointer}
+.mp-close:hover{color:var(--ink)}
+.mp-title{font-size:15px;font-weight:600;color:var(--ink);margin:0 24px 8px 0;line-height:1.35}
+.mp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.mp-tag{font-size:11px;padding:2px 8px;border-radius:12px;background:var(--build-bg);color:var(--build)}
+.mp-src{font-size:10px;color:#e67e22;font-family:"IBM Plex Mono",monospace;margin-bottom:12px}
+.mp-row{display:flex;gap:8px;padding:7px 0;border-top:1px dotted var(--rule2);font-size:12.5px}
+.mp-k{color:var(--ink3);min-width:112px;flex-shrink:0}
+.mp-v{color:var(--ink);line-height:1.5}
+@media (max-width:760px){.map-wrap{flex-direction:column}.map-panel{width:auto;height:auto;max-height:340px}}
 .map-bar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin-bottom:12px}
 .mf{display:flex;flex-direction:column;gap:5px}
 .mf>span{font-size:10px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
@@ -370,7 +384,10 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   </div>
   <div class="mf-row"><span class="mf-lbl">Hạ tầng</span><div class="mf-chips" id="mf-infra"></div></div>
   <div class="mf-row"><span class="mf-lbl">Dự án</span><div class="mf-chips" id="mf-proj"></div></div>
-  <div id="map"></div>
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="map-panel" id="map-panel"><div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div></div>
+  </div>
   <p class="sat-note">Dữ liệu <b>Cafeland</b> toàn quốc — lọc theo tỉnh · loại hạ tầng · loại dự án. 🔴 sân bay · tuyến màu theo loại · 🟢 dự án BĐS · 🟣 KCN (gộp cụm khi thu nhỏ). Bấm để xem chi tiết. © OpenStreetMap.</p>
 </div>
 
@@ -1044,20 +1061,35 @@ const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
 const mval = id => document.getElementById(id).value;
 const _infraSel = new Set(), _projSel = new Set();
+const _PANEL_HINT = '<div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div>';
+function closeDetail(){ document.getElementById('map-panel').innerHTML = _PANEL_HINT; }
+function showDetail(title, detail, meta){
+  const rows = Object.entries(detail||{}).filter(([k,v])=>v!=null&&String(v).trim()!=='')
+    .map(([k,v])=>`<div class="mp-row"><span class="mp-k">${esc(k)}</span><span class="mp-v">${esc(String(v))}</span></div>`).join('');
+  const tags = [meta.cat, meta.prov].filter(Boolean).map(t=>`<span class="mp-tag">${esc(t)}</span>`).join('');
+  document.getElementById('map-panel').innerHTML =
+    '<button class="mp-close" onclick="closeDetail()" title="Đóng">✕</button>'+
+    '<h3 class="mp-title">'+esc(title)+'</h3>'+
+    (tags?'<div class="mp-tags">'+tags+'</div>':'')+
+    '<div class="mp-src">nguồn Cafeland</div>'+
+    (rows||'<div class="mp-empty">Chưa có thông tin chi tiết.</div>');
+}
 function redrawMap(){
   const fr=mval('mf-region'), fp=mval('mf-prov');
   const okp = x => (!fr || PROV_REGION[x.prov]===fr) && (!fp || x.prov===fp);
   _L.lines.clearLayers(); _L.points.clearLayers(); _L.projects.clearLayers();
   let ni=0, np=0;
   CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okp(l)&&l.coords&&l.coords.length>1){
-    L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85}).bindPopup(cafPopup(l.title,l.detail)).addTo(_L.lines); ni++; }});
+    L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85})
+     .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines); ni++; }});
   CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okp(p)){
     const col=isAirport(p.title)?'#e11d48':'#e67e22';
-    L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9}).bindPopup(cafPopup(p.title,p.detail)).addTo(_L.points); ni++; }});
+    L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9})
+     .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov})).addTo(_L.points); ni++; }});
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
     const col=d.cat==='Khu công nghiệp'?'#7c3aed':'#16a34a';
     _L.projects.addLayer(L.circleMarker([d.a,d.o],{radius:4,weight:1,color:'#fff',fillColor:col,fillOpacity:.85})
-      .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.cat)+(d.s?' · '+S(d.s):'')+(d.p?' · '+S(d.p):'')+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); np++; }});
+      .on('click',()=>showDetail(d.t,{'Loại':d.cat,'Trạng thái':d.s,'Giá':d.p,'Diện tích':d.ac?d.ac+' ha':''},{prov:d.prov}))); np++; }});
   document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
 const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
