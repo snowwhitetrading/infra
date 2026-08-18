@@ -1091,7 +1091,7 @@ function redrawMap(){
     const lc=(ICON_INFRA[l.cat]&&ICON_INFRA[l.cat][1])||l.color||'#2563eb';
     L.polyline(l.coords,{color:lc,weight:4,opacity:.85})
      .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines);
-    if(l.cat==='Cầu/Hầm'||l.cat==='Cảng'){   // cầu/cảng là điểm → thêm icon giữa tuyến cho nhất quán
+    if(ICON_INFRA[l.cat]){                     // icon ở giữa mọi tuyến (đường bộ/sắt/cầu/cảng…)
       L.marker(l.coords[Math.floor(l.coords.length/2)],{icon:_icon(ICON_INFRA[l.cat])})
        .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines);
     }
