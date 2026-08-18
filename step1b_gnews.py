@@ -80,7 +80,7 @@ def query_gnews(client, alias, after=None, before=None):
         title = re.sub(r"\s*-\s*" + re.escape(src) + r"\s*$", "", title).strip()
         out.append({"title": title, "source": "gnews:" + src,
                     "url": (it.findtext("link") or "").strip(),
-                    "desc": re.sub("<[^>]+>", " ", it.findtext("description") or "")[:400],
+                    "description": re.sub("<[^>]+>", " ", it.findtext("description") or "")[:400],
                     "date": _date(it.findtext("pubDate", ""))})
     return out
 
@@ -100,7 +100,7 @@ def run(a):
             alias = max((p.get("aliases") or [p["name"]]), key=len)   # alias dài nhất (đặc trưng nhất)
             for after, before in windows:
                 for r in query_gnews(cl, alias, after, before):
-                    if not r["url"] or not _relevant(alias, r["title"] + " " + r["desc"]):
+                    if not r["url"] or not _relevant(alias, r["title"] + " " + r["description"]):
                         continue
                     r["projects"] = [p["tid"]]
                     docs.setdefault(r["url"], r)
