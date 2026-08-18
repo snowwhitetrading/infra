@@ -194,7 +194,7 @@ def fetch_mappts(client):
 
 
 def fetch_cafeland_map(client):
-    """Lớp tham khảo cafeland cho bản đồ: tuyến (polyline+detail) + điểm (sân bay/nút giao+detail)."""
+    """4 lớp bản đồ cafeland: tuyến · điểm · dự án BĐS · KCN. Dùng key ngắn cho lớp nhiều điểm."""
     db = client["dc_commodity"]
     lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
               "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {})}
@@ -206,7 +206,17 @@ def fetch_cafeland_map(client):
               for d in db["Cafeland_Points"].find(
                   {"lat": {"$ne": None}},
                   {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1})]
-    return lines, points
+    duan = [{"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+             "ty": d.get("type_name", ""), "s": d.get("status_name", ""), "p": d.get("price_min", "")}
+            for d in db["Infra_RealEstate"].find(
+                {"lat": {"$ne": None}},
+                {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_min": 1})]
+    kcn = [{"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+            "ac": d.get("acreage", ""), "s": d.get("status", "")}
+           for d in db["Infra_IndustrialPark"].find(
+               {"lat": {"$ne": None}},
+               {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1})]
+    return lines, points, duan, kcn
 
 
 def build_auto_rows(client, projects):
@@ -288,8 +298,9 @@ def main():
     print(f"Newsflow: {len(newsflow)} tin")
     satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
-    caf_lines, caf_points = fetch_cafeland_map(c)
-    print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến + {len(caf_points)} điểm")
+    caf_lines, caf_points, caf_duan, caf_kcn = fetch_cafeland_map(c)
+    print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến · {len(caf_points)} điểm · "
+          f"{len(caf_duan)} dự án · {len(caf_kcn)} KCN")
 
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
@@ -297,6 +308,8 @@ def main():
     out = out.replace("const CAT_ORDER = []", "const CAT_ORDER = " + json.dumps([c[0] for c in CAT_META], ensure_ascii=False), 1)
     out = out.replace("const CAF_LINES = []", "const CAF_LINES = " + json.dumps(caf_lines, ensure_ascii=False), 1)
     out = out.replace("const CAF_POINTS = []", "const CAF_POINTS = " + json.dumps(caf_points, ensure_ascii=False), 1)
+    out = out.replace("const CAF_DUAN = []", "const CAF_DUAN = " + json.dumps(caf_duan, ensure_ascii=False), 1)
+    out = out.replace("const CAF_KCN = []", "const CAF_KCN = " + json.dumps(caf_kcn, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 

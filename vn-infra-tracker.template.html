@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <style>
 :root{
   --paper:#EFF2F1; --card:#FBFCFC; --sunk:#E6EAE9;
@@ -282,6 +285,11 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .sat-note b{color:var(--ink2);font-weight:500}
 /* map */
 #map{height:72vh;min-height:460px;width:100%;border:1px solid var(--rule2);border-radius:3px;z-index:0}
+.map-layers{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.maplayer{font-family:inherit;font-size:12px;padding:6px 12px;border:1px solid var(--rule2);border-radius:18px;
+  background:var(--card);color:var(--ink3);cursor:pointer;transition:.12s}
+.maplayer:hover{border-color:var(--ink3)}
+.maplayer.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--ink2)}
 .map-legend span{display:flex;align-items:center;gap:5px}
 .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--rule2)}
@@ -344,13 +352,14 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="map-legend">
-    <span><i style="background:#e11d48"></i>Sân bay</span>
-    <span><i style="background:#e67e22"></i>Điểm (nút giao/cảng/dự án)</span>
-    <span><span style="display:inline-block;width:20px;height:0;border-top:3px solid #2563eb;vertical-align:middle"></span> Tuyến (đường/sắt/cầu)</span>
+  <div class="map-layers">
+    <button class="maplayer on" data-layer="lines">🛣️ Tuyến hạ tầng</button>
+    <button class="maplayer on" data-layer="points">✈️ Điểm &amp; sân bay</button>
+    <button class="maplayer" data-layer="duan">🏢 Dự án BĐS</button>
+    <button class="maplayer" data-layer="kcn">🏭 Khu công nghiệp</button>
   </div>
   <div id="map"></div>
-  <p class="sat-note">Dữ liệu tuyến & điểm hạ tầng lấy từ <b>Cafeland</b> (toàn quốc): 112 tuyến (polyline thật) + 189 điểm (gồm 12 sân bay). Bấm để xem chi tiết (vốn/quy mô/tiến độ). Bản đồ © OpenStreetMap.</p>
+  <p class="sat-note">Dữ liệu hạ tầng · dự án · KCN từ <b>Cafeland</b> (toàn quốc). Bật/tắt từng lớp ở trên; dự án BĐS &amp; KCN gộp cụm (cluster) khi thu nhỏ. Bấm để xem chi tiết. Bản đồ © OpenStreetMap.</p>
 </div>
 
 <footer>
@@ -391,6 +400,8 @@ const MAPPTS = [];
 const CAT_ORDER = [];
 const CAF_LINES = [];
 const CAF_POINTS = [];
+const CAF_DUAN = [];
+const CAF_KCN = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -1010,13 +1021,15 @@ function drawSat(){
   tk.innerHTML=arr.length?`<span>${arr[0].month}</span><span>${arr[arr.length-1].month}</span>`:'';
 }
 /* ---------- bản đồ (tab Bản đồ) ---------- */
-let _map = null;
+let _map = null; const _layers = {};
 function cafPopup(title, detail){
   const rows = Object.entries(detail||{}).slice(0,6)
     .map(([k,v])=>`<div style="font-size:11px"><b>${esc(k)}:</b> ${esc(String(v).slice(0,100))}</div>`).join('');
   return '<b>'+esc(title)+'</b>'+rows;
 }
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
+const S = x => esc(String(x==null?'':x));
+const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
@@ -1027,16 +1040,32 @@ function renderMap(){
     _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
-    CAF_LINES.forEach(l=>{
-      if(!l.coords || l.coords.length<2) return;
+
+    _layers.lines = L.layerGroup();
+    CAF_LINES.forEach(l=>{ if(l.coords && l.coords.length>1)
       L.polyline(l.coords, {color:l.color||'#2563eb', weight:4, opacity:.85})
-       .addTo(_map).bindPopup(cafPopup(l.title, l.detail));
-    });
-    CAF_POINTS.forEach(p=>{
-      if(p.lat==null) return;
-      const col = isAirport(p.title) ? '#e11d48' : '#e67e22';
-      L.circleMarker([p.lat, p.lng], {radius:5, weight:1.5, color:'#fff', fillColor:col, fillOpacity:.9})
-       .addTo(_map).bindPopup(cafPopup(p.title, p.detail));
+       .bindPopup(cafPopup(l.title, l.detail)).addTo(_layers.lines); });
+
+    _layers.points = L.layerGroup();
+    CAF_POINTS.forEach(p=>{ if(p.lat!=null){ const col = isAirport(p.title)?'#e11d48':'#e67e22';
+      L.circleMarker([p.lat,p.lng], {radius:5, weight:1.5, color:'#fff', fillColor:col, fillOpacity:.9})
+       .bindPopup(cafPopup(p.title, p.detail)).addTo(_layers.points); } });
+
+    _layers.duan = _cluster();
+    CAF_DUAN.forEach(d=>{ if(d.a!=null)
+      _layers.duan.addLayer(L.circleMarker([d.a,d.o], {radius:4, weight:1, color:'#fff', fillColor:'#16a34a', fillOpacity:.85})
+        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.ty)+' · '+S(d.s)+(d.p?' · '+S(d.p):'')+'</div>')); });
+
+    _layers.kcn = _cluster();
+    CAF_KCN.forEach(d=>{ if(d.a!=null)
+      _layers.kcn.addLayer(L.circleMarker([d.a,d.o], {radius:4, weight:1, color:'#fff', fillColor:'#7c3aed', fillOpacity:.85})
+        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.s)+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); });
+
+    _layers.lines.addTo(_map); _layers.points.addTo(_map);   // mặc định bật
+
+    document.querySelectorAll('.maplayer').forEach(b=>b.onclick=()=>{
+      const k=b.dataset.layer, on=b.classList.toggle('on');
+      if(on) _layers[k].addTo(_map); else _map.removeLayer(_layers[k]);
     });
   }
   setTimeout(()=>_map.invalidateSize(), 60);
