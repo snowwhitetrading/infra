@@ -367,7 +367,14 @@ def build_auto_rows(client, projects):
     auto = []
     for p in load_registry(force=True):
         tid = p.get("tid")
-        if not tid or tid in curated or tid not in nf:
+        if not tid or tid in curated:
+            continue
+        if tid not in nf:                     # dự án chưa có tin → vẫn hiện (đang theo dõi)
+            loc = reg_loc.get(p["id"], "")
+            auto.append({"id": tid, "g": categorize(p["name"], loc), "name": p["name"],
+                         "status": "theo dõi", "owner": p.get("group", ""), "loc": loc,
+                         "phases": [], "marks": [], "items": [], "huyDong": 0, "capex": [],
+                         "note": "Chưa có tin cập nhật — đang theo dõi"})
             continue
         items = sorted(nf[tid], key=lambda x: x["date"])
         seen, marks = set(), []
