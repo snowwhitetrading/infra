@@ -6,6 +6,7 @@ Endpoint → collection (dc_commodity):
   /ha-tang/get-list-line?getIdProvince=N → ~111 tuyến hạ tầng TOÀN QUỐC (polyline) → Cafeland_Infra
   /get-duan?page=N        → ~5.220 dự án BĐS                    → Infra_RealEstate
   /get-kcn?page=N         → ~760 khu/cụm CN                     → Infra_IndustrialPark
+  /start-map?getIdProvince=N (listPointToUrl) → 189 điểm nổi bật (sân bay/cầu/nút giao) → Cafeland_Points
 Lưu: cafeland_*.jsonl (soi tay) + dc_commodity.<collection> (dùng/match).
 
   python fetch_cafeland.py                          # lấy tất cả
@@ -75,6 +76,24 @@ def fetch_infra(client):
     return list(seen.values()), "Cafeland_Infra", "caf_id"
 
 
+def fetch_points(client):
+    """Quét ĐIỂM nổi bật (start-map.listPointToUrl) theo từng tỉnh → gồm SÂN BAY, cầu, nút giao,
+    cảng, KCN, dự án... (mỗi điểm có toạ độ + url chi tiết). Dedup theo id."""
+    seen = {}
+    for pid in range(1, 120):
+        j = _get(client, f"start-map?getIdProvince={pid}")
+        for p in ((j or {}).get("result") or {}).get("listPointToUrl", []):
+            i = p.get("id")
+            if i in seen:
+                continue
+            seen[i] = {"caf_id": i, "title": (p.get("title") or "").strip(),
+                       "slug": p.get("slug"), "url": p.get("url"),
+                       "lat": _f(p.get("lat")), "lng": _f(p.get("lng")),
+                       "getIdProvince": pid}
+        time.sleep(0.04)
+    return list(seen.values()), "Cafeland_Points", "caf_id"
+
+
 def _paginate(client, path, extract, label):
     """Lấy hết trang: extract(json)->list. Đọc totalPage ở trang 1."""
     first = _get(client, f"{path}?page=1")
@@ -122,7 +141,8 @@ def fetch_kcn(client):
     return _paginate(client, "get-kcn", ex, "industrialpark"), "Infra_IndustrialPark", "caf_id"
 
 
-JOBS = {"infra": fetch_infra, "realestate": fetch_duan, "industrialpark": fetch_kcn}
+JOBS = {"infra": fetch_infra, "points": fetch_points,
+        "realestate": fetch_duan, "industrialpark": fetch_kcn}
 
 
 def run(what, dry):
