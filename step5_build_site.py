@@ -55,14 +55,14 @@ SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan
                "cangio_depot": 9, "halong_depot": 10, "gia_binh": 11}
 
 # Nhóm tab Tiến độ — theo LOẠI HẠ TẦNG, khớp taxonomy tab Bản đồ (_infra_cat / ICON_INFRA).
-CAT_META = [   # (id, tên hiển thị, meta) — thứ tự trong droplist
-    ("Sân bay", "Sân bay", "cảng hàng không"),
-    ("Cầu/Hầm", "Cầu / Hầm", "cầu, hầm"),
-    ("Cảng", "Cảng", "cảng biển, cảng sông"),
-    ("Đường sắt/Metro", "Đường sắt / Metro", "đường sắt, metro, tàu điện"),
-    ("Nút giao", "Nút giao", "nút giao, ngã tư"),
-    ("Kênh/Rạch", "Kênh / Rạch", "kênh, rạch, nạo vét"),
+CAT_META = [   # (id, tên hiển thị, meta) — thứ tự hiển thị loại hình
     ("Đường bộ", "Đường bộ", "cao tốc, quốc lộ, vành đai, tỉnh lộ"),
+    ("Đường sắt/Metro", "Đường sắt / Metro", "đường sắt, metro, tàu điện"),
+    ("Sân bay", "Sân bay", "cảng hàng không"),
+    ("Kênh/Rạch", "Kênh / Rạch", "kênh, rạch, nạo vét"),
+    ("Cầu/Hầm", "Cầu / Hầm", "cầu, hầm"),
+    ("Nút giao", "Nút giao", "nút giao, ngã tư"),
+    ("Cảng", "Cảng biển", "cảng biển, cảng sông"),
 ]
 
 
