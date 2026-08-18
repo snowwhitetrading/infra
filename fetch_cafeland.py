@@ -67,28 +67,43 @@ def fetch_infra(client):
                 coors = []
             coords = [[_f(c.get("lat")), _f(c.get("lng"))] for c in coors
                       if _f(c.get("lat")) and _f(c.get("lng"))]
-            content = re.sub(r"\s+", " ", re.sub("<[^>]+>", " ", x.get("content") or "")).strip()
+            content, detail = _content_detail(x.get("content"))   # tách trường chủ đầu tư/vốn/tiến độ
             seen[cid] = {"caf_id": cid, "title": (x.get("title") or "").strip(),
                          "slug": x.get("slug"), "lat": _f(x.get("lat")), "lng": _f(x.get("lng")),
                          "line_type": x.get("line_type"), "line_color": x.get("line_color"),
                          "line_status": x.get("line_status"), "type": x.get("type"),
                          "province_id": x.get("province_id"), "getIdProvince": pid,
-                         "content": content,          # chi tiết: chủ đầu tư·vốn·tiến độ·số ga (đã bỏ HTML)
+                         "content": content, "detail": detail,
                          "n_points": len(coords), "coords": coords}
         time.sleep(0.05)
     return list(seen.values()), "Cafeland_Infra", "caf_id"
 
 
-def _content_from_html(html):
-    """Trích trường content (chi tiết: vốn/diện tích/tiến độ) từ JSON nhúng trong page điểm."""
+def _content_detail(raw):
+    """content HTML thô → (text sạch, detail{nhãn:giá trị}). Bắt cặp 'Nhãn: giá trị' theo dòng
+    (Vị trí/Quy mô/Tổng mức đầu tư/Nhu cầu sử dụng đất/Chủ đầu tư/Tổng chiều dài/Điểm đầu...)."""
+    t = re.sub(r"</(p|li|div)>|<br\s*/?>", "\n", raw or "")
+    t = re.sub("<[^>]+>", " ", t).replace("\r", "\n")
+    lines = [re.sub(r"\s+", " ", ln).strip(" •-·") for ln in t.split("\n")]
+    lines = [ln for ln in lines if len(ln) > 1]
+    detail = {}
+    for ln in lines:
+        m = re.match(r"([A-ZĐÀ-Ỹ][^:]{1,44}?):\s*(.+)", ln)
+        if m and len(m.group(2)) > 1:
+            detail[m.group(1).strip()] = m.group(2).strip()
+    return " · ".join(lines), detail
+
+
+def _parse_point_content(html):
+    """Từ page điểm (pin_id) → tách JSON nhúng lấy content rồi _content_detail."""
     i = html.find('"content":')
     if i < 0:
-        return ""
+        return "", {}
     try:
         val, _ = json.JSONDecoder().raw_decode(html[i + len('"content":'):].lstrip())
     except Exception:
-        return ""
-    return re.sub(r"\s+", " ", re.sub("<[^>]+>", " ", val or "")).strip()
+        return "", {}
+    return _content_detail(val)
 
 
 def fetch_points(client):
@@ -104,15 +119,15 @@ def fetch_points(client):
             seen[i] = {"caf_id": i, "title": (p.get("title") or "").strip(),
                        "slug": p.get("slug"), "url": p.get("url"),
                        "lat": _f(p.get("lat")), "lng": _f(p.get("lng")),
-                       "getIdProvince": pid, "content": ""}
+                       "getIdProvince": pid, "content": "", "detail": {}}
         time.sleep(0.04)
-    # enrich: fetch trang chi tiết từng điểm → content
+    # enrich: fetch trang chi tiết từng điểm → content + detail (đã tách trường)
     pts = list(seen.values())
     for n, d in enumerate(pts, 1):
         if d.get("url"):
             try:
                 r = client.get(d["url"], timeout=30)
-                d["content"] = _content_from_html(r.text)
+                d["content"], d["detail"] = _parse_point_content(r.text)
             except Exception:
                 pass
         if n % 40 == 0 or n == len(pts):
