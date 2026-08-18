@@ -193,30 +193,70 @@ def fetch_mappts(client):
     return out
 
 
+def _prov_norm(s):
+    s = (s or "").strip()
+    for p in ("TP. ", "TP.", "Thành phố ", "thành phố ", "Tỉnh ", "tỉnh "):
+        if s.startswith(p):
+            return s[len(p):].strip()
+    return s
+
+
+def _infra_cat(t):
+    t = (t or "").lower()
+    if "sân bay" in t or "hàng không" in t:
+        return "Sân bay"
+    if "metro" in t or "đường sắt" in t or "tàu điện" in t:
+        return "Đường sắt/Metro"
+    if "cầu" in t or "hầm" in t:
+        return "Cầu/Hầm"
+    if "cảng" in t:
+        return "Cảng"
+    if "kênh" in t or "rạch" in t or "nạo vét" in t:
+        return "Kênh/Rạch"
+    if "nút giao" in t:
+        return "Nút giao"
+    return "Đường bộ"
+
+
+_DUAN_LABEL = {"can_ho_chung_cu": "Căn hộ", "khu_do_thi": "Khu đô thị",
+               "khu_cong_nghiep": "Khu công nghiệp", "dat_nen_du_an": "Đất nền",
+               "nha_pho_biet_thu": "Nhà phố/Biệt thự", "bat_dong_san_nghi_duong": "Nghỉ dưỡng",
+               "nha_o_xa_hoi": "Nhà ở xã hội", "loai_hinh_khac": "Khác"}
+
+
 def fetch_cafeland_map(client):
-    """4 lớp bản đồ cafeland: tuyến · điểm · dự án BĐS · KCN. Dùng key ngắn cho lớp nhiều điểm."""
+    """3 lớp bản đồ cafeland — mỗi mục gắn `prov` (tỉnh) + `cat` (loại) để lọc:
+    lines (tuyến) · points (điểm/sân bay) · projects (dự án BĐS + KCN gộp)."""
     db = client["dc_commodity"]
+    pm = {d["pid"]: d["name"] for d in db["Cafeland_Provinces"].find({}, {"_id": 0, "pid": 1, "name": 1})}
     lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
-              "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {})}
+              "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {}),
+              "prov": _prov_norm(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
              for d in db["Cafeland_Lines"].find(
                  {"coords.1": {"$exists": True}},
-                 {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1})]
+                 {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1, "getIdProvince": 1})]
     points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
-               "detail": d.get("detail", {})}
+               "detail": d.get("detail", {}),
+               "prov": _prov_norm(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
               for d in db["Cafeland_Points"].find(
                   {"lat": {"$ne": None}},
-                  {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1})]
-    duan = [{"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
-             "ty": d.get("type_name", ""), "s": d.get("status_name", ""), "p": d.get("price_min", "")}
-            for d in db["Infra_RealEstate"].find(
-                {"lat": {"$ne": None}},
-                {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_min": 1})]
-    kcn = [{"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
-            "ac": d.get("acreage", ""), "s": d.get("status", "")}
-           for d in db["Infra_IndustrialPark"].find(
-               {"lat": {"$ne": None}},
-               {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1})]
-    return lines, points, duan, kcn
+                  {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1, "getIdProvince": 1})]
+    projects = []
+    for d in db["Infra_RealEstate"].find(
+            {"lat": {"$ne": None}},
+            {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_min": 1, "city": 1}):
+        projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+                         "cat": _DUAN_LABEL.get(d.get("type_name"), "Khác"),
+                         "prov": _prov_norm(d.get("city")), "s": d.get("status_name", ""),
+                         "p": d.get("price_min", "")})
+    for d in db["Infra_IndustrialPark"].find(
+            {"lat": {"$ne": None}},
+            {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1, "address": 1}):
+        projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+                         "cat": "Khu công nghiệp",
+                         "prov": _prov_norm((d.get("address") or "").split(",")[-1]),
+                         "s": d.get("status", ""), "ac": d.get("acreage", "")})
+    return lines, points, projects
 
 
 def build_auto_rows(client, projects):
@@ -298,9 +338,9 @@ def main():
     print(f"Newsflow: {len(newsflow)} tin")
     satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
-    caf_lines, caf_points, caf_duan, caf_kcn = fetch_cafeland_map(c)
+    caf_lines, caf_points, caf_projects = fetch_cafeland_map(c)
     print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến · {len(caf_points)} điểm · "
-          f"{len(caf_duan)} dự án · {len(caf_kcn)} KCN")
+          f"{len(caf_projects)} dự án+KCN")
 
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
@@ -308,8 +348,7 @@ def main():
     out = out.replace("const CAT_ORDER = []", "const CAT_ORDER = " + json.dumps([c[0] for c in CAT_META], ensure_ascii=False), 1)
     out = out.replace("const CAF_LINES = []", "const CAF_LINES = " + json.dumps(caf_lines, ensure_ascii=False), 1)
     out = out.replace("const CAF_POINTS = []", "const CAF_POINTS = " + json.dumps(caf_points, ensure_ascii=False), 1)
-    out = out.replace("const CAF_DUAN = []", "const CAF_DUAN = " + json.dumps(caf_duan, ensure_ascii=False), 1)
-    out = out.replace("const CAF_KCN = []", "const CAF_KCN = " + json.dumps(caf_kcn, ensure_ascii=False), 1)
+    out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 

@@ -285,11 +285,14 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .sat-note b{color:var(--ink2);font-weight:500}
 /* map */
 #map{height:72vh;min-height:460px;width:100%;border:1px solid var(--rule2);border-radius:3px;z-index:0}
-.map-layers{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-.maplayer{font-family:inherit;font-size:12px;padding:6px 12px;border:1px solid var(--rule2);border-radius:18px;
-  background:var(--card);color:var(--ink3);cursor:pointer;transition:.12s}
-.maplayer:hover{border-color:var(--ink3)}
-.maplayer.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.map-bar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin-bottom:12px}
+.mf{display:flex;flex-direction:column;gap:5px}
+.mf>span{font-size:10px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+.map-bar select{font-family:inherit;font-size:13px;padding:7px 28px 7px 11px;border:1px solid var(--rule2);
+  border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer;min-width:172px}
+.map-bar select:hover{border-color:var(--ink3)}
+.map-bar select:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.mf-count{font-size:11px;color:var(--ink3);align-self:center;margin-left:auto;font-family:"IBM Plex Mono",monospace}
 .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--ink2)}
 .map-legend span{display:flex;align-items:center;gap:5px}
 .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--rule2)}
@@ -352,14 +355,14 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="map-layers">
-    <button class="maplayer on" data-layer="lines">🛣️ Tuyến hạ tầng</button>
-    <button class="maplayer on" data-layer="points">✈️ Điểm &amp; sân bay</button>
-    <button class="maplayer" data-layer="duan">🏢 Dự án BĐS</button>
-    <button class="maplayer" data-layer="kcn">🏭 Khu công nghiệp</button>
+  <div class="map-bar">
+    <div class="mf"><span>Tỉnh thành</span><select id="mf-prov"></select></div>
+    <div class="mf"><span>Hạ tầng</span><select id="mf-infra"></select></div>
+    <div class="mf"><span>Dự án</span><select id="mf-proj"></select></div>
+    <span class="mf-count" id="mf-count"></span>
   </div>
   <div id="map"></div>
-  <p class="sat-note">Dữ liệu hạ tầng · dự án · KCN từ <b>Cafeland</b> (toàn quốc). Bật/tắt từng lớp ở trên; dự án BĐS &amp; KCN gộp cụm (cluster) khi thu nhỏ. Bấm để xem chi tiết. Bản đồ © OpenStreetMap.</p>
+  <p class="sat-note">Dữ liệu <b>Cafeland</b> toàn quốc — lọc theo tỉnh · loại hạ tầng · loại dự án. 🔴 sân bay · tuyến màu theo loại · 🟢 dự án BĐS · 🟣 KCN (gộp cụm khi thu nhỏ). Bấm để xem chi tiết. © OpenStreetMap.</p>
 </div>
 
 <footer>
@@ -400,8 +403,7 @@ const MAPPTS = [];
 const CAT_ORDER = [];
 const CAF_LINES = [];
 const CAF_POINTS = [];
-const CAF_DUAN = [];
-const CAF_KCN = [];
+const CAF_PROJECTS = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -1021,7 +1023,7 @@ function drawSat(){
   tk.innerHTML=arr.length?`<span>${arr[0].month}</span><span>${arr[arr.length-1].month}</span>`:'';
 }
 /* ---------- bản đồ (tab Bản đồ) ---------- */
-let _map = null; const _layers = {};
+let _map = null; const _L = {};
 function cafPopup(title, detail){
   const rows = Object.entries(detail||{}).slice(0,6)
     .map(([k,v])=>`<div style="font-size:11px"><b>${esc(k)}:</b> ${esc(String(v).slice(0,100))}</div>`).join('');
@@ -1030,6 +1032,26 @@ function cafPopup(title, detail){
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
 const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
+const mval = id => document.getElementById(id).value;
+function redrawMap(){
+  const fp=mval('mf-prov'), fi=mval('mf-infra')||'__all', fpr=mval('mf-proj')||'__none';
+  _L.lines.clearLayers(); _L.points.clearLayers(); _L.projects.clearLayers();
+  let ni=0, np=0;
+  if(fi!=='__none'){
+    CAF_LINES.forEach(l=>{ if((!fp||l.prov===fp)&&(fi==='__all'||l.cat===fi)&&l.coords&&l.coords.length>1){
+      L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85}).bindPopup(cafPopup(l.title,l.detail)).addTo(_L.lines); ni++; }});
+    CAF_POINTS.forEach(p=>{ if(p.lat!=null&&(!fp||p.prov===fp)&&(fi==='__all'||p.cat===fi)){
+      const col=isAirport(p.title)?'#e11d48':'#e67e22';
+      L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9}).bindPopup(cafPopup(p.title,p.detail)).addTo(_L.points); ni++; }});
+  }
+  if(fpr!=='__none'){
+    CAF_PROJECTS.forEach(d=>{ if(d.a!=null&&(!fp||d.prov===fp)&&(fpr==='__all'||d.cat===fpr)){
+      const col=d.cat==='Khu công nghiệp'?'#7c3aed':'#16a34a';
+      _L.projects.addLayer(L.circleMarker([d.a,d.o],{radius:4,weight:1,color:'#fff',fillColor:col,fillOpacity:.85})
+        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.cat)+(d.s?' · '+S(d.s):'')+(d.p?' · '+S(d.p):'')+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); np++; }});
+  }
+  document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
+}
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
@@ -1040,34 +1062,19 @@ function renderMap(){
     _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
-
-    _layers.lines = L.layerGroup();
-    CAF_LINES.forEach(l=>{ if(l.coords && l.coords.length>1)
-      L.polyline(l.coords, {color:l.color||'#2563eb', weight:4, opacity:.85})
-       .bindPopup(cafPopup(l.title, l.detail)).addTo(_layers.lines); });
-
-    _layers.points = L.layerGroup();
-    CAF_POINTS.forEach(p=>{ if(p.lat!=null){ const col = isAirport(p.title)?'#e11d48':'#e67e22';
-      L.circleMarker([p.lat,p.lng], {radius:5, weight:1.5, color:'#fff', fillColor:col, fillOpacity:.9})
-       .bindPopup(cafPopup(p.title, p.detail)).addTo(_layers.points); } });
-
-    _layers.duan = _cluster();
-    CAF_DUAN.forEach(d=>{ if(d.a!=null)
-      _layers.duan.addLayer(L.circleMarker([d.a,d.o], {radius:4, weight:1, color:'#fff', fillColor:'#16a34a', fillOpacity:.85})
-        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.ty)+' · '+S(d.s)+(d.p?' · '+S(d.p):'')+'</div>')); });
-
-    _layers.kcn = _cluster();
-    CAF_KCN.forEach(d=>{ if(d.a!=null)
-      _layers.kcn.addLayer(L.circleMarker([d.a,d.o], {radius:4, weight:1, color:'#fff', fillColor:'#7c3aed', fillOpacity:.85})
-        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.s)+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); });
-
-    _layers.lines.addTo(_map); _layers.points.addTo(_map);   // mặc định bật
-
-    document.querySelectorAll('.maplayer').forEach(b=>b.onclick=()=>{
-      const k=b.dataset.layer, on=b.classList.toggle('on');
-      if(on) _layers[k].addTo(_map); else _map.removeLayer(_layers[k]);
-    });
+    _L.lines = L.layerGroup().addTo(_map);
+    _L.points = L.layerGroup().addTo(_map);
+    _L.projects = _cluster().addTo(_map);
+    const uniq = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
+    const provs = uniq([...CAF_LINES,...CAF_POINTS,...CAF_PROJECTS].map(x=>x.prov));
+    document.getElementById('mf-prov').innerHTML='<option value="">Toàn quốc</option>'+provs.map(p=>`<option>${esc(p)}</option>`).join('');
+    const icats = uniq([...CAF_LINES,...CAF_POINTS].map(x=>x.cat));
+    document.getElementById('mf-infra').innerHTML='<option value="__all">Tất cả hạ tầng</option>'+icats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')+'<option value="__none">— Ẩn —</option>';
+    const pcats = uniq(CAF_PROJECTS.map(x=>x.cat));
+    document.getElementById('mf-proj').innerHTML='<option value="__none">— Ẩn —</option><option value="__all">Tất cả dự án</option>'+pcats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    ['mf-prov','mf-infra','mf-proj'].forEach(id=>document.getElementById(id).onchange=redrawMap);
   }
+  redrawMap();
   setTimeout(()=>_map.invalidateSize(), 60);
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
