@@ -337,6 +337,15 @@ def fetch_cafeland_map(client):
                          "cat": "Khu công nghiệp",
                          "prov": cp((d.get("address") or "").split(",")[-1]),
                          "s": d.get("status", ""), "ac": d.get("acreage", "")})
+    # dedup dự án theo tên chuẩn hoá (hoa/thường + khoảng trắng) — ưu tiên bản có detail chi tiết
+    uniq, extra = {}, []
+    for p in projects:
+        k = " ".join((p.get("t") or "").split()).lower()
+        if not k:
+            extra.append(p)
+        elif k not in uniq or (p.get("detail") and not uniq[k].get("detail")):
+            uniq[k] = p
+    projects = list(uniq.values()) + extra
     return lines, points, projects
 
 
