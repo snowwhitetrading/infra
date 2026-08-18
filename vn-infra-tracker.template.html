@@ -344,19 +344,13 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="nf-filters">
-    <div class="grp"><span>Nhóm</span><select id="map-grp"></select></div>
-    <div class="grp"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--ink2)"><input type="checkbox" id="caf-toggle"> Lớp Cafeland (tham khảo)</label></div>
-  </div>
   <div class="map-legend">
     <span><i style="background:#e11d48"></i>Sân bay</span>
-    <span><i style="background:#7c3aed"></i>Đường sắt / Metro</span>
-    <span><i style="background:#2563eb"></i>Cao tốc / Vành đai</span>
-    <span><i style="background:#0891b2"></i>Cảng</span>
-    <span><i style="background:#d97706"></i>Cầu / Hầm</span>
+    <span><i style="background:#e67e22"></i>Điểm (nút giao/cảng/dự án)</span>
+    <span><span style="display:inline-block;width:20px;height:0;border-top:3px solid #2563eb;vertical-align:middle"></span> Tuyến (đường/sắt/cầu)</span>
   </div>
   <div id="map"></div>
-  <p class="sat-note"><b>Đường kẻ</b> = hướng tuyến (cao tốc/vành đai/đường sắt), <b>ô khoanh</b> = phạm vi khu (sân bay/cảng/khu đô thị), <b>chấm</b> = điểm (cầu/hầm). Toạ độ <b>sơ bộ</b>, đang tinh chỉnh. Bấm để xem tên dự án. Bản đồ © OpenStreetMap.</p>
+  <p class="sat-note">Dữ liệu tuyến & điểm hạ tầng lấy từ <b>Cafeland</b> (toàn quốc): 112 tuyến (polyline thật) + 189 điểm (gồm 12 sân bay). Bấm để xem chi tiết (vốn/quy mô/tiến độ). Bản đồ © OpenStreetMap.</p>
 </div>
 
 <footer>
@@ -1017,68 +1011,34 @@ function drawSat(){
 }
 /* ---------- bản đồ (tab Bản đồ) ---------- */
 let _map = null;
-const MAP_COLOR = {airport:'#e11d48', rail:'#7c3aed', road:'#2563eb', port:'#0891b2', bridge:'#d97706', other:'#64748b'};
-let _mapLayer;
-function drawMapPts(){
-  const fg=document.getElementById('map-grp').value;
-  _mapLayer.clearLayers();
-  MAPPTS.filter(p=>!fg||p.g===fg).forEach(p=>{
-    const col = MAP_COLOR[p.kind]||MAP_COLOR.other;
-    const g = p.geo;
-    let layer;
-    if(g && g.type==='line' && g.coords && g.coords.length>1){
-      layer = L.polyline(g.coords, {color:col, weight:4, opacity:.85});
-    } else if(g && g.type==='area' && g.coords && g.coords.length>2){
-      layer = L.polygon(g.coords, {color:col, weight:2, fillColor:col, fillOpacity:.22});
-    } else {
-      layer = L.circleMarker([p.lat, p.lon], {radius:7, weight:1.5, color:'#fff',
-        fillColor:col, fillOpacity:.9});
-    }
-    layer.addTo(_mapLayer).bindPopup('<b>'+esc(p.name)+'</b>');
-  });
-}
-let _cafLayer;
 function cafPopup(title, detail){
   const rows = Object.entries(detail||{}).slice(0,6)
     .map(([k,v])=>`<div style="font-size:11px"><b>${esc(k)}:</b> ${esc(String(v).slice(0,100))}</div>`).join('');
-  return '<b>'+esc(title)+'</b><div style="color:#e67e22;font-size:10px;margin:2px 0">nguồn Cafeland</div>'+rows;
+  return '<b>'+esc(title)+'</b>'+rows;
 }
-function drawCaf(){
-  _cafLayer.clearLayers();
-  if(!document.getElementById('caf-toggle').checked) return;
-  CAF_LINES.forEach(l=>{
-    if(!l.coords || l.coords.length<2) return;
-    L.polyline(l.coords, {color:l.color||'#e67e22', weight:3, opacity:.65, dashArray:'5 4'})
-     .addTo(_cafLayer).bindPopup(cafPopup(l.title, l.detail));
-  });
-  CAF_POINTS.forEach(p=>{
-    if(p.lat==null) return;
-    L.circleMarker([p.lat, p.lng], {radius:4, weight:1, color:'#fff', fillColor:'#e67e22', fillOpacity:.9})
-     .addTo(_cafLayer).bindPopup(cafPopup(p.title, p.detail));
-  });
-}
+const isAirport = t => /sân bay|hàng không/i.test(t||'');
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
     el.innerHTML = '<p class="cap" style="padding:24px">Bản đồ chỉ hiển thị trên site trực tuyến (cần internet để tải bản đồ).</p>';
     return;
   }
-  const gs=document.getElementById('map-grp');
-  if(!gs.dataset.init){
-    const grps=CAT_ORDER.filter(g=>MAPPTS.some(p=>p.g===g));
-    gs.innerHTML='<option value="">Tất cả nhóm</option>'+grps.map(g=>`<option>${esc(g)}</option>`).join('');
-    gs.dataset.init='1'; gs.onchange=drawMapPts;
-    document.getElementById('caf-toggle').onchange=drawCaf;
-  }
   if(!_map){
     _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
-    _mapLayer = L.layerGroup().addTo(_map);
-    _cafLayer = L.layerGroup().addTo(_map);
+    CAF_LINES.forEach(l=>{
+      if(!l.coords || l.coords.length<2) return;
+      L.polyline(l.coords, {color:l.color||'#2563eb', weight:4, opacity:.85})
+       .addTo(_map).bindPopup(cafPopup(l.title, l.detail));
+    });
+    CAF_POINTS.forEach(p=>{
+      if(p.lat==null) return;
+      const col = isAirport(p.title) ? '#e11d48' : '#e67e22';
+      L.circleMarker([p.lat, p.lng], {radius:5, weight:1.5, color:'#fff', fillColor:col, fillOpacity:.9})
+       .addTo(_map).bindPopup(cafPopup(p.title, p.detail));
+    });
   }
-  drawMapPts();
-  drawCaf();
   setTimeout(()=>_map.invalidateSize(), 60);
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
