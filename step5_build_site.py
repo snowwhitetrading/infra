@@ -237,6 +237,30 @@ def _infra_cat(t):
     return "Đường bộ"
 
 
+def _point_class(t):
+    """Điểm nổi bật cafeland: là DỰ ÁN (khu đô thị/nhà máy/KCN…) hay HẠ TẦNG thật (sân bay/cầu/cảng…)?
+    → ('proj', loại dự án) hoặc ('infra', loại hạ tầng)."""
+    tl = (t or "").lower()
+    if "sân bay" in tl or "hàng không" in tl:      # sân bay luôn là hạ tầng (kể cả "dự án sân bay")
+        return "infra", "Sân bay"
+    if "khu công nghiệp" in tl or "cụm công nghiệp" in tl or "nhà máy" in tl or "kcn" in tl:
+        return "proj", "Khu công nghiệp"
+    if "khu đô thị" in tl or "khu dân cư" in tl or "khu nhà ở" in tl or "tái định cư" in tl:
+        return "proj", "Khu đô thị"
+    if "nhà ở xã hội" in tl or "noxh" in tl:
+        return "proj", "Nhà ở xã hội"
+    if "chung cư" in tl or "căn hộ" in tl or "tòa nhà" in tl or "toà nhà" in tl or "complex" in tl:
+        return "proj", "Căn hộ"
+    if "biệt thự" in tl or "nhà phố" in tl:
+        return "proj", "Nhà phố/Biệt thự"
+    if "nghỉ dưỡng" in tl or "resort" in tl or "khách sạn" in tl:
+        return "proj", "Nghỉ dưỡng"
+    if any(k in tl for k in ("dự án", "trung tâm", "sân golf", "sân vận động", "bệnh viện",
+                             "đại học", "khu đất", "lô đất", "silicon", "văn phòng")):
+        return "proj", "Khác"
+    return "infra", _infra_cat(t)
+
+
 _DUAN_LABEL = {"can_ho_chung_cu": "Căn hộ", "khu_do_thi": "Khu đô thị",
                "khu_cong_nghiep": "Khu công nghiệp", "dat_nen_du_an": "Đất nền",
                "nha_pho_biet_thu": "Nhà phố/Biệt thự", "bat_dong_san_nghi_duong": "Nghỉ dưỡng",
@@ -268,13 +292,18 @@ def fetch_cafeland_map(client):
                               "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
                                          "Trạng thái": "đã khai thác"},
                               "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")})
-    points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
-               "detail": _dec(d.get("detail")),
-               "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
-              for d in db["Cafeland_Points"].find(
-                  {"lat": {"$ne": None}},
-                  {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1, "getIdProvince": 1})]
-    projects = []
+    points, projects = [], []
+    for d in db["Cafeland_Points"].find(
+            {"lat": {"$ne": None}},
+            {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1, "getIdProvince": 1}):
+        prov = cp(pm.get(d.get("getIdProvince"), ""))
+        kind, cat = _point_class(d.get("title"))
+        if kind == "infra":
+            points.append({"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
+                           "detail": _dec(d.get("detail")), "prov": prov, "cat": cat})
+        else:      # điểm là DỰ ÁN → đưa sang lớp dự án (kèm detail chi tiết)
+            projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
+                             "cat": cat, "prov": prov, "detail": _dec(d.get("detail"))})
     for d in db["Infra_RealEstate"].find(
             {"lat": {"$ne": None}},
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1,

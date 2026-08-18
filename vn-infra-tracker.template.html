@@ -1096,7 +1096,7 @@ function redrawMap(){
      .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov})).addTo(_L.points); ni++; }});
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
     _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||['📍','#64748b'])})
-      .on('click',()=>showDetail(d.t,{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''},{prov:d.prov}))); np++; }});
+      .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov}))); np++; }});
   document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
 const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
