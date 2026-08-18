@@ -79,9 +79,21 @@ def fetch_infra(client):
     return list(seen.values()), "Cafeland_Infra", "caf_id"
 
 
+def _content_from_html(html):
+    """Trích trường content (chi tiết: vốn/diện tích/tiến độ) từ JSON nhúng trong page điểm."""
+    i = html.find('"content":')
+    if i < 0:
+        return ""
+    try:
+        val, _ = json.JSONDecoder().raw_decode(html[i + len('"content":'):].lstrip())
+    except Exception:
+        return ""
+    return re.sub(r"\s+", " ", re.sub("<[^>]+>", " ", val or "")).strip()
+
+
 def fetch_points(client):
     """Quét ĐIỂM nổi bật (start-map.listPointToUrl) theo từng tỉnh → gồm SÂN BAY, cầu, nút giao,
-    cảng, KCN, dự án... (mỗi điểm có toạ độ + url chi tiết). Dedup theo id."""
+    cảng, KCN, dự án... Sau đó fetch page mỗi điểm để lấy CONTENT chi tiết (vốn/diện tích/tiến độ)."""
     seen = {}
     for pid in range(1, 120):
         j = _get(client, f"start-map?getIdProvince={pid}")
@@ -92,9 +104,21 @@ def fetch_points(client):
             seen[i] = {"caf_id": i, "title": (p.get("title") or "").strip(),
                        "slug": p.get("slug"), "url": p.get("url"),
                        "lat": _f(p.get("lat")), "lng": _f(p.get("lng")),
-                       "getIdProvince": pid}
+                       "getIdProvince": pid, "content": ""}
         time.sleep(0.04)
-    return list(seen.values()), "Cafeland_Points", "caf_id"
+    # enrich: fetch trang chi tiết từng điểm → content
+    pts = list(seen.values())
+    for n, d in enumerate(pts, 1):
+        if d.get("url"):
+            try:
+                r = client.get(d["url"], timeout=30)
+                d["content"] = _content_from_html(r.text)
+            except Exception:
+                pass
+        if n % 40 == 0 or n == len(pts):
+            print(f"    points detail: {n}/{len(pts)}")
+        time.sleep(0.1)
+    return pts, "Cafeland_Points", "caf_id"
 
 
 def _paginate(client, path, extract, label):
