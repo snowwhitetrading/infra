@@ -33,6 +33,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: timeout 780 python step1_scrape_news.py --pages 1 || echo "scrape skipped/timeout"
 
+      # Google News: tìm theo tên 228 dự án → gom mọi báo (gồm báo địa phương 34 tỉnh)
+      - name: Scrape Google News
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: timeout 600 python step1b_gnews.py || echo "gnews skipped/timeout"
+
       # Radar: đọc pool tin chưa khớp (unmatched_raw) → ứng viên dự án MỚI (deterministic)
       - name: Radar candidates
         env:
