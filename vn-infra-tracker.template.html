@@ -805,7 +805,7 @@ const P = [
 
 /* ---------- helpers ---------- */
 const toY = s => {const [y,m]=s.split('-').map(Number); return y + (m-1)/12;};
-const pct = y => ((y - T0) / (T1 - T0)) * 100;
+const pct = y => Math.max(0, Math.min(100, ((y - T0) / (T1 - T0)) * 100));  // kẹp: thanh trước 2024/sau 2034 không tràn ra ngoài trục
 const nf  = n => n==null ? '—' : n.toLocaleString('vi-VN');
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const MONTH_VN = d => {const [y,m,day]=String(d).split('-'); return day ? day+'/'+m+'/'+y : m+'/'+y;};
@@ -880,7 +880,9 @@ function barsHTML(phases, marks, proj){
       h += `<span class="chev ${ph.kind==='gpmb'?'g':'b'}" style="left:${pct(b)}%">&#8250;</span>`;
     }
     const lane = ph.kind==='gpmb'?'g':'b';
-    if(!A.has(ph.from))
+    if(a < T0)                               // bắt đầu trước trục → dấu ‹ ở mép trái
+      h += `<span class="chev ${lane}" style="left:0" title="Khởi công trước ${T0} (${ph.from})">&#8249;</span>`;
+    if(!A.has(ph.from) && a >= T0)
       h += `<span class="est ${lane}" style="left:${pct(a)}%" title="Ngày bắt đầu là ước lượng, không có nguồn">~</span>`;
     if(!ongoing && !A.has(ph.to))
       h += `<span class="est ${lane}" style="left:${pct(b)}%" title="Ngày kết thúc là ước lượng, không có nguồn">~</span>`;
