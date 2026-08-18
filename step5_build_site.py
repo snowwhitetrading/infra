@@ -229,15 +229,22 @@ def fetch_cafeland_map(client):
     lines (tuyến) · points (điểm/sân bay) · projects (dự án BĐS + KCN gộp)."""
     db = client["dc_commodity"]
     pm = {d["pid"]: d["name"] for d in db["Cafeland_Provinces"].find({}, {"_id": 0, "pid": 1, "name": 1})}
+    # danh sách tỉnh chính thức (chuẩn hoá) → chuẩn hoá + validate, bỏ rác (vd "496", trùng hoa/thường)
+    canon = {}
+    for nm in pm.values():
+        d0 = _prov_norm(nm)
+        if d0:
+            canon[d0.lower()] = d0
+    cp = lambda raw: canon.get(_prov_norm(raw).lower(), "")
     lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
               "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {}),
-              "prov": _prov_norm(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
+              "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
              for d in db["Cafeland_Lines"].find(
                  {"coords.1": {"$exists": True}},
                  {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1, "getIdProvince": 1})]
     points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
                "detail": d.get("detail", {}),
-               "prov": _prov_norm(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
+               "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
               for d in db["Cafeland_Points"].find(
                   {"lat": {"$ne": None}},
                   {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1, "getIdProvince": 1})]
@@ -247,14 +254,14 @@ def fetch_cafeland_map(client):
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_min": 1, "city": 1}):
         projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
                          "cat": _DUAN_LABEL.get(d.get("type_name"), "Khác"),
-                         "prov": _prov_norm(d.get("city")), "s": d.get("status_name", ""),
+                         "prov": cp(d.get("city")), "s": d.get("status_name", ""),
                          "p": d.get("price_min", "")})
     for d in db["Infra_IndustrialPark"].find(
             {"lat": {"$ne": None}},
             {"_id": 0, "title": 1, "lat": 1, "lng": 1, "acreage": 1, "status": 1, "address": 1}):
         projects.append({"t": (d.get("title") or "")[:90], "a": d.get("lat"), "o": d.get("lng"),
                          "cat": "Khu công nghiệp",
-                         "prov": _prov_norm((d.get("address") or "").split(",")[-1]),
+                         "prov": cp((d.get("address") or "").split(",")[-1]),
                          "s": d.get("status", ""), "ac": d.get("acreage", "")})
     return lines, points, projects
 
