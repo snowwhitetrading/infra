@@ -30,6 +30,17 @@ _REGION = {"Miền Bắc": ["Hà Nội", "Hải Phòng", "Quảng Ninh", "Bắc 
                         "An Giang", "Kiên Giang", "Cần Thơ", "Hậu Giang", "Sóc Trăng", "Bạc Liêu", "Cà Mau"]}
 PROV_REGION = {p: r for r, ps in _REGION.items() for p in ps}
 
+
+def _geo_of(name, loc=""):
+    """Suy (vùng, tỉnh) từ tên+địa điểm — cho filter Vùng/Tỉnh tab Tiến độ (giống Bản đồ)."""
+    low = (str(loc) + " " + str(name)).lower()
+    if "tp.hcm" in low or "tphcm" in low or "hồ chí minh" in low or " hcm" in low:
+        return "Miền Nam", "Hồ Chí Minh"
+    for prov, reg in PROV_REGION.items():
+        if prov.lower() in low:
+            return reg, prov
+    return "", ""
+
 from lib_db import mongo_uri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -43,37 +54,21 @@ SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan
                "pq_tram": 5, "rach_chiec": 6, "gb_road_hn": 7, "gb_road_bn": 8,
                "cangio_depot": 9, "halong_depot": 10, "gia_binh": 11}
 
-# Nhóm cho dự án NGOÀI 18 curated (I–IV giữ nguyên) — droplist tab Tiến độ.
+# Nhóm tab Tiến độ — theo LOẠI HẠ TẦNG, khớp taxonomy tab Bản đồ (_infra_cat / ICON_INFRA).
 CAT_META = [   # (id, tên hiển thị, meta) — thứ tự trong droplist
-    ("Hà Nội", "Hà Nội / Vùng Thủ đô", "dự án tại Hà Nội"),
-    ("TP.HCM", "TP.HCM", "dự án tại TP.HCM"),
-    ("Hải Phòng", "Hải Phòng – Quảng Ninh", "dự án tại Hải Phòng"),
-    ("Long Thành", "Cụm Long Thành", "sân bay Long Thành & kết nối"),
-    ("Cao tốc", "Cao tốc & vành đai", "cao tốc liên tỉnh"),
-    ("Cầu cảng", "Cầu & cảng", "cầu, hầm, cảng biển"),
     ("Sân bay", "Sân bay", "cảng hàng không"),
-    ("Khác", "Khác", "hạ tầng khác"),
+    ("Cầu/Hầm", "Cầu / Hầm", "cầu, hầm"),
+    ("Cảng", "Cảng", "cảng biển, cảng sông"),
+    ("Đường sắt/Metro", "Đường sắt / Metro", "đường sắt, metro, tàu điện"),
+    ("Nút giao", "Nút giao", "nút giao, ngã tư"),
+    ("Kênh/Rạch", "Kênh / Rạch", "kênh, rạch, nạo vét"),
+    ("Đường bộ", "Đường bộ", "cao tốc, quốc lộ, vành đai, tỉnh lộ"),
 ]
 
 
 def categorize(name, loc=""):
-    """Gán dự án (ngoài curated) vào 1 nhóm droplist: hub địa lý ưu tiên, rồi theo loại."""
-    t = (name + " " + (loc or "")).lower()
-    if "long thành" in t:
-        return "Long Thành"
-    if "hà nội" in t or "thủ đô" in t:
-        return "Hà Nội"
-    if "tp.hcm" in t or "tphcm" in t or "hồ chí minh" in t:
-        return "TP.HCM"
-    if "hải phòng" in t:
-        return "Hải Phòng"
-    if "sân bay" in t or "hàng không" in t:
-        return "Sân bay"
-    if "cầu" in t or "hầm" in t or "cảng" in t:
-        return "Cầu cảng"
-    if "cao tốc" in t or "vành đai" in t:
-        return "Cao tốc"
-    return "Khác"
+    """Nhóm dự án theo LOẠI HẠ TẦNG — cùng taxonomy với tab Bản đồ (_infra_cat)."""
+    return _infra_cat(name)
 
 
 def category_map(client):
@@ -436,6 +431,8 @@ def main():
     print(f"Đọc từ DB: {len(projects)} dự án curated")
 
     projects = projects + build_auto_rows(c, projects)
+    for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
+        p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

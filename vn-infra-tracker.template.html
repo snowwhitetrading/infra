@@ -346,7 +346,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 <div id="view-gantt">
 <div class="bar">
-  <div class="grp"><span>Nhóm</span><div id="f-group"></div></div>
+  <div class="grp"><span>Vùng</span><div id="f-region"></div></div>
+  <div class="grp"><span>Tỉnh thành</span><div id="f-prov"></div></div>
+  <div class="grp"><span>Loại hình</span><div id="f-group"></div></div>
   <div class="grp"><button class="chip" id="expandAll">Mở tất cả hạng mục</button></div>
 </div>
 
@@ -823,6 +825,8 @@ function laneOf(mark, proj){
 }
 
 let activeGroups = new Set(GROUPS.map(g=>g.id));
+let activeRegion = '';
+let activeProv = '';
 let minTier = 0;
 let open = new Set();
 
@@ -929,7 +933,8 @@ function render(){
   let h = '';
   const YEARLABELS = Array.from({length:T1-T0},(_,i)=>`<span class="ylab" style="left:${pct(T0+i)}%">${T0+i}</span>`).join('');
   GROUPS.filter(g=>activeGroups.has(g.id)).forEach(g=>{
-    const rows = P.filter(p=>p.g===g.id);
+    const rows = P.filter(p=>p.g===g.id && (!activeRegion || p.region===activeRegion) && (!activeProv || p.prov===activeProv));
+    if(!rows.length) return;                 // ẩn nhóm rỗng khi lọc theo vùng/tỉnh
     h += `<div class="row grp-row"><div class="lbl">
         <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta} · ${rows.length} dự án</div></div>
       <div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
@@ -985,6 +990,22 @@ document.getElementById('f-group-sel').onchange = e=>{
   activeGroups = v==='__all' ? new Set(GROUPS.map(g=>g.id)) : new Set([v]);
   render();
 };
+
+const RORDER = ['Miền Bắc','Miền Trung','Miền Nam'];
+const REGIONS = [...new Set(P.map(p=>p.region).filter(Boolean))].sort((a,b)=>RORDER.indexOf(a)-RORDER.indexOf(b));
+document.getElementById('f-region').innerHTML =
+  '<select id="f-region-sel"><option value="">Toàn quốc</option>' +
+  REGIONS.map(r=>`<option>${esc(r)}</option>`).join('') + '</select>';
+const fpSel = () => document.getElementById('f-prov-sel');
+function fillProvs(){                          // tỉnh phụ thuộc vùng (giống Bản đồ)
+  const provs=[...new Set(P.map(p=>p.prov).filter(p=>p&&(!activeRegion||PROV_REGION[p]===activeRegion)))].sort((a,b)=>a.localeCompare(b,'vi'));
+  document.getElementById('f-prov').innerHTML =
+    '<select id="f-prov-sel"><option value="">Tất cả tỉnh</option>' +
+    provs.map(p=>`<option>${esc(p)}</option>`).join('') + '</select>';
+  fpSel().onchange = e=>{ activeProv = e.target.value; render(); };
+}
+document.getElementById('f-region-sel').onchange = e=>{ activeRegion = e.target.value; activeProv=''; fillProvs(); render(); };
+fillProvs();
 
 document.getElementById('expandAll').onclick = e=>{
   if(open.size){open.clear();e.target.textContent='Mở tất cả hạng mục';}
