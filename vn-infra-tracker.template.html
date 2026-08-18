@@ -300,6 +300,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   background:var(--card);color:var(--ink3);cursor:pointer;transition:.12s}
 .mchip:hover{border-color:var(--ink3)}
 .mchip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mf-prov-box{max-height:88px;overflow-y:auto;padding:2px 4px 2px 0}
 .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--ink2)}
 .map-legend span{display:flex;align-items:center;gap:5px}
 .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--rule2)}
@@ -362,10 +363,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="map-bar">
-    <div class="mf"><span>Tỉnh thành</span><select id="mf-prov"></select></div>
-    <span class="mf-count" id="mf-count"></span>
-  </div>
+  <div class="mf-row"><span class="mf-lbl">Tỉnh</span><div class="mf-chips mf-prov-box" id="mf-prov"></div><span class="mf-count" id="mf-count"></span></div>
   <div class="mf-row"><span class="mf-lbl">Hạ tầng</span><div class="mf-chips" id="mf-infra"></div></div>
   <div class="mf-row"><span class="mf-lbl">Dự án</span><div class="mf-chips" id="mf-proj"></div></div>
   <div id="map"></div>
@@ -1039,18 +1037,17 @@ function cafPopup(title, detail){
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
 const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
-const mval = id => document.getElementById(id).value;
-const _infraSel = new Set(), _projSel = new Set();
+const _infraSel = new Set(), _projSel = new Set(), _provSel = new Set();
+const okProv = pr => _provSel.size===0 || _provSel.has(pr);
 function redrawMap(){
-  const fp=mval('mf-prov');
   _L.lines.clearLayers(); _L.points.clearLayers(); _L.projects.clearLayers();
   let ni=0, np=0;
-  CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&(!fp||l.prov===fp)&&l.coords&&l.coords.length>1){
+  CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okProv(l.prov)&&l.coords&&l.coords.length>1){
     L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85}).bindPopup(cafPopup(l.title,l.detail)).addTo(_L.lines); ni++; }});
-  CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&(!fp||p.prov===fp)){
+  CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okProv(p.prov)){
     const col=isAirport(p.title)?'#e11d48':'#e67e22';
     L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9}).bindPopup(cafPopup(p.title,p.detail)).addTo(_L.points); ni++; }});
-  CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&(!fp||d.prov===fp)){
+  CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okProv(d.prov)){
     const col=d.cat==='Khu công nghiệp'?'#7c3aed':'#16a34a';
     _L.projects.addLayer(L.circleMarker([d.a,d.o],{radius:4,weight:1,color:'#fff',fillColor:col,fillOpacity:.85})
       .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.cat)+(d.s?' · '+S(d.s):'')+(d.p?' · '+S(d.p):'')+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); np++; }});
@@ -1078,9 +1075,7 @@ function renderMap(){
     _L.points = L.layerGroup().addTo(_map);
     _L.projects = _cluster().addTo(_map);
     const uniq = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
-    const provs = uniq([...CAF_LINES,...CAF_POINTS,...CAF_PROJECTS].map(x=>x.prov));
-    document.getElementById('mf-prov').innerHTML='<option value="">Toàn quốc</option>'+provs.map(p=>`<option>${esc(p)}</option>`).join('');
-    document.getElementById('mf-prov').onchange=redrawMap;
+    _chips('mf-prov', uniq([...CAF_LINES,...CAF_POINTS,...CAF_PROJECTS].map(x=>x.prov)), _provSel, false);  // tỉnh: chưa chọn = toàn quốc
     _chips('mf-infra', uniq([...CAF_LINES,...CAF_POINTS].map(x=>x.cat)), _infraSel, true);   // hạ tầng: bật hết
     _chips('mf-proj', uniq(CAF_PROJECTS.map(x=>x.cat)), _projSel, false);                     // dự án: tắt hết
   }

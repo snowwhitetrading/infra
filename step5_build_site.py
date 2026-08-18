@@ -8,8 +8,13 @@ xuất vn-infra-tracker.built.html (self-contained, mở trực tiếp được)
   python step5_build_site.py                 # dựng lại từ DB
   python step5_build_site.py --out foo.html  # đổi tên file ra
 """
-import argparse, csv, datetime as dt, json, os, sys
+import argparse, csv, datetime as dt, html, json, os, sys
 from pymongo import MongoClient
+
+
+def _dec(d):
+    """Giải mã HTML entity (&agrave;→à, &ocirc;→ô…) trong dict detail của cafeland."""
+    return {html.unescape(k): html.unescape(v) for k, v in (d or {}).items()}
 
 from lib_db import mongo_uri
 
@@ -237,13 +242,13 @@ def fetch_cafeland_map(client):
             canon[d0.lower()] = d0
     cp = lambda raw: canon.get(_prov_norm(raw).lower(), "")
     lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
-              "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {}),
+              "color": d.get("line_color") or "#e67e22", "detail": _dec(d.get("detail")),
               "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
              for d in db["Cafeland_Lines"].find(
                  {"coords.1": {"$exists": True}},
                  {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1, "getIdProvince": 1})]
     points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
-               "detail": d.get("detail", {}),
+               "detail": _dec(d.get("detail")),
                "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
               for d in db["Cafeland_Points"].find(
                   {"lat": {"$ne": None}},
