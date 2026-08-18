@@ -1088,7 +1088,8 @@ function redrawMap(){
   _L.lines.clearLayers(); _L.points.clearLayers(); _L.projects.clearLayers();
   let ni=0, np=0;
   CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okp(l)&&l.coords&&l.coords.length>1){
-    L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85})
+    const lc=(ICON_INFRA[l.cat]&&ICON_INFRA[l.cat][1])||l.color||'#2563eb';
+    L.polyline(l.coords,{color:lc,weight:4,opacity:.85})
      .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines); ni++; }});
   CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okp(p)){
     L.marker([p.lat,p.lng],{icon:_icon(ICON_INFRA[p.cat]||['📍','#64748b'])})
