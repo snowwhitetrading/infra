@@ -3,7 +3,7 @@
 fetch_cafeland.py — Lấy TẤT CẢ data từ map.cafeland.vn (API mở, không cần auth).
 
 Endpoint → collection (dc_commodity):
-  /ha-tang/get-list-line  → 24 tuyến hạ tầng TP.HCM (polyline)  → Cafeland_Infra
+  /ha-tang/get-list-line?getIdProvince=N → ~111 tuyến hạ tầng TOÀN QUỐC (polyline) → Cafeland_Infra
   /get-duan?page=N        → ~5.220 dự án BĐS                    → Infra_RealEstate
   /get-kcn?page=N         → ~760 khu/cụm CN                     → Infra_IndustrialPark
 Lưu: cafeland_*.jsonl (soi tay) + dc_commodity.<collection> (dùng/match).
@@ -148,7 +148,7 @@ def run(what, dry):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--what", nargs="*", default=["infra", "duan", "kcn"],
+    ap.add_argument("--what", nargs="*", default=list(JOBS),
                     choices=list(JOBS), help="loại data (mặc định: tất cả)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
