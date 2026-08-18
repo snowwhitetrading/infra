@@ -286,7 +286,10 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 /* map */
 .map-wrap{display:flex;gap:12px;align-items:stretch}
 .mk-wrap{background:none!important;border:none!important}
-.mk-ic{font-size:17px;line-height:24px;display:block;text-align:center;cursor:pointer;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.4))}
+.mk-ic{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid #64748b;
+  display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,.28)}
+.mk-ic:hover{transform:scale(1.15);transition:transform .1s}
 #map{height:72vh;min-height:460px;flex:1;border:1px solid var(--rule2);border-radius:3px;z-index:0}
 .map-panel{width:330px;flex-shrink:0;border:1px solid var(--rule2);border-radius:3px;background:var(--card);
   padding:16px 16px 20px;overflow-y:auto;height:72vh;min-height:460px;position:relative}
@@ -1061,9 +1064,9 @@ function cafPopup(title, detail){
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
 const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
-const ICON_INFRA = {'Sân bay':'✈️','Cầu/Hầm':'🌉','Cảng':'⚓','Đường sắt/Metro':'🚈','Nút giao':'🔀','Kênh/Rạch':'💧','Đường bộ':'🛣️'};
-const ICON_PROJ = {'Căn hộ':'🏢','Khu đô thị':'🏙️','Khu công nghiệp':'🏭','Đất nền':'🗺️','Nhà phố/Biệt thự':'🏘️','Nghỉ dưỡng':'🏖️','Nhà ở xã hội':'🏠','Khác':'📍'};
-const _icon = e => L.divIcon({html:'<span class="mk-ic">'+e+'</span>', className:'mk-wrap', iconSize:[24,24], iconAnchor:[12,12], popupAnchor:[0,-11]});
+const ICON_INFRA = {'Sân bay':['✈️','#e11d48'],'Cầu/Hầm':['🌉','#d97706'],'Cảng':['⚓','#0891b2'],'Đường sắt/Metro':['🚈','#7c3aed'],'Nút giao':['🔀','#475569'],'Kênh/Rạch':['💧','#0ea5e9'],'Đường bộ':['🛣️','#2563eb']};
+const ICON_PROJ = {'Căn hộ':['🏢','#16a34a'],'Khu đô thị':['🏙️','#059669'],'Khu công nghiệp':['🏭','#7c3aed'],'Đất nền':['🗺️','#ca8a04'],'Nhà phố/Biệt thự':['🏘️','#db2777'],'Nghỉ dưỡng':['🏖️','#0891b2'],'Nhà ở xã hội':['🏠','#2563eb'],'Khác':['📍','#64748b']};
+const _icon = ic => L.divIcon({html:'<div class="mk-ic" style="border-color:'+(ic[1]||'#64748b')+'">'+ic[0]+'</div>', className:'mk-wrap', iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-13]});
 const mval = id => document.getElementById(id).value;
 const _infraSel = new Set(), _projSel = new Set();
 const _PANEL_HINT = '<div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div>';
@@ -1088,10 +1091,10 @@ function redrawMap(){
     L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85})
      .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines); ni++; }});
   CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okp(p)){
-    L.marker([p.lat,p.lng],{icon:_icon(ICON_INFRA[p.cat]||'📍')})
+    L.marker([p.lat,p.lng],{icon:_icon(ICON_INFRA[p.cat]||['📍','#64748b'])})
      .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov})).addTo(_L.points); ni++; }});
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
-    _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||'📍')})
+    _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||['📍','#64748b'])})
       .on('click',()=>showDetail(d.t,{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''},{prov:d.prov}))); np++; }});
   document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
