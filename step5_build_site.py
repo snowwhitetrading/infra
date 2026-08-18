@@ -241,9 +241,15 @@ def _point_class(t):
     """Điểm nổi bật cafeland: là DỰ ÁN (khu đô thị/nhà máy/KCN…) hay HẠ TẦNG thật (sân bay/cầu/cảng…)?
     → ('proj', loại dự án) hoặc ('infra', loại hạ tầng)."""
     tl = (t or "").lower()
-    if "sân bay" in tl or "hàng không" in tl:      # sân bay luôn là hạ tầng (kể cả "dự án sân bay")
+    # HẠ TẦNG rõ ràng trước
+    if "sân bay" in tl or "hàng không" in tl:
         return "infra", "Sân bay"
-    if "khu công nghiệp" in tl or "cụm công nghiệp" in tl or "nhà máy" in tl or "kcn" in tl:
+    if "metro" in tl or "đường sắt" in tl or "tàu điện" in tl:
+        return "infra", "Đường sắt/Metro"
+    # DỰ ÁN — công nghiệp / đô thị / du lịch...
+    if any(k in tl for k in ("khu công nghiệp", "cụm công nghiệp", "ccn ", "nhà máy", "kcn",
+                             "công nghệ cao", "công nghệ số", "nhà xưởng", "logistics",
+                             "khu kinh tế", "phi thuế quan")):
         return "proj", "Khu công nghiệp"
     if "khu đô thị" in tl or "khu dân cư" in tl or "khu nhà ở" in tl or "tái định cư" in tl:
         return "proj", "Khu đô thị"
@@ -253,12 +259,24 @@ def _point_class(t):
         return "proj", "Căn hộ"
     if "biệt thự" in tl or "nhà phố" in tl:
         return "proj", "Nhà phố/Biệt thự"
-    if "nghỉ dưỡng" in tl or "resort" in tl or "khách sạn" in tl:
+    if any(k in tl for k in ("nghỉ dưỡng", "resort", "khách sạn", "du lịch", "khu nghỉ",
+                             "golf", "gofl", "vui chơi", "giải trí")):
         return "proj", "Nghỉ dưỡng"
-    if any(k in tl for k in ("dự án", "trung tâm", "sân golf", "sân vận động", "bệnh viện",
-                             "đại học", "khu đất", "lô đất", "silicon", "văn phòng")):
+    if "khu đất" in tl or "lô đất" in tl or "khu đô thị" in tl:
         return "proj", "Khác"
-    return "infra", _infra_cat(t)
+    # cầu / cảng / nút giao (điểm hạ tầng)
+    if "cầu" in tl or "hầm" in tl:
+        return "infra", "Cầu/Hầm"
+    if "cảng" in tl:
+        return "infra", "Cảng"
+    if "nút giao" in tl or "ngã tư" in tl or "ngã ba" in tl:
+        return "infra", "Nút giao"
+    # ĐƯỜNG BỘ — chỉ khi có từ khoá đường; bến xe cũng là hạ tầng giao thông
+    if any(k in tl for k in ("đường", "quốc lộ", "cao tốc", "vành đai", "tuyến", "tỉnh lộ",
+                             " ql", "đt.", "đt ", "bến xe")):
+        return "infra", "Đường bộ"
+    # còn lại KHÔNG có từ khoá hạ tầng → coi là dự án
+    return "proj", "Khác"
 
 
 _DUAN_LABEL = {"can_ho_chung_cu": "Căn hộ", "khu_do_thi": "Khu đô thị",
