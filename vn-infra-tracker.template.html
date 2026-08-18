@@ -363,9 +363,13 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="mf-row"><span class="mf-lbl">Tỉnh</span><div class="mf-chips mf-prov-box" id="mf-prov"></div><span class="mf-count" id="mf-count"></span></div>
-  <div class="mf-row"><span class="mf-lbl">Hạ tầng</span><div class="mf-chips" id="mf-infra"></div></div>
-  <div class="mf-row"><span class="mf-lbl">Dự án</span><div class="mf-chips" id="mf-proj"></div></div>
+  <div class="map-bar">
+    <div class="mf"><span>Vùng</span><select id="mf-region"></select></div>
+    <div class="mf"><span>Tỉnh thành</span><select id="mf-prov"></select></div>
+    <div class="mf"><span>Hạ tầng</span><select id="mf-infra"></select></div>
+    <div class="mf"><span>Dự án</span><select id="mf-proj"></select></div>
+    <span class="mf-count" id="mf-count"></span>
+  </div>
   <div id="map"></div>
   <p class="sat-note">Dữ liệu <b>Cafeland</b> toàn quốc — lọc theo tỉnh · loại hạ tầng · loại dự án. 🔴 sân bay · tuyến màu theo loại · 🟢 dự án BĐS · 🟣 KCN (gộp cụm khi thu nhỏ). Bấm để xem chi tiết. © OpenStreetMap.</p>
 </div>
@@ -409,6 +413,7 @@ const CAT_ORDER = [];
 const CAF_LINES = [];
 const CAF_POINTS = [];
 const CAF_PROJECTS = [];
+const PROV_REGION = {};
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -1037,29 +1042,32 @@ function cafPopup(title, detail){
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
 const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
-const _infraSel = new Set(), _projSel = new Set(), _provSel = new Set();
-const okProv = pr => _provSel.size===0 || _provSel.has(pr);
+const mval = id => document.getElementById(id).value;
 function redrawMap(){
+  const fr=mval('mf-region'), fp=mval('mf-prov'), fi=mval('mf-infra')||'__all', fpr=mval('mf-proj')||'__none';
+  const okp = x => (!fr || PROV_REGION[x.prov]===fr) && (!fp || x.prov===fp);
   _L.lines.clearLayers(); _L.points.clearLayers(); _L.projects.clearLayers();
   let ni=0, np=0;
-  CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okProv(l.prov)&&l.coords&&l.coords.length>1){
-    L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85}).bindPopup(cafPopup(l.title,l.detail)).addTo(_L.lines); ni++; }});
-  CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okProv(p.prov)){
-    const col=isAirport(p.title)?'#e11d48':'#e67e22';
-    L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9}).bindPopup(cafPopup(p.title,p.detail)).addTo(_L.points); ni++; }});
-  CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okProv(d.prov)){
-    const col=d.cat==='Khu công nghiệp'?'#7c3aed':'#16a34a';
-    _L.projects.addLayer(L.circleMarker([d.a,d.o],{radius:4,weight:1,color:'#fff',fillColor:col,fillOpacity:.85})
-      .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.cat)+(d.s?' · '+S(d.s):'')+(d.p?' · '+S(d.p):'')+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); np++; }});
+  if(fi!=='__none'){
+    CAF_LINES.forEach(l=>{ if(okp(l)&&(fi==='__all'||l.cat===fi)&&l.coords&&l.coords.length>1){
+      L.polyline(l.coords,{color:l.color||'#2563eb',weight:4,opacity:.85}).bindPopup(cafPopup(l.title,l.detail)).addTo(_L.lines); ni++; }});
+    CAF_POINTS.forEach(p=>{ if(okp(p)&&p.lat!=null&&(fi==='__all'||p.cat===fi)){
+      const col=isAirport(p.title)?'#e11d48':'#e67e22';
+      L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#fff',fillColor:col,fillOpacity:.9}).bindPopup(cafPopup(p.title,p.detail)).addTo(_L.points); ni++; }});
+  }
+  if(fpr!=='__none'){
+    CAF_PROJECTS.forEach(d=>{ if(okp(d)&&d.a!=null&&(fpr==='__all'||d.cat===fpr)){
+      const col=d.cat==='Khu công nghiệp'?'#7c3aed':'#16a34a';
+      _L.projects.addLayer(L.circleMarker([d.a,d.o],{radius:4,weight:1,color:'#fff',fillColor:col,fillOpacity:.85})
+        .bindPopup('<b>'+S(d.t)+'</b><div style="font-size:11px">'+S(d.cat)+(d.s?' · '+S(d.s):'')+(d.p?' · '+S(d.p):'')+(d.ac?' · '+S(d.ac)+' ha':'')+'</div>')); np++; }});
+  }
   document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
-function _chips(containerId, cats, sel, defaultOn){
-  if(defaultOn) cats.forEach(c=>sel.add(c));
-  document.getElementById(containerId).innerHTML =
-    cats.map(c=>`<button class="mchip${defaultOn?' on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
-  document.querySelectorAll('#'+containerId+' .mchip').forEach(b=>b.onclick=()=>{
-    const c=b.dataset.c; (b.classList.toggle('on')) ? sel.add(c) : sel.delete(c); redrawMap();
-  });
+const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
+function fillProv(){
+  const fr=mval('mf-region');
+  const provs=_uniqSort([...CAF_LINES,...CAF_POINTS,...CAF_PROJECTS].map(x=>x.prov).filter(p=>!fr||PROV_REGION[p]===fr));
+  document.getElementById('mf-prov').innerHTML='<option value="">Tất cả tỉnh</option>'+provs.map(p=>`<option>${esc(p)}</option>`).join('');
 }
 function renderMap(){
   const el = document.getElementById('map');
@@ -1074,10 +1082,14 @@ function renderMap(){
     _L.lines = L.layerGroup().addTo(_map);
     _L.points = L.layerGroup().addTo(_map);
     _L.projects = _cluster().addTo(_map);
-    const uniq = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
-    _chips('mf-prov', uniq([...CAF_LINES,...CAF_POINTS,...CAF_PROJECTS].map(x=>x.prov)), _provSel, false);  // tỉnh: chưa chọn = toàn quốc
-    _chips('mf-infra', uniq([...CAF_LINES,...CAF_POINTS].map(x=>x.cat)), _infraSel, true);   // hạ tầng: bật hết
-    _chips('mf-proj', uniq(CAF_PROJECTS.map(x=>x.cat)), _projSel, false);                     // dự án: tắt hết
+    document.getElementById('mf-region').innerHTML='<option value="">Toàn quốc</option><option>Miền Bắc</option><option>Miền Trung</option><option>Miền Nam</option>';
+    fillProv();
+    const icats = _uniqSort([...CAF_LINES,...CAF_POINTS].map(x=>x.cat));
+    document.getElementById('mf-infra').innerHTML='<option value="__all">Tất cả hạ tầng</option>'+icats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')+'<option value="__none">— Ẩn —</option>';
+    const pcats = _uniqSort(CAF_PROJECTS.map(x=>x.cat));
+    document.getElementById('mf-proj').innerHTML='<option value="__none">— Ẩn —</option><option value="__all">Tất cả dự án</option>'+pcats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    document.getElementById('mf-region').onchange=()=>{ fillProv(); redrawMap(); };
+    ['mf-prov','mf-infra','mf-proj'].forEach(id=>document.getElementById(id).onchange=redrawMap);
   }
   redrawMap();
   setTimeout(()=>_map.invalidateSize(), 60);

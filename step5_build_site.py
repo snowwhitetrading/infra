@@ -16,6 +16,20 @@ def _dec(d):
     """Giải mã HTML entity (&agrave;→à, &ocirc;→ô…) trong dict detail của cafeland."""
     return {html.unescape(k): html.unescape(v) for k, v in (d or {}).items()}
 
+
+# Tỉnh (tên chuẩn hoá) → vùng, cho filter Vùng trên bản đồ
+_REGION = {"Miền Bắc": ["Hà Nội", "Hải Phòng", "Quảng Ninh", "Bắc Ninh", "Bắc Giang", "Vĩnh Phúc",
+                        "Phú Thọ", "Thái Nguyên", "Lạng Sơn", "Cao Bằng", "Hà Giang", "Tuyên Quang",
+                        "Lào Cai", "Yên Bái", "Điện Biên", "Lai Châu", "Sơn La", "Hòa Bình", "Hưng Yên",
+                        "Hải Dương", "Thái Bình", "Nam Định", "Hà Nam", "Ninh Bình", "Bắc Kạn"],
+           "Miền Trung": ["Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Quảng Bình", "Quảng Trị", "Thừa Thiên Huế",
+                          "Đà Nẵng", "Quảng Nam", "Quảng Ngãi", "Bình Định", "Phú Yên", "Khánh Hòa",
+                          "Ninh Thuận", "Bình Thuận", "Kon Tum", "Gia Lai", "Đắk Lắk", "Đắk Nông", "Lâm Đồng"],
+           "Miền Nam": ["Hồ Chí Minh", "Bà Rịa - Vũng Tàu", "Bình Dương", "Bình Phước", "Đồng Nai",
+                        "Tây Ninh", "Long An", "Tiền Giang", "Bến Tre", "Vĩnh Long", "Trà Vinh", "Đồng Tháp",
+                        "An Giang", "Kiên Giang", "Cần Thơ", "Hậu Giang", "Sóc Trăng", "Bạc Liêu", "Cà Mau"]}
+PROV_REGION = {p: r for r, ps in _REGION.items() for p in ps}
+
 from lib_db import mongo_uri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -361,6 +375,7 @@ def main():
     out = out.replace("const CAF_LINES = []", "const CAF_LINES = " + json.dumps(caf_lines, ensure_ascii=False), 1)
     out = out.replace("const CAF_POINTS = []", "const CAF_POINTS = " + json.dumps(caf_points, ensure_ascii=False), 1)
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
+    out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 
