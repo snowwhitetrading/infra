@@ -3,14 +3,14 @@
 fetch_cafeland.py — Lấy TẤT CẢ data từ map.cafeland.vn (API mở, không cần auth).
 
 Endpoint → collection (dc_commodity):
-  /ha-tang/get-list-line?getIdProvince=N → ~111 tuyến hạ tầng TOÀN QUỐC (polyline) → Cafeland_Infra
+  /ha-tang/get-list-line?getIdProvince=N → ~111 tuyến hạ tầng TOÀN QUỐC (polyline) → Cafeland_Lines
   /get-duan?page=N        → ~5.220 dự án BĐS                    → Infra_RealEstate
   /get-kcn?page=N         → ~760 khu/cụm CN                     → Infra_IndustrialPark
   /start-map?getIdProvince=N (listPointToUrl) → 189 điểm nổi bật (sân bay/cầu/nút giao) → Cafeland_Points
 Lưu: cafeland_*.jsonl (soi tay) + dc_commodity.<collection> (dùng/match).
 
   python fetch_cafeland.py                          # lấy tất cả
-  python fetch_cafeland.py --what infra
+  python fetch_cafeland.py --what lines
   python fetch_cafeland.py --what realestate industrialpark
   python fetch_cafeland.py --dry-run
 """
@@ -52,7 +52,7 @@ def _get(client, path, tries=3):
     return None
 
 
-def fetch_infra(client):
+def fetch_lines(client):
     """Quét MỌI tỉnh qua ?getIdProvince=N (1..119) → gom tuyến toàn quốc (dedup theo id)."""
     seen = {}
     for pid in range(1, 120):
@@ -76,7 +76,7 @@ def fetch_infra(client):
                          "content": content, "detail": detail,
                          "n_points": len(coords), "coords": coords}
         time.sleep(0.05)
-    return list(seen.values()), "Cafeland_Infra", "caf_id"
+    return list(seen.values()), "Cafeland_Lines", "caf_id"
 
 
 def _content_detail(raw):
@@ -183,7 +183,7 @@ def fetch_kcn(client):
     return _paginate(client, "get-kcn", ex, "industrialpark"), "Infra_IndustrialPark", "caf_id"
 
 
-JOBS = {"infra": fetch_infra, "points": fetch_points,
+JOBS = {"lines": fetch_lines, "points": fetch_points,
         "realestate": fetch_duan, "industrialpark": fetch_kcn}
 
 
