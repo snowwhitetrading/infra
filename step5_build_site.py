@@ -233,7 +233,11 @@ def _prov_norm(s):
 
 def _infra_cat(t):
     t = (t or "").lower()
-    if "sân bay" in t or "hàng không" in t:
+    # đường nối/cao tốc/quốc lộ/vành đai TỚI sân bay vẫn là ĐƯỜNG BỘ (không phải sân bay)
+    road = any(k in t for k in ("đường kết nối", "đường nối", "đường vào", "đường trục",
+                                "đường liên", "cao tốc", "quốc lộ", "vành đai", " ql", "tỉnh lộ"))
+    if not road and ("sân bay" in t or "hàng không" in t or "chkqt" in t
+                     or "cất hạ cánh" in t or "khu bay" in t):
         return "Sân bay"
     if "metro" in t or "đường sắt" in t or "tàu điện" in t:
         return "Đường sắt/Metro"
