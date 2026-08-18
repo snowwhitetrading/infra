@@ -261,6 +261,13 @@ def fetch_cafeland_map(client):
              for d in db["Cafeland_Lines"].find(
                  {"coords.1": {"$exists": True}},
                  {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1, "getIdProvince": 1})]
+    for d in db["OSM_Infra"].find({}):                     # bổ sung tuyến cafeland thiếu (từ OSM)
+        for seg in d.get("segments", []):
+            if len(seg) > 1:
+                lines.append({"title": d.get("title", ""), "coords": seg, "color": "#0d9488",
+                              "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
+                                         "Trạng thái": "đã khai thác"},
+                              "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")})
     points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
                "detail": _dec(d.get("detail")),
                "prov": cp(pm.get(d.get("getIdProvince"), "")), "cat": _infra_cat(d.get("title"))}
