@@ -193,6 +193,22 @@ def fetch_mappts(client):
     return out
 
 
+def fetch_cafeland_map(client):
+    """Lớp tham khảo cafeland cho bản đồ: tuyến (polyline+detail) + điểm (sân bay/nút giao+detail)."""
+    db = client["dc_commodity"]
+    lines = [{"title": d.get("title", ""), "coords": d.get("coords", []),
+              "color": d.get("line_color") or "#e67e22", "detail": d.get("detail", {})}
+             for d in db["Cafeland_Lines"].find(
+                 {"coords.1": {"$exists": True}},
+                 {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1})]
+    points = [{"title": d.get("title", ""), "lat": d.get("lat"), "lng": d.get("lng"),
+               "detail": d.get("detail", {})}
+              for d in db["Cafeland_Points"].find(
+                  {"lat": {"$ne": None}},
+                  {"_id": 0, "title": 1, "lat": 1, "lng": 1, "detail": 1})]
+    return lines, points
+
+
 def build_auto_rows(client, projects):
     """Sinh dòng Gantt SƠ BỘ cho dự án trong registry chưa có trên Gantt (từ newsflow).
     1 thanh 'thi công' theo khoảng tin + mốc 'auto' từ tiêu đề tin (dedup theo tháng)."""
@@ -274,12 +290,16 @@ def main():
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
     mappts = fetch_mappts(c)
     print(f"Bản đồ: {len(mappts)} điểm dự án")
+    caf_lines, caf_points = fetch_cafeland_map(c)
+    print(f"Cafeland (tham khảo): {len(caf_lines)} tuyến + {len(caf_points)} điểm")
 
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     out = out.replace("const SATELLITE = {}", "const SATELLITE = " + json.dumps(satellite, ensure_ascii=False), 1)
     out = out.replace("const MAPPTS = []", "const MAPPTS = " + json.dumps(mappts, ensure_ascii=False), 1)
     out = out.replace("const CAT_ORDER = []", "const CAT_ORDER = " + json.dumps([c[0] for c in CAT_META], ensure_ascii=False), 1)
+    out = out.replace("const CAF_LINES = []", "const CAF_LINES = " + json.dumps(caf_lines, ensure_ascii=False), 1)
+    out = out.replace("const CAF_POINTS = []", "const CAF_POINTS = " + json.dumps(caf_points, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 

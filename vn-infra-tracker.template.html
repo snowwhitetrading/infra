@@ -344,7 +344,10 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 </div>
 
 <div id="view-map" class="hidden">
-  <div class="nf-filters"><div class="grp"><span>Nhóm</span><select id="map-grp"></select></div></div>
+  <div class="nf-filters">
+    <div class="grp"><span>Nhóm</span><select id="map-grp"></select></div>
+    <div class="grp"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--ink2)"><input type="checkbox" id="caf-toggle"> Lớp Cafeland (tham khảo)</label></div>
+  </div>
   <div class="map-legend">
     <span><i style="background:#e11d48"></i>Sân bay</span>
     <span><i style="background:#7c3aed"></i>Đường sắt / Metro</span>
@@ -392,6 +395,8 @@ const NEWSFLOW = [];
 const SATELLITE = {};
 const MAPPTS = [];
 const CAT_ORDER = [];
+const CAF_LINES = [];
+const CAF_POINTS = [];
 const GROUPS = [
   {id:'I',   name:'I · Phục vụ Hội nghị APEC 2027', meta:'Sungroup · Phú Quốc', huyDong:169724},
   {id:'II',  name:'II · Thực hiện theo hình thức PPP', meta:'Sungroup · Vingroup', huyDong:162302},
@@ -1032,6 +1037,26 @@ function drawMapPts(){
     layer.addTo(_mapLayer).bindPopup('<b>'+esc(p.name)+'</b>');
   });
 }
+let _cafLayer;
+function cafPopup(title, detail){
+  const rows = Object.entries(detail||{}).slice(0,6)
+    .map(([k,v])=>`<div style="font-size:11px"><b>${esc(k)}:</b> ${esc(String(v).slice(0,100))}</div>`).join('');
+  return '<b>'+esc(title)+'</b><div style="color:#e67e22;font-size:10px;margin:2px 0">nguồn Cafeland</div>'+rows;
+}
+function drawCaf(){
+  _cafLayer.clearLayers();
+  if(!document.getElementById('caf-toggle').checked) return;
+  CAF_LINES.forEach(l=>{
+    if(!l.coords || l.coords.length<2) return;
+    L.polyline(l.coords, {color:l.color||'#e67e22', weight:3, opacity:.65, dashArray:'5 4'})
+     .addTo(_cafLayer).bindPopup(cafPopup(l.title, l.detail));
+  });
+  CAF_POINTS.forEach(p=>{
+    if(p.lat==null) return;
+    L.circleMarker([p.lat, p.lng], {radius:4, weight:1, color:'#fff', fillColor:'#e67e22', fillOpacity:.9})
+     .addTo(_cafLayer).bindPopup(cafPopup(p.title, p.detail));
+  });
+}
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
@@ -1043,14 +1068,17 @@ function renderMap(){
     const grps=CAT_ORDER.filter(g=>MAPPTS.some(p=>p.g===g));
     gs.innerHTML='<option value="">Tất cả nhóm</option>'+grps.map(g=>`<option>${esc(g)}</option>`).join('');
     gs.dataset.init='1'; gs.onchange=drawMapPts;
+    document.getElementById('caf-toggle').onchange=drawCaf;
   }
   if(!_map){
     _map = L.map('map', {scrollWheelZoom:true}).setView([16.2, 107.5], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(_map);
     _mapLayer = L.layerGroup().addTo(_map);
+    _cafLayer = L.layerGroup().addTo(_map);
   }
   drawMapPts();
+  drawCaf();
   setTimeout(()=>_map.invalidateSize(), 60);
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
