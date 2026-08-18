@@ -14,4 +14,4 @@ __pycache__/
 *.pyc
 .claude/settings.local.json
 facebook_posts.json
-cafeland_infra.json
+cafeland_*.json
