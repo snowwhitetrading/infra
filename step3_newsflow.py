@@ -48,7 +48,8 @@ def run(days=None, dry=False):
         rec = {"url": url, "date": date, "source": doc.get("source", "?"),
                "title": title, "projects": tids}
         if not dry:
-            if coll.update_one({"url": url}, {"$setOnInsert": rec}, upsert=True).upserted_id:
+            # $set để REFRESH projects (sau khi thêm alias / re-match); upsert bài mới
+            if coll.update_one({"url": url}, {"$set": rec}, upsert=True).upserted_id:
                 added += 1
     total = "dry" if dry else coll.estimated_document_count()
     print(f"Cột mốc: {matched} bài · thêm mới: {added} · tổng Infra_Newsflow: {total}")
