@@ -349,7 +349,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <div class="grp"><span>Nhóm theo</span><select id="f-mode">
     <option value="g">Loại hình</option>
     <option value="prov">Tỉnh thành</option>
-    <option value="region">Vùng</option>
+    <option value="none">Không nhóm</option>
   </select></div>
   <div class="grp"><button class="chip" id="expandAll">Mở tất cả hạng mục</button></div>
 </div>
@@ -929,15 +929,14 @@ function detailHTML(p){
   </div></div></div>`;
 }
 
-const RORDER = ['Miền Bắc','Miền Trung','Miền Nam'];
 function sections(){                          // [{name, meta, rows}] theo groupMode
+  if(groupMode==='none')                      // không nhóm → 1 danh sách phẳng, không header
+    return [{name:null, meta:'', rows:P.slice()}];
   if(groupMode==='g')
     return GROUPS.map(g=>({name:g.name, meta:g.meta, rows:P.filter(p=>p.g===g.id)}));
-  const keyOrder = groupMode==='region'
-    ? [...new Set(P.map(p=>p.region).filter(Boolean))].sort((a,b)=>RORDER.indexOf(a)-RORDER.indexOf(b))
-    : [...new Set(P.map(p=>p.prov).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
-  const secs = keyOrder.map(k=>({name:k, meta:'', rows:P.filter(p=>p[groupMode]===k)}));
-  const rest = P.filter(p=>!p[groupMode]);   // dòng chưa rõ vùng/tỉnh → cuối
+  const keyOrder = [...new Set(P.map(p=>p.prov).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
+  const secs = keyOrder.map(k=>({name:k, meta:'', rows:P.filter(p=>p.prov===k)}));
+  const rest = P.filter(p=>!p.prov);          // dòng chưa rõ tỉnh → cuối
   if(rest.length) secs.push({name:'Chưa rõ', meta:'', rows:rest});
   return secs;
 }
@@ -948,9 +947,11 @@ function render(){
   sections().forEach(g=>{
     const rows = g.rows;
     if(!rows.length) return;                 // ẩn nhóm rỗng
-    h += `<div class="row grp-row"><div class="lbl">
-        <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta?g.meta+' · ':''}${rows.length} dự án</div></div>
-      <div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
+    h += g.name!==null
+      ? `<div class="row grp-row"><div class="lbl">
+          <div class="grp-name">${g.name}</div><div class="grp-meta">${g.meta?g.meta+' · ':''}${rows.length} dự án</div></div>
+        <div class="track">${gridHTML()}${YEARLABELS}</div></div>`
+      : `<div class="row grp-row"><div class="lbl"></div><div class="track">${gridHTML()}${YEARLABELS}</div></div>`;
 
     rows.forEach(p=>{
       const isOpen = open.has(p.id);
