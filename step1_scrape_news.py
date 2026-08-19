@@ -25,7 +25,7 @@ import datetime as dt
 import re
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
-from urllib.parse import quote
+from urllib.parse import quote, quote_plus
 
 import httpx
 from bs4 import BeautifulSoup
@@ -294,7 +294,123 @@ async def scrape_vietstock(client, pages):
     return out
 
 
-ALL_SOURCES = ["cafef", "vnexpress", "vietstock"] + list(RSS_FEEDS)
+# ── EPI platform search (Tuổi Trẻ, Thanh Niên): /tim-kiem.htm?keywords= ─────────
+EPI_ART = re.compile(r"-\d{6,}\.htm")
+
+
+async def _epi_search(client, host, kw, pages):
+    cand = {}
+    for p in range(1, pages + 1):
+        u = f"https://{host}/tim-kiem.htm?keywords={quote(kw)}" + (f"&page={p}" if p > 1 else "")
+        try:
+            r = await get(client, u)
+        except Exception:
+            break
+        before = len(cand)
+        for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
+            href = a.get("href", "")
+            if not EPI_ART.search(href) or "tim-kiem" in href:
+                continue
+            t = (a.get("title") or a.get_text(strip=True) or "").strip()
+            if t:
+                cand.setdefault(href if href.startswith("http") else f"https://{host}{href}", t)
+        if len(cand) == before:            # trang không thêm bài mới → dừng
+            break
+    return cand
+
+
+async def _art_meta(client, source, u, t):
+    """Fetch bài lấy ngày + mô tả (khớp theo tiêu đề trước để chỉ fetch bài liên quan)."""
+    date, desc = "", ""
+    try:
+        r = await get(client, u)
+        s = BeautifulSoup(r.text, "html.parser")
+        pe = (s.select_one('meta[property="article:published_time"]')
+              or s.select_one('meta[name="pubdate"]') or s.select_one('meta[itemprop="datePublished"]'))
+        if pe and pe.get("content"):
+            mm = re.search(r"\d{4}-\d{2}-\d{2}", pe["content"])
+            date = mm.group(0) if mm else pe["content"][:10]
+        de = s.select_one('meta[name="description"]')
+        desc = de["content"] if de and de.get("content") else ""
+    except Exception:
+        pass
+    return {"url": u, "source": source, "title": t, "description": desc,
+            "body": "", "date": date, "projects": match_tids(t)}
+
+
+async def scrape_epi(client, host, source, pages):
+    searches = await asyncio.gather(*[_epi_search(client, host, kw, pages) for kw in SEARCH_KEYWORDS])
+    cand = {}
+    for d in searches:
+        for u, t in d.items():
+            cand.setdefault(u, t)
+    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
+    return await asyncio.gather(*[_art_meta(client, source, u, t) for u, t in todo])
+
+
+# ── Dân Trí: /tim-kiem/{kw}.htm (chỉ trang 1; ngày lấy từ trang bài) ─────────────
+async def _dantri_search(client, kw):
+    try:
+        r = await get(client, f"https://dantri.com.vn/tim-kiem/{quote_plus(kw)}.htm")
+    except Exception:
+        return {}
+    cand = {}
+    for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
+        href = a.get("href", "")
+        if not re.search(r"-\d{6,}\.htm", href) or "tim-kiem" in href:
+            continue
+        t = (a.get("title") or a.get_text(strip=True) or "").strip()
+        if t:
+            cand.setdefault(href if href.startswith("http") else f"https://dantri.com.vn{href}", t)
+    return cand
+
+
+async def scrape_dantri(client, pages):
+    searches = await asyncio.gather(*[_dantri_search(client, kw) for kw in SEARCH_KEYWORDS])
+    cand = {}
+    for d in searches:
+        for u, t in d.items():
+            cand.setdefault(u, t)
+    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
+    return await asyncio.gather(*[_art_meta(client, "dantri", u, t) for u, t in todo])
+
+
+# ── VietnamNet: /tim-kiem?q= (bài -\d+.html) ────────────────────────────────────
+VNN_ART = re.compile(r"-\d{6,}\.html")
+
+
+async def _vnn_search(client, kw, pages):
+    cand = {}
+    for p in range(1, pages + 1):
+        u = f"https://vietnamnet.vn/tim-kiem?q={quote(kw)}" + (f"&page={p}" if p > 1 else "")
+        try:
+            r = await get(client, u)
+        except Exception:
+            break
+        before = len(cand)
+        for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
+            href = a.get("href", "")
+            if not VNN_ART.search(href) or "tim-kiem" in href:
+                continue
+            t = (a.get("title") or a.get_text(strip=True) or "").strip()
+            if t:
+                cand.setdefault(href if href.startswith("http") else f"https://vietnamnet.vn{href}", t)
+        if len(cand) == before:
+            break
+    return cand
+
+
+async def scrape_vnn(client, pages):
+    searches = await asyncio.gather(*[_vnn_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    cand = {}
+    for d in searches:
+        for u, t in d.items():
+            cand.setdefault(u, t)
+    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
+    return await asyncio.gather(*[_art_meta(client, "vietnamnet", u, t) for u, t in todo])
+
+
+ALL_SOURCES = ["cafef", "vnexpress", "tuoitre", "thanhnien", "dantri", "vietstock"] + list(RSS_FEEDS)
 
 
 async def scrape_one(client, source, pages):
@@ -302,10 +418,21 @@ async def scrape_one(client, source, pages):
         return await scrape_cafef(client, pages)
     if source == "vnexpress":
         return await scrape_vnexpress(client, pages)
+    if source == "tuoitre":
+        return await scrape_epi(client, "tuoitre.vn", "tuoitre", pages)
+    if source == "thanhnien":
+        return await scrape_epi(client, "thanhnien.vn", "thanhnien", pages)
+    if source == "dantri":
+        return await scrape_dantri(client, pages)
     if source == "vietstock":
         return await scrape_vietstock(client, pages)
     if source in RSS_FEEDS:
-        return await scrape_rss(client, source)
+        out = await scrape_rss(client, source)          # RSS (tin mới)
+        if source == "vietnamnet":                       # + search lịch sử
+            out += await scrape_vnn(client, pages)
+        if source == "vietnambiz":
+            out += await scrape_epi(client, "vietnambiz.vn", "vietnambiz", pages)
+        return out
     return []
 
 

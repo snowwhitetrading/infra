@@ -265,6 +265,11 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .nf-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:3px}
 .nf-proj{font-size:11px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--build-bg);color:var(--build)}
 .nf-src{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em}
+.nf-pager{display:flex;align-items:center;justify-content:center;gap:14px;padding:16px 0 4px;margin-top:6px;border-top:1px solid var(--rule)}
+.nf-pg{font-family:inherit;font-size:13px;padding:6px 14px;border:1px solid var(--rule2);border-radius:3px;background:var(--card);color:var(--ink);cursor:pointer}
+.nf-pg:hover:not(:disabled){border-color:var(--ink3)}
+.nf-pg:disabled{opacity:.4;cursor:default}
+.nf-pg-info{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
 .nf-text{font-size:13px;color:var(--ink);line-height:1.5}
 .nf-link{font-size:11px;color:var(--build);text-decoration:none;white-space:nowrap;margin-top:3px;display:inline-block}
 .nf-link:hover{text-decoration:underline}
@@ -371,6 +376,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
     <span class="nf-count" id="nf-count"></span>
   </div>
   <div class="nf-list" id="nf-list"></div>
+  <div class="nf-pager" id="nf-pager"></div>
 </div>
 
 <div id="view-sat" class="hidden">
@@ -1022,6 +1028,7 @@ document.getElementById('expandAll').onclick = e=>{
 
 /* ---------- newsflow (tab Dòng tin) ---------- */
 function nfDate(d){const p=(d||'').split('-');return (p[2]||'01')+'/'+(p[1]||'01')+'/'+(p[0]||'');}
+let nfPage = 0; const NF_PER = 25;      // phân trang 25 tin/trang
 function renderNews(){
   const gs=document.getElementById('nf-grp'), ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src'), ds=document.getElementById('nf-date');
   if(!ps.dataset.init){
@@ -1033,7 +1040,9 @@ function renderNews(){
     ss.innerHTML='<option value="">Tất cả nguồn</option>'+srcs.map(s=>`<option>${esc(s)}</option>`).join('');
     ds.innerHTML='<option value="">Mọi thời gian</option><option value="7">7 ngày qua</option>'+
       '<option value="30">30 ngày qua</option><option value="90">90 ngày qua</option><option value="365">12 tháng qua</option>';
-    ps.dataset.init='1'; gs.onchange=ps.onchange=ss.onchange=ds.onchange=renderNews;
+    ps.dataset.init='1';
+    const reset=()=>{ nfPage=0; renderNews(); };   // đổi lọc → về trang 1
+    gs.onchange=ps.onchange=ss.onchange=ds.onchange=reset;
   }
   const fg=gs.value, fp=ps.value, fs=ss.value, fd=ds.value;
   let cutoff='';
@@ -1045,14 +1054,26 @@ function renderNews(){
     if(cutoff){const d=(n.date||'').length===7?n.date+'-15':(n.date||''); if(d<cutoff) return false;}
     return true;
   }).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  const pages=Math.max(1, Math.ceil(items.length/NF_PER));
+  if(nfPage>=pages) nfPage=0;
+  const page=items.slice(nfPage*NF_PER, nfPage*NF_PER+NF_PER);
   document.getElementById('nf-count').textContent=items.length+' tin';
-  document.getElementById('nf-list').innerHTML = items.length ? items.map(n=>`<div class="nf-item">
+  document.getElementById('nf-list').innerHTML = page.length ? page.map(n=>`<div class="nf-item">
     <div class="nf-date">${nfDate(n.date)}</div>
     <div class="nf-body">
       <div class="nf-head"><span class="nf-proj">${esc(n.pname)}</span><span class="nf-src">${esc(n.source)}</span></div>
       <div class="nf-text">${esc(n.summary)}</div>
       ${n.url?`<a class="nf-link" href="${esc(n.url)}" target="_blank" rel="noopener">xem bài →</a>`:''}
     </div></div>`).join('') : '<p class="cap" style="padding:20px 0">Không có tin khớp bộ lọc.</p>';
+  // thanh phân trang
+  const pg=document.getElementById('nf-pager');
+  if(items.length<=NF_PER){ pg.innerHTML=''; }
+  else pg.innerHTML =
+    `<button class="nf-pg" ${nfPage<=0?'disabled':''} data-d="-1">← Trước</button>`+
+    `<span class="nf-pg-info">Trang ${nfPage+1}/${pages} · tin ${nfPage*NF_PER+1}–${Math.min((nfPage+1)*NF_PER,items.length)}</span>`+
+    `<button class="nf-pg" ${nfPage>=pages-1?'disabled':''} data-d="1">Sau →</button>`;
+  pg.querySelectorAll('.nf-pg').forEach(b=>b.onclick=()=>{ nfPage+=(+b.dataset.d); renderNews();
+    document.getElementById('nf-list').scrollIntoView({block:'start',behavior:'smooth'}); });
 }
 /* ---------- satellite (tab Vệ tinh) ---------- */
 function satName(tid){const p=P.find(x=>x.id==tid);return p?p.name:('Dự án '+tid);}
