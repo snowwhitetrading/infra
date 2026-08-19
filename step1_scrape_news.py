@@ -97,8 +97,12 @@ def rss_date(s):
     return (s or "")[:10]
 
 
+SEM = asyncio.Semaphore(10)   # trần request đồng thời (tránh nối đuôi → chạy lọt timeout)
+
+
 async def get(client, url, **kw):
-    r = await client.get(url, timeout=25, follow_redirects=True, headers=UA, **kw)
+    async with SEM:
+        r = await client.get(url, timeout=25, follow_redirects=True, headers=UA, **kw)
     r.raise_for_status()
     return r
 
@@ -130,97 +134,117 @@ async def scrape_rss(client, source):
 
 # ── cafef search ─────────────────────────────────────────────────────────────
 
-async def scrape_cafef(client, pages):
-    urls = {}
-    for kw in SEARCH_KEYWORDS:
-        for p in range(1, pages + 1):
-            u = (f"{CAFEF}/tim-kiem.chn?keywords={quote(kw)}" if p <= 1
-                 else f"{CAFEF}/tim-kiem/trang-{p}.chn?keywords={quote(kw)}")
-            try:
-                r = await get(client, u)
-            except Exception:
-                break
-            found = False
-            for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
-                href = a.get("href", "")
-                if "/du-lieu/" in href or not CAFEF_ART.search(href):
-                    continue
-                url = re.sub(r"\?.*$", "", href if href.startswith("http") else CAFEF + href)
-                urls.setdefault(url, (a.get("title") or a.get_text(strip=True) or "").strip())
-                found = True
-            if not found:
-                break
-    out = []
-    for u, t in urls.items():
+async def _cafef_search(client, kw, pages):
+    """Trang tìm kiếm 1 keyword (phân trang tuần tự, dừng khi hết) → {url: title}."""
+    found = {}
+    for p in range(1, pages + 1):
+        u = (f"{CAFEF}/tim-kiem.chn?keywords={quote(kw)}" if p <= 1
+             else f"{CAFEF}/tim-kiem/trang-{p}.chn?keywords={quote(kw)}")
         try:
             r = await get(client, u)
         except Exception:
-            continue
-        s = BeautifulSoup(r.text, "html.parser")
-        h1 = s.select_one("h1")
-        title = h1.get_text(strip=True) if h1 else t
-        de = s.select_one('meta[name="description"]')
-        desc = de["content"] if de and de.get("content") else ""
-        body_el = s.select_one(".detail-content")
-        body = ""
-        if body_el:
-            for sel in ["script", "style", ".AdsByCF", ".relationnews", ".box-tinlienquan"]:
-                for el in body_el.select(sel):
-                    el.decompose()
-            body = re.sub(r"\s+", " ", body_el.get_text(" ", strip=True))[:2000]
-        pe = s.select_one('meta[property="article:published_time"]')
-        pub = pe["content"][:10] if pe and pe.get("content") else ""
-        tids = match_tids(f"{title} {desc} {body}")
-        if tids:
-            out.append({"url": u, "source": "cafef", "title": title, "description": desc,
-                        "body": body[:1000], "date": pub, "projects": tids})
-    return out
+            break
+        hit = False
+        for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
+            href = a.get("href", "")
+            if "/du-lieu/" in href or not CAFEF_ART.search(href):
+                continue
+            url = re.sub(r"\?.*$", "", href if href.startswith("http") else CAFEF + href)
+            found.setdefault(url, (a.get("title") or a.get_text(strip=True) or "").strip())
+            hit = True
+        if not hit:
+            break
+    return found
+
+
+async def _cafef_article(client, u, t):
+    try:
+        r = await get(client, u)
+    except Exception:
+        return None
+    s = BeautifulSoup(r.text, "html.parser")
+    h1 = s.select_one("h1")
+    title = h1.get_text(strip=True) if h1 else t
+    de = s.select_one('meta[name="description"]')
+    desc = de["content"] if de and de.get("content") else ""
+    body_el = s.select_one(".detail-content")
+    body = ""
+    if body_el:
+        for sel in ["script", "style", ".AdsByCF", ".relationnews", ".box-tinlienquan"]:
+            for el in body_el.select(sel):
+                el.decompose()
+        body = re.sub(r"\s+", " ", body_el.get_text(" ", strip=True))[:2000]
+    pe = s.select_one('meta[property="article:published_time"]')
+    pub = pe["content"][:10] if pe and pe.get("content") else ""
+    tids = match_tids(f"{title} {desc} {body}")
+    if not tids:
+        return None
+    return {"url": u, "source": "cafef", "title": title, "description": desc,
+            "body": body[:1000], "date": pub, "projects": tids}
+
+
+async def scrape_cafef(client, pages):
+    searches = await asyncio.gather(*[_cafef_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    urls = {}
+    for d in searches:
+        for u, t in d.items():
+            urls.setdefault(u, t)
+    arts = await asyncio.gather(*[_cafef_article(client, u, t) for u, t in urls.items()])
+    return [a for a in arts if a]
 
 
 # ── vnexpress search (có phân trang → lịch sử) ───────────────────────────────
 
-async def scrape_vnexpress(client, pages):
+async def _vnx_search(client, kw, pages):
     cand = {}
-    for kw in SEARCH_KEYWORDS:
-        for p in range(1, pages + 1):
-            base = f"https://timkiem.vnexpress.net/?q={quote(kw)}"
-            try:
-                r = await get(client, base if p <= 1 else base + f"&page={p}")
-            except Exception:
-                break
-            found = False
-            for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
-                href = a.get("href", "")
-                if not VNX_ART.match(href):
-                    continue
-                t = (a.get("title") or a.get_text(strip=True) or "").strip()
-                if t:
-                    cand.setdefault(href, t)
-                    found = True
-            if not found:
-                break
-    # khớp trên tiêu đề trước → chỉ fetch bài khớp để lấy ngày
-    out = []
-    for u, t in cand.items():
-        if not match_tids(t):
-            continue
-        date, desc = "", ""
+    for p in range(1, pages + 1):
+        base = f"https://timkiem.vnexpress.net/?q={quote(kw)}"
         try:
-            r = await get(client, u)
-            s = BeautifulSoup(r.text, "html.parser")
-            pe = (s.select_one('meta[property="article:published_time"]')
-                  or s.select_one('meta[name="pubdate"]')
-                  or s.select_one('meta[itemprop="datePublished"]'))
-            if pe and pe.get("content"):
-                mm = re.search(r"\d{4}-\d{2}-\d{2}", pe["content"])
-                date = mm.group(0) if mm else pe["content"][:10]
-            de = s.select_one('meta[name="description"]')
-            desc = de["content"] if de and de.get("content") else ""
+            r = await get(client, base if p <= 1 else base + f"&page={p}")
         except Exception:
-            pass
-        out.append({"url": u, "source": "vnexpress", "title": t, "description": desc,
-                    "body": "", "date": date, "projects": match_tids(t)})
-    return out
+            break
+        hit = False
+        for a in BeautifulSoup(r.text, "html.parser").select("a[href]"):
+            href = a.get("href", "")
+            if not VNX_ART.match(href):
+                continue
+            t = (a.get("title") or a.get_text(strip=True) or "").strip()
+            if t:
+                cand.setdefault(href, t)
+                hit = True
+        if not hit:
+            break
+    return cand
+
+
+async def _vnx_article(client, u, t):
+    date, desc = "", ""
+    try:
+        r = await get(client, u)
+        s = BeautifulSoup(r.text, "html.parser")
+        pe = (s.select_one('meta[property="article:published_time"]')
+              or s.select_one('meta[name="pubdate"]')
+              or s.select_one('meta[itemprop="datePublished"]'))
+        if pe and pe.get("content"):
+            mm = re.search(r"\d{4}-\d{2}-\d{2}", pe["content"])
+            date = mm.group(0) if mm else pe["content"][:10]
+        de = s.select_one('meta[name="description"]')
+        desc = de["content"] if de and de.get("content") else ""
+    except Exception:
+        pass
+    return {"url": u, "source": "vnexpress", "title": t, "description": desc,
+            "body": "", "date": date, "projects": match_tids(t)}
+
+
+async def scrape_vnexpress(client, pages):
+    searches = await asyncio.gather(*[_vnx_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    cand = {}
+    for d in searches:
+        for u, t in d.items():
+            cand.setdefault(u, t)
+    # khớp trên tiêu đề trước → chỉ fetch bài khớp để lấy ngày
+    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
+    return await asyncio.gather(*[_vnx_article(client, u, t) for u, t in todo])
 
 
 # ── vietstock: RSS + phân trang ──────────────────────────────────────────────
@@ -285,55 +309,67 @@ async def scrape_one(client, source, pages):
     return []
 
 
-async def run(pages, dry, sources, since=CUTOFF):
-    now = dt.datetime.now().isoformat()
-    async with httpx.AsyncClient() as client:
-        results = await asyncio.gather(*[scrape_one(client, s, pages) for s in sources])
-    docs = {}
-    for lst in results:
-        for d in lst:
-            if not d.get("url"):
-                continue
-            if d.get("date") and d["date"][:10] < since:   # bỏ tin trước mốc --since
-                continue
-            d["scraped_at"] = now
-            docs.setdefault(d["url"], d)
-    matched = {u: d for u, d in docs.items() if d["projects"]}
-    unmatched = {u: d for u, d in docs.items() if not d["projects"]}   # cho radar soi tên mới
-    per = {}
-    for d in matched.values():
-        per[d["source"]] = per.get(d["source"], 0) + 1
-    print(f"Khớp dự án: {per} · tổng {len(matched)} · chưa khớp (pool radar): {len(unmatched)}")
-
-    if dry:
-        for d in sorted(matched.values(), key=lambda x: x["date"], reverse=True)[:30]:
-            print(f"  {d['date'][:10]:10}  {d['source']:12}  {d['title'][:58]}")
-        return
-
-    db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
-    coll = db[COLL]
-    coll.create_index("url", unique=True)
-    coll.create_index("date")
-    coll.create_index("projects")
-    ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in matched.values()]
-    if ops:
-        res = coll.bulk_write(ops)
-        print(f"Ghi mới {res.upserted_count} bài vào {DB}.{COLL} "
-              f"(tổng {coll.estimated_document_count()}). Chạy step3_newsflow.py để lên web.")
-
-    # pool tin CHƯA khớp → step2_radar soi dự án mới; TTL tự dọn sau 14 ngày
-    pool = db["unmatched_raw"]
-    pool.create_index("url", unique=True)
-    pool.create_index("_ts", expireAfterSeconds=14 * 24 * 3600)
-    ts = dt.datetime.now(dt.timezone.utc)
-    uops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": {
+def _save(db, lst, now, since):
+    """Ghi 1 nguồn NGAY khi xong (timeout không mất phần đã quét). Trả (khớp, mới, chưa_khớp, mới)."""
+    matched, unmatched = {}, {}
+    for d in lst:
+        u = d.get("url")
+        if not u or (d.get("date") and d["date"][:10] < since):
+            continue
+        d["scraped_at"] = now
+        (matched if d["projects"] else unmatched)[u] = d
+    mn = un = 0
+    if matched:
+        mn = db[COLL].bulk_write(
+            [UpdateOne({"url": d["url"]}, {"$setOnInsert": d}, upsert=True) for d in matched.values()]
+        ).upserted_count
+    if unmatched:
+        ts = dt.datetime.now(dt.timezone.utc)
+        un = db["unmatched_raw"].bulk_write(
+            [UpdateOne({"url": d["url"]}, {"$setOnInsert": {
                 "url": d["url"], "source": d["source"], "title": d["title"],
                 "description": d.get("description", ""), "date": d.get("date", ""),
-                "scraped_at": now, "_ts": ts}}, upsert=True)
-            for d in unmatched.values()]
-    if uops:
-        r2 = pool.bulk_write(uops)
-        print(f"Pool chưa khớp: +{r2.upserted_count} (tổng {pool.estimated_document_count()}).")
+                "scraped_at": now, "_ts": ts}}, upsert=True) for d in unmatched.values()]
+        ).upserted_count
+    return len(matched), mn, len(unmatched), un
+
+
+async def run(pages, dry, sources, since=CUTOFF):
+    now = dt.datetime.now().isoformat()
+    db = None
+    if not dry:
+        db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
+        db[COLL].create_index("url", unique=True)
+        db[COLL].create_index("date")
+        db[COLL].create_index("projects")
+        db["unmatched_raw"].create_index("url", unique=True)
+        db["unmatched_raw"].create_index("_ts", expireAfterSeconds=14 * 24 * 3600)
+    tot = {"m": 0, "mn": 0, "u": 0, "un": 0}
+
+    async def go(client, s):
+        lst = await scrape_one(client, s, pages)
+        if dry:
+            return [d for d in lst if d.get("projects")
+                    and not (d.get("date") and d["date"][:10] < since)]
+        m, mn, u, un = _save(db, lst, now, since)   # ghi ngay nguồn này
+        tot["m"] += m; tot["mn"] += mn; tot["u"] += u; tot["un"] += un
+        print(f"  [{s:10}] khớp {m} (+{mn} mới) · chưa khớp {u} (+{un} mới)", flush=True)
+        return []
+
+    async with httpx.AsyncClient() as client:
+        results = await asyncio.gather(*[go(client, s) for s in sources])
+
+    if dry:
+        docs = {}
+        for lst in results:
+            for d in lst:
+                docs.setdefault(d["url"], d)
+        print(f"[dry] khớp {len(docs)} bài:")
+        for d in sorted(docs.values(), key=lambda x: x["date"], reverse=True)[:30]:
+            print(f"  {d['date'][:10]:10}  {d['source']:12}  {d['title'][:58]}")
+        return
+    print(f"TỔNG: khớp {tot['m']} (+{tot['mn']} mới) · chưa khớp {tot['u']} (+{tot['un']} mới). "
+          f"Chạy step3_newsflow.py để lên web.")
 
 
 if __name__ == "__main__":

@@ -361,12 +361,17 @@ def project_names_by_tid():
 
 
 def search_keywords():
-    """Từ khóa để SEARCH trên cafef/vnexpress: 2 alias dài nhất (đặc trưng nhất) mỗi dự án."""
+    """Từ khóa SEARCH cafef/vnexpress: 1 alias NGẮN-đặc-trưng mỗi dự án.
+
+    Search khớp theo TỪ (không phải cụm chính xác) → cụm càng dài càng dễ ra 0 kết quả;
+    cụm ngắn hơn (ít từ) đã bao trùm. Chọn alias ÍT TỪ NHẤT nhưng ≥3 từ (đủ đặc trưng,
+    tránh nhiễu); không có thì lấy ngắn nhất. Độ chính xác do match_tids lọc lại sau."""
     kws = []
     for p in load_registry():
-        for a in sorted(set(p["aliases"]), key=len, reverse=True)[:2]:
-            if a not in kws:
-                kws.append(a)
+        aliases = sorted(set(p["aliases"]), key=lambda a: (len(a.split()), len(a)))
+        pick = next((a for a in aliases if len(a.split()) >= 3), aliases[0] if aliases else None)
+        if pick and pick not in kws:
+            kws.append(pick)
     return kws
 
 
