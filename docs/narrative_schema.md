@@ -56,6 +56,12 @@ Bỏ dự án thuần "chuẩn bị đầu tư" đã đủ (không có tiến đ
           {"name":"Thi công cầu chính (vòm thép)","prog":"Khởi công 10/2025; 8/2026 dựng vòm thép.","phases":[{"kind":"build","from":"2025-10","to":"2027-12"}],"marks":[]}]}
 ```
 
+## Truy cập DB
+- **Máy local / CI GitHub**: nối trực tiếp qua `lib_db.mongo_uri()` (pymongo) — cổng 27017 mở.
+- **Cloud routine (CCR)**: cổng 27017 BỊ CHẶN → KHÔNG dùng pymongo. Dùng MCP connector `DC_Database`
+  (`mongo_find`/`mongo_aggregate`/`mongo_update`, `database='dc_commodity'`, gọi trực tiếp, không qua
+  `execute_python`). `mongo_update(collection, filter, {$set:...}, upsert=True)` có quyền GHI.
+
 ## Sau khi ghi Tracker
-Chạy `python step5_build_site.py --out dist/index.html` để kiểm build không lỗi, rồi commit + push
-(site.yml sẽ tự deploy). Commit message nêu rõ số dự án đã soạn lại.
+KHÔNG cần build/push từ routine — CI hàng giờ (`deploy.yml`) tự rebuild từ DB và deploy, nên entry
+vừa ghi tự lên web trong ~1 giờ. (Chạy tay ở local thì `python step5_build_site.py` + commit để deploy ngay.)
