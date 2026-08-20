@@ -958,9 +958,9 @@ function detailHTML(p){
 }
 
 function _grow(p){ return (!gRegion||p.region===gRegion) && (!gProv||p.prov===gProv); }
-function _rowSort(a,b){                        // Hà Nội → TP.HCM → còn lại theo TMĐT giảm dần
+function _rowSort(a,b){                        // Hà Nội → TP.HCM → còn lại; trong mỗi cụm theo abc
   const r=p=>p.prov==='Hà Nội'?0:p.prov==='Hồ Chí Minh'?1:2;
-  return r(a)-r(b) || (b.tmdt||0)-(a.tmdt||0);
+  return r(a)-r(b) || a.name.localeCompare(b.name,'vi');
 }
 function sections(){                          // nhóm dưới header LOẠI HÌNH, lọc theo chip+vùng+tỉnh
   return GROUPS.filter(g=>_catSel.has(g.id))
