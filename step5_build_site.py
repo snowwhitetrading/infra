@@ -336,10 +336,13 @@ def fetch_cafeland_map(client):
     for d in db["OSM_Infra"].find({}):                     # bổ sung tuyến cafeland thiếu (từ OSM)
         for seg in d.get("segments", []):
             if len(seg) > 1:
-                lines.append({"title": _titlecase(d.get("title", "")), "coords": seg, "color": "#0d9488",
-                              "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
-                                         "Trạng thái": "đã khai thác"},
-                              "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")})
+                line = {"title": _titlecase(d.get("title", "")), "coords": seg, "color": "#0d9488",
+                        "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
+                                   "Trạng thái": "đã khai thác"},
+                        "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")}
+                if d.get("tid"):                            # tuyến tracker → gắn thẳng pid (khỏi re-match)
+                    line["pid"] = d["tid"]
+                lines.append(line)
     points, projects = [], []
     for d in db["Cafeland_Points"].find(
             {"lat": {"$ne": None}},
@@ -495,6 +498,8 @@ def main():
 
     nmatch = 0
     for it in caf_lines + caf_points:
+        if it.get("pid"):                 # đã gắn sẵn (tuyến OSM tracker) → giữ nguyên
+            continue
         tid = _pid_of(it.get("title"))
         if tid:
             it["pid"] = tid
