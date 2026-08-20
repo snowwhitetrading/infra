@@ -63,6 +63,7 @@ CAT_META = [   # (id, tên hiển thị, meta) — thứ tự hiển thị loạ
     ("Cầu/Hầm", "Cầu / Hầm", "cầu, hầm"),
     ("Nút giao", "Nút giao", "nút giao, ngã tư"),
     ("Cảng", "Cảng biển", "cảng biển, cảng sông"),
+    ("Toà nhà", "Toà nhà", "trung tâm hội nghị, sân vận động, nhà thi đấu, công trình công cộng"),
 ]
 
 
@@ -241,6 +242,12 @@ def _infra_cat(t):
         return "Sân bay"
     if "metro" in t or "đường sắt" in t or "tàu điện" in t:
         return "Đường sắt/Metro"
+    # toà nhà / công trình công cộng-thương mại (TT hội nghị, sân vận động, nhà thi đấu, nhà hát...)
+    # xét TRƯỚC cầu/cảng/kênh vì tên có thể chứa địa danh "Rạch/Cầu…" (vd Liên hợp TT Rạch Chiếc)
+    if any(k in t for k in ("hội nghị", "sân vận động", "svđ", "nhà thi đấu", "thể thao",
+                            "thể dục", "nhà hát", "quảng trường", "triển lãm", "tòa nhà",
+                            "toà nhà", "trụ sở", "cung văn hoá", "cung văn hóa")):
+        return "Toà nhà"
     # cao tốc/quốc lộ… mà tên có địa danh "Cầu X" (vd Pháp Vân - Cầu Giẽ) vẫn là Đường bộ
     if road and not re.match(r"^(cầu|hầm|cảng)\b", t):
         return "Đường bộ"
@@ -430,6 +437,9 @@ def main():
     projects = list(col.find({"_key": "project"}, {"_id": 0, "_key": 0}).sort("id", 1))
     if not projects:
         sys.exit("Chưa có dự án trong DB — chạy nạp dữ liệu trước.")
+    active = {d["tid"] for d in c[DB]["Infra_Projects_Registry"].find(
+             {"active": True}, {"tid": 1}) if d.get("tid")}
+    projects = [p for p in projects if p.get("id") in active]   # bỏ dự án đã tắt trong registry
     for p in projects:                    # default an toàn (entry AI có thể thiếu vài field) → tránh lỗi JS khi bung
         p.setdefault("capex", {}); p.setdefault("huyDong", 0)
         p.setdefault("items", []); p.setdefault("marks", []); p.setdefault("phases", [])

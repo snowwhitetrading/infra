@@ -1113,7 +1113,7 @@ function cafPopup(title, detail){
 const isAirport = t => /sân bay|hàng không/i.test(t||'');
 const S = x => esc(String(x==null?'':x));
 const _cluster = () => (L.markerClusterGroup ? L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:50}) : L.layerGroup());
-const ICON_INFRA = {'Sân bay':['✈️','#e11d48'],'Cầu/Hầm':['🌉','#d97706'],'Cảng':['⚓','#0891b2'],'Đường sắt/Metro':['🚈','#7c3aed'],'Nút giao':['🔀','#475569'],'Kênh/Rạch':['💧','#0ea5e9'],'Đường bộ':['🛣️','#2563eb']};
+const ICON_INFRA = {'Sân bay':['✈️','#e11d48'],'Cầu/Hầm':['🌉','#d97706'],'Cảng':['⚓','#0891b2'],'Đường sắt/Metro':['🚈','#7c3aed'],'Nút giao':['🔀','#475569'],'Kênh/Rạch':['💧','#0ea5e9'],'Đường bộ':['🛣️','#2563eb'],'Toà nhà':['🏛️','#9333ea']};
 const ICON_PROJ = {'Căn hộ':['🏢','#16a34a'],'Khu đô thị':['🏙️','#059669'],'Khu công nghiệp':['🏭','#7c3aed'],'Đất nền':['🗺️','#ca8a04'],'Nhà phố/Biệt thự':['🏘️','#db2777'],'Nghỉ dưỡng':['🏖️','#0891b2'],'Nhà ở xã hội':['🏠','#2563eb'],'Khác':['📍','#64748b']};
 const _icon = ic => L.divIcon({html:'<div class="mk-ic" style="border-color:'+(ic[1]||'#64748b')+'">'+ic[0]+'</div>', className:'mk-wrap', iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-13]});
 const mval = id => document.getElementById(id).value;
