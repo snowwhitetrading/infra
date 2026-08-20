@@ -221,6 +221,14 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .ms-src{font-size:10px;color:var(--ink3);display:block;margin-top:1px}
 .pill{font-family:"IBM Plex Mono",monospace;font-size:9px;padding:1px 5px;border:1px solid var(--rule2);
   color:var(--ink3);border-radius:2px;flex:none;letter-spacing:.03em}
+.pnews{font-size:12px;max-height:300px;overflow-y:auto;padding-right:8px;margin-top:4px}
+.pnews::-webkit-scrollbar{width:8px}
+.pnews::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:4px}
+.pnews-i{display:flex;gap:9px;padding:5px 0;border-bottom:1px dotted var(--rule2);align-items:baseline}
+.pnews-d{font-family:"IBM Plex Mono",monospace;color:var(--ink2);flex:none;width:74px;font-size:11px}
+.pnews-b{flex:1;color:var(--ink)}
+.pnews-s{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.03em;margin-left:4px}
+.pnews-l{color:var(--build);text-decoration:none;margin-left:3px}
 .capex{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
 .capex .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .capex .b{width:100%;background:var(--build);border-radius:1px 1px 0 0;min-height:1px}
@@ -934,7 +942,17 @@ function detailHTML(p){
         <span class="ms-body">${esc(m.label)}${m.src?`<span class="ms-src">${esc(m.src)}</span>`:''}</span>
         <span class="pill">${TIER_VN[m.tier]}</span></li>`).join('')}</ul>
     </div>
-  </div></div></div>`;
+  </div>${_projNews(p)}</div></div>`;
+}
+
+function _projNews(p){
+  const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  if(!news.length) return '';
+  return `<p class="dh" style="margin-top:20px">Tin về dự án <span class="cap">(${news.length})</span></p>
+    <div class="pnews">${news.map(n=>`<div class="pnews-i">
+      <span class="pnews-d">${nfDate(n.date)}</span>
+      <span class="pnews-b">${esc(n.summary)} <span class="pnews-s">${esc(n.source)}</span>${n.url?` <a class="pnews-l" href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span>
+    </div>`).join('')}</div>`;
 }
 
 function _grow(p){ return (!gRegion||p.region===gRegion) && (!gProv||p.prov===gProv); }
