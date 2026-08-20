@@ -115,11 +115,14 @@ def fetch_newsflow(client, projects, tid2cat):
     from lib_projects import project_names_by_tid
     tid2name = dict(project_names_by_tid())              # registry (gồm dự án mới ngoài Gantt)
     tid2name.update({p["id"]: p["name"] for p in projects})   # tên curated trên tracker ưu tiên
+    from lib_marks import news_tag
     out = []
     for doc in client[DB][NEWSFLOW_COLL].find({}):
+        title = doc.get("title", "")
+        tag = news_tag(title)
         for tid in doc.get("projects", []):
             out.append({"date": doc.get("date", ""), "pname": tid2name.get(tid, ""),
-                        "summary": doc.get("title", ""), "source": doc.get("source", "?"),
+                        "summary": title, "source": doc.get("source", "?"), "tag": tag,
                         "url": doc.get("url", ""), "g": tid2cat.get(tid, "Khác")})
     out.sort(key=lambda n: n["date"], reverse=True)
     return out

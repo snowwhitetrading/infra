@@ -82,6 +82,32 @@ def is_relevant(summary):
     return not RX_NOISE.search(summary or "")
 
 
+RX_GPMB = re.compile(r"giải phóng mặt bằng|gpmb|thu hồi đất|bàn giao (mặt bằng|\d)|tái định cư|"
+                     r"đền bù|bồi thường|cưỡng chế|di dời|kiểm kê|bốc thăm|dỡ nhà", re.I)
+RX_APPROVE = re.compile(r"phê duyệt|chủ trương đầu tư|điều chỉnh (quy hoạch|dự án|chủ trương|tổng mức)|"
+                        r"duyệt quy hoạch|quy hoạch phân khu", re.I)
+
+
+def news_tag(text):
+    """Nhãn loại tin để hiện cạnh tin trong tab Tiến độ ('' = tin thường)."""
+    t = text or ""
+    if RX_START.search(t):
+        return "khởi công"
+    if RX_DONE.search(t):
+        return "hoàn thành"
+    if RX_CONTRACT.search(t):
+        return "trúng thầu"
+    if RX_APPROVE.search(t):
+        return "phê duyệt"
+    if RX_GPMB.search(t):
+        return "mặt bằng"
+    if RX_DIRECTIVE.search(t):
+        return "chỉ đạo"
+    if RX_PROGRESS.search(t):
+        return "tiến độ"
+    return ""
+
+
 def infer_tier(text):
     if RX_CONTRACT.search(text):
         return "contract"

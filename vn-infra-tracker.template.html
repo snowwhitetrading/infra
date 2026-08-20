@@ -229,6 +229,16 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .pnews-b{flex:1;color:var(--ink)}
 .pnews-s{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.03em;margin-left:4px}
 .pnews-l{color:var(--build);text-decoration:none;margin-left:3px}
+.ntag{font-family:"IBM Plex Mono",monospace;font-size:9px;padding:1px 6px;border-radius:2px;flex:none;
+  letter-spacing:.03em;white-space:nowrap;border:1px solid transparent;align-self:flex-start}
+.t-start{color:#16a34a;border-color:#16a34a}
+.t-done{color:var(--done);border-color:var(--done)}
+.t-contract{color:#7c3aed;border-color:#7c3aed}
+.t-appr{color:#d97706;border-color:#d97706}
+.t-gpmb{color:var(--gpmb);border-color:var(--gpmb)}
+.t-dir{color:#2563eb;border-color:#2563eb}
+.t-prog{color:var(--build);border-color:var(--build)}
+.t-gen{color:var(--ink3);border-color:var(--rule2)}
 .capex{display:flex;align-items:flex-end;gap:3px;height:64px;margin-top:6px}
 .capex .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
 .capex .b{width:100%;background:var(--build);border-radius:1px 1px 0 0;min-height:1px}
@@ -915,8 +925,9 @@ function capexHTML(cap){
     `<div class="y">${String(y).slice(2)}</div></div>`).join('') + '</div>';
 }
 
+const TAG_CLS={'khởi công':'start','hoàn thành':'done','trúng thầu':'contract','phê duyệt':'appr','mặt bằng':'gpmb','chỉ đạo':'dir','tiến độ':'prog'};
 function detailHTML(p){
-  const ms = p.marks.slice().sort((a,b)=>a.date<b.date?-1:1);
+  const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
   return `<div class="detail"><div class="pad">
     ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
       <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
@@ -936,23 +947,14 @@ function detailHTML(p){
       ${p.note?`<div class="warn"><b>Ghi chú phân tích.</b> ${esc(p.note)}</div>`:''}
     </div>
     <div>
-      <p class="dh">Mốc thời gian &amp; nguồn</p>
-      <ul class="ms-list">${ms.map(m=>`<li>
-        <span class="ms-date">${MONTH_VN(m.date)}</span>
-        <span class="ms-body">${esc(m.label)}${m.src?`<span class="ms-src">${esc(m.src)}</span>`:''}</span>
-        <span class="pill">${TIER_VN[m.tier]}</span></li>`).join('')}</ul>
+      <p class="dh">Dòng tin dự án <span class="cap">(${news.length})</span></p>
+      ${news.length?`<div class="pnews">${news.map(n=>`<div class="pnews-i">
+        <span class="pnews-d">${nfDate(n.date)}</span>
+        <span class="pnews-b">${esc(n.summary)} <span class="pnews-s">${esc(n.source)}</span>${n.url?` <a class="pnews-l" href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span>
+        ${n.tag?`<span class="ntag t-${TAG_CLS[n.tag]}">${n.tag}</span>`:'<span class="ntag t-gen">tin</span>'}</div>`).join('')}</div>`
+        :'<p class="cap">Chưa có tin.</p>'}
     </div>
-  </div>${_projNews(p)}</div></div>`;
-}
-
-function _projNews(p){
-  const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
-  if(!news.length) return '';
-  return `<p class="dh" style="margin-top:20px">Tin về dự án <span class="cap">(${news.length})</span></p>
-    <div class="pnews">${news.map(n=>`<div class="pnews-i">
-      <span class="pnews-d">${nfDate(n.date)}</span>
-      <span class="pnews-b">${esc(n.summary)} <span class="pnews-s">${esc(n.source)}</span>${n.url?` <a class="pnews-l" href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span>
-    </div>`).join('')}</div>`;
+  </div></div></div>`;
 }
 
 function _grow(p){ return (!gRegion||p.region===gRegion) && (!gProv||p.prov===gProv); }
