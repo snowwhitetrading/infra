@@ -951,7 +951,7 @@ function detailHTML(p){
       ${news.length?`<div class="pnews">${news.map(n=>`<div class="pnews-i">
         <span class="pnews-d">${nfDate(n.date)}</span>
         <span class="pnews-b">${esc(n.summary)} <span class="pnews-s">${esc(n.source)}</span>${n.url?` <a class="pnews-l" href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span>
-        ${n.tag?`<span class="ntag t-${TAG_CLS[n.tag]}">${n.tag}</span>`:'<span class="ntag t-gen">tin</span>'}</div>`).join('')}</div>`
+        ${n.tag?`<span class="ntag t-${TAG_CLS[n.tag]}">${n.tag}</span>`:'<span class="ntag t-gen">tin tức</span>'}</div>`).join('')}</div>`
         :'<p class="cap">Chưa có tin.</p>'}
     </div>
   </div></div></div>`;
