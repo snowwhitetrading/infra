@@ -45,7 +45,8 @@ def run(days=None, dry=False):
             continue
         matched += 1
         url = doc.get("url") or str(doc.get("_id"))
-        rec = {"url": url, "date": date, "source": doc.get("source", "?"),
+        # dt = giờ đăng thật 'YYYY-MM-DDTHH:MM' (nếu nguồn có meta giờ), else '' → web sort theo giờ
+        rec = {"url": url, "date": date, "dt": doc.get("dt") or "", "source": doc.get("source", "?"),
                "title": title, "projects": tids, "tag": news_tag(title)}
         if not dry:
             # $set để REFRESH projects (sau khi thêm alias / re-match); upsert bài mới

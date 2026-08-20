@@ -279,6 +279,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .nf-item:first-child{border-top:none}
 .nf-date{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink2);
   font-variant-numeric:tabular-nums;padding-top:1px}
+.nf-hm{display:block;color:var(--ink3);font-size:11px;margin-top:2px}
 .nf-body{min-width:0}
 .nf-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:3px}
 .nf-proj{font-size:11px;font-weight:500;padding:1px 7px;border-radius:2px;background:var(--build-bg);color:var(--build)}
@@ -927,7 +928,7 @@ function capexHTML(cap){
 
 const TAG_CLS={'khởi công':'start','hoàn thành':'done','trúng thầu':'contract','phê duyệt':'appr','mặt bằng':'gpmb','chỉ đạo':'dir','tiến độ':'prog'};
 function detailHTML(p){
-  const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
     ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
       <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
@@ -949,7 +950,7 @@ function detailHTML(p){
     <div>
       <p class="dh">Dòng tin dự án <span class="cap">(${news.length})</span></p>
       ${news.length?`<div class="pnews">${news.map(n=>`<div class="pnews-i">
-        <span class="pnews-d">${nfDate(n.date)}</span>
+        <span class="pnews-d">${nfDate(n.date)}${nfTime(n)?` · ${nfTime(n)}`:''}</span>
         <span class="pnews-b">${esc(n.summary)} <span class="pnews-s">${esc(n.source)}</span>${n.url?` <a class="pnews-l" href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span>
         ${n.tag?`<span class="ntag t-${TAG_CLS[n.tag]}">${n.tag}</span>`:'<span class="ntag t-gen">tin tức</span>'}</div>`).join('')}</div>`
         :'<p class="cap">Chưa có tin.</p>'}
@@ -1052,6 +1053,8 @@ document.getElementById('expandAll').onclick = e=>{
 
 /* ---------- newsflow (tab Dòng tin) ---------- */
 function nfDate(d){const p=(d||'').split('-');return (p[2]||'01')+'/'+(p[1]||'01')+'/'+(p[0]||'');}
+function nfTime(n){const s=n&&n.dt||'';const i=s.indexOf('T');return i>0?s.slice(i+1,i+6):'';}   // 'HH:MM' hoặc ''
+function nfKey(n){return (n&&n.dt)?n.dt:((n&&n.date)?n.date+'T00:00':'');}                          // khoá sort theo giờ thật; ngày rỗng → cuối
 let nfPage = 0; const NF_PER = 25;      // phân trang 25 tin/trang
 function renderNews(){
   const gs=document.getElementById('nf-grp'), ps=document.getElementById('nf-proj'), ss=document.getElementById('nf-src'), ds=document.getElementById('nf-date');
@@ -1077,13 +1080,13 @@ function renderNews(){
     if(fs&&n.source!==fs) return false;
     if(cutoff){const d=(n.date||'').length===7?n.date+'-15':(n.date||''); if(d<cutoff) return false;}
     return true;
-  }).sort((a,b)=> a.date<b.date?1 : a.date>b.date?-1 : 0);
+  }).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   const pages=Math.max(1, Math.ceil(items.length/NF_PER));
   if(nfPage>=pages) nfPage=0;
   const page=items.slice(nfPage*NF_PER, nfPage*NF_PER+NF_PER);
   document.getElementById('nf-count').textContent=items.length+' tin';
   document.getElementById('nf-list').innerHTML = page.length ? page.map(n=>`<div class="nf-item">
-    <div class="nf-date">${nfDate(n.date)}</div>
+    <div class="nf-date">${nfDate(n.date)}${nfTime(n)?`<span class="nf-hm">${nfTime(n)}</span>`:''}</div>
     <div class="nf-body">
       <div class="nf-head"><span class="nf-proj">${esc(n.pname)}</span><span class="nf-src">${esc(n.source)}</span></div>
       <div class="nf-text">${esc(n.summary)}</div>

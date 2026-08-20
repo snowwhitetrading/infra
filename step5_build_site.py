@@ -120,11 +120,13 @@ def fetch_newsflow(client, projects, tid2cat):
     for doc in client[DB][NEWSFLOW_COLL].find({}):
         title = doc.get("title", "")
         tag = news_tag(title)
+        dtv = doc.get("dt") or ""     # giờ đăng thật 'YYYY-MM-DDTHH:MM' nếu có
         for tid in doc.get("projects", []):
-            out.append({"date": doc.get("date", ""), "pname": tid2name.get(tid, ""),
+            out.append({"date": doc.get("date", ""), "dt": dtv, "pname": tid2name.get(tid, ""),
                         "summary": title, "source": doc.get("source", "?"), "tag": tag,
                         "url": doc.get("url", ""), "g": tid2cat.get(tid, "Khác")})
-    out.sort(key=lambda n: n["date"], reverse=True)
+    # sort theo giờ thật khi có (dt), else theo ngày (đầu ngày); date rỗng → chìm cuối
+    out.sort(key=lambda n: n["dt"] or (n["date"] + "T00:00" if n["date"] else ""), reverse=True)
     return out
 
 

@@ -50,6 +50,17 @@ def _date(s):
         return ""
 
 
+VN_TZ = dt.timezone(dt.timedelta(hours=7))
+
+
+def _dt(s):
+    """pubDate Google News (GMT) -> giờ đăng VN 'YYYY-MM-DDTHH:MM' (rỗng nếu không parse được)."""
+    try:
+        return parsedate_to_datetime(s).astimezone(VN_TZ).strftime("%Y-%m-%dT%H:%M")
+    except (ValueError, TypeError):
+        return ""
+
+
 def _windows(start):
     """Cửa sổ 3 tháng từ start (YYYY-MM) tới nay → [(after,before)]."""
     y, m = int(start[:4]), int(start[5:7])
@@ -78,10 +89,11 @@ def query_gnews(client, alias, after=None, before=None):
         src = (it.findtext("source") or "gnews").strip()
         # bỏ đuôi " - Nguồn" trong title của Google News
         title = re.sub(r"\s*-\s*" + re.escape(src) + r"\s*$", "", title).strip()
+        pd = it.findtext("pubDate", "")
         out.append({"title": title, "source": "gnews:" + src,
                     "url": (it.findtext("link") or "").strip(),
                     "description": re.sub("<[^>]+>", " ", it.findtext("description") or "")[:400],
-                    "date": _date(it.findtext("pubDate", ""))})
+                    "date": _date(pd), "dt": _dt(pd)})
     return out
 
 

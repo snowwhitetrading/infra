@@ -111,6 +111,23 @@ def rss_date(s):
     return (s or "")[:10]
 
 
+def rss_dt(s):
+    """pubDate RSS -> giờ đăng 'YYYY-MM-DDTHH:MM' (rỗng nếu không parse được)."""
+    try:
+        return parsedate_to_datetime(s).strftime("%Y-%m-%dT%H:%M")
+    except (ValueError, TypeError):
+        return ""
+
+
+def _dt_meta(content):
+    """meta article:published_time -> 'YYYY-MM-DDTHH:MM' (giờ đăng thật) hoặc '' nếu thiếu giờ."""
+    if not content:
+        return ""
+    md = re.search(r"\d{4}-\d{2}-\d{2}", content)
+    mt = re.search(r"[T ](\d{2}:\d{2})", content)
+    return f"{md.group(0)}T{mt.group(1)}" if md and mt else ""
+
+
 SEM = asyncio.Semaphore(10)   # trần request đồng thời (tránh nối đuôi → chạy lọt timeout)
 
 
@@ -139,10 +156,11 @@ async def scrape_rss(client, source):
             if ce:
                 body = re.sub(r"\s+", " ", BeautifulSoup(ce, "html.parser").get_text(" ", strip=True))[:2000]
             tids = match_tids(f"{title} {desc} {body}")
+            pd = it.findtext("pubDate", "")
             # GIỮ cả tin không khớp (projects=[]) → run() tách sang pool cho radar
             out.append({"url": (it.findtext("link") or "").strip(), "source": source,
                         "title": title, "description": desc, "body": body[:1000],
-                        "date": rss_date(it.findtext("pubDate", "")), "projects": tids})
+                        "date": rss_date(pd), "dt": rss_dt(pd), "projects": tids})
     return out
 
 
@@ -189,12 +207,13 @@ async def _cafef_article(client, u, t):
                 el.decompose()
         body = re.sub(r"\s+", " ", body_el.get_text(" ", strip=True))[:2000]
     pe = s.select_one('meta[property="article:published_time"]')
-    pub = pe["content"][:10] if pe and pe.get("content") else ""
+    content = pe["content"] if pe and pe.get("content") else ""
+    pub = content[:10]
     tids = match_tids(f"{title} {desc} {body}")
     if not tids:
         return None
     return {"url": u, "source": "cafef", "title": title, "description": desc,
-            "body": body[:1000], "date": pub, "projects": tids}
+            "body": body[:1000], "date": pub, "dt": _dt_meta(content), "projects": tids}
 
 
 async def _finish(client, source, cand):
@@ -247,7 +266,7 @@ async def _vnx_search(client, kw, pages):
 
 
 async def _vnx_article(client, u, t):
-    date, desc = "", ""
+    date, dtv, desc = "", "", ""
     try:
         r = await get(client, u)
         s = BeautifulSoup(r.text, "html.parser")
@@ -257,12 +276,13 @@ async def _vnx_article(client, u, t):
         if pe and pe.get("content"):
             mm = re.search(r"\d{4}-\d{2}-\d{2}", pe["content"])
             date = mm.group(0) if mm else pe["content"][:10]
+            dtv = _dt_meta(pe["content"])
         de = s.select_one('meta[name="description"]')
         desc = de["content"] if de and de.get("content") else ""
     except Exception:
         pass
     return {"url": u, "source": "vnexpress", "title": t, "description": desc,
-            "body": "", "date": date, "projects": match_tids(t)}
+            "body": "", "date": date, "dt": dtv, "projects": match_tids(t)}
 
 
 async def scrape_vnexpress(client, pages):
@@ -276,9 +296,9 @@ async def scrape_vnexpress(client, pages):
 
 # ── vietstock: RSS + phân trang ──────────────────────────────────────────────
 
-def _vs(url, title, desc, date):
+def _vs(url, title, desc, date, dtv=""):
     return {"url": url, "source": "vietstock", "title": title, "description": desc,
-            "body": "", "date": date, "projects": match_tids(f"{title} {desc}")}
+            "body": "", "date": date, "dt": dtv, "projects": match_tids(f"{title} {desc}")}
 
 
 async def scrape_vietstock(client, pages):
@@ -287,10 +307,11 @@ async def scrape_vietstock(client, pages):
         try:
             r = await get(client, VIETSTOCK + path)
             for it in ET.fromstring(r.text).findall(".//item"):
+                pd = it.findtext("pubDate", "")
                 d = _vs(it.findtext("link", "").strip().replace("http://", "https://", 1),
                         (it.findtext("title") or "").strip(),
                         re.sub("<[^>]+>", "", it.findtext("description") or "").strip(),
-                        rss_date(it.findtext("pubDate", "")))
+                        rss_date(pd), rss_dt(pd))
                 if d:
                     out.append(d)
         except Exception:
@@ -348,7 +369,7 @@ async def _epi_search(client, host, kw, pages):
 
 async def _art_meta(client, source, u, t):
     """Fetch bài lấy ngày + mô tả (khớp theo tiêu đề trước để chỉ fetch bài liên quan)."""
-    date, desc = "", ""
+    date, dtv, desc = "", "", ""
     try:
         r = await get(client, u)
         s = BeautifulSoup(r.text, "html.parser")
@@ -357,12 +378,13 @@ async def _art_meta(client, source, u, t):
         if pe and pe.get("content"):
             mm = re.search(r"\d{4}-\d{2}-\d{2}", pe["content"])
             date = mm.group(0) if mm else pe["content"][:10]
+            dtv = _dt_meta(pe["content"])
         de = s.select_one('meta[name="description"]')
         desc = de["content"] if de and de.get("content") else ""
     except Exception:
         pass
     return {"url": u, "source": source, "title": t, "description": desc,
-            "body": "", "date": date, "projects": match_tids(t)}
+            "body": "", "date": date, "dt": dtv, "projects": match_tids(t)}
 
 
 async def scrape_epi(client, host, source, pages):
