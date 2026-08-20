@@ -43,14 +43,15 @@ def _relevant(alias, text):
     return len(at & _toks(text)) / len(at) >= 0.6
 
 
+VN_TZ = dt.timezone(dt.timedelta(hours=7))
+
+
 def _date(s):
+    """pubDate Google News -> ngày VN 'YYYY-MM-DD' (đồng bộ tz với _dt để không lệch ngày)."""
     try:
-        return parsedate_to_datetime(s).date().isoformat()
+        return parsedate_to_datetime(s).astimezone(VN_TZ).date().isoformat()
     except (ValueError, TypeError):
         return ""
-
-
-VN_TZ = dt.timezone(dt.timedelta(hours=7))
 
 
 def _dt(s):
