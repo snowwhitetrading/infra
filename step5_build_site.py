@@ -429,6 +429,12 @@ def main():
     projects = list(col.find({"_key": "project"}, {"_id": 0, "_key": 0}).sort("id", 1))
     if not projects:
         sys.exit("Chưa có dự án trong DB — chạy nạp dữ liệu trước.")
+    for p in projects:                    # default an toàn (entry AI có thể thiếu vài field) → tránh lỗi JS khi bung
+        p.setdefault("capex", {}); p.setdefault("huyDong", 0)
+        p.setdefault("items", []); p.setdefault("marks", []); p.setdefault("phases", [])
+        p.setdefault("owner", ""); p.setdefault("loc", "")
+        for it in p["items"]:
+            it.setdefault("phases", []); it.setdefault("marks", [])
     tid2cat = category_map(c)
     for p in projects:                    # phân 18 dự án gốc vào 8 nhóm như các dự án khác (bỏ I-IV)
         p["g"] = tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
