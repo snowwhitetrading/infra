@@ -1201,7 +1201,7 @@ function redrawMap(){
     const lc=(ICON_INFRA[l.cat]&&ICON_INFRA[l.cat][1])||l.color||'#2563eb';
     L.polyline(l.coords,{color:lc,weight:4,opacity:.85})
      .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
-    if(ICON_INFRA[l.cat]){                     // icon ở giữa mọi tuyến (đường bộ/sắt/cầu/cảng…)
+    if(ICON_INFRA[l.cat] && !l.noicon){        // 1 icon/tuyến (tuyến OSM nhiều đoạn → chỉ 1)
       L.marker(l.coords[Math.floor(l.coords.length/2)],{icon:_icon(ICON_INFRA[l.cat])})
        .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
     }

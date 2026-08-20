@@ -334,12 +334,15 @@ def fetch_cafeland_map(client):
                  {"coords.1": {"$exists": True}},
                  {"_id": 0, "title": 1, "coords": 1, "line_color": 1, "detail": 1, "getIdProvince": 1})]
     for d in db["OSM_Infra"].find({}):                     # bổ sung tuyến cafeland thiếu (từ OSM)
+        icon_shown = False
         for seg in d.get("segments", []):
             if len(seg) > 1:
                 line = {"title": _titlecase(d.get("title", "")), "coords": seg, "color": "#0d9488",
                         "detail": {"Nguồn": "OpenStreetMap", "Loại": d.get("cat", ""),
                                    "Trạng thái": "đã khai thác"},
-                        "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ")}
+                        "prov": d.get("prov", ""), "cat": d.get("cat", "Đường bộ"),
+                        "noicon": icon_shown}          # chỉ đặt 1 icon cho cả tuyến (nhiều đoạn OSM)
+                icon_shown = True
                 if d.get("tid"):                            # tuyến tracker → gắn thẳng pid (khỏi re-match)
                     line["pid"] = d["tid"]
                 lines.append(line)
