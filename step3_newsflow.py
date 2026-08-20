@@ -15,7 +15,7 @@ import datetime as dt
 from pymongo import MongoClient
 
 from lib_db import mongo_uri
-from lib_marks import is_relevant
+from lib_marks import is_relevant, news_tag
 
 SRC_DB, SRC_COLL = "dc_news", "project_news_raw"
 OUT_DB, OUT_COLL = "dc_commodity", "Infra_Newsflow"
@@ -46,7 +46,7 @@ def run(days=None, dry=False):
         matched += 1
         url = doc.get("url") or str(doc.get("_id"))
         rec = {"url": url, "date": date, "source": doc.get("source", "?"),
-               "title": title, "projects": tids}
+               "title": title, "projects": tids, "tag": news_tag(title)}
         if not dry:
             # $set để REFRESH projects (sau khi thêm alias / re-match); upsert bài mới
             if coll.update_one({"url": url}, {"$set": rec}, upsert=True).upserted_id:
