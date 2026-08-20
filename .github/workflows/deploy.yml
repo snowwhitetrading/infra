@@ -11,9 +11,13 @@ permissions:
   pages: write
   id-token: write
 
+# Group RIÊNG cho pipeline dữ liệu (KHÔNG dùng chung 'pages' với site.yml) và KHÔNG cho hủy —
+# nếu không, mỗi push (site.yml 'Deploy site fast', cùng group pages, cancel-in-progress) sẽ HỦY
+# pipeline hourly đang chạy dở ở bước scrape/newsflow → web đứng tin. Deploy Pages đã được serialize
+# sẵn qua environment github-pages nên không cần chung group với site.yml.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: data-pipeline
+  cancel-in-progress: false
 
 jobs:
   build:
