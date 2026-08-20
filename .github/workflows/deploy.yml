@@ -27,11 +27,13 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # Scrape 16 báo: tin khớp dự án → project_news_raw · tin chưa khớp → unmatched_raw (pool radar)
+      # Scrape GENERAL: ~23 từ khoá loại-hình/sự-kiện trên cafef/vnex/tuổitrẻ/thanhniên/vnn... +RSS
+      # → bài khớp dự án vào project_news_raw · bài hạ tầng chưa khớp → unmatched_raw (pool radar)
+      # Backfill lịch sử theo TÊN dự án chạy thủ công: python step1_scrape_news.py --mode project --pages 6
       - name: Scrape project news
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: timeout 780 python step1_scrape_news.py --pages 2 || echo "scrape skipped/timeout"
+        run: timeout 780 python step1_scrape_news.py --mode general --pages 3 || echo "scrape skipped/timeout"
 
       # Radar: đọc pool tin chưa khớp (unmatched_raw) → ứng viên dự án MỚI (deterministic)
       - name: Radar candidates

@@ -44,6 +44,20 @@ CONTENT_NS = {"content": "http://purl.org/rss/1.0/modules/content/"}
 
 SEARCH_KEYWORDS = search_keywords()   # động theo registry (thêm dự án → tự search)
 
+# GENERAL: quét thường xuyên bằng từ khoá loại-hình + sự-kiện (ít query, bắt tin mới + phát hiện dự án)
+GENERAL_TERMS = [
+    "cao tốc", "đường vành đai", "vành đai", "quốc lộ", "tỉnh lộ", "nút giao",
+    "đường sắt tốc độ cao", "đường sắt đô thị", "metro", "tàu điện",
+    "sân bay", "cảng hàng không", "cảng biển", "cảng", "cầu vượt sông", "hầm đường bộ",
+    "đường ven biển", "khởi công dự án", "thông xe", "khánh thành", "động thổ",
+    "phê duyệt dự án giao thông", "dự án hạ tầng giao thông",
+]
+INFRA_HINT = re.compile(r"cao tốc|đường sắt|metro|tàu điện|vành đai|sân bay|cảng|cầu|hầm|"
+                        r"quốc lộ|tỉnh lộ|nút giao|đường ven biển|bến xe", re.IGNORECASE)
+
+MODE = "project"                      # 'project' = search theo tên dự án; 'general' = từ khoá loại-hình
+KEYWORDS = SEARCH_KEYWORDS            # run() đổi theo --mode
+
 # ── RSS sources: {source: [feed urls]} ───────────────────────────────────────
 RSS_FEEDS = {
     "vneconomy": ["https://vneconomy.vn/tin-moi.rss", "https://vneconomy.vn/tieu-diem.rss",
@@ -183,12 +197,27 @@ async def _cafef_article(client, u, t):
             "body": body[:1000], "date": pub, "projects": tids}
 
 
+async def _finish(client, source, cand):
+    """{url:title} → docs. Bài khớp dự án (theo tiêu đề) → fetch lấy ngày/desc;
+    (general) bài hạ tầng chưa khớp → title-only cho radar (unmatched_raw)."""
+    docs = await asyncio.gather(*[_art_meta(client, source, u, t)
+                                  for u, t in cand.items() if match_tids(t)])
+    if MODE == "general":
+        for u, t in cand.items():
+            if not match_tids(t) and INFRA_HINT.search(t):
+                docs.append({"url": u, "source": source, "title": t, "description": "",
+                             "body": "", "date": "", "projects": []})
+    return docs
+
+
 async def scrape_cafef(client, pages):
-    searches = await asyncio.gather(*[_cafef_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    searches = await asyncio.gather(*[_cafef_search(client, kw, pages) for kw in KEYWORDS])
     urls = {}
     for d in searches:
         for u, t in d.items():
             urls.setdefault(u, t)
+    if MODE == "general":                          # nhẹ: khớp theo tiêu đề, chỉ fetch bài khớp
+        return await _finish(client, "cafef", urls)
     arts = await asyncio.gather(*[_cafef_article(client, u, t) for u, t in urls.items()])
     return [a for a in arts if a]
 
@@ -237,14 +266,12 @@ async def _vnx_article(client, u, t):
 
 
 async def scrape_vnexpress(client, pages):
-    searches = await asyncio.gather(*[_vnx_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    searches = await asyncio.gather(*[_vnx_search(client, kw, pages) for kw in KEYWORDS])
     cand = {}
     for d in searches:
         for u, t in d.items():
             cand.setdefault(u, t)
-    # khớp trên tiêu đề trước → chỉ fetch bài khớp để lấy ngày
-    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
-    return await asyncio.gather(*[_vnx_article(client, u, t) for u, t in todo])
+    return await _finish(client, "vnexpress", cand)
 
 
 # ── vietstock: RSS + phân trang ──────────────────────────────────────────────
@@ -339,13 +366,12 @@ async def _art_meta(client, source, u, t):
 
 
 async def scrape_epi(client, host, source, pages):
-    searches = await asyncio.gather(*[_epi_search(client, host, kw, pages) for kw in SEARCH_KEYWORDS])
+    searches = await asyncio.gather(*[_epi_search(client, host, kw, pages) for kw in KEYWORDS])
     cand = {}
     for d in searches:
         for u, t in d.items():
             cand.setdefault(u, t)
-    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
-    return await asyncio.gather(*[_art_meta(client, source, u, t) for u, t in todo])
+    return await _finish(client, source, cand)
 
 
 # ── Dân Trí: /tim-kiem/{kw}.htm (chỉ trang 1; ngày lấy từ trang bài) ─────────────
@@ -366,13 +392,12 @@ async def _dantri_search(client, kw):
 
 
 async def scrape_dantri(client, pages):
-    searches = await asyncio.gather(*[_dantri_search(client, kw) for kw in SEARCH_KEYWORDS])
+    searches = await asyncio.gather(*[_dantri_search(client, kw) for kw in KEYWORDS])
     cand = {}
     for d in searches:
         for u, t in d.items():
             cand.setdefault(u, t)
-    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
-    return await asyncio.gather(*[_art_meta(client, "dantri", u, t) for u, t in todo])
+    return await _finish(client, "dantri", cand)
 
 
 # ── VietnamNet: /tim-kiem?q= (bài -\d+.html) ────────────────────────────────────
@@ -401,13 +426,12 @@ async def _vnn_search(client, kw, pages):
 
 
 async def scrape_vnn(client, pages):
-    searches = await asyncio.gather(*[_vnn_search(client, kw, pages) for kw in SEARCH_KEYWORDS])
+    searches = await asyncio.gather(*[_vnn_search(client, kw, pages) for kw in KEYWORDS])
     cand = {}
     for d in searches:
         for u, t in d.items():
             cand.setdefault(u, t)
-    todo = [(u, t) for u, t in cand.items() if match_tids(t)]
-    return await asyncio.gather(*[_art_meta(client, "vietnamnet", u, t) for u, t in todo])
+    return await _finish(client, "vietnamnet", cand)
 
 
 ALL_SOURCES = ["cafef", "vnexpress", "tuoitre", "thanhnien", "dantri", "vietstock"] + list(RSS_FEEDS)
@@ -461,7 +485,11 @@ def _save(db, lst, now, since):
     return len(matched), mn, len(unmatched), un
 
 
-async def run(pages, dry, sources, since=CUTOFF):
+async def run(pages, dry, sources, since=CUTOFF, mode="project"):
+    global MODE, KEYWORDS
+    MODE = mode
+    KEYWORDS = GENERAL_TERMS if mode == "general" else SEARCH_KEYWORDS
+    print(f"MODE={mode} · {len(KEYWORDS)} keyword · nguồn: {', '.join(sources)}", flush=True)
     now = dt.datetime.now().isoformat()
     db = None
     if not dry:
@@ -505,6 +533,8 @@ if __name__ == "__main__":
     ap.add_argument("--sources", nargs="*", default=ALL_SOURCES,
                     help=f"Nguồn (mặc định tất cả): {', '.join(ALL_SOURCES)}")
     ap.add_argument("--since", default=CUTOFF, help="Chỉ giữ tin từ ngày này (YYYY-MM-DD); backfill lùi sâu hơn")
+    ap.add_argument("--mode", choices=["project", "general"], default="project",
+                    help="project=search theo tên dự án (backfill) · general=từ khoá loại-hình (quét thường xuyên + radar)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
-    asyncio.run(run(a.pages, a.dry_run, [s for s in a.sources if s in ALL_SOURCES], a.since))
+    asyncio.run(run(a.pages, a.dry_run, [s for s in a.sources if s in ALL_SOURCES], a.since, a.mode))
