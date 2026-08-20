@@ -15,7 +15,7 @@ import datetime as dt
 from pymongo import MongoClient
 
 from lib_db import mongo_uri
-from lib_marks import is_progress
+from lib_marks import is_relevant
 
 SRC_DB, SRC_COLL = "dc_news", "project_news_raw"
 OUT_DB, OUT_COLL = "dc_commodity", "Infra_Newsflow"
@@ -36,9 +36,9 @@ def run(days=None, dry=False):
             continue
         title = (doc.get("title") or "").strip()
         desc = doc.get("description") or ""
-        # lọc cột mốc: xét tiêu đề + mô tả (chặt, tránh bắt nhầm).
-        # Post Facebook đã được lọc tay lúc thu thập → miễn lọc is_progress.
-        if doc.get("source") != "facebook" and not is_progress("", title + " " + desc):
+        # Dòng tin lấy MỌI tin về dự án (không đòi cột mốc), chỉ bỏ rác (tai nạn/án/PR bán hàng).
+        # Post Facebook đã lọc tay lúc thu thập → miễn lọc.
+        if doc.get("source") != "facebook" and not is_relevant(title + " " + desc):
             continue
         tids = doc.get("projects") or []
         if not tids:

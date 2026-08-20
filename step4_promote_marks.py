@@ -14,7 +14,7 @@ import re
 from collections import defaultdict
 from pymongo import MongoClient
 from lib_db import mongo_uri
-from lib_marks import infer_type
+from lib_marks import infer_type, is_progress
 
 DB = "dc_commodity"
 TRACKER = "Infra_Project_Tracker"
@@ -36,6 +36,8 @@ def run():
         if len(month) < 7:
             continue
         title = doc.get("title", "")
+        if not is_progress("", title):        # mark trên Gantt = CHỈ tin cột mốc (Dòng tin thì lấy hết)
+            continue
         for tid in doc.get("projects", []):
             by_tid[tid].append({
                 "date": month, "type": infer_type("", title), "label": title,

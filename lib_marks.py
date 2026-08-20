@@ -77,6 +77,11 @@ def is_progress(stage, summary):
     return bool(RX_PROGRESS.search(blob))
 
 
+def is_relevant(summary):
+    """Tin VỀ dự án cho Dòng tin (không đòi cột mốc): chỉ bỏ rác (tai nạn/án/PR bán hàng...)."""
+    return not RX_NOISE.search(summary or "")
+
+
 def infer_tier(text):
     if RX_CONTRACT.search(text):
         return "contract"
