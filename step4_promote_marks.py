@@ -46,11 +46,15 @@ def run():
     total = 0
     for p in tr.find({"_key": "project"}):
         tid = p["id"]
-        # tránh trùng với mốc curated cùng tháng + nhãn na ná
-        curated = {(m["date"][:7], norm(m.get("label")))
-                   for m in p.get("marks", []) if m.get("tier") != "auto"}
+        cur_marks = [m for m in p.get("marks", []) if m.get("tier") != "auto"]
+        # tránh trùng với mốc curated/AI cùng tháng + nhãn na ná
+        curated = {(m["date"][:7], norm(m.get("label"))) for m in cur_marks}
+        # chỉ THÊM mốc MỚI HƠN timeline curated/AI (không lặp lại lịch sử đã tổng hợp)
+        latest = max((m["date"][:7] for m in cur_marks), default="")
         seen, fresh = set(), []
         for m in by_tid.get(tid, []):
+            if latest and m["date"] <= latest:
+                continue
             k = (m["date"], norm(m["label"]))
             if k in seen or k in curated:
                 continue

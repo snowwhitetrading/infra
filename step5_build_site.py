@@ -241,6 +241,9 @@ def _infra_cat(t):
         return "Sân bay"
     if "metro" in t or "đường sắt" in t or "tàu điện" in t:
         return "Đường sắt/Metro"
+    # cao tốc/quốc lộ… mà tên có địa danh "Cầu X" (vd Pháp Vân - Cầu Giẽ) vẫn là Đường bộ
+    if road and not re.match(r"^(cầu|hầm|cảng)\b", t):
+        return "Đường bộ"
     if "cầu" in t or "hầm" in t:
         return "Cầu/Hầm"
     if "cảng" in t:
@@ -418,8 +421,6 @@ def build_auto_rows(client, projects):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(HERE, "vn-infra-tracker.built.html"))
-    ap.add_argument("--with-proposed", action="store_true",
-                    help="Phủ thêm mark đề xuất từ tin tức (mờ, chờ duyệt)")
     args = ap.parse_args()
 
     c = MongoClient(MONGO_URI, serverSelectionTimeoutMS=20000)
@@ -472,10 +473,6 @@ def main():
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
-
-    if args.with_proposed:
-        out = apply_proposed(out, c)
-        print("Đã phủ mark đề xuất (chờ duyệt) từ Infra_Project_Tracker_Proposed")
 
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(out)

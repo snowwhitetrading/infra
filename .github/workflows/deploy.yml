@@ -35,11 +35,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: timeout 780 python step1_scrape_news.py --mode general --pages 3 || echo "scrape skipped/timeout"
 
-      # Radar: đọc pool tin chưa khớp (unmatched_raw) → ứng viên dự án MỚI (deterministic)
+      # Radar + TỰ ADD: pool tin chưa khớp → tên dự án MỚI (loại+địa danh) → lọc (≥2 báo & ≥3 lần
+      # + ngữ cảnh dự án + tên riêng VN + không trùng) → tự thêm vào registry (bỏ duyệt tay)
       - name: Radar candidates
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: timeout 180 python step2_radar.py --top 0 || echo "radar skipped/timeout"
+        run: timeout 180 python step2_radar.py --top 0 --auto-add || echo "radar skipped/timeout"
 
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
@@ -53,7 +54,7 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step4_promote_marks.py || echo "promote skipped"
 
-      # Dựng site chính thức (chỉ mark đã duyệt) từ DB
+      # Dựng site từ DB (Tracker chi tiết + mark auto)
       - name: Build site
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
