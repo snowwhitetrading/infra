@@ -478,6 +478,29 @@ def main():
     print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến · {len(caf_points)} điểm · "
           f"{len(caf_projects)} dự án+KCN")
 
+    # Khớp tên tuyến/điểm cafeland ↔ dự án đang theo dõi (tab Tiến độ) qua alias registry đã vetted
+    # → gắn pid=tid để panel Bản đồ hiển thị thông tin + Dòng tin của dự án.
+    from lib_projects import build_alias_regex, pid2tid
+    _arx, _p2t = build_alias_regex(), pid2tid()
+    _tracked = {p["id"] for p in projects}
+    _rx_tracked = [(rx, _p2t[pid]) for pid, rx in _arx.items()
+                   if pid in _p2t and _p2t[pid] in _tracked]
+
+    def _pid_of(title):
+        t = title or ""
+        for rx, tid in _rx_tracked:
+            if rx.search(t):
+                return tid
+        return None
+
+    nmatch = 0
+    for it in caf_lines + caf_points:
+        tid = _pid_of(it.get("title"))
+        if tid:
+            it["pid"] = tid
+            nmatch += 1
+    print(f"Khớp Bản đồ↔Tiến độ: {nmatch}/{len(caf_lines)+len(caf_points)} tuyến/điểm gắn dự án")
+
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     out = out.replace("const SATELLITE = {}", "const SATELLITE = " + json.dumps(satellite, ensure_ascii=False), 1)

@@ -327,6 +327,18 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .mp-row{display:flex;gap:8px;padding:7px 0;border-top:1px dotted var(--rule2);font-size:12.5px}
 .mp-k{color:var(--ink3);min-width:112px;flex-shrink:0}
 .mp-v{color:var(--ink);line-height:1.5}
+.mp-proj{margin:4px 0 14px;padding:10px 0 12px;border-top:2px solid var(--build);border-bottom:1px solid var(--rule2)}
+.mp-ph{font-size:12px;font-weight:600;color:var(--build);margin-bottom:6px}
+.mp-nh{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;
+  letter-spacing:.04em;margin:10px 0 4px}
+.mp-news{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto}
+.mp-ni{font-size:12px;line-height:1.45}
+.mp-nd{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink3)}
+.mp-nt{color:var(--ink)}
+.mp-ns{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink3);text-transform:uppercase}
+.mp-open{margin-top:10px;font-family:inherit;font-size:12px;padding:6px 12px;border:1px solid var(--build);
+  border-radius:3px;background:var(--build-bg);color:var(--build);cursor:pointer;width:100%}
+.mp-open:hover{background:var(--build);color:#fff}
 @media (max-width:760px){.map-wrap{flex-direction:column}.map-panel{width:auto;height:auto;max-height:340px}}
 .map-bar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin-bottom:12px}
 .mf{display:flex;flex-direction:column;gap:5px}
@@ -1155,8 +1167,30 @@ function showDetail(title, detail, meta){
     '<button class="mp-close" onclick="closeDetail()" title="Đóng">✕</button>'+
     '<h3 class="mp-title">'+esc(title)+'</h3>'+
     (tags?'<div class="mp-tags">'+tags+'</div>':'')+
+    (meta&&meta.pid?_mapProj(meta.pid):'')+
     '<div class="mp-src">nguồn Cafeland</div>'+
     (rows||'<div class="mp-empty">Chưa có thông tin chi tiết.</div>');
+}
+// Mục "dự án đang theo dõi" (khớp tên với tab Tiến độ): đánh giá tiến độ + thông tin + Dòng tin
+function _mapProj(pid){
+  const p = P.find(x=>x.id===pid); if(!p) return '';
+  const news = NEWSFLOW.filter(n=>n.pname===p.name)
+    .sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
+  const sched = p.sched?`<div class="schedbox s-${SCHED_CLS[p.sched]}" style="margin:6px 0 8px"><b>${esc(p.sched)}.</b> ${esc(p.schedWhy||'')}</div>`:'';
+  const info = [['Trạng thái',p.status],['Tổng mức đầu tư',p.tmdt?nf(p.tmdt)+' tỷ':''],
+                ['Chủ đầu tư',p.owner],['Địa điểm',p.loc]]
+    .filter(([k,v])=>v).map(([k,v])=>`<div class="mp-row"><span class="mp-k">${esc(k)}</span><span class="mp-v">${esc(String(v))}</span></div>`).join('');
+  const top = news.slice(0,6).map(n=>`<div class="mp-ni"><span class="mp-nd">${nfDate(n.date)}${nfTime(n)?' '+nfTime(n):''}</span><span class="mp-nt">${esc(n.summary)} <span class="mp-ns">${esc(n.source)}</span>${n.url?` <a href="${esc(n.url)}" target="_blank" rel="noopener">↗</a>`:''}</span></div>`).join('');
+  return `<div class="mp-proj"><div class="mp-ph">📊 Dự án đang theo dõi</div>${sched}${info}`+
+    `<p class="mp-nh">Dòng tin${news.length?' ('+news.length+')':''}</p>`+
+    (news.length?`<div class="mp-news">${top}</div>`:'<div class="mp-empty">Chưa có tin.</div>')+
+    `<button class="mp-open" onclick="_openProj(${pid})">Xem đầy đủ ở tab Tiến độ →</button></div>`;
+}
+function _openProj(id){
+  const tab=document.querySelector('.tab[data-view="gantt"]'); if(tab) tab.click();
+  open.add(id); render();
+  setTimeout(()=>{const el=document.querySelector('.pname[data-id="'+id+'"]');
+    if(el) el.scrollIntoView({block:'center',behavior:'smooth'});},80);
 }
 function redrawMap(){
   const fr=mval('mf-region'), fp=mval('mf-prov');
@@ -1166,18 +1200,18 @@ function redrawMap(){
   CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okp(l)&&l.coords&&l.coords.length>1){
     const lc=(ICON_INFRA[l.cat]&&ICON_INFRA[l.cat][1])||l.color||'#2563eb';
     L.polyline(l.coords,{color:lc,weight:4,opacity:.85})
-     .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines);
+     .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
     if(ICON_INFRA[l.cat]){                     // icon ở giữa mọi tuyến (đường bộ/sắt/cầu/cảng…)
       L.marker(l.coords[Math.floor(l.coords.length/2)],{icon:_icon(ICON_INFRA[l.cat])})
-       .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov})).addTo(_L.lines);
+       .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
     }
     ni++; }});
   CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okp(p)){
     L.marker([p.lat,p.lng],{icon:_icon(ICON_INFRA[p.cat]||['📍','#64748b'])})
-     .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov})).addTo(_L.points); ni++; }});
+     .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov,pid:p.pid})).addTo(_L.points); ni++; }});
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
     _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||['📍','#64748b'])})
-      .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov}))); np++; }});
+      .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov,pid:d.pid}))); np++; }});
   document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
 const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
