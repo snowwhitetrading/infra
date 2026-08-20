@@ -1168,8 +1168,8 @@ function showDetail(title, detail, meta){
     '<h3 class="mp-title">'+esc(title)+'</h3>'+
     (tags?'<div class="mp-tags">'+tags+'</div>':'')+
     (meta&&meta.pid?_mapProj(meta.pid):'')+
-    '<div class="mp-src">nguồn Cafeland</div>'+
-    (rows||'<div class="mp-empty">Chưa có thông tin chi tiết.</div>');
+    (rows?'<div class="mp-src">nguồn Cafeland</div>'+rows
+        :(meta&&meta.pid?'':'<div class="mp-empty">Chưa có thông tin chi tiết.</div>'));
 }
 // Mục "dự án đang theo dõi" (khớp tên với tab Tiến độ): đánh giá tiến độ + thông tin + Dòng tin
 function _mapProj(pid){

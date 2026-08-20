@@ -501,6 +501,22 @@ def main():
             nmatch += 1
     print(f"Khớp Bản đồ↔Tiến độ: {nmatch}/{len(caf_lines)+len(caf_points)} tuyến/điểm gắn dự án")
 
+    # Dự án theo dõi KHÔNG có tuyến/điểm Cafeland → chấm điểm từ toạ độ geocode (Infra_Tracker_Geo)
+    geo = {d["tid"]: d for d in c["dc_commodity"]["Infra_Tracker_Geo"].find(
+        {"lat": {"$ne": None}}, {"_id": 0, "tid": 1, "lat": 1, "lng": 1})}
+    pmeta = {p["id"]: p for p in projects}
+    covered = {it["pid"] for it in caf_lines + caf_points if it.get("pid")}
+    nadd = 0
+    for tid in _tracked - covered:
+        g, p = geo.get(tid), pmeta.get(tid)
+        if not g or not p:
+            continue
+        caf_points.append({"title": p.get("name", f"Dự án {tid}"), "lat": g["lat"], "lng": g["lng"],
+                           "detail": {}, "prov": p.get("prov", ""), "cat": p.get("g", "Khác"),
+                           "pid": tid, "src": "tracker"})
+        nadd += 1
+    print(f"Chấm điểm dự án thiếu bản đồ (geocode): {nadd}")
+
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)
     out = out.replace("const SATELLITE = {}", "const SATELLITE = " + json.dumps(satellite, ensure_ascii=False), 1)
