@@ -320,9 +320,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;
   box-shadow:0 1px 4px rgba(0,0,0,.28)}
 .mk-ic:hover{transform:scale(1.15);transition:transform .1s}
-#map{height:72vh;min-height:460px;flex:1;border:1px solid var(--rule2);border-radius:3px;z-index:0}
+#map{height:82vh;min-height:560px;flex:1;border:1px solid var(--rule2);border-radius:3px;z-index:0}
 .map-panel{width:330px;flex-shrink:0;border:1px solid var(--rule2);border-radius:3px;background:var(--card);
-  padding:16px 16px 20px;overflow-y:auto;height:72vh;min-height:460px;position:relative}
+  padding:16px 16px 20px;overflow-y:auto;height:82vh;min-height:560px;position:relative}
 .mp-empty{color:var(--ink3);font-size:13px;line-height:1.6;padding-top:8px}
 .mp-close{position:absolute;top:10px;right:12px;border:none;background:none;color:var(--ink3);font-size:15px;cursor:pointer}
 .mp-close:hover{color:var(--ink)}
@@ -337,7 +337,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .mp-ph{font-size:12px;font-weight:600;color:var(--build);margin-bottom:6px}
 .mp-nh{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;
   letter-spacing:.04em;margin:10px 0 4px}
-.mp-news{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto}
+.mp-news{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto}
 .mp-ni{font-size:12px;line-height:1.45}
 .mp-nd{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink3)}
 .mp-nt{color:var(--ink)}
@@ -357,6 +357,22 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
 .map-bar input:hover{border-color:var(--ink3)}
 .map-bar input:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.srch-box{position:relative}
+.srch-box>input{min-width:200px}
+.srch-sug{position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:1200;background:var(--card);
+  border:1px solid var(--rule2);border-radius:8px;max-height:300px;overflow-y:auto;display:none;
+  box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.srch-sug.on{display:block}
+.srch-sug button{display:block;width:100%;text-align:left;padding:8px 11px;border:none;background:none;
+  font-family:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--rule2);line-height:1.35}
+.srch-sug button:last-child{border-bottom:none}
+.srch-sug button:hover{background:var(--build-bg)}
+.srch-sug .sg-c{color:var(--ink3);font-size:10.5px}
+.srch-sug .sg-empty{padding:10px 11px;color:var(--ink3);font-size:12px}
+.sat-top input[type=search]{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rule2);
+  border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
+.sat-top input[type=search]:hover{border-color:var(--ink3)}
+.sat-top input[type=search]:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .mf-count{font-size:11px;color:var(--ink3);align-self:center;margin-left:auto;font-family:"IBM Plex Mono",monospace}
 .mf-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .mf-lbl{font-size:10px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;min-width:64px;padding-top:6px}
@@ -428,6 +444,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <div id="view-sat" class="hidden">
   <div class="sat-top">
     <div class="grp"><span>Dự án</span><select id="sat-proj"></select></div>
+    <div class="grp"><span>Tìm</span><input id="sat-search" type="search" placeholder="Tên dự án" autocomplete="off"></div>
     <span class="sat-cap" id="sat-cap"></span>
   </div>
   <div class="sat-wrap">
@@ -438,13 +455,13 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
     </div>
     <div class="map-panel" id="sat-panel"><div class="mp-empty">Chọn dự án để xem thông tin & tin tức.</div></div>
   </div>
-  <p class="sat-note" id="__satnote">Nguồn: <b>Copernicus Sentinel-2 (ESA)</b> · pixel 10m, mỗi tháng 1 ảnh ít mây nhất (không ghép). Ảnh <b>CLOUDY</b> (mây ≥30%) chỉ để tham khảo liên tục. Biến động màu phần lớn do <b>mùa vụ</b> — nên so cùng tháng năm khác thay vì tháng liền kề. Các tuyến (đường Gia Bình, đường sắt Cần Giờ / Hạ Long) chỉ là <b>một điểm đại diện</b> (nút giao/depot), không phải cả hành lang.</p>
 </div>
 
 <div id="view-map" class="hidden">
   <div class="map-bar">
     <div class="mf"><span>Vùng</span><select id="mf-region"></select></div>
     <div class="mf"><span>Tỉnh thành</span><select id="mf-prov"></select></div>
+    <div class="mf"><span>Tìm</span><div class="srch-box"><input id="map-search" type="search" placeholder="Tên dự án / hạ tầng" autocomplete="off"><div class="srch-sug" id="map-sug"></div></div></div>
     <span class="mf-count" id="mf-count"></span>
   </div>
   <div class="mf-row"><span class="mf-lbl">Hạ tầng</span><div class="mf-chips" id="mf-infra"></div></div>
@@ -453,7 +470,6 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
     <div id="map"></div>
     <div class="map-panel" id="map-panel"><div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div></div>
   </div>
-  <p class="sat-note">Dữ liệu <b>Cafeland</b> toàn quốc — lọc theo tỉnh · loại hạ tầng · loại dự án. 🔴 sân bay · tuyến màu theo loại · 🟢 dự án BĐS · 🟣 KCN (gộp cụm khi thu nhỏ). Bấm để xem chi tiết. © OpenStreetMap.</p>
 </div>
 
 </div>
@@ -1155,15 +1171,27 @@ function satPanel(tid){                         // bảng thông tin dự án b�
       +(p.prov?'<span class="mp-tag">'+esc(p.prov)+'</span>':'')+'</div>':'')+
     _mapProj(p.id);
 }
+const _norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/gi,'d').toLowerCase().trim();
+let _satTids=[];
+function _satFill(q){
+  const sel=document.getElementById('sat-proj'), nq=_norm(q);
+  const list=_satTids.filter(t=>!nq||_norm(satName(t)).includes(nq));
+  const cur=sel.value;
+  sel.innerHTML=list.length?list.map(t=>`<option value="${t}">${esc(satName(t))}</option>`).join('')
+                           :'<option value="">— không có dự án khớp —</option>';
+  if(list.map(String).includes(cur)) sel.value=cur; else if(list.length) sel.value=list[0];
+}
 function renderSat(){
   const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
   if(!sel.dataset.init){
-    const tids=Object.keys(SATELLITE).sort((a,b)=>a-b);
-    sel.innerHTML=tids.map(t=>`<option value="${t}">${esc(satName(t))}</option>`).join('');
+    _satTids=Object.keys(SATELLITE).sort((a,b)=>a-b);
+    _satFill('');
     sel.dataset.init='1';
     sel.onchange=()=>{slider.value=(SATELLITE[sel.value]||[]).length-1; drawSat();};
     slider.oninput=drawSat;
     slider.value=(SATELLITE[sel.value]||[]).length-1;
+    const ss=document.getElementById('sat-search');
+    if(ss) ss.oninput=()=>{_satFill(ss.value); slider.value=(SATELLITE[sel.value]||[]).length-1; drawSat();};
   }
   drawSat();
 }
@@ -1268,6 +1296,42 @@ function _chips(containerId, cats, sel, defaultOn){
     const c=b.dataset.c; (b.classList.toggle('on')) ? sel.add(c) : sel.delete(c); redrawMap();
   });
 }
+let _mapIdx=null;
+function _buildMapIdx(){
+  if(_mapIdx) return _mapIdx;
+  const ix=[];
+  CAF_LINES.forEach(l=>{ if(l.coords&&l.coords.length>1){const c=l.coords[Math.floor(l.coords.length/2)];
+    ix.push({n:l.title,lat:c[0],lng:c[1],z:12,kind:'infra',cat:l.cat,t:l.title,d:l.detail,m:{cat:l.cat,prov:l.prov,pid:l.pid}});}});
+  CAF_POINTS.forEach(p=>{ if(p.lat!=null)
+    ix.push({n:p.title,lat:p.lat,lng:p.lng,z:13,kind:'infra',cat:p.cat,t:p.title,d:p.detail,m:{cat:p.cat,prov:p.prov,pid:p.pid}});});
+  CAF_PROJECTS.forEach(d=>{ if(d.a!=null)
+    ix.push({n:d.t,lat:d.a,lng:d.o,z:14,kind:'proj',cat:d.cat,t:d.t,
+      d:d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''},
+      m:{cat:d.cat,prov:d.prov,pid:d.pid}});});
+  _mapIdx=ix; return ix;
+}
+function _mapGo(r){
+  document.getElementById('map-sug').classList.remove('on');
+  document.getElementById('map-search').value=r.n;
+  const sel=r.kind==='infra'?_infraSel:_projSel;           // bật loại để marker hiện
+  if(!sel.has(r.cat)){ sel.add(r.cat);
+    const b=document.querySelector('#'+(r.kind==='infra'?'mf-infra':'mf-proj')+' .mchip[data-c="'+CSS.escape(r.cat)+'"]');
+    if(b) b.classList.add('on');
+    redrawMap();
+  }
+  _map.setView([r.lat,r.lng], r.z, {animate:true});
+  showDetail(r.t, r.d, r.m);
+}
+function _mapSearch(q){
+  const box=document.getElementById('map-sug'), nq=_norm(q);
+  if(!nq){ box.classList.remove('on'); box.innerHTML=''; return; }
+  const hit=_buildMapIdx().filter(r=>_norm(r.n).includes(nq)).slice(0,15);
+  box.innerHTML=hit.length
+    ? hit.map((r,i)=>`<button data-i="${i}">${esc(r.n)}<div class="sg-c">${esc(r.cat||'')}${r.m&&r.m.prov?' · '+esc(r.m.prov):''}</div></button>`).join('')
+    : '<div class="sg-empty">Không tìm thấy</div>';
+  box.classList.add('on');
+  box.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>_mapGo(hit[i]));
+}
 function renderMap(){
   const el = document.getElementById('map');
   if(typeof L === 'undefined'){
@@ -1287,6 +1351,10 @@ function renderMap(){
     _chips('mf-proj', _uniqSort(CAF_PROJECTS.map(x=>x.cat)), _projSel, false);                     // dự án: tắt hết
     document.getElementById('mf-region').onchange=()=>{ fillProv(); redrawMap(); };
     document.getElementById('mf-prov').onchange=redrawMap;
+    const msr=document.getElementById('map-search');
+    msr.oninput=()=>_mapSearch(msr.value);
+    msr.onfocus=()=>{ if(msr.value) _mapSearch(msr.value); };
+    document.addEventListener('click',e=>{ if(!e.target.closest('.srch-box')) document.getElementById('map-sug').classList.remove('on'); });
   }
   redrawMap();
   setTimeout(()=>_map.invalidateSize(), 60);

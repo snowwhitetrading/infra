@@ -269,26 +269,39 @@ def progress_pct(text):
 RX_TMDT = re.compile(
     r"(?:tổng mức đầu tư|tổng vốn đầu tư|tổng vốn|vốn đầu tư|tổng mức|tmđt|mức đầu tư|kinh phí đầu tư)"
     r"[^.\d]{0,28}?(?:khoảng |hơn |gần |dự kiến |trên |lên (?:đến|tới) )?"
-    r"([\d.,]+)\s*(nghìn tỷ|tỷ đồng|tỷ|tỉ)\b", re.I)
+    r"([\d.,]+)\s*(triệu tỷ|nghìn tỷ|tỷ usd|tỉ usd|tỷ đô|triệu usd|triệu đô|tỷ đồng|tỷ|tỉ)", re.I)
+_USD_VND = 25400   # tỷ đồng cho mỗi tỷ USD (quy đổi thô để so sánh quy mô)
+
+
+def _parse_tmdt(s, unit):
+    try:
+        if re.match(r"^\d{1,3}(\.\d{3})+$", s):        # 16.000 / 147.370 -> dấu . là hàng nghìn
+            v = float(s.replace(".", ""))
+        else:
+            v = float(s.replace(".", "").replace(",", "."))   # 16,5 -> 16.5
+    except ValueError:
+        return None
+    if "triệu tỷ" in unit:
+        v *= 1_000_000
+    elif "nghìn tỷ" in unit:
+        v *= 1000
+    elif "tỷ usd" in unit or "tỉ usd" in unit or "tỷ đô" in unit:
+        v *= _USD_VND
+    elif "triệu usd" in unit or "triệu đô" in unit:
+        v *= _USD_VND / 1000
+    v = round(v)
+    return v if 50 <= v <= 5_000_000 else None         # loại số vô lý
 
 
 def extract_tmdt(text):
-    """Tổng mức đầu tư (TỶ ĐỒNG) nêu trong text; None nếu không có / vô lý. (Chỉ VND, bỏ USD.)"""
-    m = RX_TMDT.search(text or "")
-    if not m:
-        return None
-    s, unit = m.group(1), m.group(2).lower()
-    try:
-        if re.match(r"^\d{1,3}(\.\d{3})+$", s):        # 16.000 / 147.370 → dấu . là hàng nghìn
-            v = float(s.replace(".", ""))
-        else:
-            v = float(s.replace(".", "").replace(",", "."))   # 16,5 → 16.5
-    except ValueError:
-        return None
-    if "nghìn tỷ" in unit:
-        v *= 1000
-    v = round(v)
-    return v if 50 <= v <= 5_000_000 else None         # loại số vô lý
+    """Tổng mức đầu tư (TỶ ĐỒNG) LỚN NHẤT hợp lý nêu trong text; None nếu không có.
+    Lấy MAX vì TMĐT tổng dự án luôn lớn hơn con số từng hạng mục/đoạn/vốn năm."""
+    best = None
+    for m in RX_TMDT.finditer(text or ""):
+        v = _parse_tmdt(m.group(1), m.group(2).lower())
+        if v and (best is None or v > best):
+            best = v
+    return best
 
 
 def infer_type(stage, text):

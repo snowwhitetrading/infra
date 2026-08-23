@@ -520,8 +520,10 @@ def main():
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
         if not p.get("tmdt") and p.get("tmdtAuto"):                               # TMĐT thiếu → lấy từ tin (có nguồn)
-            p["tmdt"] = p["tmdtAuto"]
-            p["tmdtSrc"] = p.get("tmdtAutoSrc") or "theo tin"
+            floor = (p.get("tuCo") or 0) + (p.get("huyDong") or 0)                # TMĐT phải ≥ tự có + huy động
+            if p["tmdtAuto"] >= floor:                                            # nhỏ hơn → tin gán nhầm dự án khác (vd sân bay↔đường)
+                p["tmdt"] = p["tmdtAuto"]
+                p["tmdtSrc"] = p.get("tmdtAutoSrc") or "theo tin"
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

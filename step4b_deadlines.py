@@ -72,8 +72,8 @@ def run():
             if iv and (s.get("inv") is None or adate > s["inv"][0]):
                 s["inv"] = (adate, iv)                          # nhà đầu tư tư nhân (whitelist) mới nhất
             tv = extract_tmdt(blob)
-            if tv and (s["tmdt"] is None or adate > s["tmdt"][0]):
-                s["tmdt"] = (adate, tv, d.get("source", "?"))   # TMĐT (tỷ đồng) theo tin mới nhất
+            if tv and (s["tmdt"] is None or tv > s["tmdt"][1]):
+                s["tmdt"] = (adate, tv, d.get("source", "?"))   # TMĐT (tỷ đồng) LỚN NHẤT — tổng dự án, không phải hạng mục
 
     today = dt.date.today().strftime("%Y-%m")
     tids = set(dstmts) | set(sig)
