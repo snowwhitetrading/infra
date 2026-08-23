@@ -389,9 +389,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <div id="view-gantt">
 <div class="map-bar">
   <div class="mf"><span>Sắp xếp</span><select id="g-sort">
+    <option value="news" selected>Số lượng tin</option>
     <option value="sched">Tiến độ</option>
     <option value="cat">Loại hình</option>
-    <option value="news">Số lượng tin</option>
     <option value="owner">Đơn vị đầu tư</option>
   </select></div>
   <div class="mf"><span>Vùng</span><select id="g-region"></select></div>
@@ -867,7 +867,7 @@ function laneOf(mark, proj){
   return 'build';
 }
 
-let gRegion = '', gProv = '', _sortMode = 'sched', _q = '';   // vùng · tỉnh · sắp xếp · tìm
+let gRegion = '', gProv = '', _sortMode = 'news', _q = '';    // vùng · tỉnh · sắp xếp (mặc định số tin) · tìm
 const _NEWSN = {}; NEWSFLOW.forEach(n=>{ _NEWSN[n.pname] = (_NEWSN[n.pname]||0) + 1; });   // đếm tin/dự án
 const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late',
                     'đang thi công':'building','chưa thi công':'unknown'};
