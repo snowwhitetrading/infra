@@ -996,10 +996,10 @@ function sections(){                          // nhóm theo chế độ SẮP X�
   if(_sortMode==='cat')                       // theo LOẠI HÌNH
     return GROUPS.map(g=>({name:g.name, meta:g.meta, rows:rows.filter(p=>p.g===g.id).sort(_rowSort)}))
                  .filter(s=>s.rows.length);
-  if(_sortMode==='owner'){                     // theo ĐƠN VỊ ĐẦU TƯ
-    const os=[...new Set(rows.map(p=>p.owner||'(chưa rõ chủ đầu tư)'))].sort((a,b)=>a.localeCompare(b,'vi'));
-    return os.map(o=>({name:o, meta:'', rows:rows.filter(p=>(p.owner||'(chưa rõ chủ đầu tư)')===o).sort(_rowSort)}))
-             .filter(s=>s.rows.length);
+  if(_sortMode==='owner'){                     // theo ĐƠN VỊ ĐẦU TƯ: tập đoàn tư nhân trước, 'Nhà nước' cuối
+    const os=[...new Set(rows.map(p=>p.owner))]
+      .sort((a,b)=> (a==='Nhà nước')-(b==='Nhà nước') || a.localeCompare(b,'vi'));
+    return os.map(o=>({name:o, meta:'', rows:rows.filter(p=>p.owner===o).sort(_rowSort)})).filter(s=>s.rows.length);
   }
   if(_sortMode==='news')                       // theo SỐ LƯỢNG TIN (nhiều → ít)
     return [{name:'Xếp theo số lượng tin', meta:'nhiều → ít',

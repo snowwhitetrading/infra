@@ -49,31 +49,38 @@ MONGO_URI = mongo_uri()
 DB, COLL = "dc_commodity", "Infra_Project_Tracker"
 NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
-# Chuẩn hoá CHỦ ĐẦU TƯ (gộp trùng: MAI=Masterise, Sungroup×n, Vingroup/VinSpeed, Đèo Cả×n) — cho sort/lọc.
-OWNER_OVERRIDE = {11: "Masterise"}   # điền tay theo tin (vd Cảng HKQT Gia Bình do Masterise đầu tư)
+# CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
+OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup"}   # sửa tay: Cảng HKQT Gia Bình=Masterise · Cầu Cần Giờ=Vingroup
+_PRIVATE_OWNERS = [
+    (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
+    (re.compile(r"sun ?group|mặt trời"), "Sun Group"),
+    (re.compile(r"masterise|\bmai\b"), "Masterise"),
+    (re.compile(r"đèo cả"), "Đèo Cả"),
+    (re.compile(r"becamex"), "Becamex"),
+    (re.compile(r"geleximco"), "Geleximco"),
+    (re.compile(r"t ?& ?t|cienco ?-? ?4"), "T&T"),          # T&T và Cienco4 → chung T&T
+    (re.compile(r"tasco"), "Tasco"),
+    (re.compile(r"trung nam"), "Trung Nam"),
+    (re.compile(r"xuân trường"), "Xuân Trường"),
+    (re.compile(r"cường thuận"), "Cường Thuận"),
+    (re.compile(r"đức long"), "Đức Long"),
+    (re.compile(r"thaco|trường hải"), "Thaco"),
+    (re.compile(r"him lam"), "Him Lam"),
+    (re.compile(r"ecopark"), "Ecopark"),
+    (re.compile(r"sovico"), "Sovico"),
+    (re.compile(r"\bipp\b|hạnh nguyễn"), "IPP Group"),
+    (re.compile(r"hateco"), "Hateco"),
+    (re.compile(r"đại dũng"), "Đại Dũng"),
+    (re.compile(r"\bmsc\b|maersk|\btil\b"), "MSC/Maersk"),
+]
 
 
 def canon_owner(o):
-    if not o:
-        return ""
-    low = o.lower()
-    if "masterise" in low or re.match(r"^mai\b", low):
-        return "Masterise"
-    if "sungroup" in low or "sun group" in low or "mặt trời" in low:
-        return "Sun Group"
-    if "vinspeed" in low or "vingroup" in low or re.search(r"\bvic\b", low) or low.startswith("vin"):
-        return "Vingroup"
-    if "đèo cả" in low:
-        return "Đèo Cả"
-    if "becamex" in low:
-        return "Becamex"
-    if low.startswith("acv"):
-        return "ACV"
-    if "vinaconex" in low:
-        return "Vinaconex"
-    s = re.split(r"\s*[·(]", o)[0].strip()                                   # bỏ đuôi qualifier
-    s = re.sub(r"^(liên danh|cty tnhh|ctcp|công ty|tập đoàn)\s+", "", s, flags=re.I).strip()
-    return s
+    low = (o or "").lower()
+    for rx, nm in _PRIVATE_OWNERS:
+        if rx.search(low):
+            return nm
+    return "Nhà nước"                                       # còn lại → Nhà nước
 
 
 SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan": 4,
@@ -493,8 +500,8 @@ def main():
     projects = projects + build_auto_rows(c, projects)
     for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
-        p["owner"] = (OWNER_OVERRIDE.get(p.get("id")) or canon_owner(p.get("owner", ""))
-                      or p.get("ownerAuto", ""))                                    # override > LLM > máy(Nhà nước)
+        raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("owner") or p.get("ownerAuto")   # tín hiệu tốt nhất
+        p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]
