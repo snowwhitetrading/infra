@@ -32,8 +32,10 @@ POOL_DB, POOL_COLL = "dc_news", "unmatched_raw"   # do step1 để lại (tin ch
 # Hạ tầng giao thông + công trình công cộng/thương mại (KHÔNG gồm BĐS nhà ở & công nghiệp)
 TYPE = (r"(cao tốc|đường sắt tốc độ cao|đường sắt|tàu điện|đường vành đai|vành đai|sân bay|"
         r"cảng hàng không|cảng biển|cảng|metro|tuyến metro|hầm đường bộ|"
-        r"trung tâm hội nghị|sân vận động|nhà thi đấu|khu liên hợp thể thao|"
-        r"nhà hát|cung văn hoá|cung văn hóa|quảng trường|trung tâm triển lãm)")   # bỏ 'cầu' (dính nhu/yêu cầu)
+        r"đại lộ|trục cảnh quan|đường ven sông|đường ven biển|đường trên cao|nút giao|"
+        r"trung tâm hành chính|khu hành chính|trung tâm chính trị|"
+        r"công viên|trung tâm hội nghị|sân vận động|nhà thi đấu|khu liên hợp thể thao|"
+        r"nhà hát|cung văn hoá|cung văn hóa|quảng trường|trung tâm triển lãm|bảo tàng)")   # bỏ 'cầu' (dính nhu/yêu cầu)
 # tên hợp lệ: có nối địa danh (Châu Đốc - Cần Thơ) HOẶC danh từ riêng + số/riêng (Đông Hải 1)
 NAME = (r"([A-ZĐÀ-Ỹ][\wÀ-ỹ]+(?:\s+[A-ZĐÀ-Ỹ0-9][\wÀ-ỹ]*)*"
         r"(?:\s*[-–]\s*[A-ZĐÀ-Ỹ][\wÀ-ỹ]+(?:\s+[\wÀ-ỹ]+)*)*)")
