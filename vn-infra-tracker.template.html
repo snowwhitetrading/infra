@@ -369,6 +369,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .srch-sug button:hover{background:var(--build-bg)}
 .srch-sug .sg-c{color:var(--ink3);font-size:10.5px}
 .srch-sug .sg-empty{padding:10px 11px;color:var(--ink3);font-size:12px}
+.hl-ping{animation:hlping 1.1s ease-out infinite}
+@keyframes hlping{0%{stroke-width:3;opacity:.95}70%{stroke-width:11;opacity:0}100%{opacity:0}}
+.hl-pop .leaflet-popup-content{font-size:12.5px;margin:8px 12px}
 .sat-top input[type=search]{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rule2);
   border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
 .sat-top input[type=search]:hover{border-color:var(--ink3)}
@@ -1236,7 +1239,7 @@ function showDetail(title, detail, meta){
     '<h3 class="mp-title">'+esc(title)+'</h3>'+
     (tags?'<div class="mp-tags">'+tags+'</div>':'')+
     (meta&&meta.pid?_mapProj(meta.pid):'')+
-    (rows?'<div class="mp-src">nguồn Cafeland</div>'+rows
+    (rows?rows
         :(meta&&meta.pid?'':'<div class="mp-empty">Chưa có thông tin chi tiết.</div>'));
 }
 // Mục "dự án đang theo dõi" (khớp tên với tab Tiến độ): đánh giá tiến độ + thông tin + Dòng tin
@@ -1319,7 +1322,13 @@ function _mapGo(r){
     if(b) b.classList.add('on');
     redrawMap();
   }
-  _map.setView([r.lat,r.lng], r.z, {animate:true});
+  const z=Math.max(r.z, r.kind==='proj'?16:14);            // zoom sâu để TÁCH cụm marker
+  _map.setView([r.lat,r.lng], z, {animate:true});
+  if(!_L.hl) _L.hl=L.layerGroup().addTo(_map);
+  _L.hl.clearLayers();                                       // ghim nổi bật đúng vị trí (nổi trên cụm)
+  L.circleMarker([r.lat,r.lng],{radius:18,color:'#e11d48',weight:3,opacity:.9,fill:false,className:'hl-ping'}).addTo(_L.hl);
+  L.popup({closeButton:true,autoClose:false,closeOnClick:false,className:'hl-pop'})
+   .setLatLng([r.lat,r.lng]).setContent('<b>'+esc(r.n)+'</b>').openOn(_map);
   showDetail(r.t, r.d, r.m);
 }
 function _mapSearch(q){
