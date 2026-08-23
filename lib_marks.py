@@ -40,6 +40,11 @@ RX_DIRECTIVE = re.compile(
 RX_CONTRACT = re.compile(r"ký hợp đồng|hợp đồng dự án|trúng thầu|chọn nhà (thầu|đầu tư)", re.I)
 RX_START = re.compile(r"khởi công|động thổ|bấm nút|khởi động", re.I)
 RX_DONE = re.compile(r"hoàn thành|khánh thành|vận hành|về đích|thông xe|cất nóc|đưa vào khai thác", re.I)
+# 'yêu cầu/dự kiến/chốt hoàn thành...' = HẠN/chỉ đạo, KHÔNG phải đã xong → mark 'ms', không phải 'done'.
+RX_DEADLINE = re.compile(
+    r"(yêu cầu|chốt|dự kiến|kế hoạch|phấn đấu|mục tiêu|quyết tâm|cam kết|đề nghị|chỉ đạo|"
+    r"hạn|trước ngày|trước tháng|trong năm|đặt mục tiêu)\s+\S*\s{0,3}\S{0,18}"
+    r"(hoàn thành|thông xe|về đích|khánh thành|đưa vào|vận hành)", re.I)
 
 # CHỈ giữ CỘT MỐC TIẾN ĐỘ rời rạc: khởi công, hoàn thành hạng mục, GPMB, pháp lý,
 # đấu thầu/hợp đồng/góp vốn. Whitelist hẹp + blacklist tin PR/bán hàng/tài chính DN.
@@ -120,7 +125,8 @@ def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
     if RX_START.search(blob):
         return "start"
-    if RX_DONE.search(blob) or stage in ("hoàn thành", "khai thác"):
+    # 'done' chỉ khi ĐÃ xong thật; 'yêu cầu/dự kiến/chốt hoàn thành' (hạn) → 'ms'
+    if (RX_DONE.search(blob) or stage in ("hoàn thành", "khai thác")) and not RX_DEADLINE.search(blob):
         return "done"
     return "ms"
 
