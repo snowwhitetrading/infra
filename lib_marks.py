@@ -129,7 +129,7 @@ def infer_tier(text):
 RX_DMY = re.compile(r"\b(\d{1,2})[/-](\d{1,2})[/-](20\d{2})\b")            # 15/1/2026
 RX_MY = re.compile(r"(?:tháng\s*)?\b(\d{1,2})[/-](20\d{2})\b", re.I)       # tháng 1/2026
 RX_Q = re.compile(r"quý\s*(iv|iii|ii|i|[1-4])\s*[/-]?\s*(20\d{2})", re.I)  # quý IV/2026
-RX_YP = re.compile(r"(cuối|đầu|giữa)\s*năm\s*(20\d{2})", re.I)             # cuối năm 2026
+RX_YP = re.compile(r"(cuối|đầu|giữa)\s*(?:năm\s*)?(20\d{2})", re.I)        # cuối năm 2026 / cuối 2026
 _QMO = {"i": 2, "ii": 5, "iii": 8, "iv": 11, "1": 2, "2": 5, "3": 8, "4": 11}
 _YPMO = {"đầu": 2, "giữa": 6, "cuối": 12}
 
@@ -189,14 +189,21 @@ def deadline_month(text, pub_month):
     return fut[0] if fut else ""                                   # hạn gần nhất
 
 
-# Tín hiệu NHỊP ĐỘ từ tin (để grounding sched: chỉ giữ chậm/vượt/đúng khi TIN NÓI RÕ).
-RX_DELAY = re.compile(r"chậm tiến độ|chậm trễ|chậm so|lùi tiến độ|lùi (thời điểm|mốc|khởi công|hoàn thành|khai thác|tiến độ)|"
-                      r"gia hạn|trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|đội vốn|vướng (mặt bằng|gpmb)|đình trệ|ì ạch|"
-                      r"dở dang|nguy cơ chậm|chưa thể hoàn thành|quá hạn|thi công ì|nợ tiến độ", re.I)
-RX_AHEAD = re.compile(r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn)|vượt kế hoạch|"
-                      r"hoàn thành sớm|trước (thời hạn|hạn|kế hoạch)|rút ngắn (tiến độ|thời gian)|thần tốc", re.I)
-RX_ONTRACK = re.compile(r"đúng tiến độ|đảm bảo tiến độ|bám sát (tiến độ|kế hoạch)|đúng kế hoạch|đúng hẹn|"
-                        r"đáp ứng tiến độ|theo đúng tiến độ|giữ vững tiến độ", re.I)
+# Tín hiệu NHỊP ĐỘ từ tin (để đánh giá chậm/vượt/đúng khi TIN NÓI RÕ — mở rộng để phủ nhiều cách diễn đạt).
+RX_DELAY = re.compile(
+    r"chậm tiến độ|chậm trễ|chậm so|chậm nhất|thi công chậm|lùi (tiến độ|thời điểm|mốc|ngày|khởi công|hoàn thành|khai thác|thông xe)|"
+    r"gia hạn|trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|đội vốn|đội chi phí|vướng (mặt bằng|gpmb|giải phóng)|đình trệ|ì ạch|"
+    r"dở dang|nguy cơ (chậm|vỡ tiến độ)|vỡ tiến độ|chưa thể hoàn thành|quá hạn|nợ tiến độ|thi công (ì|cầm chừng)|"
+    r"ngừng thi công|tạm dừng thi công|đắp chiếu|khó (về đích|hoàn thành|kịp)|không kịp|chưa hẹn ngày|"
+    r"mòn mỏi|bế tắc|ách tắc|chưa biết ngày (về đích|hoàn thành)|thất hứa|trượt tiến độ", re.I)
+RX_AHEAD = re.compile(
+    r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn|so)|vượt kế hoạch|vượt mốc tiến độ|"
+    r"hoàn thành sớm|xong sớm|trước (thời hạn|hạn|kế hoạch|tiến độ)|rút ngắn (tiến độ|thời gian)|thần tốc|"
+    r"băng băng về đích|đích sớm", re.I)
+RX_ONTRACK = re.compile(
+    r"đúng tiến độ|đảm bảo tiến độ|bám sát (tiến độ|kế hoạch)|đúng kế hoạch|đúng hẹn|đáp ứng tiến độ|"
+    r"theo đúng tiến độ|giữ vững tiến độ|đúng cam kết|hoàn thành đúng (hạn|hẹn|kế hoạch|tiến độ)|đúng mốc|"
+    r"đảm bảo (hoàn thành|về đích) đúng", re.I)
 # % khối lượng/tiến độ đã đạt (để so với kỳ vọng theo timeline)
 RX_PCT = re.compile(r"(?:đạt|hoàn thành|thi công|thực hiện|tiến độ|khối lượng|sản lượng)\s*(?:khoảng\s*|hơn\s*|gần\s*)?"
                     r"(\d{1,3})\s*%|(\d{1,3})\s*%\s*(?:khối lượng|kế hoạch|tiến độ|hoàn thành|giá trị hợp đồng|sản lượng)",

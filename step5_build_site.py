@@ -49,6 +49,32 @@ MONGO_URI = mongo_uri()
 DB, COLL = "dc_commodity", "Infra_Project_Tracker"
 NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
+# Chuẩn hoá CHỦ ĐẦU TƯ (gộp trùng: MAI=Masterise, Sungroup×n, Vingroup/VinSpeed, Đèo Cả×n) — cho sort/lọc.
+OWNER_OVERRIDE = {11: "Masterise"}   # điền tay theo tin (vd Cảng HKQT Gia Bình do Masterise đầu tư)
+
+
+def canon_owner(o):
+    if not o:
+        return ""
+    low = o.lower()
+    if "masterise" in low or re.match(r"^mai\b", low):
+        return "Masterise"
+    if "sungroup" in low or "sun group" in low or "mặt trời" in low:
+        return "Sun Group"
+    if "vinspeed" in low or "vingroup" in low or re.search(r"\bvic\b", low) or low.startswith("vin"):
+        return "Vingroup"
+    if "đèo cả" in low:
+        return "Đèo Cả"
+    if "becamex" in low:
+        return "Becamex"
+    if low.startswith("acv"):
+        return "ACV"
+    if "vinaconex" in low:
+        return "Vinaconex"
+    s = re.split(r"\s*[·(]", o)[0].strip()                                   # bỏ đuôi qualifier
+    s = re.sub(r"^(liên danh|cty tnhh|ctcp|công ty|tập đoàn)\s+", "", s, flags=re.I).strip()
+    return s
+
 
 SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan": 4,
                "pq_tram": 5, "rach_chiec": 6, "gb_road_hn": 7, "gb_road_bn": 8,
@@ -410,7 +436,7 @@ def build_auto_rows(client, projects):
         if tid not in nf:                     # dự án chưa có tin → vẫn hiện (đang theo dõi)
             loc = reg_loc.get(p["id"], "")
             auto.append({"id": tid, "g": categorize(p["name"], loc), "name": p["name"],
-                         "status": "theo dõi", "owner": p.get("group", ""), "loc": loc,
+                         "status": "theo dõi", "owner": "", "loc": loc,
                          "phases": [], "marks": [], "items": [], "huyDong": 0, "capex": [],
                          "note": "Chưa có tin cập nhật — đang theo dõi"})
             continue
@@ -430,7 +456,7 @@ def build_auto_rows(client, projects):
         end = max(last, today)
         auto.append({
             "id": tid, "g": categorize(p["name"], loc), "name": p["name"], "status": "thi công",
-            "owner": p.get("group", ""), "loc": loc,
+            "owner": "", "loc": loc,
             "phases": [{"kind": "build", "from": first, "to": end,
                         "state": "ongoing", "doneTo": last}],
             "marks": marks[-30:], "items": [], "huyDong": 0, "capex": [],
@@ -467,6 +493,7 @@ def main():
     projects = projects + build_auto_rows(c, projects)
     for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
+        p["owner"] = OWNER_OVERRIDE.get(p.get("id")) or canon_owner(p.get("owner", ""))   # chuẩn hoá CĐT
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

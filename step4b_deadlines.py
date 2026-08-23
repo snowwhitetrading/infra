@@ -75,17 +75,22 @@ def run():
         marks = [m for m in p.get("marks", []) if m.get("tier") != "deadline"]
         phases = p.get("phases", [])
         latest = None
+        froms = [ph["from"] for ph in phases if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
         if dstmts.get(tid):
             adate, dl, src = sorted(dstmts[tid])[-1]                 # tin mới nhất nêu hạn
-            latest = dl
-            marks.append({"date": dl, "type": "ms", "tier": "deadline",
-                          "label": "Hạn dự kiến hoàn thành (theo tin)", "src": f"{src} · {adate[:7]}"})
-            builds = [ph for ph in phases if ph.get("kind") == "build"]
-            if builds and dl > (builds[-1].get("from") or "0"):
-                builds[-1]["to"] = dl
-                if dl <= today:
-                    builds[-1]["state"] = "ongoing"
-            n_dl += 1
+            # BỎ hạn phi lý: hạn hoàn thành < lúc KHỞI CÔNG (ước tính sớm cũ, đã lỗi thời — vd sân bay Gia Bình 2025-12).
+            if froms and dl < min(froms):
+                pass
+            else:
+                latest = dl
+                marks.append({"date": dl, "type": "ms", "tier": "deadline",
+                              "label": "Hạn dự kiến hoàn thành (theo tin)", "src": f"{src} · {adate[:7]}"})
+                builds = [ph for ph in phases if ph.get("kind") == "build"]
+                if builds and dl > (builds[-1].get("from") or "0"):
+                    builds[-1]["to"] = dl
+                    if dl <= today:
+                        builds[-1]["state"] = "ongoing"
+                n_dl += 1
 
         # ── ĐÁNH GIÁ paceAuto (đa tín hiệu, ưu tiên bằng chứng mạnh) ──
         done_after = latest and any((m.get("date") or "") >= latest and
