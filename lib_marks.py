@@ -73,7 +73,10 @@ RX_NOISE = re.compile(
     r"thương hiệu|nghỉ dưỡng|du lịch|đường bay|đón (chuyến bay|tàu bay)|"
     r"room tín dụng|năng lực tài chính|hưởng lợi|đẹp nhất|sức hút|"
     r"tai nạn|va chạm|lật xe|tông|bốc cháy|cháy xe|tử vong|thương vong|"
-    r"bắt tạm giam|bạo hành|khởi tố|truy tố|trộm|cướp|đánh nhau|bạo lực",
+    r"bắt tạm giam|bạo hành|khởi tố|truy tố|trộm|cướp|đánh nhau|bạo lực|"
+    r"cảnh sát giao thông|csgt|xử phạt|phạt nguội|nồng độ cồn|vi phạm (giao thông|tốc độ|nồng độ|trật tự)|"
+    r"tuần tra|kiểm soát tải trọng|xe quá tải|phân luồng giao thông|đua xe|"
+    r"cướp giật|ma túy|đánh bạc|lừa đảo",
     re.I)
 
 

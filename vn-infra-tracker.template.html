@@ -269,12 +269,13 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .tab:hover{color:var(--ink)}
 .tab[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--build)}
 .tab:focus-visible{outline:2px solid var(--build);outline-offset:2px}
-.nf-filters{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
-.nf-filters .grp{display:flex;align-items:center;gap:6px}
+.nf-filters{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:14px}
+.nf-filters .grp{display:flex;flex-direction:column;gap:5px;flex:1 1 190px;min-width:0}
 .nf-filters .grp>span{font-size:11px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;
   text-transform:uppercase;letter-spacing:.08em}
-.nf-filters select{font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--rule2);
-  background:var(--card);color:var(--ink);border-radius:2px}
+.nf-filters select{font-family:inherit;font-size:12px;padding:6px 8px;border:1px solid var(--rule2);
+  background:var(--card);color:var(--ink);border-radius:2px;width:100%;min-width:0;
+  text-overflow:ellipsis}
 .nf-count{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink3)}
 .nf-list{display:flex;flex-direction:column;max-width:920px}
 .nf-item{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:12px 4px;border-top:1px solid var(--rule)}
@@ -301,6 +302,9 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .sat-top select{font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--rule2);background:var(--card);color:var(--ink);border-radius:2px}
 .sat-cap{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink2)}
 .sat-cap .cloudy{color:var(--alert);font-weight:500}
+.sat-wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.sat-left{flex:1 1 420px;min-width:0;max-width:640px}
+@media(max-width:760px){.sat-left{max-width:none}}
 .sat-stage{width:100%;max-width:620px;aspect-ratio:1/1;background:var(--sunk);border:1px solid var(--rule2);
   border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .sat-stage img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto}
@@ -375,7 +379,6 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <header>
   <p class="eyebrow">Cập nhật tự động từ báo chí · vệ tinh · bản đồ</p>
   <h1>Theo dõi tiến độ dự án hạ tầng</h1>
-  <p class="sub">Ba lớp thời gian: <b>giải phóng mặt bằng</b>, <b>thi công</b>, <b>hạn hoàn thành</b>. Mốc thời gian là <b>ngày sự kiện</b>, không phải ngày đăng tin.</p>
 </header>
 
 
@@ -389,7 +392,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 <div id="view-gantt">
 <div class="map-bar">
   <div class="mf"><span>Sắp xếp</span><select id="g-sort">
-    <option value="news" selected>Số lượng tin</option>
+    <option value="news" selected>Số lượng tin tức</option>
     <option value="sched">Tiến độ</option>
     <option value="cat">Loại hình</option>
     <option value="owner">Đơn vị đầu tư</option>
@@ -427,9 +430,14 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
     <div class="grp"><span>Dự án</span><select id="sat-proj"></select></div>
     <span class="sat-cap" id="sat-cap"></span>
   </div>
-  <div class="sat-stage"><img id="sat-img" alt="Ảnh vệ tinh công trường" loading="lazy"></div>
-  <input type="range" id="sat-slider" min="0" max="0" value="0" step="1">
-  <div class="sat-ticks" id="sat-ticks"></div>
+  <div class="sat-wrap">
+    <div class="sat-left">
+      <div class="sat-stage"><img id="sat-img" alt="Ảnh vệ tinh công trường" loading="lazy"></div>
+      <input type="range" id="sat-slider" min="0" max="0" value="0" step="1">
+      <div class="sat-ticks" id="sat-ticks"></div>
+    </div>
+    <div class="map-panel" id="sat-panel"><div class="mp-empty">Chọn dự án để xem thông tin & tin tức.</div></div>
+  </div>
   <p class="sat-note" id="__satnote">Nguồn: <b>Copernicus Sentinel-2 (ESA)</b> · pixel 10m, mỗi tháng 1 ảnh ít mây nhất (không ghép). Ảnh <b>CLOUDY</b> (mây ≥30%) chỉ để tham khảo liên tục. Biến động màu phần lớn do <b>mùa vụ</b> — nên so cùng tháng năm khác thay vì tháng liền kề. Các tuyến (đường Gia Bình, đường sắt Cần Giờ / Hạ Long) chỉ là <b>một điểm đại diện</b> (nút giao/depot), không phải cả hành lang.</p>
 </div>
 
@@ -1121,7 +1129,6 @@ function renderNews(){
   const pages=Math.max(1, Math.ceil(items.length/NF_PER));
   if(nfPage>=pages) nfPage=0;
   const page=items.slice(nfPage*NF_PER, nfPage*NF_PER+NF_PER);
-  document.getElementById('nf-count').textContent=items.length+' tin';
   document.getElementById('nf-list').innerHTML = page.length ? page.map(n=>`<div class="nf-item">
     <div class="nf-date">${nfDate(n.date)}${nfTime(n)?`<span class="nf-hm">${nfTime(n)}</span>`:''}</div>
     <div class="nf-body">
@@ -1141,6 +1148,15 @@ function renderNews(){
 }
 /* ---------- satellite (tab Vệ tinh) ---------- */
 function satName(tid){const p=P.find(x=>x.id==tid);return p?p.name:('Dự án '+tid);}
+function satPanel(tid){                         // bảng thông tin dự án bên phải (đồng bộ với Bản đồ/Tiến độ)
+  const el=document.getElementById('sat-panel'); if(!el) return;
+  const p=P.find(x=>x.id==tid);
+  if(!p){ el.innerHTML='<div class="mp-empty">Chọn dự án để xem thông tin & tin tức.</div>'; return; }
+  el.innerHTML='<h3 class="mp-title">'+esc(p.name)+'</h3>'+
+    ((p.owner||p.prov)?'<div class="mp-tags">'+(p.owner?'<span class="mp-tag">'+esc(p.owner)+'</span>':'')
+      +(p.prov?'<span class="mp-tag">'+esc(p.prov)+'</span>':'')+'</div>':'')+
+    _mapProj(p.id);
+}
 function renderSat(){
   const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
   if(!sel.dataset.init){
@@ -1166,6 +1182,7 @@ function drawSat(){
   cap.innerHTML=`Tháng ${mo}/${y}${capd} · mây ${m.cloud}%`+(m.ok?'':' <span class="cloudy">CLOUDY</span>');
   const tk=document.getElementById('sat-ticks');
   tk.innerHTML=arr.length?`<span>${arr[0].month}</span><span>${arr[arr.length-1].month}</span>`:'';
+  satPanel(sel.value);
 }
 /* ---------- bản đồ (tab Bản đồ) ---------- */
 let _map = null; const _L = {};
@@ -1201,7 +1218,8 @@ function _mapProj(pid){
   const p = P.find(x=>x.id===pid); if(!p) return '';
   const news = NEWSFLOW.filter(n=>n.pname===p.name)
     .sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
-  const sched = p.sched?`<div class="schedbox s-${SCHED_CLS[p.sched]}" style="margin:6px 0 8px"><b>${esc(p.sched)}.</b> ${esc(p.schedWhy||'')}</div>`:'';
+  const sc = schedOf(p);
+  const sched = `<div class="schedbox s-${SCHED_CLS2[sc]}" style="margin:6px 0 8px"><b>${esc(sc)}.</b> ${esc(p.paceWhy||'')}</div>`;
   const info = [['Trạng thái',p.status],['Tổng mức đầu tư',p.tmdt?nf(p.tmdt)+' tỷ':''],
                 ['Chủ đầu tư',p.owner],['Địa điểm',p.loc]]
     .filter(([k,v])=>v).map(([k,v])=>`<div class="mp-row"><span class="mp-k">${esc(k)}</span><span class="mp-v">${esc(String(v))}</span></div>`).join('');
@@ -1237,7 +1255,6 @@ function redrawMap(){
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
     _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||['📍','#64748b'])})
       .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov,pid:d.pid}))); np++; }});
-  document.getElementById('mf-count').textContent = ni+' hạ tầng · '+np+' dự án';
 }
 const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
 function fillProv(){
