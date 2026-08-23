@@ -126,6 +126,36 @@ def infer_tier(text):
     return "company"
 
 
+RX_DMY = re.compile(r"\b(\d{1,2})[/-](\d{1,2})[/-](20\d{2})\b")            # 15/1/2026
+RX_MY = re.compile(r"(?:tháng\s*)?\b(\d{1,2})[/-](20\d{2})\b", re.I)       # tháng 1/2026
+RX_Q = re.compile(r"quý\s*(iv|iii|ii|i|[1-4])\s*[/-]?\s*(20\d{2})", re.I)  # quý IV/2026
+RX_YP = re.compile(r"(cuối|đầu|giữa)\s*năm\s*(20\d{2})", re.I)             # cuối năm 2026
+_QMO = {"i": 2, "ii": 5, "iii": 8, "iv": 11, "1": 2, "2": 5, "3": 8, "4": 11}
+_YPMO = {"đầu": 2, "giữa": 6, "cuối": 12}
+
+
+def event_month(text, pub_month):
+    """Suy THÁNG SỰ KIỆN (YYYY-MM) từ ngày rõ trong text; CHỈ nhận mốc ≤ tháng đăng
+    (sự kiện quá khứ/hiện tại — loại ngày tương lai vì đó là HẠN). Không có → '' (dùng tháng đăng)."""
+    if not text or len(pub_month) < 7:
+        return ""
+    c = []
+    for m in RX_DMY.finditer(text):
+        mo = int(m.group(2))
+        if 1 <= mo <= 12:
+            c.append(f"{m.group(3)}-{mo:02d}")
+    for m in RX_MY.finditer(text):
+        mo = int(m.group(1))
+        if 1 <= mo <= 12:
+            c.append(f"{m.group(2)}-{mo:02d}")
+    for m in RX_Q.finditer(text):
+        c.append(f"{m.group(2)}-{_QMO[m.group(1).lower()]:02d}")
+    for m in RX_YP.finditer(text):
+        c.append(f"{m.group(2)}-{_YPMO[m.group(1).lower()]:02d}")
+    past = [x for x in c if x <= pub_month]        # chỉ mốc đã tới (loại hạn tương lai)
+    return max(past) if past else ""               # gần tháng đăng nhất = sự kiện đang được thuật
+
+
 def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
     intent = RX_INTENT.search(blob)      # đề xuất/dự kiến/sắp... + mốc = CHƯA xảy ra → 'ms'
