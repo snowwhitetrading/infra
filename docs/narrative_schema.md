@@ -32,8 +32,16 @@ Bỏ dự án thuần "chuẩn bị đầu tư" đã đủ (không có tiến đ
 ```
 
 ## Quy tắc (bắt buộc)
-- **sched** không để trống nếu có tin tiến độ: lỡ mốc/gia hạn/đội vốn/vướng MB kéo dài → chậm;
-  về đích sớm → vượt; bám sát lịch → đúng. Chỉ '' khi thuần chuẩn bị đầu tư.
+- **sched — PHẢI CÓ CƠ SỞ, TUYỆT ĐỐI KHÔNG BỊA:**
+  - `chậm tiến độ` khi TIN nêu rõ lỡ mốc / gia hạn / lùi tiến độ / vướng mặt bằng kéo dài / đội vốn.
+  - `vượt tiến độ` khi TIN nêu về đích sớm / vượt kế hoạch.
+  - `đúng tiến độ` CHỈ khi có HẠN/KẾ HOẠCH **CÓ NGUỒN** và tin cho thấy bám sát — **KHÔNG dùng làm mặc định**.
+  - `chưa đánh giá được` khi KHÔNG có hạn/kế hoạch có nguồn để đối chiếu (thà nói không biết còn hơn phán bừa "đúng").
+  - `''` chỉ khi thuần chuẩn bị đầu tư.
+- **HẠN (`to`) PHẢI CÓ NGUỒN nếu dùng để đánh giá:** đặt `to` = tháng cụ thể CHỈ khi TIN nêu hạn,
+  VÀ kèm 1 mark `tier:'directive'`/`'company'` có `src` tại tháng đó (để hạn "có căn cứ"). Nếu tin KHÔNG
+  nêu hạn → **ĐỪNG bịa tháng chính xác**; ước lượng thô + `note` ghi "ước lượng, chưa có nguồn", KHÔNG kèm
+  mark hạn (thanh sẽ hiện `~`), và sched = `chưa đánh giá được`. Web tự phát hiện "⚠ quá hạn" CHỈ khi hạn có nguồn.
 - **items ≥2 hạng mục** khi đã thi công (GPMB · thi công chính · cầu/hầm/nhà ga/khán đài…), mỗi cái có `prog`.
 - **marks 4-8 mốc chính**, mỗi mốc có `src` (báo + tháng). Nhãn VIẾT LẠI gọn, không chép tiêu đề thô.
 - **phases**: ≥1 build từ khởi công → hạn hoàn thành (tìm trong tin; không có thì ước lượng theo loại

@@ -940,9 +940,11 @@ function _overdueMonth(proj){
   const marks = [];
   const collect = o => (o.marks||[]).forEach(m=>marks.push(m));
   collect(proj); (proj.items||[]).forEach(collect);
+  const anchored = new Set(marks.filter(m=>m.src).map(m=>m.date));   // ngày HẠN CÓ NGUỒN
   let m = null;
   const scan = phs => (phs||[]).forEach(ph=>{
-    if(ph.state==='ongoing' && ph.to && toY(ph.to) < TODAY){
+    // CHỈ tính quá hạn khi HẠN CÓ NGUỒN (anchored) — KHÔNG phán trên hạn ước lượng/bịa của LLM.
+    if(ph.state==='ongoing' && ph.to && toY(ph.to) < TODAY && anchored.has(ph.to)){
       // có tin XÁC NHẬN (mark actual / done) tại-hoặc-sau hạn → dự án đã đi tiếp, KHÔNG tính quá hạn
       const confirmed = marks.some(mk => mk.date && mk.date >= ph.to && (mk.tier==='actual' || mk.type==='done'));
       if(!confirmed && (!m || ph.to < m)) m = ph.to;
