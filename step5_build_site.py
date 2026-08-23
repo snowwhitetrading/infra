@@ -519,6 +519,9 @@ def main():
         raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("owner") or p.get("ownerAuto")   # tín hiệu tốt nhất
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
+        if not p.get("tmdt") and p.get("tmdtAuto"):                               # TMĐT thiếu → lấy từ tin (có nguồn)
+            p["tmdt"] = p["tmdtAuto"]
+            p["tmdtSrc"] = p.get("tmdtAutoSrc") or "theo tin"
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

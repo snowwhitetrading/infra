@@ -971,16 +971,15 @@ function detailHTML(p){
       <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>
     <div class="dgrid" style="margin-top:20px">
     <div>
-      <p class="dh">Vốn — Phụ lục I (tỷ đồng)</p>
+      ${(p.tmdt||p.tmdtDc||p.tuCo||p.huyDong)?`<p class="dh">Vốn (tỷ đồng)</p>
       <table class="fin">
-        ${p.tmdt?`<tr><td>Tổng mức đầu tư</td><td>${nf(p.tmdt)}</td></tr>`:''}
+        ${p.tmdt?`<tr><td>Tổng mức đầu tư${p.tmdtSrc?` <span class="cap">(${esc(p.tmdtSrc)})</span>`:''}</td><td>${nf(p.tmdt)}</td></tr>`:''}
         ${p.tmdtDc?`<tr><td>TMĐT điều chỉnh <span class="cap">(chưa duyệt)</span></td><td>${nf(p.tmdtDc)}</td></tr>`:''}
         ${p.tuCo?`<tr><td>Vốn tự có</td><td>${nf(p.tuCo)}</td></tr>`:''}
-        <tr><td>Vốn huy động</td><td>${nf(p.huyDong)}</td></tr>
+        ${p.huyDong?`<tr><td>Vốn huy động</td><td>${nf(p.huyDong)}</td></tr>`:''}
         ${p.tuCo&&p.huyDong?`<tr><td>Tỷ lệ vay / (tự có + vay)</td><td>${Math.round(p.huyDong/(p.huyDong+p.tuCo)*100)}%</td></tr>`:''}
-      </table>
-      <p class="dh" style="margin-top:16px">Lịch giải ngân vốn vay</p>
-      ${capexHTML(p.capex)}
+      </table>`:''}
+      ${(p.capex&&Object.keys(p.capex).length)?`<p class="dh" style="margin-top:16px">Lịch giải ngân vốn vay</p>${capexHTML(p.capex)}`:''}
       ${p.note?`<div class="warn"><b>Ghi chú phân tích.</b> ${esc(p.note)}</div>`:''}
     </div>
     <div>

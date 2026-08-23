@@ -17,7 +17,7 @@ from collections import defaultdict
 from pymongo import MongoClient
 
 from lib_db import mongo_uri
-from lib_marks import (deadline_month, progress_pct, extract_investor,
+from lib_marks import (deadline_month, progress_pct, extract_investor, extract_tmdt,
                        RX_DELAY, RX_AHEAD, RX_ONTRACK, RX_STATE)
 from lib_projects import build_alias_regex, pid2tid
 
@@ -40,7 +40,8 @@ def run():
             t2rx[p2t[pid]].append(r)
 
     dstmts = defaultdict(list)          # tid -> [(article_date, deadline_month, source)]
-    sig = defaultdict(lambda: {"delay": None, "ahead": None, "ontrack": None, "pct": None, "state": False})
+    sig = defaultdict(lambda: {"delay": None, "ahead": None, "ontrack": None, "pct": None,
+                               "state": False, "tmdt": None})
     for d in raw.find({"projects": {"$ne": []}},
                       {"title": 1, "description": 1, "date": 1, "source": 1, "projects": 1}):
         pub = (d.get("date") or "")[:7]
@@ -70,6 +71,9 @@ def run():
             iv = extract_investor(blob)
             if iv and (s.get("inv") is None or adate > s["inv"][0]):
                 s["inv"] = (adate, iv)                          # nhà đầu tư tư nhân (whitelist) mới nhất
+            tv = extract_tmdt(blob)
+            if tv and (s["tmdt"] is None or adate > s["tmdt"][0]):
+                s["tmdt"] = (adate, tv, d.get("source", "?"))   # TMĐT (tỷ đồng) theo tin mới nhất
 
     today = dt.date.today().strftime("%Y-%m")
     tids = set(dstmts) | set(sig)
@@ -139,6 +143,9 @@ def run():
         owner_auto = (s["inv"][1] if s.get("inv") else ("Nhà nước" if s["state"] else ""))   # tư nhân > Nhà nước
         upd = {"marks": marks, "phases": phases, "paceAuto": pace, "paceWhy": why,
                "ownerAuto": owner_auto}
+        if s["tmdt"]:
+            upd["tmdtAuto"] = s["tmdt"][1]
+            upd["tmdtAutoSrc"] = f"theo {s['tmdt'][2]} {s['tmdt'][0][:7]}"
         tr.update_one({"_key": "project", "id": tid}, {"$set": upd})
         if pace:
             n_pace += 1

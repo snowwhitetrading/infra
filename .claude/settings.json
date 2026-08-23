@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python step1b_gnews.py --limit 5 --dry-run)"
+    ]
+  }
+}

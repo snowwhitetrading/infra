@@ -266,6 +266,31 @@ def progress_pct(text):
     return best
 
 
+RX_TMDT = re.compile(
+    r"(?:tổng mức đầu tư|tổng vốn đầu tư|tổng vốn|vốn đầu tư|tổng mức|tmđt|mức đầu tư|kinh phí đầu tư)"
+    r"[^.\d]{0,28}?(?:khoảng |hơn |gần |dự kiến |trên |lên (?:đến|tới) )?"
+    r"([\d.,]+)\s*(nghìn tỷ|tỷ đồng|tỷ|tỉ)\b", re.I)
+
+
+def extract_tmdt(text):
+    """Tổng mức đầu tư (TỶ ĐỒNG) nêu trong text; None nếu không có / vô lý. (Chỉ VND, bỏ USD.)"""
+    m = RX_TMDT.search(text or "")
+    if not m:
+        return None
+    s, unit = m.group(1), m.group(2).lower()
+    try:
+        if re.match(r"^\d{1,3}(\.\d{3})+$", s):        # 16.000 / 147.370 → dấu . là hàng nghìn
+            v = float(s.replace(".", ""))
+        else:
+            v = float(s.replace(".", "").replace(",", "."))   # 16,5 → 16.5
+    except ValueError:
+        return None
+    if "nghìn tỷ" in unit:
+        v *= 1000
+    v = round(v)
+    return v if 50 <= v <= 5_000_000 else None         # loại số vô lý
+
+
 def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
     intent = RX_INTENT.search(blob)      # đề xuất/dự kiến/sắp... + mốc = CHƯA xảy ra → 'ms'
