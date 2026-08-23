@@ -880,9 +880,16 @@ const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime
                     'đang thi công':'building','chưa thi công':'unknown'};
 const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','đang thi công','chưa thi công'];
 function newsN(p){ return _NEWSN[p.name] || 0; }
-// Nhãn tiến độ hiển thị: có đánh giá (đúng/chậm/vượt) → dùng; KHÔNG (dự án không hạn) → theo trạng thái thi công.
+// Nhãn tiến độ hiển thị (grounded):
+//  - 'chậm' giữ (tin nói trễ, định tính được).
+//  - 'đúng'/'vượt' CHỈ giữ khi có HẠN CÓ NGUỒN để đối chiếu (build phase.to anchored — giống thanh có mũi ›);
+//    không có hạn nguồn → KHÔNG thể nói đúng/vượt → theo trạng thái: 'đang thi công' / 'chưa thi công'.
 function schedOf(p){
-  if(p.sched==='chậm tiến độ'||p.sched==='đúng tiến độ'||p.sched==='vượt tiến độ') return p.sched;
+  const s = p.sched;
+  if(s==='chậm tiến độ') return s;
+  const A = anchors(p);
+  const grounded = (p.phases||[]).some(ph=>ph.kind!=='gpmb' && ph.to && A.has(ph.to));
+  if((s==='đúng tiến độ'||s==='vượt tiến độ') && grounded) return s;
   const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
   return started ? 'đang thi công' : 'chưa thi công';
 }
