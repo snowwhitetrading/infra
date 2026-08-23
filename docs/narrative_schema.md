@@ -37,7 +37,13 @@ Bỏ dự án thuần "chuẩn bị đầu tư" đã đủ (không có tiến đ
 - **items ≥2 hạng mục** khi đã thi công (GPMB · thi công chính · cầu/hầm/nhà ga/khán đài…), mỗi cái có `prog`.
 - **marks 4-8 mốc chính**, mỗi mốc có `src` (báo + tháng). Nhãn VIẾT LẠI gọn, không chép tiêu đề thô.
 - **phases**: ≥1 build từ khởi công → hạn hoàn thành (tìm trong tin; không có thì ước lượng theo loại
-  + ghi "ước lượng" trong note). Có GPMB thì thêm phase gpmb. Đang chạy: state=ongoing + doneTo.
+  + ghi "ước lượng" trong note). Có GPMB thì thêm phase gpmb.
+- **Giai đoạn CHƯA XONG (`state:'ongoing'`) — QUAN TRỌNG để thanh không trông như đã hoàn thành:**
+  - `to` = **hạn hoàn thành THỰC TẾ** (nếu đã lỡ hạn thì đẩy sang mốc dự kiến mới ở **TƯƠNG LAI**);
+    KHÔNG để `to` ở quá khứ cho việc chưa xong (nếu không thanh sẽ tô kín trông như đã xong).
+  - `doneTo` = **tháng có tiến độ XÁC NHẬN gần nhất** (≤ hôm nay và **≤ `to`**). KHÔNG đặt `doneTo` ≥ `to`,
+    KHÔNG đặt bằng "hôm nay" nếu chưa xác nhận tới đó. Đoạn [doneTo→to] tự vẽ "đang làm" (rỗng + mũi ›).
+  - Việc ĐÃ XONG hẳn: bỏ `state`/`doneTo`, đặt `to` = tháng hoàn thành thật.
 - KHÔNG bịa số (tmdt/owner chỉ khi tin nêu). Mâu thuẫn số → note. Cảnh báo tin trộn dự án khác → note.
 - Nhãn tiếng Việt, ngày YYYY-MM. Lấy đúng id=tid.
 

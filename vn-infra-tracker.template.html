@@ -898,24 +898,20 @@ function barsHTML(phases, marks, proj){
     const a = toY(ph.from), b = toY(ph.to);
     const cls = ph.kind==='gpmb'?'bar-g':ph.kind==='swap'?'bar-s':'bar-b';
     const ongoing = ph.state === 'ongoing';
-    // Mốc kết thúc phần ĐÃ XÁC NHẬN. Với giai đoạn chưa chốt, mặc định dừng ở hôm nay.
-    const solidEnd = ongoing ? Math.min(ph.doneTo ? toY(ph.doneTo) : TODAY, b) : b;
+    // ĐÃ XÁC NHẬN (đặc): tới doneTo, nhưng KHÔNG vượt hôm nay (tương lai chưa xác nhận được).
+    const solidEnd = ongoing ? Math.min(ph.doneTo ? toY(ph.doneTo) : TODAY, TODAY, b) : Math.min(b, TODAY);
+    // Cuối đoạn MỞ: giai đoạn ongoing QUÁ HẠN (to < hôm nay) vẫn kéo phần "đang làm" tới hôm nay.
+    const openEnd = ongoing ? Math.max(b, TODAY) : b;
+    const futStart = Math.max(solidEnd, a);   // phase tương lai (a > hôm nay) bắt đầu từ a, không từ hôm nay
 
-    if(solidEnd > a){
-      if(solidEnd <= TODAY){
-        h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(solidEnd)-pct(a)}%"></div>`;
-      } else {
-        h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(TODAY)-pct(a)}%"></div>`;
-        h += `<div class="${cls} fut" style="left:${pct(TODAY)}%;width:${pct(solidEnd)-pct(TODAY)}%"></div>`;
-      }
-    }
-    if(b > solidEnd){
+    if(solidEnd > a)                           // phần ĐÃ XÁC NHẬN (đặc)
+      h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(solidEnd)-pct(a)}%"></div>`;
+    if(openEnd > futStart){                    // ĐANG LÀM (opn, rỗng) hoặc DỰ KIẾN (fut, đứt nét mờ)
       const t = ongoing ? 'opn' : 'fut';
-      h += `<div class="${cls} ${t}" style="left:${pct(solidEnd)}%;width:${pct(b)-pct(solidEnd)}%"></div>`;
+      h += `<div class="${cls} ${t}" style="left:${pct(futStart)}%;width:${pct(openEnd)-pct(futStart)}%"></div>`;
     }
-    if(ongoing){
-      h += `<span class="chev ${ph.kind==='gpmb'?'g':'b'}" style="left:${pct(b)}%">&#8250;</span>`;
-    }
+    if(ongoing)                                // mũi › ở đầu mút hiện tại (tới hạn / đang chạy)
+      h += `<span class="chev ${ph.kind==='gpmb'?'g':'b'}" style="left:${pct(openEnd)}%">&#8250;</span>`;
     const lane = ph.kind==='gpmb'?'g':'b';
     if(a < T0)                               // bắt đầu trước trục → dấu ‹ ở mép trái
       h += `<span class="chev ${lane}" style="left:0" title="Khởi công trước ${T0} (${ph.from})">&#8249;</span>`;
