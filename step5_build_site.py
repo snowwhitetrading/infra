@@ -50,7 +50,7 @@ DB, COLL = "dc_commodity", "Infra_Project_Tracker"
 NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
 # CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
-OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup"}   # sửa tay: Cảng HKQT Gia Bình=Masterise · Cầu Cần Giờ=Vingroup
+OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Vingroup · HSR Bắc-Nam=Nhà nước
 _PRIVATE_OWNERS = [
     (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
     (re.compile(r"sun ?group|mặt trời"), "Sun Group"),
@@ -81,6 +81,22 @@ def canon_owner(o):
         if rx.search(low):
             return nm
     return "Nhà nước"                                       # còn lại → Nhà nước
+
+
+# Đổi TÊN từ Title-Case (mọi từ viết hoa) → proper text (chỉ từ đầu + tên riêng viết hoa).
+_LOWER_WORDS = set("đường sắt tốc độ số sân bay tuyến nút giao vành đai ven biển quốc lộ tỉnh "
+                   "nâng cấp mở rộng dự án đoạn nối dài kết trục đô thị xây dựng đầu tư hạ tầng cải tạo "
+                   "giai với đến của và hầm nhẹ hàng không bộ trên khu".split())
+
+
+def proper_case(name):
+    ws = (name or "").split()
+    out = []
+    for i, w in enumerate(ws):
+        core = re.sub(r"[^\wÀ-ỹ]", "", w).lower()
+        out.append(w.lower() if i > 0 and core in _LOWER_WORDS else w)
+    s = " ".join(out)
+    return (s[:1].upper() + s[1:]) if s else s
 
 
 SITEKEY2TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan": 4,
@@ -502,6 +518,7 @@ def main():
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
         raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("owner") or p.get("ownerAuto")   # tín hiệu tốt nhất
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
+        p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

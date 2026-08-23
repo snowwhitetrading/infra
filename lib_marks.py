@@ -199,38 +199,41 @@ RX_AHEAD = re.compile(
     r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn|so)|vượt kế hoạch|vượt mốc tiến độ|"
     r"hoàn thành sớm|xong sớm|trước (thời hạn|hạn|kế hoạch|tiến độ)|rút ngắn (tiến độ|thời gian)|thần tốc|"
     r"băng băng về đích|đích sớm", re.I)
-# WHITELIST nhà đầu tư tư nhân (hạ tầng) — khớp tên đáng tin, không nhiễu như trích tự do.
+# WHITELIST nhà đầu tư tư nhân (hạ tầng) — tên (regex str) + tên canonical.
 _INVESTORS = [
-    (re.compile(r"vinspeed|vingroup|vinhomes|\bVIC\b", re.I), "Vingroup"),
-    (re.compile(r"sun ?group|tập đoàn mặt trời", re.I), "Sun Group"),
-    (re.compile(r"masterise|\bMAI\b"), "Masterise"),
-    (re.compile(r"đèo cả", re.I), "Đèo Cả"),
-    (re.compile(r"becamex", re.I), "Becamex"),
-    (re.compile(r"geleximco", re.I), "Geleximco"),
-    (re.compile(r"\bT&T\b|tập đoàn T ?& ?T"), "T&T"),
-    (re.compile(r"\btasco\b", re.I), "Tasco"),
-    (re.compile(r"trung nam", re.I), "Trung Nam"),
-    (re.compile(r"xuân trường", re.I), "Xuân Trường"),
-    (re.compile(r"cường thuận", re.I), "Cường Thuận"),
-    (re.compile(r"đức long", re.I), "Đức Long"),
-    (re.compile(r"thaco|trường hải", re.I), "Thaco"),
-    (re.compile(r"him lam", re.I), "Him Lam"),
-    (re.compile(r"ecopark", re.I), "Ecopark"),
-    (re.compile(r"sovico", re.I), "Sovico"),
-    (re.compile(r"\bIPP\b|hạnh nguyễn", re.I), "IPP Group"),
-    (re.compile(r"đại dũng", re.I), "Đại Dũng"),
+    (r"vinspeed|vingroup|vinhomes", "Vingroup"),
+    (r"sun ?group|tập đoàn mặt trời", "Sun Group"),
+    (r"masterise|\bmai\b", "Masterise"),
+    (r"đèo cả", "Đèo Cả"),
+    (r"becamex", "Becamex"),
+    (r"geleximco", "Geleximco"),
+    (r"t ?& ?t|cienco ?-? ?4", "T&T"),
+    (r"tasco", "Tasco"),
+    (r"trung nam", "Trung Nam"),
+    (r"xuân trường", "Xuân Trường"),
+    (r"cường thuận", "Cường Thuận"),
+    (r"đức long", "Đức Long"),
+    (r"thaco|trường hải", "Thaco"),
+    (r"him lam", "Him Lam"),
+    (r"ecopark", "Ecopark"),
+    (r"sovico", "Sovico"),
+    (r"\bipp\b|hạnh nguyễn", "IPP Group"),
+    (r"hateco", "Hateco"),
+    (r"đại dũng", "Đại Dũng"),
+    (r"\bmsc\b|maersk", "MSC/Maersk"),
 ]
-_RX_INVCTX = re.compile(r"chủ đầu tư|nhà đầu tư|đề xuất (đầu tư|dự án|làm)|làm chủ đầu tư|"
-                        r"trúng thầu|nhà thầu|liên danh|\bBOT\b|\bBT\b|\bPPP\b|đối tác công tư|đầu tư dự án", re.I)
+_INV_LEAD = r"(?:tập đoàn |liên danh |ctcp |tổng công ty |công ty (?:cổ phần |cp |tnhh )?)?"
+# Trích CHỦ ĐẦU TƯ THẬT: tên phải KỀ cụm xác nhận sở hữu — KHÔNG tính 'đề xuất/rút/trúng thầu'.
+_INV_RX = [(re.compile(r"chủ đầu tư (?:dự án )?(?:là |gồm |:)?\s*" + _INV_LEAD + r"(?:" + s + r")", re.I),
+            re.compile(r"(?:" + s + r")[^.]{0,30}(?:làm chủ đầu tư|được giao (?:làm )?chủ đầu tư|là chủ đầu tư)", re.I),
+            nm) for s, nm in _INVESTORS]
 
 
 def extract_investor(text):
-    """Tên nhà đầu tư tư nhân (whitelist) nếu xuất hiện KÈM ngữ cảnh đầu tư; '' nếu không."""
+    """Chủ đầu tư tư nhân THẬT (tên KỀ 'chủ đầu tư là X' / 'X làm chủ đầu tư'); '' nếu chỉ đề xuất/bỏ thầu."""
     t = text or ""
-    if not _RX_INVCTX.search(t):
-        return ""
-    for rx, nm in _INVESTORS:
-        if rx.search(t):
+    for rx1, rx2, nm in _INV_RX:
+        if rx1.search(t) or rx2.search(t):
             return nm
     return ""
 
