@@ -934,32 +934,10 @@ function capexHTML(cap){
     `<div class="y">${String(y).slice(2)}</div></div>`).join('') + '</div>';
 }
 
-// CHECK MÁY (deterministic, tự cập nhật theo hôm nay): tháng hạn SỚM NHẤT của giai đoạn ĐANG LÀM
-// (state='ongoing') mà đã quá hôm nay → "quá hạn im lặng, chưa có tin xác nhận hoàn thành".
-function _overdueMonth(proj){
-  const marks = [];
-  const collect = o => (o.marks||[]).forEach(m=>marks.push(m));
-  collect(proj); (proj.items||[]).forEach(collect);
-  const anchored = new Set(marks.filter(m=>m.src).map(m=>m.date));   // ngày HẠN CÓ NGUỒN
-  let m = null;
-  const scan = phs => (phs||[]).forEach(ph=>{
-    // CHỈ tính quá hạn khi HẠN CÓ NGUỒN (anchored) — KHÔNG phán trên hạn ước lượng/bịa của LLM.
-    if(ph.state==='ongoing' && ph.to && toY(ph.to) < TODAY && anchored.has(ph.to)){
-      // có tin XÁC NHẬN (mark actual / done) tại-hoặc-sau hạn → dự án đã đi tiếp, KHÔNG tính quá hạn
-      const confirmed = marks.some(mk => mk.date && mk.date >= ph.to && (mk.tier==='actual' || mk.type==='done'));
-      if(!confirmed && (!m || ph.to < m)) m = ph.to;
-    }
-  });
-  scan(proj.phases); (proj.items||[]).forEach(it=>scan(it.phases));
-  return m;
-}
-const _mmyy = s => { const p=(s||'').split('-'); return p[1]?p[1]+'/'+p[0]:s; };
 const TAG_CLS={'khởi công':'start','hoàn thành':'done','trúng thầu':'contract','phê duyệt':'appr','mặt bằng':'gpmb','chỉ đạo':'dir','tiến độ':'prog'};
 function detailHTML(p){
-  const _od = _overdueMonth(p);
   const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
-    ${_od?`<div class="schedbox s-late" style="margin-bottom:14px"><b>⚠ Quá hạn ${_mmyy(_od)}.</b> Giai đoạn vẫn ở trạng thái đang làm mà đã qua hạn, chưa có tin xác nhận hoàn thành (tự phát hiện theo mốc, độc lập với đánh giá).</div>`:''}
     ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
       <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
       <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>`:''}
@@ -1016,7 +994,6 @@ function render(){
           <button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>
           <div class="pmeta">${p.sched?`<span class="sched s-${SCHED_CLS[p.sched]}" title="${esc(p.schedWhy||'')}">${p.sched}</span>`:''}
-            ${(()=>{const od=_overdueMonth(p);return od?`<span class="sched s-late" title="Quá hạn ${_mmyy(od)}: giai đoạn vẫn đang làm, chưa có tin xác nhận hoàn thành">⚠ quá hạn ${_mmyy(od)}</span>`:'';})()}
             <span class="cap">${esc(p.owner)}</span></div>
           ${p.loc?`<div class="loc">${esc(p.loc)}</div>`:''}
         </div>
