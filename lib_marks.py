@@ -293,11 +293,17 @@ def _parse_tmdt(s, unit):
     return v if 50 <= v <= 5_000_000 else None         # loại số vô lý
 
 
+_RX_CEIL = re.compile(r"lên tới|lên đến|tối đa|có thể lên", re.I)   # "lên tới 100 tỷ USD" = trần, KHÔNG phải TMĐT thực
+
+
 def extract_tmdt(text):
     """Tổng mức đầu tư (TỶ ĐỒNG) LỚN NHẤT hợp lý nêu trong text; None nếu không có.
-    Lấy MAX vì TMĐT tổng dự án luôn lớn hơn con số từng hạng mục/đoạn/vốn năm."""
+    Lấy MAX vì TMĐT tổng dự án luôn lớn hơn con số từng hạng mục/đoạn/vốn năm.
+    Bỏ con số kèm 'lên tới/lên đến/tối đa' (trần dự phóng, hay thổi phồng quy mô)."""
     best = None
     for m in RX_TMDT.finditer(text or ""):
+        if _RX_CEIL.search(m.group(0)):
+            continue
         v = _parse_tmdt(m.group(1), m.group(2).lower())
         if v and (best is None or v > best):
             best = v
