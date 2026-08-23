@@ -199,6 +199,42 @@ RX_AHEAD = re.compile(
     r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn|so)|vượt kế hoạch|vượt mốc tiến độ|"
     r"hoàn thành sớm|xong sớm|trước (thời hạn|hạn|kế hoạch|tiến độ)|rút ngắn (tiến độ|thời gian)|thần tốc|"
     r"băng băng về đích|đích sớm", re.I)
+# WHITELIST nhà đầu tư tư nhân (hạ tầng) — khớp tên đáng tin, không nhiễu như trích tự do.
+_INVESTORS = [
+    (re.compile(r"vinspeed|vingroup|vinhomes|\bVIC\b", re.I), "Vingroup"),
+    (re.compile(r"sun ?group|tập đoàn mặt trời", re.I), "Sun Group"),
+    (re.compile(r"masterise|\bMAI\b"), "Masterise"),
+    (re.compile(r"đèo cả", re.I), "Đèo Cả"),
+    (re.compile(r"becamex", re.I), "Becamex"),
+    (re.compile(r"geleximco", re.I), "Geleximco"),
+    (re.compile(r"\bT&T\b|tập đoàn T ?& ?T"), "T&T"),
+    (re.compile(r"\btasco\b", re.I), "Tasco"),
+    (re.compile(r"trung nam", re.I), "Trung Nam"),
+    (re.compile(r"xuân trường", re.I), "Xuân Trường"),
+    (re.compile(r"cường thuận", re.I), "Cường Thuận"),
+    (re.compile(r"đức long", re.I), "Đức Long"),
+    (re.compile(r"thaco|trường hải", re.I), "Thaco"),
+    (re.compile(r"him lam", re.I), "Him Lam"),
+    (re.compile(r"ecopark", re.I), "Ecopark"),
+    (re.compile(r"sovico", re.I), "Sovico"),
+    (re.compile(r"\bIPP\b|hạnh nguyễn", re.I), "IPP Group"),
+    (re.compile(r"đại dũng", re.I), "Đại Dũng"),
+]
+_RX_INVCTX = re.compile(r"chủ đầu tư|nhà đầu tư|đề xuất (đầu tư|dự án|làm)|làm chủ đầu tư|"
+                        r"trúng thầu|nhà thầu|liên danh|\bBOT\b|\bBT\b|\bPPP\b|đối tác công tư|đầu tư dự án", re.I)
+
+
+def extract_investor(text):
+    """Tên nhà đầu tư tư nhân (whitelist) nếu xuất hiện KÈM ngữ cảnh đầu tư; '' nếu không."""
+    t = text or ""
+    if not _RX_INVCTX.search(t):
+        return ""
+    for rx, nm in _INVESTORS:
+        if rx.search(t):
+            return nm
+    return ""
+
+
 RX_STATE = re.compile(                                       # tín hiệu DỰ ÁN CÔNG (vốn nhà nước)
     r"đầu tư công|ban quản lý dự án|bqlda|ban qlda|pmu|"
     r"(bộ (giao thông|xây dựng|gtvt)|ubnd[^.]{0,40})\s*(làm\s*)?chủ đầu tư|"

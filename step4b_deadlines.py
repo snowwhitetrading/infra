@@ -17,7 +17,8 @@ from collections import defaultdict
 from pymongo import MongoClient
 
 from lib_db import mongo_uri
-from lib_marks import deadline_month, progress_pct, RX_DELAY, RX_AHEAD, RX_ONTRACK, RX_STATE
+from lib_marks import (deadline_month, progress_pct, extract_investor,
+                       RX_DELAY, RX_AHEAD, RX_ONTRACK, RX_STATE)
 from lib_projects import build_alias_regex, pid2tid
 
 DB = "dc_commodity"
@@ -66,6 +67,9 @@ def run():
                 s["pct"] = (adate, pc, d.get("source", "?"))    # % mới nhất theo tin
             if RX_STATE.search(blob):
                 s["state"] = True                               # tín hiệu dự án công (vốn nhà nước)
+            iv = extract_investor(blob)
+            if iv and (s.get("inv") is None or adate > s["inv"][0]):
+                s["inv"] = (adate, iv)                          # nhà đầu tư tư nhân (whitelist) mới nhất
 
     today = dt.date.today().strftime("%Y-%m")
     tids = set(dstmts) | set(sig)
@@ -132,8 +136,9 @@ def run():
                 else:
                     pace, why = "đúng tiến độ", f"Đạt {pc}% bám sát kỳ vọng ~{exp}% theo mốc (theo {s['pct'][2]} {s['pct'][0][:7]})."
 
+        owner_auto = (s["inv"][1] if s.get("inv") else ("Nhà nước" if s["state"] else ""))   # tư nhân > Nhà nước
         upd = {"marks": marks, "phases": phases, "paceAuto": pace, "paceWhy": why,
-               "ownerAuto": "Nhà nước" if s["state"] else ""}     # dự án công → chủ đầu tư nhà nước
+               "ownerAuto": owner_auto}
         tr.update_one({"_key": "project", "id": tid}, {"$set": upd})
         if pace:
             n_pace += 1
