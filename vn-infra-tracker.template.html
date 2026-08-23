@@ -144,6 +144,8 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .s-ontime{color:var(--ink2);border-color:var(--rule2);background:transparent}
 .s-late{color:var(--alert);border-color:var(--alert);background:transparent}
 .s-unknown{color:var(--ink3);border-color:var(--rule2);border-style:dashed;background:transparent}
+.s-building{color:var(--build);border-color:var(--build);background:transparent}
+.schedbox.s-building{border-color:var(--build)} .schedbox.s-building b{color:var(--build)}
 .pctchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:2px;
   background:var(--gpmb-bg);color:var(--gpmb);letter-spacing:.03em}
 .bar-g{height:6px;top:11px;background:var(--gpmb)}
@@ -347,6 +349,10 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer;min-width:172px}
 .map-bar select:hover{border-color:var(--ink3)}
 .map-bar select:focus-visible{outline:2px solid var(--build);outline-offset:2px}
+.map-bar input{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rule2);
+  border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
+.map-bar input:hover{border-color:var(--ink3)}
+.map-bar input:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .mf-count{font-size:11px;color:var(--ink3);align-self:center;margin-left:auto;font-family:"IBM Plex Mono",monospace}
 .mf-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .mf-lbl{font-size:10px;color:var(--ink3);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;min-width:64px;padding-top:6px}
@@ -382,12 +388,18 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 <div id="view-gantt">
 <div class="map-bar">
+  <div class="mf"><span>Sắp xếp</span><select id="g-sort">
+    <option value="sched">Tiến độ</option>
+    <option value="cat">Loại hình</option>
+    <option value="news">Số lượng tin</option>
+    <option value="owner">Đơn vị đầu tư</option>
+  </select></div>
   <div class="mf"><span>Vùng</span><select id="g-region"></select></div>
   <div class="mf"><span>Tỉnh thành</span><select id="g-prov"></select></div>
+  <div class="mf"><span>Tìm</span><input id="g-search" type="search" placeholder="Tên dự án / chủ đầu tư"></div>
   <span class="mf-count" id="g-count"></span>
   <button class="chip" id="expandAll" style="align-self:flex-end">Mở tất cả hạng mục</button>
 </div>
-<div class="mf-row"><span class="mf-lbl">Loại hình</span><div class="mf-chips" id="g-cat"></div></div>
 
 <div class="legend">
   <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">tiến độ so với mốc đã công bố trước đó — rê chuột để xem căn cứ</span></div>
@@ -862,8 +874,19 @@ function laneOf(mark, proj){
   return 'build';
 }
 
-const _catSel = new Set();         // loại hình đang bật (chip) — lọc kiểu Bản đồ
-let gRegion = '', gProv = '';      // vùng · tỉnh đang chọn
+let gRegion = '', gProv = '', _sortMode = 'sched', _q = '';   // vùng · tỉnh · sắp xếp · tìm
+const _NEWSN = {}; NEWSFLOW.forEach(n=>{ _NEWSN[n.pname] = (_NEWSN[n.pname]||0) + 1; });   // đếm tin/dự án
+const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late',
+                    'đang thi công':'building','chưa thi công':'unknown'};
+const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','đang thi công','chưa thi công'];
+function newsN(p){ return _NEWSN[p.name] || 0; }
+// Nhãn tiến độ hiển thị: có đánh giá (đúng/chậm/vượt) → dùng; KHÔNG (dự án không hạn) → theo trạng thái thi công.
+function schedOf(p){
+  if(p.sched==='chậm tiến độ'||p.sched==='đúng tiến độ'||p.sched==='vượt tiến độ') return p.sched;
+  const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
+  return started ? 'đang thi công' : 'chưa thi công';
+}
+function _searchOk(p){ return !_q || (p.name+' '+(p.owner||'')).toLowerCase().includes(_q); }
 let minTier = 0;
 let open = new Set();
 
@@ -941,9 +964,9 @@ const TAG_CLS={'khởi công':'start','hoàn thành':'done','trúng thầu':'con
 function detailHTML(p){
   const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
-    ${p.sched?`<p class="dh">Đánh giá tiến độ</p>
-      <div class="schedbox s-${SCHED_CLS[p.sched]}"><b>${p.sched}.</b> ${esc(p.schedWhy||'')}
-      <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>`:''}
+    <p class="dh">Đánh giá tiến độ</p>
+    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.schedWhy || (schedOf(p)==='đang thi công'?'Chưa có hạn hoàn thành từ nguồn để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}
+      <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>
     <div class="dgrid" style="margin-top:20px">
     <div>
       <p class="dh">Vốn — Phụ lục I (tỷ đồng)</p>
@@ -974,9 +997,22 @@ function _rowSort(a,b){                        // Hà Nội → TP.HCM → còn 
   const r=p=>p.prov==='Hà Nội'?0:p.prov==='Hồ Chí Minh'?1:2;
   return r(a)-r(b) || a.name.localeCompare(b.name,'vi');
 }
-function sections(){                          // nhóm dưới header LOẠI HÌNH, lọc theo chip+vùng+tỉnh
-  return GROUPS.filter(g=>_catSel.has(g.id))
-    .map(g=>({name:g.name, meta:g.meta, rows:P.filter(p=>p.g===g.id && _grow(p)).sort(_rowSort)}));
+function sections(){                          // nhóm theo chế độ SẮP XẾP, lọc theo vùng+tỉnh+tìm
+  const rows = P.filter(p=>_grow(p) && _searchOk(p));
+  if(_sortMode==='cat')                       // theo LOẠI HÌNH
+    return GROUPS.map(g=>({name:g.name, meta:g.meta, rows:rows.filter(p=>p.g===g.id).sort(_rowSort)}))
+                 .filter(s=>s.rows.length);
+  if(_sortMode==='owner'){                     // theo ĐƠN VỊ ĐẦU TƯ
+    const os=[...new Set(rows.map(p=>p.owner||'(chưa rõ chủ đầu tư)'))].sort((a,b)=>a.localeCompare(b,'vi'));
+    return os.map(o=>({name:o, meta:'', rows:rows.filter(p=>(p.owner||'(chưa rõ chủ đầu tư)')===o).sort(_rowSort)}))
+             .filter(s=>s.rows.length);
+  }
+  if(_sortMode==='news')                       // theo SỐ LƯỢNG TIN (nhiều → ít)
+    return [{name:'Xếp theo số lượng tin', meta:'nhiều → ít',
+             rows:rows.slice().sort((a,b)=>newsN(b)-newsN(a) || a.name.localeCompare(b.name,'vi'))}];
+  // 'sched' (mặc định) — theo TIẾN ĐỘ
+  return _SCHED_ORDER.map(s=>({name:s, meta:'', rows:rows.filter(p=>schedOf(p)===s).sort(_rowSort)}))
+                     .filter(s=>s.rows.length);
 }
 
 function render(){
@@ -996,7 +1032,8 @@ function render(){
       h += `<div class="row"><div class="lbl">
           <button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>
-          <div class="pmeta">${p.sched?`<span class="sched s-${SCHED_CLS[p.sched]}" title="${esc(p.schedWhy||'')}">${p.sched}</span>`:''}
+          <div class="pmeta"><span class="sched s-${SCHED_CLS2[schedOf(p)]}" title="${esc(p.schedWhy||'')}">${schedOf(p)}</span>
+            ${_sortMode==='news'?`<span class="pctchip">${newsN(p)} tin</span>`:''}
             <span class="cap">${esc(p.owner)}</span></div>
           ${p.loc?`<div class="loc">${esc(p.loc)}</div>`:''}
         </div>
@@ -1045,13 +1082,8 @@ function render(){
     document.getElementById('g-prov').innerHTML='<option value="">Tất cả tỉnh</option>'+provs.map(p=>`<option>${esc(p)}</option>`).join('');
   }
   fillProv();
-  // chip Loại hình (theo GROUPS đang có), mặc định bật hết — như "Hạ tầng" bên map
-  GROUPS.forEach(g=>_catSel.add(g.id));
-  document.getElementById('g-cat').innerHTML =
-    GROUPS.map(g=>`<button class="mchip on" data-c="${esc(g.id)}">${esc(g.name)}</button>`).join('');
-  document.querySelectorAll('#g-cat .mchip').forEach(b=>b.onclick=()=>{
-    const c=b.dataset.c; b.classList.toggle('on') ? _catSel.add(c) : _catSel.delete(c); render();
-  });
+  document.getElementById('g-sort').onchange=e=>{ _sortMode=e.target.value; render(); };
+  document.getElementById('g-search').oninput=e=>{ _q=e.target.value.trim().toLowerCase(); render(); };
   reg.onchange=e=>{ gRegion=e.target.value; gProv=''; fillProv(); render(); };
   document.getElementById('g-prov').onchange=e=>{ gProv=e.target.value; render(); };
 })();
