@@ -897,28 +897,31 @@ function barsHTML(phases, marks, proj){
   (phases||[]).forEach(ph=>{
     const a = toY(ph.from), b = toY(ph.to);
     const cls = ph.kind==='gpmb'?'bar-g':ph.kind==='swap'?'bar-s':'bar-b';
+    const lane = ph.kind==='gpmb'?'g':'b';
     const ongoing = ph.state === 'ongoing';
-    // ĐÃ XÁC NHẬN (đặc): tới doneTo, nhưng KHÔNG vượt hôm nay (tương lai chưa xác nhận được).
-    const solidEnd = ongoing ? Math.min(ph.doneTo ? toY(ph.doneTo) : TODAY, TODAY, b) : Math.min(b, TODAY);
-    // Cuối đoạn MỞ: giai đoạn ongoing QUÁ HẠN (to < hôm nay) vẫn kéo phần "đang làm" tới hôm nay.
-    const openEnd = ongoing ? Math.max(b, TODAY) : b;
-    const futStart = Math.max(solidEnd, a);   // phase tương lai (a > hôm nay) bắt đầu từ a, không từ hôm nay
+    const grounded = A.has(ph.to);             // HẠN CÓ NGUỒN (mark tier='deadline'/directive có src tại to)
+    // KHÔNG có hạn nguồn + CHƯA khởi công (bắt đầu ở tương lai) → KHÔNG vẽ thanh (chưa khởi công).
+    if(!grounded && a > TODAY) return;
+    // Đầu mút thanh: hạn CÓ NGUỒN → tới b (hạn thật); KHÔNG nguồn → chỉ tới HÔM NAY (không vẽ hạn bịa).
+    const end = grounded ? b : Math.min(b, TODAY);
+    const solidEnd = ongoing ? Math.min(ph.doneTo ? toY(ph.doneTo) : TODAY, TODAY, end) : Math.min(end, TODAY);
+    const openEnd = grounded ? (ongoing ? Math.max(b, TODAY) : b) : TODAY;   // không nguồn → mở tới hôm nay
+    const futStart = Math.max(solidEnd, a);
 
     if(solidEnd > a)                           // phần ĐÃ XÁC NHẬN (đặc)
       h += `<div class="${cls}" style="left:${pct(a)}%;width:${pct(solidEnd)-pct(a)}%"></div>`;
-    if(openEnd > futStart){                    // ĐANG LÀM (opn, rỗng) hoặc DỰ KIẾN (fut, đứt nét mờ)
-      const t = ongoing ? 'opn' : 'fut';
+    if(openEnd > futStart){                    // ĐANG LÀM (opn, rỗng) hoặc DỰ KIẾN có nguồn (fut, đứt nét)
+      const t = (ongoing || !grounded) ? 'opn' : 'fut';
       h += `<div class="${cls} ${t}" style="left:${pct(futStart)}%;width:${pct(openEnd)-pct(futStart)}%"></div>`;
     }
-    if(ongoing)                                // mũi › ở đầu mút hiện tại (tới hạn / đang chạy)
-      h += `<span class="chev ${ph.kind==='gpmb'?'g':'b'}" style="left:${pct(openEnd)}%">&#8250;</span>`;
-    const lane = ph.kind==='gpmb'?'g':'b';
+    if(grounded && ongoing)                     // mũi › CHỈ khi có hạn nguồn (chỉ vào hạn THẬT)
+      h += `<span class="chev ${lane}" style="left:${pct(openEnd)}%" title="Hạn hoàn thành (theo tin)">&#8250;</span>`;
+    else if(!grounded && openEnd > a)           // đang thi công, chưa có hạn từ nguồn → '…'
+      h += `<span class="chev ${lane}" style="left:${pct(openEnd)}%" title="Đang thi công — chưa có hạn hoàn thành từ nguồn">…</span>`;
     if(a < T0)                               // bắt đầu trước trục → dấu ‹ ở mép trái
       h += `<span class="chev ${lane}" style="left:0" title="Khởi công trước ${T0} (${ph.from})">&#8249;</span>`;
-    if(!A.has(ph.from) && a >= T0)
+    if(!A.has(ph.from) && a >= T0 && a <= TODAY)
       h += `<span class="est ${lane}" style="left:${pct(a)}%" title="Ngày bắt đầu là ước lượng, không có nguồn">~</span>`;
-    if(!ongoing && !A.has(ph.to))
-      h += `<span class="est ${lane}" style="left:${pct(b)}%" title="Ngày kết thúc là ước lượng, không có nguồn">~</span>`;
   });
   // Mark hình (tròn/kim cương/tam giác) đã bỏ — mốc chỉ liệt kê ở "Mốc thời gian & nguồn".
   return h;

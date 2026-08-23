@@ -44,6 +44,10 @@ Bỏ dự án thuần "chuẩn bị đầu tư" đã đủ (không có tiến đ
   - Nếu dự án KHÔNG có mark `deadline` → **chưa có hạn có nguồn**: để `to` ước lượng thô (thanh hiện `~`),
     `note` ghi "hạn ước lượng, chưa có nguồn", và **sched = `chưa đánh giá được`** (đừng phán "đúng/chậm").
   - CHỈ đánh `chậm`/`vượt` khi có mark `deadline` (hoặc tin nói rõ trễ/sớm) để đối chiếu.
+- **Dự án KHÔNG có mark `deadline` (không ước lượng hạn — web tự dừng thanh ở hôm nay):**
+  - **ĐÃ khởi công** → `status:'thi công'`, `sched:'chưa đánh giá được'`, phase build có `from` (khởi công),
+    ĐỪNG đặt `to` tương lai bịa (thanh tự vẽ tới hôm nay + dấu `…`).
+  - **CHƯA khởi công** → `status:'chuẩn bị đầu tư'`, `sched:''`, KHÔNG tạo phase build (thanh không vẽ).
 - **items ≥2 hạng mục** khi đã thi công (GPMB · thi công chính · cầu/hầm/nhà ga/khán đài…), mỗi cái có `prog`.
 - **marks 4-8 mốc chính**, mỗi mốc có `src` (báo + tháng). Nhãn VIẾT LẠI gọn, không chép tiêu đề thô.
 - **phases**: ≥1 build từ khởi công → hạn hoàn thành (tìm trong tin; không có thì ước lượng theo loại
