@@ -40,12 +40,10 @@ def main(dry):
     from step5_build_site import _point_class, _prov_norm, _infra_cat, _titlecase
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
     reg = c["Infra_Projects_Registry"]
+    from lib_projects import is_dup_name, known_token_sets, dup_tokens
+    _catf = lambda n, loc="": _infra_cat(n)
     existing = list(reg.find({}, {"name": 1, "aliases": 1, "id": 1, "tid": 1}))
-    known = set()
-    for d in existing:
-        known.add(_norm(d.get("name")))
-        for a in d.get("aliases") or []:
-            known.add(_norm(a))
+    known_sets = known_token_sets(reg, _catf)   # (loại hình, token) của mọi dự án — fuzzy dedup cùng loại
     used_ids = {d.get("id") for d in existing}
     tid = max((d.get("tid", 0) or 0 for d in existing), default=0)
     pm = {d["pid"]: d["name"] for d in c["Cafeland_Provinces"].find({}, {"pid": 1, "name": 1})}
@@ -68,13 +66,11 @@ def main(dry):
             items.append((d.get("title", ""), "line", coords, lat, lng, d.get("prov", ""), d.get("cat", "Đường bộ")))
 
     added, skip = [], 0
-    seen_new = set()
     for title, kind, coords, lat, lng, prov, cat in items:
-        n = _norm(title)
-        if not n or n in known or n in seen_new:
+        if not (title or "").strip() or is_dup_name(title, _infra_cat(title), known_sets):   # TRÙNG cùng loại → bỏ
             skip += 1
             continue
-        seen_new.add(n)
+        known_sets.append((_infra_cat(title), dup_tokens(title)))         # thêm để không trùng nhau trong lô
         tid += 1
         doc = {"id": _slug(title, used_ids), "tid": tid, "name": _titlecase(title.strip()),
                "aliases": [_titlecase(title.strip())], "active": True, "origin": "cafeland",

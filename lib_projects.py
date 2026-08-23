@@ -375,6 +375,46 @@ def search_keywords():
     return kws
 
 
+import unicodedata as _ud
+
+_DUP_NOISE = {"hon", "ty", "usd", "km", "so", "nghin", "trieu", "ti", "gan", "khoang", "toi",
+              "du", "an", "va", "cua", "den", "cho", "dai", "moi", "cac", "khu"}
+
+
+def dup_tokens(s):
+    """Token tên riêng (bỏ dấu, ≥3 ký tự, bỏ từ định-lượng/hư-từ, bỏ số) — để so trùng."""
+    a = _ud.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
+    return {t for t in a.replace("-", " ").replace("–", " ").split()
+            if len(t) >= 3 and t not in _DUP_NOISE and not t.isdigit()}
+
+
+def is_dup_name(name, cat, known_sets):
+    """True nếu `name` TRÙNG 1 dự án đã có CÙNG LOẠI HÌNH `cat`: ≥60% token của name nằm trong
+    dự án cũ HOẶC name bao trùm ≥75% token dự án cũ. (Khác loại hình → không trùng, vd cao tốc vs
+    đường sắt cùng hành lang Bắc-Nam.)"""
+    nt = dup_tokens(name)
+    if not nt:
+        return False
+    for kcat, ks in known_sets:
+        if kcat != cat or not ks:
+            continue
+        if len(nt & ks) / len(nt) >= 0.6 or len(nt & ks) / len(ks) >= 0.75:
+            return True
+    return False
+
+
+def known_token_sets(reg, cat_fn):
+    """[(loại hình, token)] của MỌI dự án đã có (name + aliases). cat_fn(name, loc) → loại hình."""
+    out = []
+    for d in reg.find({}, {"name": 1, "aliases": 1, "location": 1}):
+        cat = cat_fn(d.get("name", ""), d.get("location", "") or "")
+        for s in [d.get("name")] + (d.get("aliases") or []):
+            ts = dup_tokens(s)
+            if ts:
+                out.append((cat, ts))
+    return out
+
+
 def build_alias_regex():
     """Trả về {project_id: compiled_regex} dò bất kỳ alias nào của dự án (từ registry)."""
     out = {}

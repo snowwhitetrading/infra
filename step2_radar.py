@@ -171,17 +171,20 @@ def auto_add_projects(client, rows, dry=False):
     from step5_build_site import _infra_cat
     reg = client["dc_commodity"]["Infra_Projects_Registry"]
     existing = list(reg.find({}, {"id": 1, "tid": 1, "name": 1, "aliases": 1}))
-    known_sets = []                       # tập token tên của từng dự án đã có
+    known_sets = []                       # (loại hình, token) của từng dự án đã có
     for d in existing:
+        cat = _infra_cat(d.get("name", ""))
         for s in [d.get("name")] + (d.get("aliases") or []):
             ts = _name_toks(s)
             if ts:
-                known_sets.append(ts)
+                known_sets.append((cat, ts))
     used_ids = {d.get("id") for d in existing}
     tid = max((d.get("tid", 0) or 0 for d in existing), default=0)
 
-    def is_dup(nt):
-        return any(nt and len(nt & ks) / len(nt) >= 0.6 for ks in known_sets)
+    def is_dup(nt, cat):                                   # trùng CÙNG LOẠI HÌNH, 2 chiều (name ⊂ cũ / bao trùm cũ)
+        return any(kc == cat and ks and nt and
+                   (len(nt & ks) / len(nt) >= 0.6 or len(nt & ks) / len(ks) >= 0.75)
+                   for kc, ks in known_sets)
 
     added = 0
     for r in rows:
@@ -193,7 +196,7 @@ def auto_add_projects(client, rows, dry=False):
             continue
         if not _place_ok(name_part) or len(nt) < 2:       # loại tên vụn (số/định lượng)
             continue
-        if is_dup(nt):                                     # đã có (kể cả tên biến thể)
+        if is_dup(nt, _infra_cat(name_part)):              # đã có (kể cả tên biến thể, cùng loại)
             continue
         tid += 1
         name = re.sub(r"\s+", " ", r["label"]).strip().title()
@@ -204,7 +207,7 @@ def auto_add_projects(client, rows, dry=False):
                                      "aliases": [name, r["label"]], "active": True,
                                      "origin": "radar", "group": _infra_cat(r["label"])}},
                            upsert=True)
-        known_sets.append(nt)
+        known_sets.append((_infra_cat(name_part), nt))
         added += 1
         print(f"  {'[dry] ' if dry else ''}+ TỰ ADD tid{tid} [{_infra_cat(r['label'])}] {name[:48]}")
     print(f"Auto-add: thêm {added} dự án (lọc ≥{AUTO_MIN_SOURCES} báo & ≥{AUTO_MIN_COUNT} lần + ngữ cảnh + tên riêng + không trùng).")

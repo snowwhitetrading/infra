@@ -1064,7 +1064,6 @@ function render(){
        `</div></div>`;
 
   document.getElementById('chart').innerHTML = h;
-  const gc = document.getElementById('g-count'); if(gc) gc.textContent = shown + ' dự án';
   document.querySelectorAll('.pname').forEach(b=>b.onclick=()=>{
     const id = +b.dataset.id;
     open.has(id) ? open.delete(id) : open.add(id);
