@@ -156,6 +156,39 @@ def event_month(text, pub_month):
     return max(past) if past else ""               # gần tháng đăng nhất = sự kiện đang được thuật
 
 
+def _all_months(text):
+    c = []
+    for m in RX_DMY.finditer(text):
+        mo = int(m.group(2))
+        if 1 <= mo <= 12:
+            c.append(f"{m.group(3)}-{mo:02d}")
+    for m in RX_MY.finditer(text):
+        mo = int(m.group(1))
+        if 1 <= mo <= 12:
+            c.append(f"{m.group(2)}-{mo:02d}")
+    for m in RX_Q.finditer(text):
+        c.append(f"{m.group(2)}-{_QMO[m.group(1).lower()]:02d}")
+    for m in RX_YP.finditer(text):
+        c.append(f"{m.group(2)}-{_YPMO[m.group(1).lower()]:02d}")
+    return c
+
+
+# 'hoàn thành/thông xe/về đích...' gắn với HẠN (ý-định) = tin nêu HẠN HOÀN THÀNH.
+RX_FINISH = re.compile(r"hoàn thành|thông xe|về đích|khánh thành|đưa vào (khai thác|vận hành)|"
+                       r"vận hành|thông tuyến|hợp long|xong", re.I)
+
+
+def deadline_month(text, pub_month):
+    """DETERMINISTIC: tin nêu HẠN HOÀN THÀNH (ý-định + mốc hoàn thành + ngày TƯƠNG LAI) →
+    trả tháng hạn gần nhất (YYYY-MM); else ''. Dùng để trích hạn TỪ TIN (có nguồn), không để LLM bịa."""
+    if not text or len(pub_month) < 7:
+        return ""
+    if not (RX_INTENT.search(text) and RX_FINISH.search(text)):
+        return ""
+    fut = sorted(x for x in _all_months(text) if x > pub_month)   # chỉ mốc TƯƠNG LAI
+    return fut[0] if fut else ""                                   # hạn gần nhất
+
+
 def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
     intent = RX_INTENT.search(blob)      # đề xuất/dự kiến/sắp... + mốc = CHƯA xảy ra → 'ms'
