@@ -190,16 +190,20 @@ def deadline_month(text, pub_month):
 
 
 # Tín hiệu NHỊP ĐỘ từ tin (để đánh giá chậm/vượt/đúng khi TIN NÓI RÕ — mở rộng để phủ nhiều cách diễn đạt).
-RX_DELAY = re.compile(
-    r"chậm tiến độ|chậm trễ|chậm so|chậm nhất|thi công chậm|lùi (tiến độ|thời điểm|mốc|ngày|khởi công|hoàn thành|khai thác|thông xe)|"
-    r"gia hạn|trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|đội vốn|đội chi phí|vướng (mặt bằng|gpmb|giải phóng)|đình trệ|ì ạch|"
-    r"dở dang|nguy cơ (chậm|vỡ tiến độ)|vỡ tiến độ|chưa thể hoàn thành|quá hạn|nợ tiến độ|thi công (ì|cầm chừng)|"
-    r"ngừng thi công|tạm dừng thi công|đắp chiếu|khó (về đích|hoàn thành|kịp)|không kịp|chưa hẹn ngày|"
-    r"mòn mỏi|bế tắc|ách tắc|chưa biết ngày (về đích|hoàn thành)|thất hứa|trượt tiến độ", re.I)
+RX_DELAY = re.compile(                                        # CHỈ từ 'chậm' RÕ RÀNG (bỏ vướng MB/gia hạn/đội vốn — quá phổ biến)
+    r"chậm tiến độ|chậm trễ|thi công chậm|chậm nhất là|"
+    r"lùi (tiến độ|thời điểm hoàn thành|thời gian hoàn thành|mốc hoàn thành|ngày hoàn thành|thời hạn|tiến độ hoàn thành)|"
+    r"trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|trượt tiến độ|vỡ tiến độ|nguy cơ vỡ tiến độ|"
+    r"đình trệ|đắp chiếu|thi công cầm chừng|ngừng thi công|quá hạn|nợ tiến độ|thất hứa|ì ạch", re.I)
 RX_AHEAD = re.compile(
     r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn|so)|vượt kế hoạch|vượt mốc tiến độ|"
     r"hoàn thành sớm|xong sớm|trước (thời hạn|hạn|kế hoạch|tiến độ)|rút ngắn (tiến độ|thời gian)|thần tốc|"
     r"băng băng về đích|đích sớm", re.I)
+RX_STATE = re.compile(                                       # tín hiệu DỰ ÁN CÔNG (vốn nhà nước)
+    r"đầu tư công|ban quản lý dự án|bqlda|ban qlda|pmu|"
+    r"(bộ (giao thông|xây dựng|gtvt)|ubnd[^.]{0,40})\s*(làm\s*)?chủ đầu tư|"
+    r"chủ đầu tư (là )?(bộ|ubnd|ban quản lý dự án|sở giao thông)|"
+    r"do (bộ|ubnd|ban quản lý)[^.]{0,30}(đầu tư|làm chủ đầu tư)|vốn ngân sách nhà nước", re.I)
 RX_ONTRACK = re.compile(
     r"đúng tiến độ|đảm bảo tiến độ|bám sát (tiến độ|kế hoạch)|đúng kế hoạch|đúng hẹn|đáp ứng tiến độ|"
     r"theo đúng tiến độ|giữ vững tiến độ|đúng cam kết|hoàn thành đúng (hạn|hẹn|kế hoạch|tiến độ)|đúng mốc|"

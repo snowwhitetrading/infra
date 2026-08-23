@@ -493,7 +493,8 @@ def main():
     projects = projects + build_auto_rows(c, projects)
     for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
-        p["owner"] = OWNER_OVERRIDE.get(p.get("id")) or canon_owner(p.get("owner", ""))   # chuẩn hoá CĐT
+        p["owner"] = (OWNER_OVERRIDE.get(p.get("id")) or canon_owner(p.get("owner", ""))
+                      or p.get("ownerAuto", ""))                                    # override > LLM > máy(Nhà nước)
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

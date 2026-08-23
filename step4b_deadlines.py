@@ -17,7 +17,7 @@ from collections import defaultdict
 from pymongo import MongoClient
 
 from lib_db import mongo_uri
-from lib_marks import deadline_month, progress_pct, RX_DELAY, RX_AHEAD, RX_ONTRACK
+from lib_marks import deadline_month, progress_pct, RX_DELAY, RX_AHEAD, RX_ONTRACK, RX_STATE
 from lib_projects import build_alias_regex, pid2tid
 
 DB = "dc_commodity"
@@ -39,7 +39,7 @@ def run():
             t2rx[p2t[pid]].append(r)
 
     dstmts = defaultdict(list)          # tid -> [(article_date, deadline_month, source)]
-    sig = defaultdict(lambda: {"delay": None, "ahead": None, "ontrack": None, "pct": None})
+    sig = defaultdict(lambda: {"delay": None, "ahead": None, "ontrack": None, "pct": None, "state": False})
     for d in raw.find({"projects": {"$ne": []}},
                       {"title": 1, "description": 1, "date": 1, "source": 1, "projects": 1}):
         pub = (d.get("date") or "")[:7]
@@ -64,6 +64,8 @@ def run():
             pc = progress_pct(blob)
             if pc is not None and (s["pct"] is None or adate > s["pct"][0]):
                 s["pct"] = (adate, pc, d.get("source", "?"))    # % mới nhất theo tin
+            if RX_STATE.search(blob):
+                s["state"] = True                               # tín hiệu dự án công (vốn nhà nước)
 
     today = dt.date.today().strftime("%Y-%m")
     tids = set(dstmts) | set(sig)
@@ -102,14 +104,20 @@ def run():
                   _m2n(ds_sorted[-1][1]) - _m2n(ds_sorted[0][1]) >= 3)
         s = sig[tid]
         pace, why = "", ""
-        if overdue:
+        # TIN NHỊP ĐỘ MỚI NHẤT THẮNG (tin đúng/vượt gần đây ĐÈ tin chậm cũ — tránh gắn chậm mãi).
+        news = []
+        if s["delay"]:
+            news.append((s["delay"][0], "chậm tiến độ", f"Tin nêu chậm/lùi tiến độ (theo {s['delay'][1]} {s['delay'][0][:7]})."))
+        if s["ahead"]:
+            news.append((s["ahead"][0], "vượt tiến độ", f"Tin nêu về đích sớm/vượt tiến độ (theo {s['ahead'][1]} {s['ahead'][0][:7]})."))
+        if s["ontrack"]:
+            news.append((s["ontrack"][0], "đúng tiến độ", f"Tin nêu bám sát/đúng tiến độ (theo {s['ontrack'][1]} {s['ontrack'][0][:7]})."))
+        if news:
+            _, pace, why = max(news)                                          # bài mới nhất quyết định
+        elif overdue:
             pace, why = "chậm tiến độ", f"Quá hạn {latest} (theo tin) mà chưa có tin xác nhận hoàn thành."
         elif pushed:
             pace, why = "chậm tiến độ", f"Hạn bị lùi (từ {ds_sorted[0][1]} sang {ds_sorted[-1][1]} theo tin)."
-        elif s["delay"]:
-            pace, why = "chậm tiến độ", f"Tin nêu chậm/lùi tiến độ (theo {s['delay'][1]} {s['delay'][0][:7]})."
-        elif s["ahead"]:
-            pace, why = "vượt tiến độ", f"Tin nêu về đích sớm/vượt tiến độ (theo {s['ahead'][1]} {s['ahead'][0][:7]})."
         elif latest and s["pct"] and [ph for ph in phases if ph.get("kind") == "build" and ph.get("from")]:
             # % đã đạt so với KỲ VỌNG theo timeline (chỉ khi có hạn nguồn để tính kỳ vọng)
             frm = min(ph["from"] for ph in phases if ph.get("kind") == "build" and ph.get("from"))
@@ -123,10 +131,9 @@ def run():
                     pace, why = "vượt tiến độ", f"Đạt {pc}% vượt kỳ vọng ~{exp}% theo mốc (theo {s['pct'][2]} {s['pct'][0][:7]})."
                 else:
                     pace, why = "đúng tiến độ", f"Đạt {pc}% bám sát kỳ vọng ~{exp}% theo mốc (theo {s['pct'][2]} {s['pct'][0][:7]})."
-        elif s["ontrack"]:
-            pace, why = "đúng tiến độ", f"Tin nêu bám sát/đúng tiến độ (theo {s['ontrack'][1]} {s['ontrack'][0][:7]})."
 
-        upd = {"marks": marks, "phases": phases, "paceAuto": pace, "paceWhy": why}
+        upd = {"marks": marks, "phases": phases, "paceAuto": pace, "paceWhy": why,
+               "ownerAuto": "Nhà nước" if s["state"] else ""}     # dự án công → chủ đầu tư nhà nước
         tr.update_one({"_key": "project", "id": tid}, {"$set": upd})
         if pace:
             n_pace += 1
