@@ -84,7 +84,7 @@ def canon_owner(o):
 
 
 # Đổi TÊN từ Title-Case (mọi từ viết hoa) → proper text (chỉ từ đầu + tên riêng viết hoa).
-_LOWER_WORDS = set("đường sắt tốc độ số sân bay tuyến nút giao vành đai ven biển quốc lộ tỉnh "
+_LOWER_WORDS = set("đường sắt tốc độ số sân bay tuyến nút giao vành đai ven biển lộ tỉnh "
                    "nâng cấp mở rộng dự án đoạn nối dài kết trục đô thị xây dựng đầu tư hạ tầng cải tạo "
                    "giai với đến của và hầm nhẹ hàng không bộ trên khu".split())
 
