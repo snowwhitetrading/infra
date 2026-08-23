@@ -375,6 +375,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .mp-near{display:flex;flex-direction:column;gap:2px;margin-top:2px}
 .mp-nrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:1.4;padding:5px 0;border-top:1px dotted var(--rule2)}
 .mp-nnm{color:var(--ink)}
+.mp-nnm .sched{white-space:nowrap;vertical-align:middle}
 .mp-nkm{color:var(--ink3);font-family:"IBM Plex Mono",monospace;flex-shrink:0}
 .sat-top input[type=search]{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rule2);
   border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
@@ -1242,9 +1243,9 @@ function _nearbyInfra(at, exceptTitle){                     // tuyến/điểm h
   const out=[];
   CAF_LINES.forEach(l=>{ if(l.coords&&l.coords.length&&l.title!==exceptTitle){
     const c=l.coords[Math.floor(l.coords.length/2)];
-    out.push({title:l.title,cat:l.cat,km:_dist(at[0],at[1],c[0],c[1])}); }});
+    out.push({title:l.title,cat:l.cat,pid:l.pid,km:_dist(at[0],at[1],c[0],c[1])}); }});
   CAF_POINTS.forEach(p=>{ if(p.lat!=null&&p.title!==exceptTitle)
-    out.push({title:p.title,cat:p.cat,km:_dist(at[0],at[1],p.lat,p.lng)}); });
+    out.push({title:p.title,cat:p.cat,pid:p.pid,km:_dist(at[0],at[1],p.lat,p.lng)}); });
   return out.filter(x=>x.km<=8).sort((a,b)=>a.km-b.km).slice(0,8);
 }
 function _nearHTML(at, title){
@@ -1253,7 +1254,10 @@ function _nearHTML(at, title){
   return '<p class="mp-nh">Hạ tầng xung quanh (≤8 km)</p><div class="mp-near">'+
     near.map(n=>{const ic=(ICON_INFRA[n.cat]||['📍'])[0];
       const d=n.km<1?Math.round(n.km*1000)+' m':n.km.toFixed(1)+' km';
-      return '<div class="mp-nrow"><span class="mp-nnm">'+ic+' '+esc(n.title)+'</span><span class="mp-nkm">'+d+'</span></div>';
+      const p=n.pid?P.find(x=>x.id===n.pid):null;           // hạ tầng có gắn dự án theo dõi → kèm tiến độ
+      const sc=p?schedOf(p):'';
+      const badge=sc?` <span class="sched s-${SCHED_CLS2[sc]}" style="margin-left:4px">${esc(sc)}</span>`:'';
+      return '<div class="mp-nrow"><span class="mp-nnm">'+ic+' '+esc(n.title)+badge+'</span><span class="mp-nkm">'+d+'</span></div>';
     }).join('')+'</div>';
 }
 function showDetail(title, detail, meta, at){
