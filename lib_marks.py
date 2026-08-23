@@ -40,11 +40,13 @@ RX_DIRECTIVE = re.compile(
 RX_CONTRACT = re.compile(r"ký hợp đồng|hợp đồng dự án|trúng thầu|chọn nhà (thầu|đầu tư)", re.I)
 RX_START = re.compile(r"khởi công|động thổ|bấm nút|khởi động", re.I)
 RX_DONE = re.compile(r"hoàn thành|khánh thành|vận hành|về đích|thông xe|cất nóc|đưa vào khai thác", re.I)
-# 'yêu cầu/dự kiến/chốt hoàn thành...' = HẠN/chỉ đạo, KHÔNG phải đã xong → mark 'ms', không phải 'done'.
-RX_DEADLINE = re.compile(
-    r"(yêu cầu|chốt|dự kiến|kế hoạch|phấn đấu|mục tiêu|quyết tâm|cam kết|đề nghị|chỉ đạo|"
-    r"hạn|trước ngày|trước tháng|trong năm|đặt mục tiêu)\s+\S*\s{0,3}\S{0,18}"
-    r"(hoàn thành|thông xe|về đích|khánh thành|đưa vào|vận hành)", re.I)
+# Ngôn ngữ Ý ĐỊNH / HẠN (đề xuất/dự kiến/sắp/yêu cầu... + mốc) = CHƯA xảy ra.
+# → KHÔNG đánh 'start'/'done' (tránh chấm "đã khởi công/đã xong" giả); Dòng tin gắn nhãn 'chỉ đạo'.
+RX_INTENT = re.compile(
+    r"(đề xuất|kiến nghị|đề nghị|dự kiến|kế hoạch|phương án|ý tưởng|nghiên cứu|xem xét|"
+    r"muốn|mong muốn|xin chủ trương|phấn đấu|mục tiêu|quyết tâm|cam kết|yêu cầu|chốt|"
+    r"hạn|trước ngày|trước tháng|trong năm|đặt mục tiêu|sắp|chuẩn bị)\s+\S*\s{0,3}\S{0,18}"
+    r"(khởi công|động thổ|hoàn thành|thông xe|về đích|khánh thành|đưa vào|vận hành|hợp long)", re.I)
 
 # CHỈ giữ CỘT MỐC TIẾN ĐỘ rời rạc: khởi công, hoàn thành hạng mục, GPMB, pháp lý,
 # đấu thầu/hợp đồng/góp vốn. Whitelist hẹp + blacklist tin PR/bán hàng/tài chính DN.
@@ -96,6 +98,9 @@ RX_APPROVE = re.compile(r"phê duyệt|chủ trương đầu tư|điều chỉnh
 def news_tag(text):
     """Nhãn loại tin để hiện cạnh tin trong tab Tiến độ ('' = tin thường)."""
     t = text or ""
+    # đề xuất/dự kiến/sắp khởi công-hoàn thành = định hướng, CHƯA xảy ra → 'chỉ đạo', không 'khởi công/hoàn thành'
+    if RX_INTENT.search(t) and (RX_START.search(t) or RX_DONE.search(t)):
+        return "chỉ đạo"
     if RX_START.search(t):
         return "khởi công"
     if RX_DONE.search(t):
@@ -123,10 +128,10 @@ def infer_tier(text):
 
 def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
-    if RX_START.search(blob):
+    intent = RX_INTENT.search(blob)      # đề xuất/dự kiến/sắp... + mốc = CHƯA xảy ra → 'ms'
+    if RX_START.search(blob) and not intent:
         return "start"
-    # 'done' chỉ khi ĐÃ xong thật; 'yêu cầu/dự kiến/chốt hoàn thành' (hạn) → 'ms'
-    if (RX_DONE.search(blob) or stage in ("hoàn thành", "khai thác")) and not RX_DEADLINE.search(blob):
+    if (RX_DONE.search(blob) or stage in ("hoàn thành", "khai thác")) and not intent:
         return "done"
     return "ms"
 
