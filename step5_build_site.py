@@ -251,7 +251,9 @@ def _infra_cat(t):
     # xét TRƯỚC cầu/cảng/kênh vì tên có thể chứa địa danh "Rạch/Cầu…" (vd Liên hợp TT Rạch Chiếc)
     if any(k in t for k in ("hội nghị", "sân vận động", "svđ", "nhà thi đấu", "thể thao",
                             "thể dục", "nhà hát", "quảng trường", "triển lãm", "tòa nhà",
-                            "toà nhà", "trụ sở", "cung văn hoá", "cung văn hóa")):
+                            "toà nhà", "trụ sở", "cung văn hoá", "cung văn hóa",
+                            "trung tâm hành chính", "khu hành chính", "trung tâm chính trị",
+                            "công viên", "bảo tàng", "trung tâm văn hoá", "trung tâm văn hóa")):
         return "Toà nhà"
     # cao tốc/quốc lộ… mà tên có địa danh "Cầu X" (vd Pháp Vân - Cầu Giẽ) vẫn là Đường bộ
     if road and not re.match(r"^(cầu|hầm|cảng)\b", t):
