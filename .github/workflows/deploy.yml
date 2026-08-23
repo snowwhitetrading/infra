@@ -58,6 +58,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step4_promote_marks.py || echo "promote skipped"
 
+      # HẠN hoàn thành lấy TỪ TIN (deterministic, có nguồn) → mark 'deadline' + phase.to (không để LLM bịa)
+      - name: Deadlines from news
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python step4b_deadlines.py || echo "deadlines skipped"
+
       # Dựng site từ DB (Tracker chi tiết + mark auto)
       - name: Build site
         env:

@@ -38,10 +38,12 @@ Bỏ dự án thuần "chuẩn bị đầu tư" đã đủ (không có tiến đ
   - `đúng tiến độ` CHỈ khi có HẠN/KẾ HOẠCH **CÓ NGUỒN** và tin cho thấy bám sát — **KHÔNG dùng làm mặc định**.
   - `chưa đánh giá được` khi KHÔNG có hạn/kế hoạch có nguồn để đối chiếu (thà nói không biết còn hơn phán bừa "đúng").
   - `''` chỉ khi thuần chuẩn bị đầu tư.
-- **HẠN (`to`) PHẢI CÓ NGUỒN nếu dùng để đánh giá:** đặt `to` = tháng cụ thể CHỈ khi TIN nêu hạn,
-  VÀ kèm 1 mark `tier:'directive'`/`'company'` có `src` tại tháng đó (để hạn "có căn cứ"). Nếu tin KHÔNG
-  nêu hạn → **ĐỪNG bịa tháng chính xác**; ước lượng thô + `note` ghi "ước lượng, chưa có nguồn", KHÔNG kèm
-  mark hạn (thanh sẽ hiện `~`), và sched = `chưa đánh giá được`. Web tự phát hiện "⚠ quá hạn" CHỈ khi hạn có nguồn.
+- **HẠN (`to`) DO MÁY TRÍCH TỪ TIN — KHÔNG tự bịa:** bước `step4b_deadlines.py` (deterministic) trích
+  hạn hoàn thành từ tin mới nhất (có `src`) → ghi **mark `tier:'deadline'`** + đặt `phase.to` build cuối.
+  - **GIỮ NGUYÊN mọi mark `tier:'deadline'`** khi soạn (đừng xoá); ĐỪNG tự đặt/sửa một hạn tương lai khác.
+  - Nếu dự án KHÔNG có mark `deadline` → **chưa có hạn có nguồn**: để `to` ước lượng thô (thanh hiện `~`),
+    `note` ghi "hạn ước lượng, chưa có nguồn", và **sched = `chưa đánh giá được`** (đừng phán "đúng/chậm").
+  - CHỈ đánh `chậm`/`vượt` khi có mark `deadline` (hoặc tin nói rõ trễ/sớm) để đối chiếu.
 - **items ≥2 hạng mục** khi đã thi công (GPMB · thi công chính · cầu/hầm/nhà ga/khán đài…), mỗi cái có `prog`.
 - **marks 4-8 mốc chính**, mỗi mốc có `src` (báo + tháng). Nhãn VIẾT LẠI gọn, không chép tiêu đề thô.
 - **phases**: ≥1 build từ khởi công → hạn hoàn thành (tìm trong tin; không có thì ước lượng theo loại
