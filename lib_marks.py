@@ -189,6 +189,30 @@ def deadline_month(text, pub_month):
     return fut[0] if fut else ""                                   # hạn gần nhất
 
 
+# Tín hiệu NHỊP ĐỘ từ tin (để grounding sched: chỉ giữ chậm/vượt/đúng khi TIN NÓI RÕ).
+RX_DELAY = re.compile(r"chậm tiến độ|chậm trễ|chậm so|lùi tiến độ|lùi (thời điểm|mốc|khởi công|hoàn thành|khai thác|tiến độ)|"
+                      r"gia hạn|trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|đội vốn|vướng (mặt bằng|gpmb)|đình trệ|ì ạch|"
+                      r"dở dang|nguy cơ chậm|chưa thể hoàn thành|quá hạn|thi công ì|nợ tiến độ", re.I)
+RX_AHEAD = re.compile(r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn)|vượt kế hoạch|"
+                      r"hoàn thành sớm|trước (thời hạn|hạn|kế hoạch)|rút ngắn (tiến độ|thời gian)|thần tốc", re.I)
+RX_ONTRACK = re.compile(r"đúng tiến độ|đảm bảo tiến độ|bám sát (tiến độ|kế hoạch)|đúng kế hoạch|đúng hẹn|"
+                        r"đáp ứng tiến độ|theo đúng tiến độ|giữ vững tiến độ", re.I)
+# % khối lượng/tiến độ đã đạt (để so với kỳ vọng theo timeline)
+RX_PCT = re.compile(r"(?:đạt|hoàn thành|thi công|thực hiện|tiến độ|khối lượng|sản lượng)\s*(?:khoảng\s*|hơn\s*|gần\s*)?"
+                    r"(\d{1,3})\s*%|(\d{1,3})\s*%\s*(?:khối lượng|kế hoạch|tiến độ|hoàn thành|giá trị hợp đồng|sản lượng)",
+                    re.I)
+
+
+def progress_pct(text):
+    """% khối lượng/tiến độ CAO NHẤT nêu trong text (0-100); None nếu không có. (Bỏ % lặt vặt như lãi suất.)"""
+    best = None
+    for m in RX_PCT.finditer(text or ""):
+        v = int(m.group(1) or m.group(2))
+        if 0 <= v <= 100:
+            best = v if best is None else max(best, v)
+    return best
+
+
 def infer_type(stage, text):
     blob = (stage or "") + " " + (text or "")
     intent = RX_INTENT.search(blob)      # đề xuất/dự kiến/sắp... + mốc = CHƯA xảy ra → 'ms'

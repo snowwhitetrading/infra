@@ -448,13 +448,6 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <p class="sat-note">Dữ liệu <b>Cafeland</b> toàn quốc — lọc theo tỉnh · loại hạ tầng · loại dự án. 🔴 sân bay · tuyến màu theo loại · 🟢 dự án BĐS · 🟣 KCN (gộp cụm khi thu nhỏ). Bấm để xem chi tiết. © OpenStreetMap.</p>
 </div>
 
-<footer>
-  <p><b>Cách đọc.</b> Thanh mờ + viền đứt = phần nằm sau ngày hôm nay (kế hoạch). Vạch đỏ dọc = 3/8/2026. Bấm tên dự án để mở hạng mục con và bảng tài chính theo Phụ lục I.</p>
-  <p><b>Độ phủ nguồn.</b> Chỉ số <code>căn cứ N%</code> đo tỷ lệ đầu mút thanh giai đoạn trùng ngày với một mốc có nguồn dẫn. Phần còn lại là ước lượng của người lập bảng để vẽ được thanh, đánh dấu bằng <code>~</code>. Chỉ số này do chương trình tự tính từ dữ liệu, không nhập tay — thêm một mốc có nguồn là nó tự tăng.</p>
-  <p><b>Cấp độ tin cậy.</b> <code>hợp đồng</code> mốc ghi trong hợp đồng dự án hoặc quyết định phê duyệt · <code>chỉ đạo</code> mốc trong kết luận họp của Chính phủ/UBND · <code>doanh nghiệp</code> chủ đầu tư tự công bố · <code>suy đoán</code> nội suy từ lịch giải ngân trong Phụ lục I, không có nguồn công bố.</p>
-  <p><b>Nguồn số liệu tài chính.</b> Phụ lục I công văn 5386/NHNN-TD ngày 22/6/2026. Đơn vị tỷ đồng. TMĐT điều chỉnh của các dự án Sungroup là số doanh nghiệp báo cáo, chưa được phê duyệt (theo chú thích 3 của công văn). Mốc tiến độ tổng hợp từ báo chí và thông báo của Chính phủ/địa phương, cập nhật đến 3/8/2026.</p>
-</footer>
-
 </div>
 
 <script>
@@ -880,16 +873,10 @@ const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime
                     'đang thi công':'building','chưa thi công':'unknown'};
 const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','đang thi công','chưa thi công'];
 function newsN(p){ return _NEWSN[p.name] || 0; }
-// Nhãn tiến độ hiển thị (grounded):
-//  - 'chậm' giữ (tin nói trễ, định tính được).
-//  - 'đúng'/'vượt' CHỈ giữ khi có HẠN CÓ NGUỒN để đối chiếu (build phase.to anchored — giống thanh có mũi ›);
-//    không có hạn nguồn → KHÔNG thể nói đúng/vượt → theo trạng thái: 'đang thi công' / 'chưa thi công'.
+// Nhãn tiến độ: dùng ĐÁNH GIÁ MÁY paceAuto (step4b — kết hợp: tin nói rõ chậm/vượt/đúng ·
+// quá hạn · hạn bị lùi · % so kỳ vọng — đều CÓ NGUỒN). Không đủ tín hiệu → theo trạng thái thi công.
 function schedOf(p){
-  const s = p.sched;
-  if(s==='chậm tiến độ') return s;
-  const A = anchors(p);
-  const grounded = (p.phases||[]).some(ph=>ph.kind!=='gpmb' && ph.to && A.has(ph.to));
-  if((s==='đúng tiến độ'||s==='vượt tiến độ') && grounded) return s;
+  if(p.paceAuto) return p.paceAuto;
   const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
   return started ? 'đang thi công' : 'chưa thi công';
 }
@@ -972,7 +959,7 @@ function detailHTML(p){
   const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
     <p class="dh">Đánh giá tiến độ</p>
-    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.schedWhy || (schedOf(p)==='đang thi công'?'Chưa có hạn hoàn thành từ nguồn để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}
+    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}
       <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>
     <div class="dgrid" style="margin-top:20px">
     <div>
