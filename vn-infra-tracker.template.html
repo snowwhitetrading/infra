@@ -372,6 +372,10 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 .hl-ping{animation:hlping 1.1s ease-out infinite}
 @keyframes hlping{0%{stroke-width:3;opacity:.95}70%{stroke-width:11;opacity:0}100%{opacity:0}}
 .hl-pop .leaflet-popup-content{font-size:12.5px;margin:8px 12px}
+.mp-near{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.mp-nrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:1.4;padding:5px 0;border-top:1px dotted var(--rule2)}
+.mp-nnm{color:var(--ink)}
+.mp-nkm{color:var(--ink3);font-family:"IBM Plex Mono",monospace;flex-shrink:0}
 .sat-top input[type=search]{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rule2);
   border-radius:8px;background:var(--card);color:var(--ink);min-width:200px}
 .sat-top input[type=search]:hover{border-color:var(--ink3)}
@@ -1230,7 +1234,29 @@ const mval = id => document.getElementById(id).value;
 const _infraSel = new Set(), _projSel = new Set();
 const _PANEL_HINT = '<div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div>';
 function closeDetail(){ document.getElementById('map-panel').innerHTML = _PANEL_HINT; }
-function showDetail(title, detail, meta){
+function _dist(a,b,c,d){const R=6371,rad=x=>x*Math.PI/180,dLa=rad(c-a),dLo=rad(d-b);
+  const s=Math.sin(dLa/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));}
+function _nearbyInfra(at, exceptTitle){                     // tuyến/điểm hạ tầng gần nhất quanh toạ độ
+  if(!at) return [];
+  const out=[];
+  CAF_LINES.forEach(l=>{ if(l.coords&&l.coords.length&&l.title!==exceptTitle){
+    const c=l.coords[Math.floor(l.coords.length/2)];
+    out.push({title:l.title,cat:l.cat,km:_dist(at[0],at[1],c[0],c[1])}); }});
+  CAF_POINTS.forEach(p=>{ if(p.lat!=null&&p.title!==exceptTitle)
+    out.push({title:p.title,cat:p.cat,km:_dist(at[0],at[1],p.lat,p.lng)}); });
+  return out.filter(x=>x.km<=8).sort((a,b)=>a.km-b.km).slice(0,8);
+}
+function _nearHTML(at, title){
+  const near=_nearbyInfra(at, title);
+  if(!near.length) return '';
+  return '<p class="mp-nh">Hạ tầng xung quanh (≤8 km)</p><div class="mp-near">'+
+    near.map(n=>{const ic=(ICON_INFRA[n.cat]||['📍'])[0];
+      const d=n.km<1?Math.round(n.km*1000)+' m':n.km.toFixed(1)+' km';
+      return '<div class="mp-nrow"><span class="mp-nnm">'+ic+' '+esc(n.title)+'</span><span class="mp-nkm">'+d+'</span></div>';
+    }).join('')+'</div>';
+}
+function showDetail(title, detail, meta, at){
   const rows = Object.entries(detail||{}).filter(([k,v])=>v!=null&&String(v).trim()!=='')
     .map(([k,v])=>`<div class="mp-row"><span class="mp-k">${esc(k)}</span><span class="mp-v">${esc(String(v))}</span></div>`).join('');
   const tags = [meta.cat, meta.prov].filter(Boolean).map(t=>`<span class="mp-tag">${esc(t)}</span>`).join('');
@@ -1240,7 +1266,8 @@ function showDetail(title, detail, meta){
     (tags?'<div class="mp-tags">'+tags+'</div>':'')+
     (meta&&meta.pid?_mapProj(meta.pid):'')+
     (rows?rows
-        :(meta&&meta.pid?'':'<div class="mp-empty">Chưa có thông tin chi tiết.</div>'));
+        :(meta&&meta.pid?'':'<div class="mp-empty">Chưa có thông tin chi tiết.</div>'))+
+    _nearHTML(at, title);
 }
 // Mục "dự án đang theo dõi" (khớp tên với tab Tiến độ): đánh giá tiến độ + thông tin + Dòng tin
 function _mapProj(pid){
@@ -1271,19 +1298,20 @@ function redrawMap(){
   let ni=0, np=0;
   CAF_LINES.forEach(l=>{ if(_infraSel.has(l.cat)&&okp(l)&&l.coords&&l.coords.length>1){
     const lc=(ICON_INFRA[l.cat]&&ICON_INFRA[l.cat][1])||l.color||'#2563eb';
+    const lmid=l.coords[Math.floor(l.coords.length/2)];
     L.polyline(l.coords,{color:lc,weight:4,opacity:.85})
-     .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
+     .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid},lmid)).addTo(_L.lines);
     if(ICON_INFRA[l.cat] && !l.noicon){        // 1 icon/tuyến (tuyến OSM nhiều đoạn → chỉ 1)
-      L.marker(l.coords[Math.floor(l.coords.length/2)],{icon:_icon(ICON_INFRA[l.cat])})
-       .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid})).addTo(_L.lines);
+      L.marker(lmid,{icon:_icon(ICON_INFRA[l.cat])})
+       .on('click',()=>showDetail(l.title,l.detail,{cat:l.cat,prov:l.prov,pid:l.pid},lmid)).addTo(_L.lines);
     }
     ni++; }});
   CAF_POINTS.forEach(p=>{ if(_infraSel.has(p.cat)&&p.lat!=null&&okp(p)){
     L.marker([p.lat,p.lng],{icon:_icon(ICON_INFRA[p.cat]||['📍','#64748b'])})
-     .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov,pid:p.pid})).addTo(_L.points); ni++; }});
+     .on('click',()=>showDetail(p.title,p.detail,{cat:p.cat,prov:p.prov,pid:p.pid},[p.lat,p.lng])).addTo(_L.points); ni++; }});
   CAF_PROJECTS.forEach(d=>{ if(_projSel.has(d.cat)&&d.a!=null&&okp(d)){
     _L.projects.addLayer(L.marker([d.a,d.o],{icon:_icon(ICON_PROJ[d.cat]||['📍','#64748b'])})
-      .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov,pid:d.pid}))); np++; }});
+      .on('click',()=>showDetail(d.t, d.detail||{'Loại':d.cat,'Trạng thái':d.s,'Giá/m²':d.pm2,'Giá từ':d.p,'Diện tích':d.ac?d.ac+' ha':''}, {cat:d.cat,prov:d.prov,pid:d.pid},[d.a,d.o]))); np++; }});
 }
 const _uniqSort = a => [...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'vi'));
 function fillProv(){
@@ -1329,7 +1357,7 @@ function _mapGo(r){
   L.circleMarker([r.lat,r.lng],{radius:18,color:'#e11d48',weight:3,opacity:.9,fill:false,className:'hl-ping'}).addTo(_L.hl);
   L.popup({closeButton:true,autoClose:false,closeOnClick:false,className:'hl-pop'})
    .setLatLng([r.lat,r.lng]).setContent('<b>'+esc(r.n)+'</b>').openOn(_map);
-  showDetail(r.t, r.d, r.m);
+  showDetail(r.t, r.d, r.m, [r.lat,r.lng]);
 }
 function _mapSearch(q){
   const box=document.getElementById('map-sug'), nq=_norm(q);
