@@ -76,7 +76,8 @@ RX_NOISE = re.compile(
     r"bắt tạm giam|bạo hành|khởi tố|truy tố|trộm|cướp|đánh nhau|bạo lực|"
     r"cảnh sát giao thông|csgt|xử phạt|phạt nguội|nồng độ cồn|vi phạm (giao thông|tốc độ|nồng độ|trật tự)|"
     r"tuần tra|kiểm soát tải trọng|xe quá tải|phân luồng giao thông|đua xe|"
-    r"cướp giật|ma túy|đánh bạc|lừa đảo",
+    r"cướp giật|ma túy|đánh bạc|lừa đảo|"
+    r"ùn tắc|kẹt xe|ùn ứ|ách tắc|quá tải giao thông|giảm kẹt xe|thường xuyên kẹt",
     re.I)
 
 
@@ -193,11 +194,12 @@ def deadline_month(text, pub_month):
 
 
 # Tín hiệu NHỊP ĐỘ từ tin (để đánh giá chậm/vượt/đúng khi TIN NÓI RÕ — mở rộng để phủ nhiều cách diễn đạt).
-RX_DELAY = re.compile(                                        # CHỈ từ 'chậm' RÕ RÀNG (bỏ vướng MB/gia hạn/đội vốn — quá phổ biến)
-    r"chậm tiến độ|chậm trễ|thi công chậm|chậm nhất là|"
+RX_DELAY = re.compile(                                        # 'chậm' RÕ RÀNG + rủi ro trễ RÕ (bỏ vướng MB/gia hạn/đội vốn — quá phổ biến)
+    r"chậm tiến độ|chậm trễ|thi công chậm|chậm nhất là|chậm so với (kế hoạch|tiến độ|dự kiến)|"
     r"lùi (tiến độ|thời điểm hoàn thành|thời gian hoàn thành|mốc hoàn thành|ngày hoàn thành|thời hạn|tiến độ hoàn thành)|"
-    r"trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|trượt tiến độ|vỡ tiến độ|nguy cơ vỡ tiến độ|"
-    r"đình trệ|đắp chiếu|thi công cầm chừng|ngừng thi công|quá hạn|nợ tiến độ|thất hứa|ì ạch", re.I)
+    r"trễ hẹn|lỡ hẹn|lỡ tiến độ|trễ tiến độ|trượt tiến độ|vỡ tiến độ|nguy cơ (chậm|trễ|vỡ tiến độ|không kịp|lỡ tiến độ)|"
+    r"cản tiến độ|cản trở tiến độ|khó (về đích|hoàn thành đúng|đúng hạn|kịp tiến độ)|chưa thể hoàn thành|"
+    r"đình trệ|đắp chiếu|thi công cầm chừng|ngừng thi công|quá hạn|nợ tiến độ|thất hứa|ì ạch|dậm chân tại chỗ", re.I)
 RX_AHEAD = re.compile(
     r"về đích sớm|vượt tiến độ|sớm hơn (kế hoạch|dự kiến|tiến độ|hạn|so)|vượt kế hoạch|vượt mốc tiến độ|"
     r"hoàn thành sớm|xong sớm|trước (thời hạn|hạn|kế hoạch|tiến độ)|rút ngắn (tiến độ|thời gian)|thần tốc|"

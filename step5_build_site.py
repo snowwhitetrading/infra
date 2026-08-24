@@ -164,10 +164,12 @@ def fetch_newsflow(client, projects, tid2cat):
     from lib_projects import project_names_by_tid
     tid2name = dict(project_names_by_tid())              # registry (gồm dự án mới ngoài Gantt)
     tid2name.update({p["id"]: p["name"] for p in projects})   # tên curated trên tracker ưu tiên
-    from lib_marks import news_tag
+    from lib_marks import news_tag, RX_NOISE
     out = []
     for doc in client[DB][NEWSFLOW_COLL].find({}):
         title = doc.get("title", "")
+        if RX_NOISE.search(title):        # bỏ nhiễu (kẹt xe/CSGT/tai nạn/mở bán…) khỏi Dòng tin & đếm tin
+            continue
         tag = news_tag(title)
         dtv = doc.get("dt") or ""     # giờ đăng thật 'YYYY-MM-DDTHH:MM' nếu có
         for tid in doc.get("projects", []):

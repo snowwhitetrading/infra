@@ -1023,7 +1023,7 @@ function _rowSort(a,b){                        // Hà Nội → TP.HCM → còn 
   return r(a)-r(b) || a.name.localeCompare(b.name,'vi');
 }
 function sections(){                          // nhóm theo chế độ SẮP XẾP, lọc theo vùng+tỉnh+tìm
-  const rows = P.filter(p=>_grow(p) && _searchOk(p));
+  const rows = P.filter(p=>_grow(p) && _searchOk(p) && newsN(p)>=5);   // ẩn dự án <5 tin (ít tín hiệu/nhiễu)
   if(_sortMode==='cat')                       // theo LOẠI HÌNH
     return GROUPS.map(g=>({name:g.name, meta:g.meta, rows:rows.filter(p=>p.g===g.id).sort(_rowSort)}))
                  .filter(s=>s.rows.length);

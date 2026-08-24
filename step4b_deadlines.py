@@ -57,6 +57,8 @@ def run():
             if dl:
                 dstmts[tid].append((adate, dl, d.get("source", "?")))
             s = sig[tid]
+            if adate > s.get("last", ""):
+                s["last"] = adate                               # tin (title-gated) MỚI NHẤT của dự án
             if RX_DELAY.search(blob) and (s["delay"] is None or adate > s["delay"][0]):
                 s["delay"] = (adate, d.get("source", "?"))
             if RX_AHEAD.search(blob) and (s["ahead"] is None or adate > s["ahead"][0]):
@@ -113,12 +115,15 @@ def run():
         s = sig[tid]
         pace, why = "", ""
         # TIN NHỊP ĐỘ MỚI NHẤT THẮNG (tin đúng/vượt gần đây ĐÈ tin chậm cũ — tránh gắn chậm mãi).
+        # BỎ tín hiệu QUÁ CŨ (>12 tháng so với tin gần nhất) — tránh "vượt/đúng" cũ trơ mãi khi tin mới nói khác.
+        last7 = (s.get("last") or "")[:7]
+        fresh = lambda d: (not last7) or (_m2n(last7) - _m2n(d[:7]) <= 12)
         news = []
-        if s["delay"]:
-            news.append((s["delay"][0], "chậm tiến độ", f"Tin nêu chậm/lùi tiến độ (theo {s['delay'][1]} {s['delay'][0][:7]})."))
-        if s["ahead"]:
+        if s["delay"] and fresh(s["delay"][0]):
+            news.append((s["delay"][0], "chậm tiến độ", f"Tin nêu chậm/cản/lùi tiến độ (theo {s['delay'][1]} {s['delay'][0][:7]})."))
+        if s["ahead"] and fresh(s["ahead"][0]):
             news.append((s["ahead"][0], "vượt tiến độ", f"Tin nêu về đích sớm/vượt tiến độ (theo {s['ahead'][1]} {s['ahead'][0][:7]})."))
-        if s["ontrack"]:
+        if s["ontrack"] and fresh(s["ontrack"][0]):
             news.append((s["ontrack"][0], "đúng tiến độ", f"Tin nêu bám sát/đúng tiến độ (theo {s['ontrack'][1]} {s['ontrack'][0][:7]})."))
         if news:
             _, pace, why = max(news)                                          # bài mới nhất quyết định
