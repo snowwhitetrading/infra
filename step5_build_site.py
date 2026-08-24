@@ -544,6 +544,9 @@ def main():
             if p["tmdtAuto"] >= floor:                                            # nhỏ hơn → tin gán nhầm dự án khác (vd sân bay↔đường)
                 p["tmdt"] = p["tmdtAuto"]
                 p["tmdtSrc"] = p.get("tmdtAutoSrc") or "theo tin"
+        if p.get("paceLLM") is not None:                                          # AGENT đọc-hiểu ưu tiên hơn regex (paceAuto)
+            p["paceAuto"] = p["paceLLM"]
+            p["paceWhy"] = p.get("paceWhyLLM") or p.get("paceWhy", "")
     used = {p["g"] for p in projects}
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]

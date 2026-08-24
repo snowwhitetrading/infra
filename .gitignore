@@ -16,3 +16,7 @@ __pycache__/
 facebook_posts.json
 cafeland_*.jsonl
 cafeland_*.json
+
+pace_bundles.json
+pace_sample.json
+pace_verdicts*.json
