@@ -2,32 +2,71 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-03,2026-03-10,0.0,OK,airport_catbi/2026-03_2026-03-10_cloud0pct_OK.png
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-05,2026-05-26,0.0,OK,airport_catbi/2026-05_2026-05-26_cloud0pct_OK.png
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-08,2026-08-12,34.9,CLOUDY,airport_catbi/2026-08_2026-08-12_cloud35pct_CLOUDY.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-02,2026-02-20,91.0,CLOUDY,airport_long_thanh/2026-02_2026-02-20_cloud91pct_CLOUDY.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-03,2026-03-17,0.0,OK,airport_long_thanh/2026-03_2026-03-17_cloud0pct_OK.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-04,2026-05-01,0.0,OK,airport_long_thanh/2026-04_2026-05-01_cloud0pct_OK.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-05,2026-05-01,0.0,OK,airport_long_thanh/2026-05_2026-05-01_cloud0pct_OK.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-06,2026-06-22,31.2,CLOUDY,airport_long_thanh/2026-06_2026-06-22_cloud31pct_CLOUDY.png
-19,Sân bay Long Thành,airport_long_thanh,10.97,107.0,2026-07,2026-07-20,72.8,CLOUDY,airport_long_thanh/2026-07_2026-07-20_cloud73pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-01,2025-01-06,0.0,OK,airport_long_thanh/2025-01_2025-01-06_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-02,2025-02-05,0.3,OK,airport_long_thanh/2025-02_2025-02-05_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-03,2025-03-27,26.6,OK,airport_long_thanh/2025-03_2025-03-27_cloud27pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-04,2025-04-28,55.3,CLOUDY,airport_long_thanh/2025-04_2025-04-28_cloud55pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-05,2025-05-06,74.5,CLOUDY,airport_long_thanh/2025-05_2025-05-06_cloud74pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-06,2025-06-05,58.2,CLOUDY,airport_long_thanh/2025-06_2025-06-05_cloud58pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-07,2025-07-25,20.9,OK,airport_long_thanh/2025-07_2025-07-25_cloud21pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-08,2025-08-04,39.2,CLOUDY,airport_long_thanh/2025-08_2025-08-04_cloud39pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-09,2025-09-15,12.8,OK,airport_long_thanh/2025-09_2025-09-15_cloud13pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-10,2025-10-15,39.1,CLOUDY,airport_long_thanh/2025-10_2025-10-15_cloud39pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-11,2025-11-24,52.9,CLOUDY,airport_long_thanh/2025-11_2025-11-24_cloud53pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-12,2026-01-01,0.0,OK,airport_long_thanh/2025-12_2026-01-01_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-01,2026-01-26,0.0,OK,airport_long_thanh/2026-01_2026-01-26_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-02,2026-02-10,100.0,CLOUDY,airport_long_thanh/2026-02_2026-02-10_cloud100pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-03,2026-03-22,0.0,OK,airport_long_thanh/2026-03_2026-03-22_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-04,2026-05-01,0.0,OK,airport_long_thanh/2026-04_2026-05-01_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-05,2026-05-01,0.0,OK,airport_long_thanh/2026-05_2026-05-01_cloud0pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-06,2026-06-22,22.1,OK,airport_long_thanh/2026-06_2026-06-22_cloud22pct_OK.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-07,2026-07-20,55.2,CLOUDY,airport_long_thanh/2026-07_2026-07-20_cloud55pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-08,2026-08-14,88.6,CLOUDY,airport_long_thanh/2026-08_2026-08-14_cloud89pct_CLOUDY.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-03,2026-03-13,0.0,OK,airport_noibai/2026-03_2026-03-13_cloud0pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-04,2026-04-12,0.0,OK,airport_noibai/2026-04_2026-04-12_cloud0pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-05,2026-05-27,19.6,OK,airport_noibai/2026-05_2026-05-27_cloud20pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-06,2026-06-01,51.2,CLOUDY,airport_noibai/2026-06_2026-06-01_cloud51pct_CLOUDY.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-07,2026-07-18,17.8,OK,airport_noibai/2026-07_2026-07-18_cloud18pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-08,2026-08-10,0.0,OK,airport_noibai/2026-08_2026-08-10_cloud0pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-02,2026-02-05,0.0,OK,airport_phanthiet/2026-02_2026-02-05_cloud0pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-03,2026-03-17,0.0,OK,airport_phanthiet/2026-03_2026-03-17_cloud0pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-04,2026-04-06,0.0,OK,airport_phanthiet/2026-04_2026-04-06_cloud0pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-05,2026-05-01,0.2,OK,airport_phanthiet/2026-05_2026-05-01_cloud0pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-06,2026-06-22,1.7,OK,airport_phanthiet/2026-06_2026-06-22_cloud2pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-07,2026-07-20,4.0,OK,airport_phanthiet/2026-07_2026-07-20_cloud4pct_OK.png
-73,Sân bay Phan Thiết,airport_phanthiet,10.95,108.07,2026-08,2026-08-01,39.8,CLOUDY,airport_phanthiet/2026-08_2026-08-01_cloud40pct_CLOUDY.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-02,2026-02-28,0.0,OK,airport_quangtri/2026-02_2026-02-28_cloud0pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-03,2026-03-30,0.0,OK,airport_quangtri/2026-03_2026-03-30_cloud0pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-04,2026-04-04,0.0,OK,airport_quangtri/2026-04_2026-04-04_cloud0pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-05,2026-05-26,0.0,OK,airport_quangtri/2026-05_2026-05-26_cloud0pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-06,2026-06-23,0.0,OK,airport_quangtri/2026-06_2026-06-23_cloud0pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-07,2026-07-23,1.7,OK,airport_quangtri/2026-07_2026-07-23_cloud2pct_OK.png
-74,Sân bay Quảng Trị,airport_quangtri,16.75,107.03,2026-08,2026-08-17,1.0,OK,airport_quangtri/2026-08_2026-08-17_cloud1pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-01,2025-01-06,0.0,OK,airport_phanthiet/2025-01_2025-01-06_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-02,2025-02-05,0.0,OK,airport_phanthiet/2025-02_2025-02-05_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-03,2025-03-27,0.0,OK,airport_phanthiet/2025-03_2025-03-27_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-04,2025-04-28,0.0,OK,airport_phanthiet/2025-04_2025-04-28_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-05,2025-05-06,0.0,OK,airport_phanthiet/2025-05_2025-05-06_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-06,2025-06-27,0.0,OK,airport_phanthiet/2025-06_2025-06-27_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-07,2025-07-10,0.0,OK,airport_phanthiet/2025-07_2025-07-10_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-08,2025-08-04,9.3,OK,airport_phanthiet/2025-08_2025-08-04_cloud9pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-09,2025-09-15,0.0,OK,airport_phanthiet/2025-09_2025-09-15_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-10,2025-10-15,0.0,OK,airport_phanthiet/2025-10_2025-10-15_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-11,2025-11-24,6.1,OK,airport_phanthiet/2025-11_2025-11-24_cloud6pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-12,2025-12-07,0.0,OK,airport_phanthiet/2025-12_2025-12-07_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-01,2026-01-26,0.0,OK,airport_phanthiet/2026-01_2026-01-26_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-02,2026-02-15,9.4,OK,airport_phanthiet/2026-02_2026-02-15_cloud9pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-03,2026-03-17,0.0,OK,airport_phanthiet/2026-03_2026-03-17_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-04,2026-04-06,0.0,OK,airport_phanthiet/2026-04_2026-04-06_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-05,2026-05-01,0.0,OK,airport_phanthiet/2026-05_2026-05-01_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-06,2026-06-15,0.0,OK,airport_phanthiet/2026-06_2026-06-15_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-07,2026-07-10,0.0,OK,airport_phanthiet/2026-07_2026-07-10_cloud0pct_OK.png
+73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2026-08,2026-08-24,24.3,OK,airport_phanthiet/2026-08_2026-08-24_cloud24pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-01,2025-01-24,14.7,OK,airport_quangtri/2025-01_2025-01-24_cloud15pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-02,2025-02-03,9.1,OK,airport_quangtri/2025-02_2025-02-03_cloud9pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-03,2025-03-05,0.0,OK,airport_quangtri/2025-03_2025-03-05_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-04,2025-04-19,0.0,OK,airport_quangtri/2025-04_2025-04-19_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-05,2025-05-04,0.0,OK,airport_quangtri/2025-05_2025-05-04_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-06,2025-06-08,0.0,OK,airport_quangtri/2025-06_2025-06-08_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-07,2025-07-18,0.0,OK,airport_quangtri/2025-07_2025-07-18_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-08,2025-08-12,0.0,OK,airport_quangtri/2025-08_2025-08-12_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-09,2025-09-11,9.7,OK,airport_quangtri/2025-09_2025-09-11_cloud10pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-10,2025-10-08,9.0,OK,airport_quangtri/2025-10_2025-10-08_cloud9pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2025-12,2025-12-30,94.7,CLOUDY,airport_quangtri/2025-12_2025-12-30_cloud95pct_CLOUDY.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-01,2026-01-19,2.8,OK,airport_quangtri/2026-01_2026-01-19_cloud3pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-02,2026-02-28,0.0,OK,airport_quangtri/2026-02_2026-02-28_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-03,2026-03-30,0.0,OK,airport_quangtri/2026-03_2026-03-30_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-04,2026-04-14,0.0,OK,airport_quangtri/2026-04_2026-04-14_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-05,2026-05-26,0.0,OK,airport_quangtri/2026-05_2026-05-26_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-06,2026-06-23,0.0,OK,airport_quangtri/2026-06_2026-06-23_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-07,2026-07-18,0.0,OK,airport_quangtri/2026-07_2026-07-18_cloud0pct_OK.png
+74,Sân bay Quảng Trị,airport_quangtri,16.8883,107.111,2026-08,2026-08-17,5.6,OK,airport_quangtri/2026-08_2026-08-17_cloud6pct_OK.png
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-02,2026-02-06,0.1,OK,airport_sapa/2026-02_2026-02-06_cloud0pct_OK.png
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-03,2026-03-31,15.6,OK,airport_sapa/2026-03_2026-03-31_cloud16pct_OK.png
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-04,2026-04-12,2.0,OK,airport_sapa/2026-04_2026-04-12_cloud2pct_OK.png
@@ -62,12 +101,23 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-06,2026-06-16,1.8,OK,01_apec_center/2026-06_2026-06-16_cloud2pct_OK.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-07,2026-07-16,1.1,OK,01_apec_center/2026-07_2026-07-16_cloud1pct_OK.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-08,2026-08-02,12.7,OK,01_apec_center/2026-08_2026-08-02_cloud13pct_OK.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-03,2026-03-13,0.0,OK,atc_tower/2026-03_2026-03-13_cloud0pct_OK.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-04,2026-04-12,0.0,OK,atc_tower/2026-04_2026-04-12_cloud0pct_OK.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-05,2026-05-27,2.2,OK,atc_tower/2026-05_2026-05-27_cloud2pct_OK.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-06,2026-06-01,25.0,OK,atc_tower/2026-06_2026-06-01_cloud25pct_OK.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-07,2026-07-26,72.2,CLOUDY,atc_tower/2026-07_2026-07-26_cloud72pct_CLOUDY.png
-12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.05,106.28,2026-08,2026-08-10,0.0,OK,atc_tower/2026-08_2026-08-10_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-01,2025-01-17,0.0,OK,atc_tower/2025-01_2025-01-17_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-03,2025-03-23,37.8,CLOUDY,atc_tower/2025-03_2025-03-23_cloud38pct_CLOUDY.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-05,2025-05-12,10.1,OK,atc_tower/2025-05_2025-05-12_cloud10pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-06,2025-06-11,5.1,OK,atc_tower/2025-06_2025-06-11_cloud5pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-07,2025-07-26,87.2,CLOUDY,atc_tower/2025-07_2025-07-26_cloud87pct_CLOUDY.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-08,2025-08-12,63.2,CLOUDY,atc_tower/2025-08_2025-08-12_cloud63pct_CLOUDY.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-09,2025-09-21,12.9,OK,atc_tower/2025-09_2025-09-21_cloud13pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-10,2025-10-19,0.0,OK,atc_tower/2025-10_2025-10-19_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-11,2025-11-13,0.0,OK,atc_tower/2025-11_2025-11-13_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-12,2025-12-08,0.0,OK,atc_tower/2025-12_2025-12-08_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-01,2026-01-07,0.0,OK,atc_tower/2026-01_2026-01-07_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-03,2026-03-13,0.0,OK,atc_tower/2026-03_2026-03-13_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-04,2026-04-07,0.0,OK,atc_tower/2026-04_2026-04-07_cloud0pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-05,2026-05-27,36.9,CLOUDY,atc_tower/2026-05_2026-05-27_cloud37pct_CLOUDY.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-06,2026-06-01,73.3,CLOUDY,atc_tower/2026-06_2026-06-01_cloud73pct_CLOUDY.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-07,2026-07-26,9.9,OK,atc_tower/2026-07_2026-07-26_cloud10pct_OK.png
+12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2026-08,2026-08-10,0.0,OK,atc_tower/2026-08_2026-08-10_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-01,2025-01-27,0.0,OK,03_bai_dat_do/2025-01_2025-01-27_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-02,2025-02-08,0.0,OK,03_bai_dat_do/2025-02_2025-02-08_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2025-03,2025-03-10,0.0,OK,03_bai_dat_do/2025-03_2025-03-10_cloud0pct_OK.png
@@ -108,12 +158,22 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-05,2026-05-01,0.0,OK,bridge_dong_nai/2026-05_2026-05-01_cloud0pct_OK.png
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-06,2026-06-05,21.4,OK,bridge_dong_nai/2026-06_2026-06-05_cloud21pct_OK.png
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-07,2026-07-20,60.7,CLOUDY,bridge_dong_nai/2026-07_2026-07-20_cloud61pct_CLOUDY.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-03,2026-03-30,2.8,OK,bridge_phong_chau/2026-03_2026-03-30_cloud3pct_OK.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-04,2026-04-12,0.0,OK,bridge_phong_chau/2026-04_2026-04-12_cloud0pct_OK.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-05,2026-05-27,0.9,OK,bridge_phong_chau/2026-05_2026-05-27_cloud1pct_OK.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-06,2026-06-01,72.9,CLOUDY,bridge_phong_chau/2026-06_2026-06-01_cloud73pct_CLOUDY.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-07,2026-07-18,11.4,OK,bridge_phong_chau/2026-07_2026-07-18_cloud11pct_OK.png
-52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.35,105.2,2026-08,2026-08-10,2.2,OK,bridge_phong_chau/2026-08_2026-08-10_cloud2pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-01,2025-01-12,0.0,OK,bridge_phong_chau/2025-01_2025-01-12_cloud0pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-03,2025-03-23,43.7,CLOUDY,bridge_phong_chau/2025-03_2025-03-23_cloud44pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-05,2025-05-12,4.2,OK,bridge_phong_chau/2025-05_2025-05-12_cloud4pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-06,2025-06-01,99.9,CLOUDY,bridge_phong_chau/2025-06_2025-06-01_cloud100pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-08,2025-08-20,99.9,CLOUDY,bridge_phong_chau/2025-08_2025-08-20_cloud100pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-09,2025-09-21,42.7,CLOUDY,bridge_phong_chau/2025-09_2025-09-21_cloud43pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-10,2025-10-04,9.4,OK,bridge_phong_chau/2025-10_2025-10-04_cloud9pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-11,2025-11-23,0.0,OK,bridge_phong_chau/2025-11_2025-11-23_cloud0pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2025-12,2025-12-10,8.1,OK,bridge_phong_chau/2025-12_2025-12-10_cloud8pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-01,2026-01-07,24.5,OK,bridge_phong_chau/2026-01_2026-01-07_cloud24pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-03,2026-03-30,38.3,CLOUDY,bridge_phong_chau/2026-03_2026-03-30_cloud38pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-04,2026-04-12,0.0,OK,bridge_phong_chau/2026-04_2026-04-12_cloud0pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-05,2026-05-27,4.1,OK,bridge_phong_chau/2026-05_2026-05-27_cloud4pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-06,2026-06-01,57.3,CLOUDY,bridge_phong_chau/2026-06_2026-06-01_cloud57pct_CLOUDY.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-07,2026-07-18,11.9,OK,bridge_phong_chau/2026-07_2026-07-18_cloud12pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-08,2026-08-10,0.0,OK,bridge_phong_chau/2026-08_2026-08-10_cloud0pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-02,2026-02-08,14.8,OK,bridge_rach_mieu_2/2026-02_2026-02-08_cloud15pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-03,2026-03-10,8.4,OK,bridge_rach_mieu_2/2026-03_2026-03-10_cloud8pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-04,2026-04-24,27.2,OK,bridge_rach_mieu_2/2026-04_2026-04-24_cloud27pct_OK.png
@@ -121,18 +181,38 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-06,2026-06-13,74.0,CLOUDY,bridge_rach_mieu_2/2026-06_2026-06-13_cloud74pct_CLOUDY.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-07,2026-07-23,25.1,OK,bridge_rach_mieu_2/2026-07_2026-07-23_cloud25pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-08,2026-08-12,91.0,CLOUDY,bridge_rach_mieu_2/2026-08_2026-08-12_cloud91pct_CLOUDY.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-03,2026-03-13,8.6,OK,bridge_tu_lien/2026-03_2026-03-13_cloud9pct_OK.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-04,2026-04-12,4.2,OK,bridge_tu_lien/2026-04_2026-04-12_cloud4pct_OK.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-05,2026-05-27,4.4,OK,bridge_tu_lien/2026-05_2026-05-27_cloud4pct_OK.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-06,2026-06-01,32.5,CLOUDY,bridge_tu_lien/2026-06_2026-06-01_cloud33pct_CLOUDY.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-07,2026-07-26,9.2,OK,bridge_tu_lien/2026-07_2026-07-26_cloud9pct_OK.png
-79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.07,105.87,2026-08,2026-08-10,0.0,OK,bridge_tu_lien/2026-08_2026-08-10_cloud0pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-03,2026-03-13,0.2,OK,bridge_van_phuc/2026-03_2026-03-13_cloud0pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-04,2026-04-12,1.2,OK,bridge_van_phuc/2026-04_2026-04-12_cloud1pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-05,2026-05-27,1.9,OK,bridge_van_phuc/2026-05_2026-05-27_cloud2pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-06,2026-06-01,22.1,OK,bridge_van_phuc/2026-06_2026-06-01_cloud22pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-07,2026-07-18,0.0,OK,bridge_van_phuc/2026-07_2026-07-18_cloud0pct_OK.png
-39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,21.15,105.65,2026-08,2026-08-10,7.8,OK,bridge_van_phuc/2026-08_2026-08-10_cloud8pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-01,2025-01-12,0.0,OK,bridge_tu_lien/2025-01_2025-01-12_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-03,2025-03-23,28.0,OK,bridge_tu_lien/2025-03_2025-03-23_cloud28pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-05,2025-05-02,0.0,OK,bridge_tu_lien/2025-05_2025-05-02_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-06,2025-06-01,99.8,CLOUDY,bridge_tu_lien/2025-06_2025-06-01_cloud100pct_CLOUDY.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-08,2025-08-12,31.2,CLOUDY,bridge_tu_lien/2025-08_2025-08-12_cloud31pct_CLOUDY.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-09,2025-09-21,30.1,CLOUDY,bridge_tu_lien/2025-09_2025-09-21_cloud30pct_CLOUDY.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-10,2025-10-19,5.0,OK,bridge_tu_lien/2025-10_2025-10-19_cloud5pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-11,2025-11-23,0.0,OK,bridge_tu_lien/2025-11_2025-11-23_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2025-12,2025-12-18,0.0,OK,bridge_tu_lien/2025-12_2025-12-18_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-01,2026-01-12,0.0,OK,bridge_tu_lien/2026-01_2026-01-12_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-03,2026-03-13,13.2,OK,bridge_tu_lien/2026-03_2026-03-13_cloud13pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-04,2026-04-12,0.1,OK,bridge_tu_lien/2026-04_2026-04-12_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-05,2026-05-27,0.0,OK,bridge_tu_lien/2026-05_2026-05-27_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-06,2026-06-01,7.2,OK,bridge_tu_lien/2026-06_2026-06-01_cloud7pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-07,2026-07-26,14.7,OK,bridge_tu_lien/2026-07_2026-07-26_cloud15pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-08,2026-08-10,0.0,OK,bridge_tu_lien/2026-08_2026-08-10_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-01,2025-01-12,0.0,OK,bridge_van_phuc/2025-01_2025-01-12_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-03,2025-03-23,92.4,CLOUDY,bridge_van_phuc/2025-03_2025-03-23_cloud92pct_CLOUDY.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-05,2025-05-12,0.0,OK,bridge_van_phuc/2025-05_2025-05-12_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-06,2025-06-01,91.6,CLOUDY,bridge_van_phuc/2025-06_2025-06-01_cloud92pct_CLOUDY.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-08,2025-08-12,10.0,OK,bridge_van_phuc/2025-08_2025-08-12_cloud10pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-09,2025-09-04,12.9,OK,bridge_van_phuc/2025-09_2025-09-04_cloud13pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-10,2025-10-19,65.9,CLOUDY,bridge_van_phuc/2025-10_2025-10-19_cloud66pct_CLOUDY.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-11,2025-11-23,0.0,OK,bridge_van_phuc/2025-11_2025-11-23_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-12,2025-12-18,0.0,OK,bridge_van_phuc/2025-12_2025-12-18_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-01,2026-01-07,0.0,OK,bridge_van_phuc/2026-01_2026-01-07_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-03,2026-03-13,0.0,OK,bridge_van_phuc/2026-03_2026-03-13_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-04,2026-04-12,0.0,OK,bridge_van_phuc/2026-04_2026-04-12_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-05,2026-06-01,1.7,OK,bridge_van_phuc/2026-05_2026-06-01_cloud2pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-06,2026-06-01,1.7,OK,bridge_van_phuc/2026-06_2026-06-01_cloud2pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-07,2026-07-18,0.1,OK,bridge_van_phuc/2026-07_2026-07-18_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-08,2026-08-10,0.0,OK,bridge_van_phuc/2026-08_2026-08-10_cloud0pct_OK.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-03,2026-03-13,0.0,OK,bt1/2026-03_2026-03-13_cloud0pct_OK.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-04,2026-04-12,3.4,OK,bt1/2026-04_2026-04-12_cloud3pct_OK.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-05,2026-05-27,0.1,OK,bt1/2026-05_2026-05-27_cloud0pct_OK.png
@@ -1094,13 +1174,26 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-05,2026-05-01,0.0,OK,port_cai_mep/2026-05_2026-05-01_cloud0pct_OK.png
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-07,2026-07-20,52.1,CLOUDY,port_cai_mep/2026-07_2026-07-20_cloud52pct_CLOUDY.png
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-08,2026-08-14,87.4,CLOUDY,port_cai_mep/2026-08_2026-08-14_cloud87pct_CLOUDY.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-02,2026-02-10,6.2,OK,port_can_gio/2026-02_2026-02-10_cloud6pct_OK.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-03,2026-03-22,0.0,OK,port_can_gio/2026-03_2026-03-22_cloud0pct_OK.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-04,2026-05-01,0.0,OK,port_can_gio/2026-04_2026-05-01_cloud0pct_OK.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-05,2026-05-01,0.0,OK,port_can_gio/2026-05_2026-05-01_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-01,2025-01-16,0.0,OK,port_can_gio/2025-01_2025-01-16_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-02,2025-02-25,78.7,CLOUDY,port_can_gio/2025-02_2025-02-25_cloud79pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-03,2025-03-12,0.0,OK,port_can_gio/2025-03_2025-03-12_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-04,2025-04-28,0.3,OK,port_can_gio/2025-04_2025-04-28_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-05,2025-05-06,0.0,OK,port_can_gio/2025-05_2025-05-06_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-06,2025-06-30,5.1,OK,port_can_gio/2025-06_2025-06-30_cloud5pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-07,2025-07-25,19.1,OK,port_can_gio/2025-07_2025-07-25_cloud19pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-08,2025-08-04,71.8,CLOUDY,port_can_gio/2025-08_2025-08-04_cloud72pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-09,2025-09-15,97.4,CLOUDY,port_can_gio/2025-09_2025-09-15_cloud97pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-10,2025-10-03,5.2,OK,port_can_gio/2025-10_2025-10-03_cloud5pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-11,2025-11-24,0.2,OK,port_can_gio/2025-11_2025-11-24_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-12,2026-01-01,0.0,OK,port_can_gio/2025-12_2026-01-01_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-01,2026-01-26,0.0,OK,port_can_gio/2026-01_2026-01-26_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-02,2026-02-15,63.9,CLOUDY,port_can_gio/2026-02_2026-02-15_cloud64pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-03,2026-03-22,0.0,OK,port_can_gio/2026-03_2026-03-22_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-04,2026-05-01,0.0,OK,port_can_gio/2026-04_2026-05-01_cloud0pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-05,2026-05-01,0.0,OK,port_can_gio/2026-05_2026-05-01_cloud0pct_OK.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-06,2026-06-22,21.2,OK,port_can_gio/2026-06_2026-06-22_cloud21pct_OK.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-07,2026-07-10,37.5,CLOUDY,port_can_gio/2026-07_2026-07-10_cloud37pct_CLOUDY.png
-57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-08,2026-08-14,20.5,OK,port_can_gio/2026-08_2026-08-14_cloud20pct_OK.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-07,2026-07-10,67.3,CLOUDY,port_can_gio/2026-07_2026-07-10_cloud67pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-08,2026-08-14,65.2,CLOUDY,port_can_gio/2026-08_2026-08-14_cloud65pct_CLOUDY.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-02,2026-02-03,1.2,OK,port_lach_huyen/2026-02_2026-02-03_cloud1pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-03,2026-03-25,0.2,OK,port_lach_huyen/2026-03_2026-03-25_cloud0pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-04,2026-04-09,100.0,CLOUDY,port_lach_huyen/2026-04_2026-04-09_cloud100pct_CLOUDY.png
