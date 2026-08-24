@@ -1196,7 +1196,7 @@ function _satFill(q){
 function renderSat(){
   const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
   if(!sel.dataset.init){
-    _satTids=Object.keys(SATELLITE).sort((a,b)=>a-b);
+    _satTids=Object.keys(SATELLITE).filter(t=>P.some(p=>p.id==t)).sort((a,b)=>a-b);   // chỉ dự án đang theo dõi (bỏ ảnh dự án đã tắt)
     _satFill('');
     sel.dataset.init='1';
     sel.onchange=()=>{slider.value=(SATELLITE[sel.value]||[]).length-1; drawSat();};

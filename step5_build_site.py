@@ -52,7 +52,9 @@ NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do ste
 # CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
 OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Vingroup · HSR Bắc-Nam=Nhà nước
 # TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
-COORD_OVERRIDE = {11: (21.0405, 106.1381)}   # Sân bay Gia Bình (Gia Bình, Bắc Ninh) — theo OSM, thay điểm Cafeland lệch ~6km
+COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
+# Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
+SAT_SITE_BLOCK = {"giabinh_airport"}         # AOI 106.28 lệch ~8km (đúng phải 106.20, dùng site 'gia_binh')
 _PRIVATE_OWNERS = [
     (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
     (re.compile(r"sun ?group|mặt trời"), "Sun Group"),
@@ -147,6 +149,8 @@ def fetch_satellite(client):
     with open(path, encoding="utf-8") as f:
         for row in csv.DictReader(f):
             sk = row.get("site_key")
+            if sk in SAT_SITE_BLOCK:                     # site AOI lệch → bỏ
+                continue
             tid = reg_id2tid.get(sk) or SITEKEY2TID.get(sk)
             if not tid:
                 continue
@@ -155,9 +159,21 @@ def fetch_satellite(client):
                 "cloud": round(float(row["aoi_cloud_pct"])),
                 "ok": row["status"] == "OK",
                 "file": "satellite_export/" + row["file"],
+                "sk": sk,
             })
     for tid in data:
-        data[tid].sort(key=lambda x: x["month"])
+        # 1 SITE_KEY/dự án: chọn chuỗi NHIỀU ẢNH NHẤT (framing nhất quán) — tránh 2 AOI khác nhau lẫn lộn
+        bysk = {}
+        for im in data[tid]:
+            bysk.setdefault(im["sk"], []).append(im)
+        chosen = max(bysk.values(), key=lambda v: (len(v), -sum(x["cloud"] for x in v) / len(v)))
+        best = {}                                        # rồi 1 ẢNH/THÁNG: ưu tiên OK, ít mây nhất
+        for im in chosen:
+            k = im["month"]
+            if k not in best or (im["ok"], -im["cloud"]) > (best[k]["ok"], -best[k]["cloud"]):
+                best[k] = im
+        data[tid] = sorted(({k: v for k, v in im.items() if k != "sk"} for im in best.values()),
+                           key=lambda x: x["month"])
     return data
 
 
