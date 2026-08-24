@@ -993,8 +993,7 @@ function detailHTML(p){
   const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
     <p class="dh">Đánh giá tiến độ</p>
-    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}
-      <span class="cap" style="display:block;margin-top:5px">Độ phủ nguồn của các thanh giai đoạn: ${coverage(p)===null?'—':coverage(p)+'%'} đầu mút có căn cứ</span></div>
+    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}</div>
     <div class="dgrid" style="margin-top:20px">
     <div>
       ${(p.tmdt||p.tmdtDc||p.tuCo||p.huyDong)?`<p class="dh">Vốn (tỷ đồng)</p>
