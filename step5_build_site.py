@@ -51,6 +51,8 @@ NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do ste
 
 # CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
 OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Vingroup · HSR Bắc-Nam=Nhà nước
+# TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
+COORD_OVERRIDE = {11: (21.0405, 106.1381)}   # Sân bay Gia Bình (Gia Bình, Bắc Ninh) — theo OSM, thay điểm Cafeland lệch ~6km
 _PRIVATE_OWNERS = [
     (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
     (re.compile(r"sun ?group|mặt trời"), "Sun Group"),
@@ -585,6 +587,14 @@ def main():
                            "pid": tid, "src": "tracker"})
         nadd += 1
     print(f"Chấm điểm dự án thiếu bản đồ (geocode): {nadd}")
+
+    # Ghi đè toạ độ dự án bị cắm sai (COORD_OVERRIDE) — điểm + marker dự án
+    for it in caf_points:
+        if it.get("pid") in COORD_OVERRIDE:
+            it["lat"], it["lng"] = COORD_OVERRIDE[it["pid"]]
+    for d in caf_projects:
+        if d.get("pid") in COORD_OVERRIDE:
+            d["a"], d["o"] = COORD_OVERRIDE[d["pid"]]
 
     out = tpl.replace(old_g, new_g, 1).replace(old_p, new_p, 1)
     out = out.replace("const NEWSFLOW = []", "const NEWSFLOW = " + json.dumps(newsflow, ensure_ascii=False), 1)

@@ -146,6 +146,8 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .s-unknown{color:var(--ink3);border-color:var(--rule2);border-style:dashed;background:transparent}
 .s-building{color:var(--build);border-color:var(--build);background:transparent}
 .schedbox.s-building{border-color:var(--build)} .schedbox.s-building b{color:var(--build)}
+.tabjump{border:none;background:none;cursor:pointer;font-size:12px;padding:0 2px;line-height:1;opacity:.6}
+.tabjump:hover{opacity:1;transform:scale(1.15)}
 .pctchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:2px;
   background:var(--gpmb-bg);color:var(--gpmb);letter-spacing:.03em}
 .bar-g{height:6px;top:11px;background:var(--gpmb)}
@@ -1059,7 +1061,9 @@ function render(){
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>
           <div class="pmeta"><span class="sched s-${SCHED_CLS2[schedOf(p)]}" title="${esc(p.schedWhy||'')}">${schedOf(p)}</span>
             ${_sortMode==='news'?`<span class="pctchip">${newsN(p)} tin</span>`:''}
-            <span class="cap">${esc(p.owner)}</span></div>
+            <span class="cap">${esc(p.owner)}</span>
+            ${SATELLITE[p.id]?`<button class="tabjump" onclick="_focusSat(${p.id})" title="Xem ảnh vệ tinh">🛰</button>`:''}
+            ${_mapByPid()[p.id]?`<button class="tabjump" onclick="_focusMap(${p.id})" title="Xem trên bản đồ">🗺</button>`:''}</div>
           ${p.loc?`<div class="loc">${esc(p.loc)}</div>`:''}
         </div>
         <div class="track">${gridHTML()}${barsHTML(p.phases,p.marks,p)}</div></div>`;
@@ -1294,6 +1298,23 @@ function _openProj(id){
   open.add(id); render();
   setTimeout(()=>{const el=document.querySelector('.pname[data-id="'+id+'"]');
     if(el) el.scrollIntoView({block:'center',behavior:'smooth'});},80);
+}
+let _mapPid=null;
+function _mapByPid(){                            // pid dự án → mục có toạ độ trên bản đồ (đồng bộ tab)
+  if(_mapPid) return _mapPid;
+  _mapPid={}; _buildMapIdx().forEach(r=>{ if(r.m&&r.m.pid!=null&&!_mapPid[r.m.pid]) _mapPid[r.m.pid]=r; });
+  return _mapPid;
+}
+function _focusSat(id){                          // mở dự án ở tab Vệ tinh
+  const t=document.querySelector('.tab[data-view="sat"]'); if(t) t.click();
+  const ss=document.getElementById('sat-search'); if(ss) ss.value=''; _satFill('');
+  const sel=document.getElementById('sat-proj'); if(sel){ sel.value=id;
+    const sl=document.getElementById('sat-slider'); if(sl) sl.value=(SATELLITE[id]||[]).length-1; drawSat(); }
+}
+function _focusMap(id){                          // mở dự án ở tab Bản đồ (bay tới + ghim)
+  const t=document.querySelector('.tab[data-view="map"]'); if(t) t.click();
+  const e=_mapByPid()[id];
+  if(e) setTimeout(()=>_mapGo(e), 90);           // chờ map init/invalidateSize
 }
 function redrawMap(){
   const fr=mval('mf-region'), fp=mval('mf-prov');
