@@ -2,6 +2,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-03,2026-03-10,0.0,OK,airport_catbi/2026-03_2026-03-10_cloud0pct_OK.png
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-05,2026-05-26,0.0,OK,airport_catbi/2026-05_2026-05-26_cloud0pct_OK.png
 76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-08,2026-08-12,34.9,CLOUDY,airport_catbi/2026-08_2026-08-12_cloud35pct_CLOUDY.png
+76,Sân bay Cát Bi (Hải Phòng),airport_catbi,20.82,106.72,2026-09,2026-09-01,99.9,CLOUDY,airport_catbi/2026-09_2026-09-01_cloud100pct_CLOUDY.png
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-01,2025-01-06,0.0,OK,airport_long_thanh/2025-01_2025-01-06_cloud0pct_OK.png
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-02,2025-02-05,0.3,OK,airport_long_thanh/2025-02_2025-02-05_cloud0pct_OK.png
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2025-03,2025-03-27,26.6,OK,airport_long_thanh/2025-03_2025-03-27_cloud27pct_OK.png
@@ -22,12 +23,14 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-06,2026-06-22,22.1,OK,airport_long_thanh/2026-06_2026-06-22_cloud22pct_OK.png
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-07,2026-07-20,55.2,CLOUDY,airport_long_thanh/2026-07_2026-07-20_cloud55pct_CLOUDY.png
 19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-08,2026-08-14,88.6,CLOUDY,airport_long_thanh/2026-08_2026-08-14_cloud89pct_CLOUDY.png
+19,Sân bay Long Thành,airport_long_thanh,10.7803,107.0456,2026-09,2026-09-03,99.3,CLOUDY,airport_long_thanh/2026-09_2026-09-03_cloud99pct_CLOUDY.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-03,2026-03-13,0.0,OK,airport_noibai/2026-03_2026-03-13_cloud0pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-04,2026-04-12,0.0,OK,airport_noibai/2026-04_2026-04-12_cloud0pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-05,2026-05-27,19.6,OK,airport_noibai/2026-05_2026-05-27_cloud20pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-06,2026-06-01,51.2,CLOUDY,airport_noibai/2026-06_2026-06-01_cloud51pct_CLOUDY.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-07,2026-07-18,17.8,OK,airport_noibai/2026-07_2026-07-18_cloud18pct_OK.png
 75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-08,2026-08-10,0.0,OK,airport_noibai/2026-08_2026-08-10_cloud0pct_OK.png
+75,Sân bay Nội Bài (mở rộng),airport_noibai,21.22,105.8,2026-09,2026-09-04,11.0,OK,airport_noibai/2026-09_2026-09-04_cloud11pct_OK.png
 73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-01,2025-01-06,0.0,OK,airport_phanthiet/2025-01_2025-01-06_cloud0pct_OK.png
 73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-02,2025-02-05,0.0,OK,airport_phanthiet/2025-02_2025-02-05_cloud0pct_OK.png
 73,Sân bay Phan Thiết,airport_phanthiet,10.9895,108.2281,2025-03,2025-03-27,0.0,OK,airport_phanthiet/2025-03_2025-03-27_cloud0pct_OK.png
@@ -74,6 +77,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-06,2026-06-14,76.4,CLOUDY,airport_sapa/2026-06_2026-06-14_cloud76pct_CLOUDY.png
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-07,2026-07-21,37.0,CLOUDY,airport_sapa/2026-07_2026-07-21_cloud37pct_CLOUDY.png
 72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-08,2026-08-13,34.8,CLOUDY,airport_sapa/2026-08_2026-08-13_cloud35pct_CLOUDY.png
+72,Sân bay Sa Pa (Lào Cai),airport_sapa,22.23,104.1,2026-09,2026-09-02,10.6,OK,airport_sapa/2026-09_2026-09-02_cloud11pct_OK.png
 40,Sân bay Tân Sơn Nhất (nhà ga T3),airport_tan_son_nhat,10.818,106.658,2026-02,2026-02-08,0.0,OK,airport_tan_son_nhat/2026-02_2026-02-08_cloud0pct_OK.png
 40,Sân bay Tân Sơn Nhất (nhà ga T3),airport_tan_son_nhat,10.818,106.658,2026-03,2026-04-01,0.0,OK,airport_tan_son_nhat/2026-03_2026-04-01_cloud0pct_OK.png
 40,Sân bay Tân Sơn Nhất (nhà ga T3),airport_tan_son_nhat,10.818,106.658,2026-04,2026-04-24,0.0,OK,airport_tan_son_nhat/2026-04_2026-04-24_cloud0pct_OK.png
@@ -152,6 +156,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 77,Cầu Đại Ngãi,bridge_dai_ngai,9.65,106.25,2026-06,2026-06-13,25.2,OK,bridge_dai_ngai/2026-06_2026-06-13_cloud25pct_OK.png
 77,Cầu Đại Ngãi,bridge_dai_ngai,9.65,106.25,2026-07,2026-07-20,25.6,OK,bridge_dai_ngai/2026-07_2026-07-20_cloud26pct_OK.png
 77,Cầu Đại Ngãi,bridge_dai_ngai,9.65,106.25,2026-08,2026-08-04,0.0,OK,bridge_dai_ngai/2026-08_2026-08-04_cloud0pct_OK.png
+77,Cầu Đại Ngãi,bridge_dai_ngai,9.65,106.25,2026-09,2026-09-03,73.0,CLOUDY,bridge_dai_ngai/2026-09_2026-09-03_cloud73pct_CLOUDY.png
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-02,2026-02-20,33.7,CLOUDY,bridge_dong_nai/2026-02_2026-02-20_cloud34pct_CLOUDY.png
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-03,2026-03-17,2.4,OK,bridge_dong_nai/2026-03_2026-03-17_cloud2pct_OK.png
 51,Cầu Đồng Nai (QL1),bridge_dong_nai,10.92,106.85,2026-04,2026-04-01,5.2,OK,bridge_dong_nai/2026-04_2026-04-01_cloud5pct_OK.png
@@ -174,6 +179,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-06,2026-06-01,57.3,CLOUDY,bridge_phong_chau/2026-06_2026-06-01_cloud57pct_CLOUDY.png
 52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-07,2026-07-18,11.9,OK,bridge_phong_chau/2026-07_2026-07-18_cloud12pct_OK.png
 52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-08,2026-08-10,0.0,OK,bridge_phong_chau/2026-08_2026-08-10_cloud0pct_OK.png
+52,Cầu Phong Châu (Phú Thọ),bridge_phong_chau,21.2857,105.26,2026-09,2026-09-04,0.0,OK,bridge_phong_chau/2026-09_2026-09-04_cloud0pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-02,2026-02-08,14.8,OK,bridge_rach_mieu_2/2026-02_2026-02-08_cloud15pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-03,2026-03-10,8.4,OK,bridge_rach_mieu_2/2026-03_2026-03-10_cloud8pct_OK.png
 78,Cầu Rạch Miễu 2,bridge_rach_mieu_2,10.32,106.35,2026-04,2026-04-24,27.2,OK,bridge_rach_mieu_2/2026-04_2026-04-24_cloud27pct_OK.png
@@ -197,6 +203,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-06,2026-06-01,7.2,OK,bridge_tu_lien/2026-06_2026-06-01_cloud7pct_OK.png
 79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-07,2026-07-26,14.7,OK,bridge_tu_lien/2026-07_2026-07-26_cloud15pct_OK.png
 79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-08,2026-08-10,0.0,OK,bridge_tu_lien/2026-08_2026-08-10_cloud0pct_OK.png
+79,Cầu Tứ Liên (Hà Nội),bridge_tu_lien,21.0759,105.857,2026-09,2026-09-04,100.0,CLOUDY,bridge_tu_lien/2026-09_2026-09-04_cloud100pct_CLOUDY.png
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-01,2025-01-12,0.0,OK,bridge_van_phuc/2025-01_2025-01-12_cloud0pct_OK.png
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-03,2025-03-23,92.4,CLOUDY,bridge_van_phuc/2025-03_2025-03-23_cloud92pct_CLOUDY.png
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2025-05,2025-05-12,0.0,OK,bridge_van_phuc/2025-05_2025-05-12_cloud0pct_OK.png
@@ -213,6 +220,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-06,2026-06-01,1.7,OK,bridge_van_phuc/2026-06_2026-06-01_cloud2pct_OK.png
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-07,2026-07-18,0.1,OK,bridge_van_phuc/2026-07_2026-07-18_cloud0pct_OK.png
 39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-08,2026-08-10,0.0,OK,bridge_van_phuc/2026-08_2026-08-10_cloud0pct_OK.png
+39,Cầu Vân Phúc (Hà Nội),bridge_van_phuc,20.9757,105.7768,2026-09,2026-09-04,47.0,CLOUDY,bridge_van_phuc/2026-09_2026-09-04_cloud47pct_CLOUDY.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-03,2026-03-13,0.0,OK,bt1/2026-03_2026-03-13_cloud0pct_OK.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-04,2026-04-12,3.4,OK,bt1/2026-04_2026-04-12_cloud3pct_OK.png
 13,BT1 - Đường kết nối sân bay Gia Bình,bt1,21.06,106.29,2026-05,2026-05-27,0.1,OK,bt1/2026-05_2026-05-27_cloud0pct_OK.png
@@ -243,6 +251,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 15,BT3 - Công trình hoàn trả hạ tầng (Gia Bình),bt3,21.05,106.3,2026-06,2026-06-01,63.5,CLOUDY,bt3/2026-06_2026-06-01_cloud64pct_CLOUDY.png
 15,BT3 - Công trình hoàn trả hạ tầng (Gia Bình),bt3,21.05,106.3,2026-07,2026-07-26,54.9,CLOUDY,bt3/2026-07_2026-07-26_cloud55pct_CLOUDY.png
 15,BT3 - Công trình hoàn trả hạ tầng (Gia Bình),bt3,21.05,106.3,2026-08,2026-08-10,0.0,OK,bt3/2026-08_2026-08-10_cloud0pct_OK.png
+15,BT3 - Công trình hoàn trả hạ tầng (Gia Bình),bt3,21.05,106.3,2026-09,2026-09-01,100.0,CLOUDY,bt3/2026-09_2026-09-01_cloud100pct_CLOUDY.png
 18,Dự án đối ứng BT3 (Gia Bình),bt3_doiung,21.05,106.27,2026-03,2026-03-13,0.0,OK,bt3_doiung/2026-03_2026-03-13_cloud0pct_OK.png
 18,Dự án đối ứng BT3 (Gia Bình),bt3_doiung,21.05,106.27,2026-04,2026-04-12,0.0,OK,bt3_doiung/2026-04_2026-04-12_cloud0pct_OK.png
 18,Dự án đối ứng BT3 (Gia Bình),bt3_doiung,21.05,106.27,2026-05,2026-05-27,12.8,OK,bt3_doiung/2026-05_2026-05-27_cloud13pct_OK.png
@@ -255,6 +264,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 220,Cảng Cạn Cái Mép,cang_can_cai_mep,10.54696176436067,107.0390221482103,2026-05,2026-05-01,0.0,OK,cang_can_cai_mep/2026-05_2026-05-01_cloud0pct_OK.png
 220,Cảng Cạn Cái Mép,cang_can_cai_mep,10.54696176436067,107.0390221482103,2026-07,2026-07-20,52.7,CLOUDY,cang_can_cai_mep/2026-07_2026-07-20_cloud53pct_CLOUDY.png
 220,Cảng Cạn Cái Mép,cang_can_cai_mep,10.54696176436067,107.0390221482103,2026-08,2026-08-14,97.4,CLOUDY,cang_can_cai_mep/2026-08_2026-08-14_cloud97pct_CLOUDY.png
+220,Cảng Cạn Cái Mép,cang_can_cai_mep,10.54696176436067,107.0390221482103,2026-09,2026-09-03,88.1,CLOUDY,cang_can_cai_mep/2026-09_2026-09-03_cloud88pct_CLOUDY.png
 209,Cảng Hàng Không Rạch Giá,cang_hang_khong_rach_gia,9.958581536720336,105.13391160886941,2026-02,2026-02-03,60.7,CLOUDY,cang_hang_khong_rach_gia/2026-02_2026-02-03_cloud61pct_CLOUDY.png
 209,Cảng Hàng Không Rạch Giá,cang_hang_khong_rach_gia,9.958581536720336,105.13391160886941,2026-03,2026-03-15,60.9,CLOUDY,cang_hang_khong_rach_gia/2026-03_2026-03-15_cloud61pct_CLOUDY.png
 209,Cảng Hàng Không Rạch Giá,cang_hang_khong_rach_gia,9.958581536720336,105.13391160886941,2026-04,2026-04-16,27.1,OK,cang_hang_khong_rach_gia/2026-04_2026-04-16_cloud27pct_OK.png
@@ -288,6 +298,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-05,2026-05-01,52.6,CLOUDY,cao_t_c_bi_n_h_a_v_ng_t_u/2026-05_2026-05-01_cloud53pct_CLOUDY.png
 24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-07,2026-07-20,45.1,CLOUDY,cao_t_c_bi_n_h_a_v_ng_t_u/2026-07_2026-07-20_cloud45pct_CLOUDY.png
 24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-08,2026-08-14,100.0,CLOUDY,cao_t_c_bi_n_h_a_v_ng_t_u/2026-08_2026-08-14_cloud100pct_CLOUDY.png
+24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-09,2026-09-03,65.8,CLOUDY,cao_t_c_bi_n_h_a_v_ng_t_u/2026-09_2026-09-03_cloud66pct_CLOUDY.png
 25,Cao tốc Châu Đốc - Cần Thơ - Sóc Trăng,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng,10.1,105.5,2026-02,2026-02-18,0.0,OK,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng/2026-02_2026-02-18_cloud0pct_OK.png
 25,Cao tốc Châu Đốc - Cần Thơ - Sóc Trăng,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng,10.1,105.5,2026-03,2026-03-25,7.9,OK,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng/2026-03_2026-03-25_cloud8pct_OK.png
 25,Cao tốc Châu Đốc - Cần Thơ - Sóc Trăng,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng,10.1,105.5,2026-04,2026-04-24,22.5,OK,cao_t_c_ch_u_c_c_n_th_s_c_tr_ng/2026-04_2026-04-24_cloud23pct_OK.png
@@ -329,6 +340,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 233,Cao Tốc Cam Lộ - La Sơn,cao_toc_cam_lo_la_son,17.2166964,106.9548246,2026-06,2026-06-23,1.1,OK,cao_toc_cam_lo_la_son/2026-06_2026-06-23_cloud1pct_OK.png
 233,Cao Tốc Cam Lộ - La Sơn,cao_toc_cam_lo_la_son,17.2166964,106.9548246,2026-07,2026-07-23,0.0,OK,cao_toc_cam_lo_la_son/2026-07_2026-07-23_cloud0pct_OK.png
 233,Cao Tốc Cam Lộ - La Sơn,cao_toc_cam_lo_la_son,17.2166964,106.9548246,2026-08,2026-08-12,0.0,OK,cao_toc_cam_lo_la_son/2026-08_2026-08-12_cloud0pct_OK.png
+233,Cao Tốc Cam Lộ - La Sơn,cao_toc_cam_lo_la_son,17.2166964,106.9548246,2026-09,2026-09-03,100.0,CLOUDY,cao_toc_cam_lo_la_son/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 147,Cao Tốc Cao Lãnh - An Hữu,cao_toc_cao_lanh_an_huu,10.401703547264997,105.76904118475781,2026-02,2026-02-03,0.0,OK,cao_toc_cao_lanh_an_huu/2026-02_2026-02-03_cloud0pct_OK.png
 147,Cao Tốc Cao Lãnh - An Hữu,cao_toc_cao_lanh_an_huu,10.401703547264997,105.76904118475781,2026-03,2026-03-10,0.0,OK,cao_toc_cao_lanh_an_huu/2026-03_2026-03-10_cloud0pct_OK.png
 147,Cao Tốc Cao Lãnh - An Hữu,cao_toc_cao_lanh_an_huu,10.401703547264997,105.76904118475781,2026-04,2026-04-16,4.5,OK,cao_toc_cao_lanh_an_huu/2026-04_2026-04-16_cloud5pct_OK.png
@@ -396,6 +408,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 230,Cao Tốc Pháp Vân - Cầu Giẽ,cao_toc_phap_van_cau_gie,20.9635168,105.8492727,2026-06,2026-06-01,65.5,CLOUDY,cao_toc_phap_van_cau_gie/2026-06_2026-06-01_cloud65pct_CLOUDY.png
 230,Cao Tốc Pháp Vân - Cầu Giẽ,cao_toc_phap_van_cau_gie,20.9635168,105.8492727,2026-07,2026-07-18,0.2,OK,cao_toc_phap_van_cau_gie/2026-07_2026-07-18_cloud0pct_OK.png
 230,Cao Tốc Pháp Vân - Cầu Giẽ,cao_toc_phap_van_cau_gie,20.9635168,105.8492727,2026-08,2026-08-10,0.0,OK,cao_toc_phap_van_cau_gie/2026-08_2026-08-10_cloud0pct_OK.png
+230,Cao Tốc Pháp Vân - Cầu Giẽ,cao_toc_phap_van_cau_gie,20.9635168,105.8492727,2026-09,2026-09-04,17.1,OK,cao_toc_phap_van_cau_gie/2026-09_2026-09-04_cloud17pct_OK.png
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-02,2026-02-04,0.0,OK,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-02_2026-02-04_cloud0pct_OK.png
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-03,2026-03-26,0.0,OK,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-03_2026-03-26_cloud0pct_OK.png
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-04,2026-04-12,0.0,OK,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-04_2026-04-12_cloud0pct_OK.png
@@ -403,12 +416,14 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-06,2026-06-04,100.0,CLOUDY,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-06_2026-06-04_cloud100pct_CLOUDY.png
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-07,2026-07-14,19.3,OK,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-07_2026-07-14_cloud19pct_OK.png
 161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-08,2026-08-13,93.9,CLOUDY,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-08_2026-08-13_cloud94pct_CLOUDY.png
+161,Cao Tốc Sơn La - Điện Biên - Cửa Khẩu Tây Trang,cao_toc_son_la_ien_bien_cua_khau_tay_tra,21.364278588827272,103.17819773372507,2026-09,2026-09-02,87.2,CLOUDY,cao_toc_son_la_ien_bien_cua_khau_tay_tra/2026-09_2026-09-02_cloud87pct_CLOUDY.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-03,2026-03-30,22.3,OK,cao_toc_tuyen_quang_phu_tho/2026-03_2026-03-30_cloud22pct_OK.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-04,2026-04-12,1.5,OK,cao_toc_tuyen_quang_phu_tho/2026-04_2026-04-12_cloud2pct_OK.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-05,2026-05-27,0.0,OK,cao_toc_tuyen_quang_phu_tho/2026-05_2026-05-27_cloud0pct_OK.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-06,2026-06-01,25.1,OK,cao_toc_tuyen_quang_phu_tho/2026-06_2026-06-01_cloud25pct_OK.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-07,2026-07-26,14.0,OK,cao_toc_tuyen_quang_phu_tho/2026-07_2026-07-26_cloud14pct_OK.png
 127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-08,2026-08-10,0.0,OK,cao_toc_tuyen_quang_phu_tho/2026-08_2026-08-10_cloud0pct_OK.png
+127,Cao Tốc Tuyên Quang - Phú Thọ,cao_toc_tuyen_quang_phu_tho,21.58852492117191,105.20145697142485,2026-09,2026-09-04,0.0,OK,cao_toc_tuyen_quang_phu_tho/2026-09_2026-09-04_cloud0pct_OK.png
 231,Cao Tốc Vĩnh Hảo - Phan Thiết,cao_toc_vinh_hao_phan_thiet,11.0022474,108.0055908,2026-02,2026-02-20,0.0,OK,cao_toc_vinh_hao_phan_thiet/2026-02_2026-02-20_cloud0pct_OK.png
 231,Cao Tốc Vĩnh Hảo - Phan Thiết,cao_toc_vinh_hao_phan_thiet,11.0022474,108.0055908,2026-03,2026-03-17,0.0,OK,cao_toc_vinh_hao_phan_thiet/2026-03_2026-03-17_cloud0pct_OK.png
 231,Cao Tốc Vĩnh Hảo - Phan Thiết,cao_toc_vinh_hao_phan_thiet,11.0022474,108.0055908,2026-04,2026-04-06,0.0,OK,cao_toc_vinh_hao_phan_thiet/2026-04_2026-04-06_cloud0pct_OK.png
@@ -451,6 +466,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 121,Cầu Cổ Chiên 2,cau_co_chien_2,9.860678778373806,106.54422877021662,2026-06,2026-06-22,10.3,OK,cau_co_chien_2/2026-06_2026-06-22_cloud10pct_OK.png
 121,Cầu Cổ Chiên 2,cau_co_chien_2,9.860678778373806,106.54422877021662,2026-07,2026-07-20,6.2,OK,cau_co_chien_2/2026-07_2026-07-20_cloud6pct_OK.png
 121,Cầu Cổ Chiên 2,cau_co_chien_2,9.860678778373806,106.54422877021662,2026-08,2026-08-04,36.2,CLOUDY,cau_co_chien_2/2026-08_2026-08-04_cloud36pct_CLOUDY.png
+121,Cầu Cổ Chiên 2,cau_co_chien_2,9.860678778373806,106.54422877021662,2026-09,2026-09-03,99.7,CLOUDY,cau_co_chien_2/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 126,Cầu Cửa Đại,cau_cua_ai,10.216124662720855,106.72350903006645,2026-02,2026-02-10,35.0,CLOUDY,cau_cua_ai/2026-02_2026-02-10_cloud35pct_CLOUDY.png
 126,Cầu Cửa Đại,cau_cua_ai,10.216124662720855,106.72350903006645,2026-03,2026-03-17,0.0,OK,cau_cua_ai/2026-03_2026-03-17_cloud0pct_OK.png
 126,Cầu Cửa Đại,cau_cua_ai,10.216124662720855,106.72350903006645,2026-04,2026-05-01,0.0,OK,cau_cua_ai/2026-04_2026-05-01_cloud0pct_OK.png
@@ -478,6 +494,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 187,Cầu Hồng Phú,cau_hong_phu,20.541363731455903,105.91066264644543,2026-06,2026-06-01,1.7,OK,cau_hong_phu/2026-06_2026-06-01_cloud2pct_OK.png
 187,Cầu Hồng Phú,cau_hong_phu,20.541363731455903,105.91066264644543,2026-07,2026-07-18,0.0,OK,cau_hong_phu/2026-07_2026-07-18_cloud0pct_OK.png
 187,Cầu Hồng Phú,cau_hong_phu,20.541363731455903,105.91066264644543,2026-08,2026-08-10,0.0,OK,cau_hong_phu/2026-08_2026-08-10_cloud0pct_OK.png
+187,Cầu Hồng Phú,cau_hong_phu,20.541363731455903,105.91066264644543,2026-09,2026-09-04,0.0,OK,cau_hong_phu/2026-09_2026-09-04_cloud0pct_OK.png
 124,Cầu Đình Khao,cau_inh_khao,10.256887391649418,106.05619790061812,2026-02,2026-02-03,0.0,OK,cau_inh_khao/2026-02_2026-02-03_cloud0pct_OK.png
 124,Cầu Đình Khao,cau_inh_khao,10.256887391649418,106.05619790061812,2026-03,2026-03-25,0.0,OK,cau_inh_khao/2026-03_2026-03-25_cloud0pct_OK.png
 124,Cầu Đình Khao,cau_inh_khao,10.256887391649418,106.05619790061812,2026-04,2026-04-16,8.5,OK,cau_inh_khao/2026-04_2026-04-16_cloud9pct_OK.png
@@ -491,6 +508,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 211,Cầu Lộc Trù,cau_loc_tru,20.68436479135127,106.61809715921851,2026-06,2026-06-23,0.0,OK,cau_loc_tru/2026-06_2026-06-23_cloud0pct_OK.png
 211,Cầu Lộc Trù,cau_loc_tru,20.68436479135127,106.61809715921851,2026-07,2026-07-18,0.0,OK,cau_loc_tru/2026-07_2026-07-18_cloud0pct_OK.png
 211,Cầu Lộc Trù,cau_loc_tru,20.68436479135127,106.61809715921851,2026-08,2026-08-12,0.0,OK,cau_loc_tru/2026-08_2026-08-12_cloud0pct_OK.png
+211,Cầu Lộc Trù,cau_loc_tru,20.68436479135127,106.61809715921851,2026-09,2026-09-03,0.0,OK,cau_loc_tru/2026-09_2026-09-03_cloud0pct_OK.png
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-02,2026-02-10,100.0,CLOUDY,cau_long_hung/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-03,2026-03-22,0.0,OK,cau_long_hung/2026-03_2026-03-22_cloud0pct_OK.png
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-04,2026-05-01,0.0,OK,cau_long_hung/2026-04_2026-05-01_cloud0pct_OK.png
@@ -498,6 +516,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-06,2026-06-22,1.6,OK,cau_long_hung/2026-06_2026-06-22_cloud2pct_OK.png
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-07,2026-07-20,55.2,CLOUDY,cau_long_hung/2026-07_2026-07-20_cloud55pct_CLOUDY.png
 154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-08,2026-08-14,100.0,CLOUDY,cau_long_hung/2026-08_2026-08-14_cloud100pct_CLOUDY.png
+154,Cầu Long Hưng,cau_long_hung,10.826646125777346,106.8875277248267,2026-09,2026-09-03,100.0,CLOUDY,cau_long_hung/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 155,Cầu Mã Đà Và Đường Kết Nối,cau_ma_a_va_uong_ket_noi,11.17742822148248,107.03091769028799,2026-02,2026-02-10,15.8,OK,cau_ma_a_va_uong_ket_noi/2026-02_2026-02-10_cloud16pct_OK.png
 155,Cầu Mã Đà Và Đường Kết Nối,cau_ma_a_va_uong_ket_noi,11.17742822148248,107.03091769028799,2026-03,2026-04-01,0.0,OK,cau_ma_a_va_uong_ket_noi/2026-03_2026-04-01_cloud0pct_OK.png
 155,Cầu Mã Đà Và Đường Kết Nối,cau_ma_a_va_uong_ket_noi,11.17742822148248,107.03091769028799,2026-04,2026-04-01,0.0,OK,cau_ma_a_va_uong_ket_noi/2026-04_2026-04-01_cloud0pct_OK.png
@@ -511,6 +530,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 175,Cầu Nghĩa Tự,cau_nghia_tu,15.930825151484,108.30619875755755,2026-06,2026-06-20,0.0,OK,cau_nghia_tu/2026-06_2026-06-20_cloud0pct_OK.png
 175,Cầu Nghĩa Tự,cau_nghia_tu,15.930825151484,108.30619875755755,2026-07,2026-07-30,50.1,CLOUDY,cau_nghia_tu/2026-07_2026-07-30_cloud50pct_CLOUDY.png
 175,Cầu Nghĩa Tự,cau_nghia_tu,15.930825151484,108.30619875755755,2026-08,2026-08-14,14.6,OK,cau_nghia_tu/2026-08_2026-08-14_cloud15pct_OK.png
+175,Cầu Nghĩa Tự,cau_nghia_tu,15.930825151484,108.30619875755755,2026-09,2026-09-03,100.0,CLOUDY,cau_nghia_tu/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-02,2026-02-20,0.9,OK,cau_nguyen_duy_hieu/2026-02_2026-02-20_cloud1pct_OK.png
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-03,2026-03-27,0.0,OK,cau_nguyen_duy_hieu/2026-03_2026-03-27_cloud0pct_OK.png
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-04,2026-04-06,0.0,OK,cau_nguyen_duy_hieu/2026-04_2026-04-06_cloud0pct_OK.png
@@ -518,6 +538,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-06,2026-06-20,0.0,OK,cau_nguyen_duy_hieu/2026-06_2026-06-20_cloud0pct_OK.png
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-07,2026-07-30,98.8,CLOUDY,cau_nguyen_duy_hieu/2026-07_2026-07-30_cloud99pct_CLOUDY.png
 176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-08,2026-08-14,63.3,CLOUDY,cau_nguyen_duy_hieu/2026-08_2026-08-14_cloud63pct_CLOUDY.png
+176,Cầu Nguyễn Duy Hiệu,cau_nguyen_duy_hieu,15.907563766462902,108.32096787063715,2026-09,2026-09-03,100.0,CLOUDY,cau_nguyen_duy_hieu/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 84,Cầu Phú Mỹ 2,cau_phu_my_2,10.710145217424197,106.74052774890257,2026-02,2026-02-08,0.0,OK,cau_phu_my_2/2026-02_2026-02-08_cloud0pct_OK.png
 84,Cầu Phú Mỹ 2,cau_phu_my_2,10.710145217424197,106.74052774890257,2026-03,2026-03-17,0.0,OK,cau_phu_my_2/2026-03_2026-03-17_cloud0pct_OK.png
 84,Cầu Phú Mỹ 2,cau_phu_my_2,10.710145217424197,106.74052774890257,2026-04,2026-05-01,0.0,OK,cau_phu_my_2/2026-04_2026-05-01_cloud0pct_OK.png
@@ -538,6 +559,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 186,Cầu Sông Lô,cau_song_lo,21.63086107999362,105.18829300936471,2026-06,2026-06-01,29.4,OK,cau_song_lo/2026-06_2026-06-01_cloud29pct_OK.png
 186,Cầu Sông Lô,cau_song_lo,21.63086107999362,105.18829300936471,2026-07,2026-07-26,6.2,OK,cau_song_lo/2026-07_2026-07-26_cloud6pct_OK.png
 186,Cầu Sông Lô,cau_song_lo,21.63086107999362,105.18829300936471,2026-08,2026-08-10,0.0,OK,cau_song_lo/2026-08_2026-08-10_cloud0pct_OK.png
+186,Cầu Sông Lô,cau_song_lo,21.63086107999362,105.18829300936471,2026-09,2026-09-04,0.0,OK,cau_song_lo/2026-09_2026-09-04_cloud0pct_OK.png
 197,Cầu Tân Hiền,cau_tan_hien,11.03595351557714,106.84412967198179,2026-02,2026-02-20,0.0,OK,cau_tan_hien/2026-02_2026-02-20_cloud0pct_OK.png
 197,Cầu Tân Hiền,cau_tan_hien,11.03595351557714,106.84412967198179,2026-03,2026-04-01,0.0,OK,cau_tan_hien/2026-03_2026-04-01_cloud0pct_OK.png
 197,Cầu Tân Hiền,cau_tan_hien,11.03595351557714,106.84412967198179,2026-04,2026-04-01,0.0,OK,cau_tan_hien/2026-04_2026-04-01_cloud0pct_OK.png
@@ -569,6 +591,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 184,Cầu Trần Hưng Đạo,cau_tran_hung_ao,21.01839074970311,105.86098535477447,2026-06,2026-06-01,60.3,CLOUDY,cau_tran_hung_ao/2026-06_2026-06-01_cloud60pct_CLOUDY.png
 184,Cầu Trần Hưng Đạo,cau_tran_hung_ao,21.01839074970311,105.86098535477447,2026-07,2026-07-18,49.2,CLOUDY,cau_tran_hung_ao/2026-07_2026-07-18_cloud49pct_CLOUDY.png
 184,Cầu Trần Hưng Đạo,cau_tran_hung_ao,21.01839074970311,105.86098535477447,2026-08,2026-08-10,3.1,OK,cau_tran_hung_ao/2026-08_2026-08-10_cloud3pct_OK.png
+184,Cầu Trần Hưng Đạo,cau_tran_hung_ao,21.01839074970311,105.86098535477447,2026-09,2026-09-04,99.9,CLOUDY,cau_tran_hung_ao/2026-09_2026-09-04_cloud100pct_CLOUDY.png
 97,Cầu Đường Bình Tiên,cau_uong_binh_tien,10.72921557914999,106.64677654402088,2026-02,2026-02-08,0.0,OK,cau_uong_binh_tien/2026-02_2026-02-08_cloud0pct_OK.png
 97,Cầu Đường Bình Tiên,cau_uong_binh_tien,10.72921557914999,106.64677654402088,2026-03,2026-03-17,0.0,OK,cau_uong_binh_tien/2026-03_2026-03-17_cloud0pct_OK.png
 97,Cầu Đường Bình Tiên,cau_uong_binh_tien,10.72921557914999,106.64677654402088,2026-04,2026-04-26,0.8,OK,cau_uong_binh_tien/2026-04_2026-04-26_cloud1pct_OK.png
@@ -630,6 +653,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 113,Dự Án Mở Rộng Quốc Lộ 1A Từ Vành Đai 1 Hầm Kim Liên Đến Nút Giao Cầu Giẽ,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha,20.715827646167902,105.91247273859103,2026-06,2026-06-01,17.0,OK,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha/2026-06_2026-06-01_cloud17pct_OK.png
 113,Dự Án Mở Rộng Quốc Lộ 1A Từ Vành Đai 1 Hầm Kim Liên Đến Nút Giao Cầu Giẽ,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha,20.715827646167902,105.91247273859103,2026-07,2026-07-26,9.3,OK,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha/2026-07_2026-07-26_cloud9pct_OK.png
 113,Dự Án Mở Rộng Quốc Lộ 1A Từ Vành Đai 1 Hầm Kim Liên Đến Nút Giao Cầu Giẽ,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha,20.715827646167902,105.91247273859103,2026-08,2026-08-10,0.0,OK,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha/2026-08_2026-08-10_cloud0pct_OK.png
+113,Dự Án Mở Rộng Quốc Lộ 1A Từ Vành Đai 1 Hầm Kim Liên Đến Nút Giao Cầu Giẽ,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha,20.715827646167902,105.91247273859103,2026-09,2026-09-04,9.4,OK,du_an_mo_rong_quoc_lo_1a_tu_vanh_ai_1_ha/2026-09_2026-09-04_cloud9pct_OK.png
 86,Dự Án Mở Rộng Quốc Lộ 22 Đoạn An Sương Đến Vành Đai 3,du_an_mo_rong_quoc_lo_22_oan_an_suong_en,10.875297016202708,106.59269996408315,2026-02,2026-02-08,0.0,OK,du_an_mo_rong_quoc_lo_22_oan_an_suong_en/2026-02_2026-02-08_cloud0pct_OK.png
 86,Dự Án Mở Rộng Quốc Lộ 22 Đoạn An Sương Đến Vành Đai 3,du_an_mo_rong_quoc_lo_22_oan_an_suong_en,10.875297016202708,106.59269996408315,2026-03,2026-04-01,0.0,OK,du_an_mo_rong_quoc_lo_22_oan_an_suong_en/2026-03_2026-04-01_cloud0pct_OK.png
 86,Dự Án Mở Rộng Quốc Lộ 22 Đoạn An Sương Đến Vành Đai 3,du_an_mo_rong_quoc_lo_22_oan_an_suong_en,10.875297016202708,106.59269996408315,2026-04,2026-04-01,0.0,OK,du_an_mo_rong_quoc_lo_22_oan_an_suong_en/2026-04_2026-04-01_cloud0pct_OK.png
@@ -692,18 +716,21 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 208,Dự Án Sân Bay Thổ Chu,du_an_san_bay_tho_chu,9.310185657645238,103.4957896112473,2026-06,2026-06-16,61.6,CLOUDY,du_an_san_bay_tho_chu/2026-06_2026-06-16_cloud62pct_CLOUDY.png
 208,Dự Án Sân Bay Thổ Chu,du_an_san_bay_tho_chu,9.310185657645238,103.4957896112473,2026-07,2026-07-18,56.9,CLOUDY,du_an_san_bay_tho_chu/2026-07_2026-07-18_cloud57pct_CLOUDY.png
 208,Dự Án Sân Bay Thổ Chu,du_an_san_bay_tho_chu,9.310185657645238,103.4957896112473,2026-08,2026-08-27,54.9,CLOUDY,du_an_san_bay_tho_chu/2026-08_2026-08-27_cloud55pct_CLOUDY.png
+208,Dự Án Sân Bay Thổ Chu,du_an_san_bay_tho_chu,9.310185657645238,103.4957896112473,2026-09,2026-09-04,61.2,CLOUDY,du_an_san_bay_tho_chu/2026-09_2026-09-04_cloud61pct_CLOUDY.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-02,2026-02-15,100.0,CLOUDY,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-02_2026-02-15_cloud100pct_CLOUDY.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-03,2026-03-17,0.0,OK,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-03_2026-03-17_cloud0pct_OK.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-04,2026-05-01,0.0,OK,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-04_2026-05-01_cloud0pct_OK.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-05,2026-05-01,0.0,OK,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-05_2026-05-01_cloud0pct_OK.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-07,2026-07-20,73.5,CLOUDY,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-07_2026-07-20_cloud73pct_CLOUDY.png
 228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-08,2026-08-14,86.1,CLOUDY,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-08_2026-08-14_cloud86pct_CLOUDY.png
+228,Dự Án Silicon Toàn Cầu Tokuyama Việt Nam,du_an_silicon_toan_cau_tokuyama_viet_nam,10.535156799142403,107.05946072539496,2026-09,2026-09-03,93.2,CLOUDY,du_an_silicon_toan_cau_tokuyama_viet_nam/2026-09_2026-09-03_cloud93pct_CLOUDY.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-02,2026-02-15,31.8,CLOUDY,du_an_uong_991b/2026-02_2026-02-15_cloud32pct_CLOUDY.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-03,2026-03-22,0.0,OK,du_an_uong_991b/2026-03_2026-03-22_cloud0pct_OK.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-04,2026-05-01,0.0,OK,du_an_uong_991b/2026-04_2026-05-01_cloud0pct_OK.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-05,2026-05-01,0.0,OK,du_an_uong_991b/2026-05_2026-05-01_cloud0pct_OK.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-07,2026-07-10,67.8,CLOUDY,du_an_uong_991b/2026-07_2026-07-10_cloud68pct_CLOUDY.png
 219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-08,2026-08-14,95.4,CLOUDY,du_an_uong_991b/2026-08_2026-08-14_cloud95pct_CLOUDY.png
+219,Dự Án Đường 991B,du_an_uong_991b,10.498452068642344,107.0584567103224,2026-09,2026-09-03,78.9,CLOUDY,du_an_uong_991b/2026-09_2026-09-03_cloud79pct_CLOUDY.png
 207,Dự Án Đường Tỉnh ĐT.975,du_an_uong_tinh_t_975,10.152092123818491,103.979120239446,2026-02,2026-02-28,0.0,OK,du_an_uong_tinh_t_975/2026-02_2026-02-28_cloud0pct_OK.png
 207,Dự Án Đường Tỉnh ĐT.975,du_an_uong_tinh_t_975,10.152092123818491,103.979120239446,2026-03,2026-03-08,58.9,CLOUDY,du_an_uong_tinh_t_975/2026-03_2026-03-08_cloud59pct_CLOUDY.png
 207,Dự Án Đường Tỉnh ĐT.975,du_an_uong_tinh_t_975,10.152092123818491,103.979120239446,2026-04,2026-04-07,0.6,OK,du_an_uong_tinh_t_975/2026-04_2026-04-07_cloud1pct_OK.png
@@ -729,6 +756,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 35,Cao tốc Bảo Hà - Lai Châu,expr_baoha_laichau,22.2,103.7,2026-04,2026-04-12,0.0,OK,expr_baoha_laichau/2026-04_2026-04-12_cloud0pct_OK.png
 35,Cao tốc Bảo Hà - Lai Châu,expr_baoha_laichau,22.2,103.7,2026-07,2026-07-31,2.9,OK,expr_baoha_laichau/2026-07_2026-07-31_cloud3pct_OK.png
 35,Cao tốc Bảo Hà - Lai Châu,expr_baoha_laichau,22.2,103.7,2026-08,2026-08-13,13.1,OK,expr_baoha_laichau/2026-08_2026-08-13_cloud13pct_OK.png
+35,Cao tốc Bảo Hà - Lai Châu,expr_baoha_laichau,22.2,103.7,2026-09,2026-09-02,0.0,OK,expr_baoha_laichau/2026-09_2026-09-02_cloud0pct_OK.png
 37,Cao tốc Bảo Lộc - Liên Khương,expr_baoloc_lienkhuong,11.7,108.2,2026-02,2026-02-20,0.0,OK,expr_baoloc_lienkhuong/2026-02_2026-02-20_cloud0pct_OK.png
 37,Cao tốc Bảo Lộc - Liên Khương,expr_baoloc_lienkhuong,11.7,108.2,2026-03,2026-03-27,0.0,OK,expr_baoloc_lienkhuong/2026-03_2026-03-27_cloud0pct_OK.png
 37,Cao tốc Bảo Lộc - Liên Khương,expr_baoloc_lienkhuong,11.7,108.2,2026-04,2026-05-01,0.0,OK,expr_baoloc_lienkhuong/2026-04_2026-05-01_cloud0pct_OK.png
@@ -764,6 +792,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 45,Cao tốc Cao Bồ - Mai Sơn,expr_caobo_maison,20.2,105.9,2026-06,2026-06-21,0.0,OK,expr_caobo_maison/2026-06_2026-06-21_cloud0pct_OK.png
 45,Cao tốc Cao Bồ - Mai Sơn,expr_caobo_maison,20.2,105.9,2026-07,2026-07-18,0.0,OK,expr_caobo_maison/2026-07_2026-07-18_cloud0pct_OK.png
 45,Cao tốc Cao Bồ - Mai Sơn,expr_caobo_maison,20.2,105.9,2026-08,2026-08-10,0.0,OK,expr_caobo_maison/2026-08_2026-08-10_cloud0pct_OK.png
+45,Cao tốc Cao Bồ - Mai Sơn,expr_caobo_maison,20.2,105.9,2026-09,2026-09-04,0.0,OK,expr_caobo_maison/2026-09_2026-09-04_cloud0pct_OK.png
 65,Cao tốc Dầu Giây - Tân Phú,expr_daugiay_tanphu,11.1,107.28,2026-02,2026-02-10,13.9,OK,expr_daugiay_tanphu/2026-02_2026-02-10_cloud14pct_OK.png
 65,Cao tốc Dầu Giây - Tân Phú,expr_daugiay_tanphu,11.1,107.28,2026-03,2026-03-17,0.0,OK,expr_daugiay_tanphu/2026-03_2026-03-17_cloud0pct_OK.png
 65,Cao tốc Dầu Giây - Tân Phú,expr_daugiay_tanphu,11.1,107.28,2026-04,2026-04-01,0.1,OK,expr_daugiay_tanphu/2026-04_2026-04-01_cloud0pct_OK.png
@@ -789,6 +818,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 48,Cao tốc Hà Nội - Hải Phòng (mở rộng),expr_hanoi_haiphong,20.9,106.4,2026-06,2026-06-01,50.7,CLOUDY,expr_hanoi_haiphong/2026-06_2026-06-01_cloud51pct_CLOUDY.png
 48,Cao tốc Hà Nội - Hải Phòng (mở rộng),expr_hanoi_haiphong,20.9,106.4,2026-07,2026-07-26,45.4,CLOUDY,expr_hanoi_haiphong/2026-07_2026-07-26_cloud45pct_CLOUDY.png
 48,Cao tốc Hà Nội - Hải Phòng (mở rộng),expr_hanoi_haiphong,20.9,106.4,2026-08,2026-08-10,0.0,OK,expr_hanoi_haiphong/2026-08_2026-08-10_cloud0pct_OK.png
+48,Cao tốc Hà Nội - Hải Phòng (mở rộng),expr_hanoi_haiphong,20.9,106.4,2026-09,2026-09-01,0.0,OK,expr_hanoi_haiphong/2026-09_2026-09-01_cloud0pct_OK.png
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-02,2026-02-10,100.0,CLOUDY,expr_hcm_longthanh_daugiay/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-03,2026-03-22,0.0,OK,expr_hcm_longthanh_daugiay/2026-03_2026-03-22_cloud0pct_OK.png
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-04,2026-05-01,0.0,OK,expr_hcm_longthanh_daugiay/2026-04_2026-05-01_cloud0pct_OK.png
@@ -796,6 +826,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-06,2026-06-22,49.8,CLOUDY,expr_hcm_longthanh_daugiay/2026-06_2026-06-22_cloud50pct_CLOUDY.png
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-07,2026-07-20,49.3,CLOUDY,expr_hcm_longthanh_daugiay/2026-07_2026-07-20_cloud49pct_CLOUDY.png
 54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-08,2026-08-14,87.5,CLOUDY,expr_hcm_longthanh_daugiay/2026-08_2026-08-14_cloud88pct_CLOUDY.png
+54,Cao tốc TP.HCM - Long Thành - Dầu Giây,expr_hcm_longthanh_daugiay,10.85,106.98,2026-09,2026-09-03,100.0,CLOUDY,expr_hcm_longthanh_daugiay/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 59,Cao tốc TP.HCM - Mộc Bài,expr_hcm_mocbai,10.98,106.4,2026-02,2026-02-08,0.0,OK,expr_hcm_mocbai/2026-02_2026-02-08_cloud0pct_OK.png
 59,Cao tốc TP.HCM - Mộc Bài,expr_hcm_mocbai,10.98,106.4,2026-03,2026-03-25,0.0,OK,expr_hcm_mocbai/2026-03_2026-03-25_cloud0pct_OK.png
 59,Cao tốc TP.HCM - Mộc Bài,expr_hcm_mocbai,10.98,106.4,2026-04,2026-04-04,6.0,OK,expr_hcm_mocbai/2026-04_2026-04-04_cloud6pct_OK.png
@@ -810,6 +841,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 66,Cao tốc Hòa Bình - Mộc Châu,expr_hoabinh_mocchau,20.8,104.95,2026-06,2026-06-01,7.0,OK,expr_hoabinh_mocchau/2026-06_2026-06-01_cloud7pct_OK.png
 66,Cao tốc Hòa Bình - Mộc Châu,expr_hoabinh_mocchau,20.8,104.95,2026-07,2026-07-26,20.6,OK,expr_hoabinh_mocchau/2026-07_2026-07-26_cloud21pct_OK.png
 66,Cao tốc Hòa Bình - Mộc Châu,expr_hoabinh_mocchau,20.8,104.95,2026-08,2026-08-10,60.1,CLOUDY,expr_hoabinh_mocchau/2026-08_2026-08-10_cloud60pct_CLOUDY.png
+66,Cao tốc Hòa Bình - Mộc Châu,expr_hoabinh_mocchau,20.8,104.95,2026-09,2026-09-04,0.0,OK,expr_hoabinh_mocchau/2026-09_2026-09-04_cloud0pct_OK.png
 69,Cao tốc Hoài Nhơn - Quy Nhơn,expr_hoainhon_quynhon,14.1,109.1,2026-03,2026-03-27,0.0,OK,expr_hoainhon_quynhon/2026-03_2026-03-27_cloud0pct_OK.png
 69,Cao tốc Hoài Nhơn - Quy Nhơn,expr_hoainhon_quynhon,14.1,109.1,2026-04,2026-04-03,0.0,OK,expr_hoainhon_quynhon/2026-04_2026-04-03_cloud0pct_OK.png
 69,Cao tốc Hoài Nhơn - Quy Nhơn,expr_hoainhon_quynhon,14.1,109.1,2026-05,2026-05-26,0.1,OK,expr_hoainhon_quynhon/2026-05_2026-05-26_cloud0pct_OK.png
@@ -822,6 +854,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 63,Cao tốc Hữu Nghị - Chi Lăng,expr_huunghi_chilang,21.78,106.6,2026-06,2026-06-01,60.2,CLOUDY,expr_huunghi_chilang/2026-06_2026-06-01_cloud60pct_CLOUDY.png
 63,Cao tốc Hữu Nghị - Chi Lăng,expr_huunghi_chilang,21.78,106.6,2026-07,2026-07-26,80.6,CLOUDY,expr_huunghi_chilang/2026-07_2026-07-26_cloud81pct_CLOUDY.png
 63,Cao tốc Hữu Nghị - Chi Lăng,expr_huunghi_chilang,21.78,106.6,2026-08,2026-08-10,55.8,CLOUDY,expr_huunghi_chilang/2026-08_2026-08-10_cloud56pct_CLOUDY.png
+63,Cao tốc Hữu Nghị - Chi Lăng,expr_huunghi_chilang,21.78,106.6,2026-09,2026-09-03,0.0,OK,expr_huunghi_chilang/2026-09_2026-09-03_cloud0pct_OK.png
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-02,2026-02-23,0.0,OK,expr_lasson_hoalien/2026-02_2026-02-23_cloud0pct_OK.png
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-03,2026-03-30,0.0,OK,expr_lasson_hoalien/2026-03_2026-03-30_cloud0pct_OK.png
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-04,2026-04-23,1.0,OK,expr_lasson_hoalien/2026-04_2026-04-23_cloud1pct_OK.png
@@ -829,6 +862,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-06,2026-06-23,2.8,OK,expr_lasson_hoalien/2026-06_2026-06-23_cloud3pct_OK.png
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-07,2026-07-20,37.4,CLOUDY,expr_lasson_hoalien/2026-07_2026-07-20_cloud37pct_CLOUDY.png
 47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-08,2026-08-02,90.0,CLOUDY,expr_lasson_hoalien/2026-08_2026-08-02_cloud90pct_CLOUDY.png
+47,Cao tốc La Sơn - Hòa Liên,expr_lasson_hoalien,16.2,107.9,2026-09,2026-09-03,84.1,CLOUDY,expr_lasson_hoalien/2026-09_2026-09-03_cloud84pct_CLOUDY.png
 41,Cao tốc Mỹ Thuận - Cần Thơ,expr_myhuan_cantho,10.15,105.85,2026-02,2026-02-03,0.0,OK,expr_myhuan_cantho/2026-02_2026-02-03_cloud0pct_OK.png
 41,Cao tốc Mỹ Thuận - Cần Thơ,expr_myhuan_cantho,10.15,105.85,2026-03,2026-03-25,1.0,OK,expr_myhuan_cantho/2026-03_2026-03-25_cloud1pct_OK.png
 41,Cao tốc Mỹ Thuận - Cần Thơ,expr_myhuan_cantho,10.15,105.85,2026-04,2026-04-16,18.7,OK,expr_myhuan_cantho/2026-04_2026-04-16_cloud19pct_OK.png
@@ -843,6 +877,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 36,Cao tốc Ninh Bình - Hải Phòng,expr_ninhbinh_haiphong,20.4,106.2,2026-06,2026-06-23,5.3,OK,expr_ninhbinh_haiphong/2026-06_2026-06-23_cloud5pct_OK.png
 36,Cao tốc Ninh Bình - Hải Phòng,expr_ninhbinh_haiphong,20.4,106.2,2026-07,2026-07-26,5.8,OK,expr_ninhbinh_haiphong/2026-07_2026-07-26_cloud6pct_OK.png
 36,Cao tốc Ninh Bình - Hải Phòng,expr_ninhbinh_haiphong,20.4,106.2,2026-08,2026-08-10,0.0,OK,expr_ninhbinh_haiphong/2026-08_2026-08-10_cloud0pct_OK.png
+36,Cao tốc Ninh Bình - Hải Phòng,expr_ninhbinh_haiphong,20.4,106.2,2026-09,2026-09-04,0.0,OK,expr_ninhbinh_haiphong/2026-09_2026-09-04_cloud0pct_OK.png
 38,Cao tốc Phan Thiết - Dầu Giây,expr_phanthiet_daugiay,11.0,107.6,2026-02,2026-02-20,0.0,OK,expr_phanthiet_daugiay/2026-02_2026-02-20_cloud0pct_OK.png
 38,Cao tốc Phan Thiết - Dầu Giây,expr_phanthiet_daugiay,11.0,107.6,2026-03,2026-03-17,0.0,OK,expr_phanthiet_daugiay/2026-03_2026-03-17_cloud0pct_OK.png
 38,Cao tốc Phan Thiết - Dầu Giây,expr_phanthiet_daugiay,11.0,107.6,2026-04,2026-04-06,0.0,OK,expr_phanthiet_daugiay/2026-04_2026-04-06_cloud0pct_OK.png
@@ -880,6 +915,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 67,Cao tốc Tuyên Quang - Hà Giang,expr_tuyenquang_hagiang,22.3,105.1,2026-06,2026-06-01,14.7,OK,expr_tuyenquang_hagiang/2026-06_2026-06-01_cloud15pct_OK.png
 67,Cao tốc Tuyên Quang - Hà Giang,expr_tuyenquang_hagiang,22.3,105.1,2026-07,2026-07-21,0.5,OK,expr_tuyenquang_hagiang/2026-07_2026-07-21_cloud0pct_OK.png
 67,Cao tốc Tuyên Quang - Hà Giang,expr_tuyenquang_hagiang,22.3,105.1,2026-08,2026-08-10,0.0,OK,expr_tuyenquang_hagiang/2026-08_2026-08-10_cloud0pct_OK.png
+67,Cao tốc Tuyên Quang - Hà Giang,expr_tuyenquang_hagiang,22.3,105.1,2026-09,2026-09-04,6.1,OK,expr_tuyenquang_hagiang/2026-09_2026-09-04_cloud6pct_OK.png
 71,Cao tốc Vân Phong - Nha Trang,expr_vanphong_nhatrang,12.45,109.2,2026-02,2026-02-20,7.5,OK,expr_vanphong_nhatrang/2026-02_2026-02-20_cloud7pct_OK.png
 71,Cao tốc Vân Phong - Nha Trang,expr_vanphong_nhatrang,12.45,109.2,2026-03,2026-03-17,0.0,OK,expr_vanphong_nhatrang/2026-03_2026-03-17_cloud0pct_OK.png
 71,Cao tốc Vân Phong - Nha Trang,expr_vanphong_nhatrang,12.45,109.2,2026-04,2026-04-23,0.0,OK,expr_vanphong_nhatrang/2026-04_2026-04-23_cloud0pct_OK.png
@@ -892,6 +928,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 42,Cao tốc Vinh - Thanh Thủy,expr_vinh_thanhthuy,18.7,105.5,2026-04,2026-04-07,0.0,OK,expr_vinh_thanhthuy/2026-04_2026-04-07_cloud0pct_OK.png
 42,Cao tốc Vinh - Thanh Thủy,expr_vinh_thanhthuy,18.7,105.5,2026-05,2026-06-01,0.0,OK,expr_vinh_thanhthuy/2026-05_2026-06-01_cloud0pct_OK.png
 42,Cao tốc Vinh - Thanh Thủy,expr_vinh_thanhthuy,18.7,105.5,2026-06,2026-06-01,0.0,OK,expr_vinh_thanhthuy/2026-06_2026-06-01_cloud0pct_OK.png
+42,Cao tốc Vinh - Thanh Thủy,expr_vinh_thanhthuy,18.7,105.5,2026-09,2026-09-04,52.6,CLOUDY,expr_vinh_thanhthuy/2026-09_2026-09-04_cloud53pct_CLOUDY.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-01,2025-01-27,0.0,OK,07b_gb_road_bn/2025-01_2025-01-27_cloud0pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-02,2025-02-11,0.1,OK,07b_gb_road_bn/2025-02_2025-02-11_cloud0pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2025-03,2025-03-23,18.5,OK,07b_gb_road_bn/2025-03_2025-03-23_cloud18pct_OK.png
@@ -982,6 +1019,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-06,2026-06-20,0.0,OK,hsr_bac_nam/2026-06_2026-06-20_cloud0pct_OK.png
 20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-07,2026-07-30,6.2,OK,hsr_bac_nam/2026-07_2026-07-30_cloud6pct_OK.png
 20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-08,2026-08-14,0.0,OK,hsr_bac_nam/2026-08_2026-08-14_cloud0pct_OK.png
+20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-09,2026-09-03,100.0,CLOUDY,hsr_bac_nam/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-02,2026-02-10,100.0,CLOUDY,huong_lo_2/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-03,2026-03-22,0.0,OK,huong_lo_2/2026-03_2026-03-22_cloud0pct_OK.png
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-04,2026-05-01,0.0,OK,huong_lo_2/2026-04_2026-05-01_cloud0pct_OK.png
@@ -989,6 +1027,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-06,2026-06-22,29.3,OK,huong_lo_2/2026-06_2026-06-22_cloud29pct_OK.png
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-07,2026-07-20,24.3,OK,huong_lo_2/2026-07_2026-07-20_cloud24pct_OK.png
 149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-08,2026-08-14,99.9,CLOUDY,huong_lo_2/2026-08_2026-08-14_cloud100pct_CLOUDY.png
+149,Hương Lộ 2,huong_lo_2,10.840468774272068,106.8708208274991,2026-09,2026-09-03,99.9,CLOUDY,huong_lo_2/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 202,Điểm Đầu Cầu Vượt Biển Hòn Khoai,iem_au_cau_vuot_bien_hon_khoai,8.584681791427165,104.91072043735097,2026-02,2026-02-28,8.9,OK,iem_au_cau_vuot_bien_hon_khoai/2026-02_2026-02-28_cloud9pct_OK.png
 202,Điểm Đầu Cầu Vượt Biển Hòn Khoai,iem_au_cau_vuot_bien_hon_khoai,8.584681791427165,104.91072043735097,2026-03,2026-03-27,0.0,OK,iem_au_cau_vuot_bien_hon_khoai/2026-03_2026-03-27_cloud0pct_OK.png
 202,Điểm Đầu Cầu Vượt Biển Hòn Khoai,iem_au_cau_vuot_bien_hon_khoai,8.584681791427165,104.91072043735097,2026-04,2026-04-14,0.0,OK,iem_au_cau_vuot_bien_hon_khoai/2026-04_2026-04-14_cloud0pct_OK.png
@@ -1002,6 +1041,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 210,Điểm Đầu Tuyến Đường Ven Sông Kinh Môn,iem_au_tuyen_uong_ven_song_kinh_mon,20.976108314818294,106.53027307513408,2026-06,2026-06-01,41.8,CLOUDY,iem_au_tuyen_uong_ven_song_kinh_mon/2026-06_2026-06-01_cloud42pct_CLOUDY.png
 210,Điểm Đầu Tuyến Đường Ven Sông Kinh Môn,iem_au_tuyen_uong_ven_song_kinh_mon,20.976108314818294,106.53027307513408,2026-07,2026-07-26,24.2,OK,iem_au_tuyen_uong_ven_song_kinh_mon/2026-07_2026-07-26_cloud24pct_OK.png
 210,Điểm Đầu Tuyến Đường Ven Sông Kinh Môn,iem_au_tuyen_uong_ven_song_kinh_mon,20.976108314818294,106.53027307513408,2026-08,2026-08-10,0.0,OK,iem_au_tuyen_uong_ven_song_kinh_mon/2026-08_2026-08-10_cloud0pct_OK.png
+210,Điểm Đầu Tuyến Đường Ven Sông Kinh Môn,iem_au_tuyen_uong_ven_song_kinh_mon,20.976108314818294,106.53027307513408,2026-09,2026-09-01,23.4,OK,iem_au_tuyen_uong_ven_song_kinh_mon/2026-09_2026-09-01_cloud23pct_OK.png
 222,Khu Vực Cảng Nhà Rồng - Khánh Hội,khu_vuc_cang_nha_rong_khanh_hoi,10.767480200268666,106.70739231028179,2026-02,2026-02-08,0.0,OK,khu_vuc_cang_nha_rong_khanh_hoi/2026-02_2026-02-08_cloud0pct_OK.png
 222,Khu Vực Cảng Nhà Rồng - Khánh Hội,khu_vuc_cang_nha_rong_khanh_hoi,10.767480200268666,106.70739231028179,2026-03,2026-03-25,0.0,OK,khu_vuc_cang_nha_rong_khanh_hoi/2026-03_2026-03-25_cloud0pct_OK.png
 222,Khu Vực Cảng Nhà Rồng - Khánh Hội,khu_vuc_cang_nha_rong_khanh_hoi,10.767480200268666,106.70739231028179,2026-04,2026-04-24,0.0,OK,khu_vuc_cang_nha_rong_khanh_hoi/2026-04_2026-04-24_cloud0pct_OK.png
@@ -1029,6 +1069,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 26,Metro Nam Thăng Long - Trần Hưng Đạo (Hà Nội tuyến 2),metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t,21.05,105.83,2026-06,2026-06-01,54.5,CLOUDY,metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t/2026-06_2026-06-01_cloud55pct_CLOUDY.png
 26,Metro Nam Thăng Long - Trần Hưng Đạo (Hà Nội tuyến 2),metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t,21.05,105.83,2026-07,2026-07-26,19.3,OK,metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t/2026-07_2026-07-26_cloud19pct_OK.png
 26,Metro Nam Thăng Long - Trần Hưng Đạo (Hà Nội tuyến 2),metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t,21.05,105.83,2026-08,2026-08-10,0.0,OK,metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t/2026-08_2026-08-10_cloud0pct_OK.png
+26,Metro Nam Thăng Long - Trần Hưng Đạo (Hà Nội tuyến 2),metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t,21.05,105.83,2026-09,2026-09-04,51.9,CLOUDY,metro_nam_th_ng_long_tr_n_h_ng_o_h_n_i_t/2026-09_2026-09-04_cloud52pct_CLOUDY.png
 27,Metro số 4 TP.HCM,metro_s_4_tp_hcm,10.8,106.66,2026-02,2026-02-08,0.0,OK,metro_s_4_tp_hcm/2026-02_2026-02-08_cloud0pct_OK.png
 27,Metro số 4 TP.HCM,metro_s_4_tp_hcm,10.8,106.66,2026-03,2026-04-01,0.0,OK,metro_s_4_tp_hcm/2026-03_2026-04-01_cloud0pct_OK.png
 27,Metro số 4 TP.HCM,metro_s_4_tp_hcm,10.8,106.66,2026-04,2026-04-24,0.0,OK,metro_s_4_tp_hcm/2026-04_2026-04-24_cloud0pct_OK.png
@@ -1062,12 +1103,14 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 112,Metro Số 3 Đoạn Nhổn - Ga Hà Nội,metro_so_3_oan_nhon_ga_ha_noi,21.03841069337738,105.78818097634162,2026-06,2026-06-01,8.2,OK,metro_so_3_oan_nhon_ga_ha_noi/2026-06_2026-06-01_cloud8pct_OK.png
 112,Metro Số 3 Đoạn Nhổn - Ga Hà Nội,metro_so_3_oan_nhon_ga_ha_noi,21.03841069337738,105.78818097634162,2026-07,2026-07-26,38.1,CLOUDY,metro_so_3_oan_nhon_ga_ha_noi/2026-07_2026-07-26_cloud38pct_CLOUDY.png
 112,Metro Số 3 Đoạn Nhổn - Ga Hà Nội,metro_so_3_oan_nhon_ga_ha_noi,21.03841069337738,105.78818097634162,2026-08,2026-08-10,0.0,OK,metro_so_3_oan_nhon_ga_ha_noi/2026-08_2026-08-10_cloud0pct_OK.png
+112,Metro Số 3 Đoạn Nhổn - Ga Hà Nội,metro_so_3_oan_nhon_ga_ha_noi,21.03841069337738,105.78818097634162,2026-09,2026-09-04,19.8,OK,metro_so_3_oan_nhon_ga_ha_noi/2026-09_2026-09-04_cloud20pct_OK.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-03,2026-03-13,10.7,OK,metro_so_5_ha_noi/2026-03_2026-03-13_cloud11pct_OK.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-04,2026-04-12,0.0,OK,metro_so_5_ha_noi/2026-04_2026-04-12_cloud0pct_OK.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-05,2026-05-27,0.0,OK,metro_so_5_ha_noi/2026-05_2026-05-27_cloud0pct_OK.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-06,2026-06-01,4.1,OK,metro_so_5_ha_noi/2026-06_2026-06-01_cloud4pct_OK.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-07,2026-07-26,32.6,CLOUDY,metro_so_5_ha_noi/2026-07_2026-07-26_cloud33pct_CLOUDY.png
 32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-08,2026-08-10,0.0,OK,metro_so_5_ha_noi/2026-08_2026-08-10_cloud0pct_OK.png
+32,Metro số 5 Hà Nội (Văn Cao - Hòa Lạc),metro_so_5_ha_noi,21.03,105.79,2026-09,2026-09-04,26.2,OK,metro_so_5_ha_noi/2026-09_2026-09-04_cloud26pct_OK.png
 111,Metro Số 5 Văn Cao - Hòa Lạc,metro_so_5_van_cao_hoa_lac,21.016149031095978,105.6331832762909,2026-03,2026-03-30,95.8,CLOUDY,metro_so_5_van_cao_hoa_lac/2026-03_2026-03-30_cloud96pct_CLOUDY.png
 111,Metro Số 5 Văn Cao - Hòa Lạc,metro_so_5_van_cao_hoa_lac,21.016149031095978,105.6331832762909,2026-04,2026-04-12,0.0,OK,metro_so_5_van_cao_hoa_lac/2026-04_2026-04-12_cloud0pct_OK.png
 111,Metro Số 5 Văn Cao - Hòa Lạc,metro_so_5_van_cao_hoa_lac,21.016149031095978,105.6331832762909,2026-05,2026-05-27,0.0,OK,metro_so_5_van_cao_hoa_lac/2026-05_2026-05-27_cloud0pct_OK.png
@@ -1101,6 +1144,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 215,Nâng Cấp Mở Rộng Quốc Lộ 60,nang_cap_mo_rong_quoc_lo_60,9.701640633621189,106.02224178273592,2026-05,2026-05-09,11.9,OK,nang_cap_mo_rong_quoc_lo_60/2026-05_2026-05-09_cloud12pct_OK.png
 215,Nâng Cấp Mở Rộng Quốc Lộ 60,nang_cap_mo_rong_quoc_lo_60,9.701640633621189,106.02224178273592,2026-06,2026-06-28,7.3,OK,nang_cap_mo_rong_quoc_lo_60/2026-06_2026-06-28_cloud7pct_OK.png
 215,Nâng Cấp Mở Rộng Quốc Lộ 60,nang_cap_mo_rong_quoc_lo_60,9.701640633621189,106.02224178273592,2026-07,2026-07-23,14.7,OK,nang_cap_mo_rong_quoc_lo_60/2026-07_2026-07-23_cloud15pct_OK.png
+215,Nâng Cấp Mở Rộng Quốc Lộ 60,nang_cap_mo_rong_quoc_lo_60,9.701640633621189,106.02224178273592,2026-09,2026-09-03,100.0,CLOUDY,nang_cap_mo_rong_quoc_lo_60/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 150,"Nâng Cấp, Mở Rộng Đường Tỉnh 769",nang_cap_mo_rong_uong_tinh_769,10.862578133440874,107.0485196488861,2026-02,2026-02-10,100.0,CLOUDY,nang_cap_mo_rong_uong_tinh_769/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 150,"Nâng Cấp, Mở Rộng Đường Tỉnh 769",nang_cap_mo_rong_uong_tinh_769,10.862578133440874,107.0485196488861,2026-03,2026-04-01,0.0,OK,nang_cap_mo_rong_uong_tinh_769/2026-03_2026-04-01_cloud0pct_OK.png
 150,"Nâng Cấp, Mở Rộng Đường Tỉnh 769",nang_cap_mo_rong_uong_tinh_769,10.862578133440874,107.0485196488861,2026-04,2026-04-01,0.0,OK,nang_cap_mo_rong_uong_tinh_769/2026-04_2026-04-01_cloud0pct_OK.png
@@ -1113,6 +1157,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 28,Đường sắt Hải Phòng - Hạ Long - Móng Cái,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i,21.0,107.2,2026-05,2026-05-26,0.0,OK,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i/2026-05_2026-05-26_cloud0pct_OK.png
 28,Đường sắt Hải Phòng - Hạ Long - Móng Cái,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i,21.0,107.2,2026-07,2026-07-13,57.1,CLOUDY,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i/2026-07_2026-07-13_cloud57pct_CLOUDY.png
 28,Đường sắt Hải Phòng - Hạ Long - Móng Cái,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i,21.0,107.2,2026-08,2026-08-12,5.0,OK,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i/2026-08_2026-08-12_cloud5pct_OK.png
+28,Đường sắt Hải Phòng - Hạ Long - Móng Cái,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i,21.0,107.2,2026-09,2026-09-03,51.2,CLOUDY,ng_s_t_h_i_ph_ng_h_long_m_ng_c_i/2026-09_2026-09-03_cloud51pct_CLOUDY.png
 193,Ngã Tư Đồng Tâm,nga_tu_ong_tam,10.391994861505815,106.30526047608572,2026-02,2026-02-23,2.8,OK,nga_tu_ong_tam/2026-02_2026-02-23_cloud3pct_OK.png
 193,Ngã Tư Đồng Tâm,nga_tu_ong_tam,10.391994861505815,106.30526047608572,2026-03,2026-03-25,4.5,OK,nga_tu_ong_tam/2026-03_2026-03-25_cloud5pct_OK.png
 193,Ngã Tư Đồng Tâm,nga_tu_ong_tam,10.391994861505815,106.30526047608572,2026-04,2026-04-24,16.7,OK,nga_tu_ong_tam/2026-04_2026-04-24_cloud17pct_OK.png
@@ -1161,6 +1206,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 223,Nút Giao Gò Công,nut_giao_go_cong,10.82209015299133,106.83010368696587,2026-06,2026-06-05,41.2,CLOUDY,nut_giao_go_cong/2026-06_2026-06-05_cloud41pct_CLOUDY.png
 223,Nút Giao Gò Công,nut_giao_go_cong,10.82209015299133,106.83010368696587,2026-07,2026-07-20,39.9,CLOUDY,nut_giao_go_cong/2026-07_2026-07-20_cloud40pct_CLOUDY.png
 223,Nút Giao Gò Công,nut_giao_go_cong,10.82209015299133,106.83010368696587,2026-08,2026-08-14,96.6,CLOUDY,nut_giao_go_cong/2026-08_2026-08-14_cloud97pct_CLOUDY.png
+223,Nút Giao Gò Công,nut_giao_go_cong,10.82209015299133,106.83010368696587,2026-09,2026-09-03,97.6,CLOUDY,nut_giao_go_cong/2026-09_2026-09-03_cloud98pct_CLOUDY.png
 226,Nút Giao Mỹ Thủy,nut_giao_my_thuy,10.76998361312905,106.7751122986743,2026-02,2026-02-10,73.0,CLOUDY,nut_giao_my_thuy/2026-02_2026-02-10_cloud73pct_CLOUDY.png
 226,Nút Giao Mỹ Thủy,nut_giao_my_thuy,10.76998361312905,106.7751122986743,2026-03,2026-04-01,0.0,OK,nut_giao_my_thuy/2026-03_2026-04-01_cloud0pct_OK.png
 226,Nút Giao Mỹ Thủy,nut_giao_my_thuy,10.76998361312905,106.7751122986743,2026-04,2026-05-01,0.0,OK,nut_giao_my_thuy/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1174,6 +1220,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 108,Nút Giao Phạm Tu - Xa La,nut_giao_pham_tu_xa_la,20.961713735806057,105.79450804042146,2026-06,2026-06-01,4.8,OK,nut_giao_pham_tu_xa_la/2026-06_2026-06-01_cloud5pct_OK.png
 108,Nút Giao Phạm Tu - Xa La,nut_giao_pham_tu_xa_la,20.961713735806057,105.79450804042146,2026-07,2026-07-18,0.0,OK,nut_giao_pham_tu_xa_la/2026-07_2026-07-18_cloud0pct_OK.png
 108,Nút Giao Phạm Tu - Xa La,nut_giao_pham_tu_xa_la,20.961713735806057,105.79450804042146,2026-08,2026-08-10,0.0,OK,nut_giao_pham_tu_xa_la/2026-08_2026-08-10_cloud0pct_OK.png
+108,Nút Giao Phạm Tu - Xa La,nut_giao_pham_tu_xa_la,20.961713735806057,105.79450804042146,2026-09,2026-09-04,54.9,CLOUDY,nut_giao_pham_tu_xa_la/2026-09_2026-09-04_cloud55pct_CLOUDY.png
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-02,2026-02-10,83.9,CLOUDY,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-02_2026-02-10_cloud84pct_CLOUDY.png
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-03,2026-03-22,0.0,OK,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-03_2026-03-22_cloud0pct_OK.png
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-04,2026-04-26,0.0,OK,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-04_2026-04-26_cloud0pct_OK.png
@@ -1181,6 +1228,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-06,2026-06-22,47.2,CLOUDY,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-06_2026-06-22_cloud47pct_CLOUDY.png
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-07,2026-07-20,27.9,OK,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-07_2026-07-20_cloud28pct_OK.png
 201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-08,2026-08-14,66.0,CLOUDY,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-08_2026-08-14_cloud66pct_CLOUDY.png
+201,Nút Giao ĐT770B Với Cao Tốc Phan Thiết - Dầu Giây,nut_giao_t770b_voi_cao_toc_phan_thiet_da,10.838609039009409,107.15171847908,2026-09,2026-09-03,65.4,CLOUDY,nut_giao_t770b_voi_cao_toc_phan_thiet_da/2026-09_2026-09-03_cloud65pct_CLOUDY.png
 2,Đầu tư mở rộng Cảng hàng không quốc tế Phú Quốc,phu_quoc_airport,10.17,103.993,2026-02,2026-02-28,35.6,CLOUDY,phu_quoc_airport/2026-02_2026-02-28_cloud36pct_CLOUDY.png
 2,Đầu tư mở rộng Cảng hàng không quốc tế Phú Quốc,phu_quoc_airport,10.17,103.993,2026-03,2026-03-08,70.0,CLOUDY,phu_quoc_airport/2026-03_2026-03-08_cloud70pct_CLOUDY.png
 2,Đầu tư mở rộng Cảng hàng không quốc tế Phú Quốc,phu_quoc_airport,10.17,103.993,2026-04,2026-04-07,0.1,OK,phu_quoc_airport/2026-04_2026-04-07_cloud0pct_OK.png
@@ -1201,6 +1249,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-05,2026-05-01,0.0,OK,port_cai_mep/2026-05_2026-05-01_cloud0pct_OK.png
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-07,2026-07-20,52.1,CLOUDY,port_cai_mep/2026-07_2026-07-20_cloud52pct_CLOUDY.png
 83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-08,2026-08-14,87.4,CLOUDY,port_cai_mep/2026-08_2026-08-14_cloud87pct_CLOUDY.png
+83,Cảng Cái Mép - Thị Vải (mở rộng),port_cai_mep,10.52,107.02,2026-09,2026-09-03,58.3,CLOUDY,port_cai_mep/2026-09_2026-09-03_cloud58pct_CLOUDY.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-01,2025-01-16,0.0,OK,port_can_gio/2025-01_2025-01-16_cloud0pct_OK.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-02,2025-02-25,78.7,CLOUDY,port_can_gio/2025-02_2025-02-25_cloud79pct_CLOUDY.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2025-03,2025-03-12,0.0,OK,port_can_gio/2025-03_2025-03-12_cloud0pct_OK.png
@@ -1221,6 +1270,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.42,106.87,2026-06,2026-06-22,21.2,OK,port_can_gio/2026-06_2026-06-22_cloud21pct_OK.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-07,2026-07-10,67.3,CLOUDY,port_can_gio/2026-07_2026-07-10_cloud67pct_CLOUDY.png
 57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-08,2026-08-14,65.2,CLOUDY,port_can_gio/2026-08_2026-08-14_cloud65pct_CLOUDY.png
+57,Cảng trung chuyển quốc tế Cần Giờ,port_can_gio,10.4924,106.985,2026-09,2026-09-03,76.6,CLOUDY,port_can_gio/2026-09_2026-09-03_cloud77pct_CLOUDY.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-02,2026-02-03,1.2,OK,port_lach_huyen/2026-02_2026-02-03_cloud1pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-03,2026-03-25,0.2,OK,port_lach_huyen/2026-03_2026-03-25_cloud0pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-04,2026-04-09,100.0,CLOUDY,port_lach_huyen/2026-04_2026-04-09_cloud100pct_CLOUDY.png
@@ -1228,6 +1278,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-06,2026-06-03,22.6,OK,port_lach_huyen/2026-06_2026-06-03_cloud23pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-07,2026-07-18,0.9,OK,port_lach_huyen/2026-07_2026-07-18_cloud1pct_OK.png
 49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-08,2026-08-12,5.0,OK,port_lach_huyen/2026-08_2026-08-12_cloud5pct_OK.png
+49,Cảng Lạch Huyện (Hải Phòng),port_lach_huyen,20.8,106.87,2026-09,2026-09-03,0.0,OK,port_lach_huyen/2026-09_2026-09-03_cloud0pct_OK.png
 22,Cảng Liên Chiểu (Đà Nẵng),port_lien_chieu,16.12,108.11,2026-02,2026-02-05,8.2,OK,port_lien_chieu/2026-02_2026-02-05_cloud8pct_OK.png
 22,Cảng Liên Chiểu (Đà Nẵng),port_lien_chieu,16.12,108.11,2026-03,2026-03-27,0.0,OK,port_lien_chieu/2026-03_2026-03-27_cloud0pct_OK.png
 22,Cảng Liên Chiểu (Đà Nẵng),port_lien_chieu,16.12,108.11,2026-04,2026-04-06,0.0,OK,port_lien_chieu/2026-04_2026-04-06_cloud0pct_OK.png
@@ -1242,12 +1293,14 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 50,Cảng Tiên Sa - giai đoạn 2 (Đà Nẵng),port_tien_sa,16.12,108.22,2026-06,2026-06-20,0.0,OK,port_tien_sa/2026-06_2026-06-20_cloud0pct_OK.png
 50,Cảng Tiên Sa - giai đoạn 2 (Đà Nẵng),port_tien_sa,16.12,108.22,2026-07,2026-07-30,0.0,OK,port_tien_sa/2026-07_2026-07-30_cloud0pct_OK.png
 50,Cảng Tiên Sa - giai đoạn 2 (Đà Nẵng),port_tien_sa,16.12,108.22,2026-08,2026-08-14,34.0,CLOUDY,port_tien_sa/2026-08_2026-08-14_cloud34pct_CLOUDY.png
+50,Cảng Tiên Sa - giai đoạn 2 (Đà Nẵng),port_tien_sa,16.12,108.22,2026-09,2026-09-03,100.0,CLOUDY,port_tien_sa/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-02,2026-02-08,14.2,OK,port_tran_de/2026-02_2026-02-08_cloud14pct_OK.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-03,2026-03-15,7.7,OK,port_tran_de/2026-03_2026-03-15_cloud8pct_OK.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-04,2026-05-01,0.0,OK,port_tran_de/2026-04_2026-05-01_cloud0pct_OK.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-05,2026-05-01,0.0,OK,port_tran_de/2026-05_2026-05-01_cloud0pct_OK.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-06,2026-06-13,8.5,OK,port_tran_de/2026-06_2026-06-13_cloud8pct_OK.png
 82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-07,2026-07-18,55.2,CLOUDY,port_tran_de/2026-07_2026-07-18_cloud55pct_CLOUDY.png
+82,Cảng Trần Đề (Sóc Trăng),port_tran_de,9.5,106.2,2026-09,2026-09-03,99.9,CLOUDY,port_tran_de/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-01,2025-01-27,0.0,OK,02_pq_airport/2025-01_2025-01-27_cloud0pct_OK.png
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-02,2025-02-08,0.0,OK,02_pq_airport/2025-02_2025-02-08_cloud0pct_OK.png
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2025-03,2025-03-10,0.0,OK,02_pq_airport/2025-03_2025-03-10_cloud0pct_OK.png
@@ -1295,6 +1348,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-06,2026-06-22,13.2,OK,quoc_lo_51/2026-06_2026-06-22_cloud13pct_OK.png
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-07,2026-07-20,27.5,OK,quoc_lo_51/2026-07_2026-07-20_cloud27pct_OK.png
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-08,2026-08-14,99.9,CLOUDY,quoc_lo_51/2026-08_2026-08-14_cloud100pct_CLOUDY.png
+200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-09,2026-09-03,100.0,CLOUDY,quoc_lo_51/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 169,Quốc Lộ 63B Cà Mau,quoc_lo_63b_ca_mau,9.324949668192009,105.40510838519032,2026-02,2026-02-13,0.2,OK,quoc_lo_63b_ca_mau/2026-02_2026-02-13_cloud0pct_OK.png
 169,Quốc Lộ 63B Cà Mau,quoc_lo_63b_ca_mau,9.324949668192009,105.40510838519032,2026-03,2026-03-27,53.4,CLOUDY,quoc_lo_63b_ca_mau/2026-03_2026-03-27_cloud53pct_CLOUDY.png
 169,Quốc Lộ 63B Cà Mau,quoc_lo_63b_ca_mau,9.324949668192009,105.40510838519032,2026-04,2026-04-16,28.5,OK,quoc_lo_63b_ca_mau/2026-04_2026-04-16_cloud29pct_OK.png
@@ -1336,15 +1390,18 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 9,Đường sắt Bến Thành - Cần Giờ,rail_benthanh_cangio,10.72,106.85,2026-06,2026-06-22,24.9,OK,rail_benthanh_cangio/2026-06_2026-06-22_cloud25pct_OK.png
 9,Đường sắt Bến Thành - Cần Giờ,rail_benthanh_cangio,10.72,106.85,2026-07,2026-07-20,67.6,CLOUDY,rail_benthanh_cangio/2026-07_2026-07-20_cloud68pct_CLOUDY.png
 9,Đường sắt Bến Thành - Cần Giờ,rail_benthanh_cangio,10.72,106.85,2026-08,2026-08-14,95.1,CLOUDY,rail_benthanh_cangio/2026-08_2026-08-14_cloud95pct_CLOUDY.png
+9,Đường sắt Bến Thành - Cần Giờ,rail_benthanh_cangio,10.72,106.85,2026-09,2026-09-03,100.0,CLOUDY,rail_benthanh_cangio/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-02,2026-02-15,67.8,CLOUDY,rail_bienhoa_vungtau/2026-02_2026-02-15_cloud68pct_CLOUDY.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-03,2026-03-22,0.0,OK,rail_bienhoa_vungtau/2026-03_2026-03-22_cloud0pct_OK.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-04,2026-05-01,0.9,OK,rail_bienhoa_vungtau/2026-04_2026-05-01_cloud1pct_OK.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-05,2026-05-01,0.9,OK,rail_bienhoa_vungtau/2026-05_2026-05-01_cloud1pct_OK.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-07,2026-07-20,69.1,CLOUDY,rail_bienhoa_vungtau/2026-07_2026-07-20_cloud69pct_CLOUDY.png
 81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-08,2026-08-04,42.6,CLOUDY,rail_bienhoa_vungtau/2026-08_2026-08-04_cloud43pct_CLOUDY.png
+81,Đường sắt Biên Hòa - Vũng Tàu,rail_bienhoa_vungtau,10.65,107.0,2026-09,2026-09-03,57.6,CLOUDY,rail_bienhoa_vungtau/2026-09_2026-09-03_cloud58pct_CLOUDY.png
 10,Đường sắt Hà Nội - Quảng Ninh,rail_hanoi_quangninh,21.05,106.8,2026-03,2026-03-10,0.0,OK,rail_hanoi_quangninh/2026-03_2026-03-10_cloud0pct_OK.png
 10,Đường sắt Hà Nội - Quảng Ninh,rail_hanoi_quangninh,21.05,106.8,2026-05,2026-05-24,1.4,OK,rail_hanoi_quangninh/2026-05_2026-05-24_cloud1pct_OK.png
 10,Đường sắt Hà Nội - Quảng Ninh,rail_hanoi_quangninh,21.05,106.8,2026-08,2026-08-12,4.9,OK,rail_hanoi_quangninh/2026-08_2026-08-12_cloud5pct_OK.png
+10,Đường sắt Hà Nội - Quảng Ninh,rail_hanoi_quangninh,21.05,106.8,2026-09,2026-09-01,68.7,CLOUDY,rail_hanoi_quangninh/2026-09_2026-09-01_cloud69pct_CLOUDY.png
 80,Đường sắt TP.HCM - Cần Thơ,rail_hcm_cantho,10.5,106.3,2026-02,2026-02-08,0.0,OK,rail_hcm_cantho/2026-02_2026-02-08_cloud0pct_OK.png
 80,Đường sắt TP.HCM - Cần Thơ,rail_hcm_cantho,10.5,106.3,2026-03,2026-03-25,0.6,OK,rail_hcm_cantho/2026-03_2026-03-25_cloud1pct_OK.png
 80,Đường sắt TP.HCM - Cần Thơ,rail_hcm_cantho,10.5,106.3,2026-04,2026-04-24,17.5,OK,rail_hcm_cantho/2026-04_2026-04-24_cloud17pct_OK.png
@@ -1358,6 +1415,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 21,Đường sắt Lào Cai - Hà Nội - Hải Phòng,rail_laocai_hn_hp,21.02,105.84,2026-06,2026-06-01,48.7,CLOUDY,rail_laocai_hn_hp/2026-06_2026-06-01_cloud49pct_CLOUDY.png
 21,Đường sắt Lào Cai - Hà Nội - Hải Phòng,rail_laocai_hn_hp,21.02,105.84,2026-07,2026-07-26,78.5,CLOUDY,rail_laocai_hn_hp/2026-07_2026-07-26_cloud79pct_CLOUDY.png
 21,Đường sắt Lào Cai - Hà Nội - Hải Phòng,rail_laocai_hn_hp,21.02,105.84,2026-08,2026-08-10,1.1,OK,rail_laocai_hn_hp/2026-08_2026-08-10_cloud1pct_OK.png
+21,Đường sắt Lào Cai - Hà Nội - Hải Phòng,rail_laocai_hn_hp,21.02,105.84,2026-09,2026-09-04,98.3,CLOUDY,rail_laocai_hn_hp/2026-09_2026-09-04_cloud98pct_CLOUDY.png
 55,Vành đai 3 TP.HCM,ring3_hcmc,10.82,106.68,2026-02,2026-02-08,0.0,OK,ring3_hcmc/2026-02_2026-02-08_cloud0pct_OK.png
 55,Vành đai 3 TP.HCM,ring3_hcmc,10.82,106.68,2026-03,2026-04-01,0.0,OK,ring3_hcmc/2026-03_2026-04-01_cloud0pct_OK.png
 55,Vành đai 3 TP.HCM,ring3_hcmc,10.82,106.68,2026-04,2026-04-24,0.0,OK,ring3_hcmc/2026-04_2026-04-24_cloud0pct_OK.png
@@ -1371,6 +1429,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 56,Vành đai 4 - Vùng Thủ đô Hà Nội,ring4_hanoi,21.0,105.85,2026-06,2026-06-01,36.5,CLOUDY,ring4_hanoi/2026-06_2026-06-01_cloud37pct_CLOUDY.png
 56,Vành đai 4 - Vùng Thủ đô Hà Nội,ring4_hanoi,21.0,105.85,2026-07,2026-07-18,66.7,CLOUDY,ring4_hanoi/2026-07_2026-07-18_cloud67pct_CLOUDY.png
 56,Vành đai 4 - Vùng Thủ đô Hà Nội,ring4_hanoi,21.0,105.85,2026-08,2026-08-10,0.6,OK,ring4_hanoi/2026-08_2026-08-10_cloud1pct_OK.png
+56,Vành đai 4 Hà Nội,ring4_hanoi,21.0,105.85,2026-09,2026-09-04,100.0,CLOUDY,ring4_hanoi/2026-09_2026-09-04_cloud100pct_CLOUDY.png
 23,Vành đai 4 TP.HCM,ring4_hcmc,10.85,106.62,2026-02,2026-02-08,0.0,OK,ring4_hcmc/2026-02_2026-02-08_cloud0pct_OK.png
 23,Vành đai 4 TP.HCM,ring4_hcmc,10.85,106.62,2026-03,2026-04-01,0.0,OK,ring4_hcmc/2026-03_2026-04-01_cloud0pct_OK.png
 23,Vành đai 4 TP.HCM,ring4_hcmc,10.85,106.62,2026-04,2026-04-24,0.0,OK,ring4_hcmc/2026-04_2026-04-24_cloud0pct_OK.png
@@ -1390,6 +1449,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 7,Tuyến đường nối sân bay Gia Bình - Hà Nội (đoạn qua TP Hà Nội),road_giabinh_hanoi,21.0,106.05,2026-06,2026-06-01,46.3,CLOUDY,road_giabinh_hanoi/2026-06_2026-06-01_cloud46pct_CLOUDY.png
 7,Tuyến đường nối sân bay Gia Bình - Hà Nội (đoạn qua TP Hà Nội),road_giabinh_hanoi,21.0,106.05,2026-07,2026-07-26,87.2,CLOUDY,road_giabinh_hanoi/2026-07_2026-07-26_cloud87pct_CLOUDY.png
 7,Tuyến đường nối sân bay Gia Bình - Hà Nội (đoạn qua TP Hà Nội),road_giabinh_hanoi,21.0,106.05,2026-08,2026-08-10,0.0,OK,road_giabinh_hanoi/2026-08_2026-08-10_cloud0pct_OK.png
+7,Tuyến đường nối sân bay Gia Bình - Hà Nội (đoạn qua TP Hà Nội),road_giabinh_hanoi,21.0,106.05,2026-09,2026-09-04,100.0,CLOUDY,road_giabinh_hanoi/2026-09_2026-09-04_cloud100pct_CLOUDY.png
 205,Sân Bay Cà Mau,san_bay_ca_mau,9.177255863973546,105.17937072046632,2026-02,2026-02-28,0.0,OK,san_bay_ca_mau/2026-02_2026-02-28_cloud0pct_OK.png
 205,Sân Bay Cà Mau,san_bay_ca_mau,9.177255863973546,105.17937072046632,2026-03,2026-03-27,43.0,CLOUDY,san_bay_ca_mau/2026-03_2026-03-27_cloud43pct_CLOUDY.png
 205,Sân Bay Cà Mau,san_bay_ca_mau,9.177255863973546,105.17937072046632,2026-04,2026-04-16,21.4,OK,san_bay_ca_mau/2026-04_2026-04-16_cloud21pct_OK.png
@@ -1424,6 +1484,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 236,Sân vận động VinFast - Trống Đồng,svd_trong_dong,21.0071085,105.8274308,2026-06,2026-06-01,57.8,CLOUDY,svd_trong_dong/2026-06_2026-06-01_cloud58pct_CLOUDY.png
 236,Sân vận động VinFast - Trống Đồng,svd_trong_dong,21.0071085,105.8274308,2026-07,2026-07-18,70.0,CLOUDY,svd_trong_dong/2026-07_2026-07-18_cloud70pct_CLOUDY.png
 236,Sân vận động VinFast - Trống Đồng,svd_trong_dong,21.0071085,105.8274308,2026-08,2026-08-10,0.0,OK,svd_trong_dong/2026-08_2026-08-10_cloud0pct_OK.png
+236,Sân vận động VinFast - Trống Đồng,svd_trong_dong,21.0071085,105.8274308,2026-09,2026-09-04,100.0,CLOUDY,svd_trong_dong/2026-09_2026-09-04_cloud100pct_CLOUDY.png
 146,Trục Giao Thông Đô Thị TP.HCM - Long An - Tiền Giang,truc_giao_thong_o_thi_tp_hcm_long_an_tie,10.42087214945288,106.39140448750321,2026-02,2026-02-08,2.2,OK,truc_giao_thong_o_thi_tp_hcm_long_an_tie/2026-02_2026-02-08_cloud2pct_OK.png
 146,Trục Giao Thông Đô Thị TP.HCM - Long An - Tiền Giang,truc_giao_thong_o_thi_tp_hcm_long_an_tie,10.42087214945288,106.39140448750321,2026-03,2026-03-25,4.2,OK,truc_giao_thong_o_thi_tp_hcm_long_an_tie/2026-03_2026-03-25_cloud4pct_OK.png
 146,Trục Giao Thông Đô Thị TP.HCM - Long An - Tiền Giang,truc_giao_thong_o_thi_tp_hcm_long_an_tie,10.42087214945288,106.39140448750321,2026-04,2026-04-16,4.2,OK,truc_giao_thong_o_thi_tp_hcm_long_an_tie/2026-04_2026-04-16_cloud4pct_OK.png
@@ -1451,12 +1512,14 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 114,Tuyến Lê Duẩn - Giải Phóng - Ngọc Hồi Và QL 1A,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_,20.976939385199618,105.84566416475013,2026-06,2026-06-01,53.6,CLOUDY,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_/2026-06_2026-06-01_cloud54pct_CLOUDY.png
 114,Tuyến Lê Duẩn - Giải Phóng - Ngọc Hồi Và QL 1A,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_,20.976939385199618,105.84566416475013,2026-07,2026-07-18,0.8,OK,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_/2026-07_2026-07-18_cloud1pct_OK.png
 114,Tuyến Lê Duẩn - Giải Phóng - Ngọc Hồi Và QL 1A,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_,20.976939385199618,105.84566416475013,2026-08,2026-08-10,0.0,OK,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_/2026-08_2026-08-10_cloud0pct_OK.png
+114,Tuyến Lê Duẩn - Giải Phóng - Ngọc Hồi Và QL 1A,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_,20.976939385199618,105.84566416475013,2026-09,2026-09-04,55.1,CLOUDY,tuyen_le_duan_giai_phong_ngoc_hoi_va_ql_/2026-09_2026-09-04_cloud55pct_CLOUDY.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-03,2026-03-13,0.0,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-03_2026-03-13_cloud0pct_OK.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-04,2026-04-12,0.0,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-04_2026-04-12_cloud0pct_OK.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-05,2026-06-01,6.5,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-05_2026-06-01_cloud7pct_OK.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-06,2026-06-01,6.5,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-06_2026-06-01_cloud7pct_OK.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-07,2026-07-18,0.0,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-07_2026-07-18_cloud0pct_OK.png
 109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-08,2026-08-10,0.0,OK,tuyen_metro_2a_cat_linh_ha_ong/2026-08_2026-08-10_cloud0pct_OK.png
+109,Tuyến Metro 2A Cát Linh - Hà Đông,tuyen_metro_2a_cat_linh_ha_ong,20.98908161661369,105.78796400265571,2026-09,2026-09-04,82.3,CLOUDY,tuyen_metro_2a_cat_linh_ha_ong/2026-09_2026-09-04_cloud82pct_CLOUDY.png
 90,Tuyến Metro Số 1 Bến Thành - Suối Tiên,tuyen_metro_so_1_ben_thanh_suoi_tien,10.8267268259191,106.7592965542127,2026-02,2026-02-03,0.0,OK,tuyen_metro_so_1_ben_thanh_suoi_tien/2026-02_2026-02-03_cloud0pct_OK.png
 90,Tuyến Metro Số 1 Bến Thành - Suối Tiên,tuyen_metro_so_1_ben_thanh_suoi_tien,10.8267268259191,106.7592965542127,2026-03,2026-03-17,0.0,OK,tuyen_metro_so_1_ben_thanh_suoi_tien/2026-03_2026-03-17_cloud0pct_OK.png
 90,Tuyến Metro Số 1 Bến Thành - Suối Tiên,tuyen_metro_so_1_ben_thanh_suoi_tien,10.8267268259191,106.7592965542127,2026-04,2026-05-01,0.3,OK,tuyen_metro_so_1_ben_thanh_suoi_tien/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1471,6 +1534,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 139,Tuyến Đường Kết Nối Di Sản Văn Hoá Du Lịch Và Phát Triển Kinh Tế Dọc Sông Hồng,tuyen_uong_ket_noi_di_san_van_hoa_du_lic,20.790284780527443,106.01095446774715,2026-06,2026-06-21,6.3,OK,tuyen_uong_ket_noi_di_san_van_hoa_du_lic/2026-06_2026-06-21_cloud6pct_OK.png
 139,Tuyến Đường Kết Nối Di Sản Văn Hoá Du Lịch Và Phát Triển Kinh Tế Dọc Sông Hồng,tuyen_uong_ket_noi_di_san_van_hoa_du_lic,20.790284780527443,106.01095446774715,2026-07,2026-07-26,10.8,OK,tuyen_uong_ket_noi_di_san_van_hoa_du_lic/2026-07_2026-07-26_cloud11pct_OK.png
 139,Tuyến Đường Kết Nối Di Sản Văn Hoá Du Lịch Và Phát Triển Kinh Tế Dọc Sông Hồng,tuyen_uong_ket_noi_di_san_van_hoa_du_lic,20.790284780527443,106.01095446774715,2026-08,2026-08-10,0.0,OK,tuyen_uong_ket_noi_di_san_van_hoa_du_lic/2026-08_2026-08-10_cloud0pct_OK.png
+139,Tuyến Đường Kết Nối Di Sản Văn Hoá Du Lịch Và Phát Triển Kinh Tế Dọc Sông Hồng,tuyen_uong_ket_noi_di_san_van_hoa_du_lic,20.790284780527443,106.01095446774715,2026-09,2026-09-04,81.3,CLOUDY,tuyen_uong_ket_noi_di_san_van_hoa_du_lic/2026-09_2026-09-04_cloud81pct_CLOUDY.png
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-02,2026-02-10,100.0,CLOUDY,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-03,2026-04-01,0.0,OK,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-03_2026-04-01_cloud0pct_OK.png
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-04,2026-05-01,0.0,OK,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1478,6 +1542,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-06,2026-06-22,0.0,OK,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-06_2026-06-22_cloud0pct_OK.png
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-07,2026-07-20,0.0,OK,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-07_2026-07-20_cloud0pct_OK.png
 94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-08,2026-08-14,98.7,CLOUDY,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-08_2026-08-14_cloud99pct_CLOUDY.png
+94,Tuyến Đường Sắt Nhẹ Thủ Thiêm - Long Thành,tuyen_uong_sat_nhe_thu_thiem_long_thanh,10.768309655830793,106.92256620105944,2026-09,2026-09-03,100.0,CLOUDY,tuyen_uong_sat_nhe_thu_thiem_long_thanh/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 203,Tuyến Đường Vành Đai 3 (đường Tỉnh ĐT.983C),tuyen_uong_vanh_ai_3_uongtinh_t_983c,9.237967338835647,105.15706896820085,2026-02,2026-02-28,0.0,OK,tuyen_uong_vanh_ai_3_uongtinh_t_983c/2026-02_2026-02-28_cloud0pct_OK.png
 203,Tuyến Đường Vành Đai 3 (đường Tỉnh ĐT.983C),tuyen_uong_vanh_ai_3_uongtinh_t_983c,9.237967338835647,105.15706896820085,2026-03,2026-03-27,67.6,CLOUDY,tuyen_uong_vanh_ai_3_uongtinh_t_983c/2026-03_2026-03-27_cloud68pct_CLOUDY.png
 203,Tuyến Đường Vành Đai 3 (đường Tỉnh ĐT.983C),tuyen_uong_vanh_ai_3_uongtinh_t_983c,9.237967338835647,105.15706896820085,2026-04,2026-04-16,11.8,OK,tuyen_uong_vanh_ai_3_uongtinh_t_983c/2026-04_2026-04-16_cloud12pct_OK.png
@@ -1492,6 +1557,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 159,Đường Bưng Môn,uong_bung_mon,10.775402890316727,106.97015952360326,2026-06,2026-06-22,40.6,CLOUDY,uong_bung_mon/2026-06_2026-06-22_cloud41pct_CLOUDY.png
 159,Đường Bưng Môn,uong_bung_mon,10.775402890316727,106.97015952360326,2026-07,2026-07-20,36.2,CLOUDY,uong_bung_mon/2026-07_2026-07-20_cloud36pct_CLOUDY.png
 159,Đường Bưng Môn,uong_bung_mon,10.775402890316727,106.97015952360326,2026-08,2026-08-14,67.0,CLOUDY,uong_bung_mon/2026-08_2026-08-14_cloud67pct_CLOUDY.png
+159,Đường Bưng Môn,uong_bung_mon,10.775402890316727,106.97015952360326,2026-09,2026-09-03,100.0,CLOUDY,uong_bung_mon/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-02,2026-02-08,7.1,OK,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-02_2026-02-08_cloud7pct_OK.png
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-03,2026-03-02,0.0,OK,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-03_2026-03-02_cloud0pct_OK.png
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-04,2026-04-23,0.0,OK,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-04_2026-04-23_cloud0pct_OK.png
@@ -1499,6 +1565,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-06,2026-06-15,3.3,OK,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-06_2026-06-15_cloud3pct_OK.png
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-07,2026-07-20,30.4,CLOUDY,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-07_2026-07-20_cloud30pct_CLOUDY.png
 179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-08,2026-08-04,0.0,OK,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-08_2026-08-04_cloud0pct_OK.png
+179,Đường Dẫn Và Cầu Vượt Biển Ra Cảng Trần Đề,uong_dan_va_cau_vuot_bien_ra_cang_tran_e,9.399919527090972,106.26100616550106,2026-09,2026-09-03,71.5,CLOUDY,uong_dan_va_cau_vuot_bien_ra_cang_tran_e/2026-09_2026-09-03_cloud72pct_CLOUDY.png
 144,Đường Giao Thông Hai Bên Bờ Sông Bảo Định,uong_giao_thong_hai_ben_bo_song_bao_inh,10.37117771456262,106.35410649454973,2026-02,2026-02-23,2.7,OK,uong_giao_thong_hai_ben_bo_song_bao_inh/2026-02_2026-02-23_cloud3pct_OK.png
 144,Đường Giao Thông Hai Bên Bờ Sông Bảo Định,uong_giao_thong_hai_ben_bo_song_bao_inh,10.37117771456262,106.35410649454973,2026-03,2026-03-25,7.3,OK,uong_giao_thong_hai_ben_bo_song_bao_inh/2026-03_2026-03-25_cloud7pct_OK.png
 144,Đường Giao Thông Hai Bên Bờ Sông Bảo Định,uong_giao_thong_hai_ben_bo_song_bao_inh,10.37117771456262,106.35410649454973,2026-04,2026-04-24,17.0,OK,uong_giao_thong_hai_ben_bo_song_bao_inh/2026-04_2026-04-24_cloud17pct_OK.png
@@ -1569,6 +1636,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 104,Đường Rừng Sác,uong_rung_sac,10.530441230645996,106.84520100143598,2026-06,2026-06-22,11.1,OK,uong_rung_sac/2026-06_2026-06-22_cloud11pct_OK.png
 104,Đường Rừng Sác,uong_rung_sac,10.530441230645996,106.84520100143598,2026-07,2026-07-20,73.5,CLOUDY,uong_rung_sac/2026-07_2026-07-20_cloud74pct_CLOUDY.png
 104,Đường Rừng Sác,uong_rung_sac,10.530441230645996,106.84520100143598,2026-08,2026-08-04,8.8,OK,uong_rung_sac/2026-08_2026-08-04_cloud9pct_OK.png
+104,Đường Rừng Sác,uong_rung_sac,10.530441230645996,106.84520100143598,2026-09,2026-09-03,100.0,CLOUDY,uong_rung_sac/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 96,Đường Sắt Đô Thị Bến Thành - Cần Giờ,uong_sat_o_thi_ben_thanh_can_gio,10.58050598308954,106.81484374081391,2026-02,2026-02-10,8.5,OK,uong_sat_o_thi_ben_thanh_can_gio/2026-02_2026-02-10_cloud9pct_OK.png
 96,Đường Sắt Đô Thị Bến Thành - Cần Giờ,uong_sat_o_thi_ben_thanh_can_gio,10.58050598308954,106.81484374081391,2026-03,2026-03-22,0.0,OK,uong_sat_o_thi_ben_thanh_can_gio/2026-03_2026-03-22_cloud0pct_OK.png
 96,Đường Sắt Đô Thị Bến Thành - Cần Giờ,uong_sat_o_thi_ben_thanh_can_gio,10.58050598308954,106.81484374081391,2026-04,2026-05-01,0.0,OK,uong_sat_o_thi_ben_thanh_can_gio/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1596,6 +1664,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 158,Đường Tỉnh 25B,uong_tinh_25b,10.729409354227538,106.91139496646932,2026-06,2026-06-22,24.9,OK,uong_tinh_25b/2026-06_2026-06-22_cloud25pct_OK.png
 158,Đường Tỉnh 25B,uong_tinh_25b,10.729409354227538,106.91139496646932,2026-07,2026-07-20,30.2,CLOUDY,uong_tinh_25b/2026-07_2026-07-20_cloud30pct_CLOUDY.png
 158,Đường Tỉnh 25B,uong_tinh_25b,10.729409354227538,106.91139496646932,2026-08,2026-08-14,99.9,CLOUDY,uong_tinh_25b/2026-08_2026-08-14_cloud100pct_CLOUDY.png
+158,Đường Tỉnh 25B,uong_tinh_25b,10.729409354227538,106.91139496646932,2026-09,2026-09-03,100.0,CLOUDY,uong_tinh_25b/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 153,Đường Tỉnh 768B,uong_tinh_768b,10.995067420143577,106.87371494462339,2026-02,2026-02-20,8.2,OK,uong_tinh_768b/2026-02_2026-02-20_cloud8pct_OK.png
 153,Đường Tỉnh 768B,uong_tinh_768b,10.995067420143577,106.87371494462339,2026-03,2026-03-17,0.0,OK,uong_tinh_768b/2026-03_2026-03-17_cloud0pct_OK.png
 153,Đường Tỉnh 768B,uong_tinh_768b,10.995067420143577,106.87371494462339,2026-04,2026-04-01,0.0,OK,uong_tinh_768b/2026-04_2026-04-01_cloud0pct_OK.png
@@ -1643,6 +1712,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 229,Vành đai 3 Hà Nội,uong_vanh_ai_3_ha_noi,21.0821119,105.7882259,2026-06,2026-06-01,27.2,OK,uong_vanh_ai_3_ha_noi/2026-06_2026-06-01_cloud27pct_OK.png
 229,Vành đai 3 Hà Nội,uong_vanh_ai_3_ha_noi,21.0821119,105.7882259,2026-07,2026-07-26,4.0,OK,uong_vanh_ai_3_ha_noi/2026-07_2026-07-26_cloud4pct_OK.png
 229,Vành đai 3 Hà Nội,uong_vanh_ai_3_ha_noi,21.0821119,105.7882259,2026-08,2026-08-10,0.0,OK,uong_vanh_ai_3_ha_noi/2026-08_2026-08-10_cloud0pct_OK.png
+229,Vành đai 3 Hà Nội,uong_vanh_ai_3_ha_noi,21.0821119,105.7882259,2026-09,2026-09-04,37.7,CLOUDY,uong_vanh_ai_3_ha_noi/2026-09_2026-09-04_cloud38pct_CLOUDY.png
 167,Đường Vành Đai Ngoài Bạc Liêu,uong_vanh_ai_ngoai_bac_lieu,9.28705323305565,105.742549933341,2026-02,2026-02-03,6.7,OK,uong_vanh_ai_ngoai_bac_lieu/2026-02_2026-02-03_cloud7pct_OK.png
 167,Đường Vành Đai Ngoài Bạc Liêu,uong_vanh_ai_ngoai_bac_lieu,9.28705323305565,105.742549933341,2026-03,2026-03-27,4.4,OK,uong_vanh_ai_ngoai_bac_lieu/2026-03_2026-03-27_cloud4pct_OK.png
 167,Đường Vành Đai Ngoài Bạc Liêu,uong_vanh_ai_ngoai_bac_lieu,9.28705323305565,105.742549933341,2026-04,2026-04-16,7.8,OK,uong_vanh_ai_ngoai_bac_lieu/2026-04_2026-04-16_cloud8pct_OK.png
@@ -1664,6 +1734,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 177,Đường Ven Biển Đà Nẵng - Hội An,uong_ven_bien_a_nang_hoi_an,16.011461312163746,108.30552661738696,2026-06,2026-06-20,0.0,OK,uong_ven_bien_a_nang_hoi_an/2026-06_2026-06-20_cloud0pct_OK.png
 177,Đường Ven Biển Đà Nẵng - Hội An,uong_ven_bien_a_nang_hoi_an,16.011461312163746,108.30552661738696,2026-07,2026-07-30,0.0,OK,uong_ven_bien_a_nang_hoi_an/2026-07_2026-07-30_cloud0pct_OK.png
 177,Đường Ven Biển Đà Nẵng - Hội An,uong_ven_bien_a_nang_hoi_an,16.011461312163746,108.30552661738696,2026-08,2026-08-14,0.0,OK,uong_ven_bien_a_nang_hoi_an/2026-08_2026-08-14_cloud0pct_OK.png
+177,Đường Ven Biển Đà Nẵng - Hội An,uong_ven_bien_a_nang_hoi_an,16.011461312163746,108.30552661738696,2026-09,2026-09-03,100.0,CLOUDY,uong_ven_bien_a_nang_hoi_an/2026-09_2026-09-03_cloud100pct_CLOUDY.png
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-02,2026-02-21,0.0,OK,uong_ven_bien_nghi_son_cua_lo/2026-02_2026-02-21_cloud0pct_OK.png
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-03,2026-03-30,9.9,OK,uong_ven_bien_nghi_son_cua_lo/2026-03_2026-03-30_cloud10pct_OK.png
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-04,2026-04-07,0.0,OK,uong_ven_bien_nghi_son_cua_lo/2026-04_2026-04-07_cloud0pct_OK.png
@@ -1671,6 +1742,7 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-06,2026-06-01,28.3,OK,uong_ven_bien_nghi_son_cua_lo/2026-06_2026-06-01_cloud28pct_OK.png
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-07,2026-07-18,1.9,OK,uong_ven_bien_nghi_son_cua_lo/2026-07_2026-07-18_cloud2pct_OK.png
 137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-08,2026-08-15,3.9,OK,uong_ven_bien_nghi_son_cua_lo/2026-08_2026-08-15_cloud4pct_OK.png
+137,Đường Ven Biển Nghi Sơn - Cửa Lò,uong_ven_bien_nghi_son_cua_lo,19.00653835858681,105.68643857482276,2026-09,2026-09-04,0.0,OK,uong_ven_bien_nghi_son_cua_lo/2026-09_2026-09-04_cloud0pct_OK.png
 182,Đường Ven Biển Đoạn Qua Bạc Liêu,uong_ven_bien_oan_qua_bac_lieu,9.200948955216397,105.722033737566,2026-02,2026-02-03,1.4,OK,uong_ven_bien_oan_qua_bac_lieu/2026-02_2026-02-03_cloud1pct_OK.png
 182,Đường Ven Biển Đoạn Qua Bạc Liêu,uong_ven_bien_oan_qua_bac_lieu,9.200948955216397,105.722033737566,2026-03,2026-03-25,23.3,OK,uong_ven_bien_oan_qua_bac_lieu/2026-03_2026-03-25_cloud23pct_OK.png
 182,Đường Ven Biển Đoạn Qua Bạc Liêu,uong_ven_bien_oan_qua_bac_lieu,9.200948955216397,105.722033737566,2026-04,2026-04-04,12.5,OK,uong_ven_bien_oan_qua_bac_lieu/2026-04_2026-04-04_cloud13pct_OK.png
@@ -1698,24 +1770,28 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 88,Đường Vượt Biển Cần Giờ - Vũng Tàu,uong_vuot_bien_can_gio_vung_tau,10.397076045628413,107.03221248111007,2026-05,2026-05-01,0.0,OK,uong_vuot_bien_can_gio_vung_tau/2026-05_2026-05-01_cloud0pct_OK.png
 88,Đường Vượt Biển Cần Giờ - Vũng Tàu,uong_vuot_bien_can_gio_vung_tau,10.397076045628413,107.03221248111007,2026-07,2026-07-20,2.4,OK,uong_vuot_bien_can_gio_vung_tau/2026-07_2026-07-20_cloud2pct_OK.png
 88,Đường Vượt Biển Cần Giờ - Vũng Tàu,uong_vuot_bien_can_gio_vung_tau,10.397076045628413,107.03221248111007,2026-08,2026-08-14,47.6,CLOUDY,uong_vuot_bien_can_gio_vung_tau/2026-08_2026-08-14_cloud48pct_CLOUDY.png
+88,Đường Vượt Biển Cần Giờ - Vũng Tàu,uong_vuot_bien_can_gio_vung_tau,10.397076045628413,107.03221248111007,2026-09,2026-09-03,66.1,CLOUDY,uong_vuot_bien_can_gio_vung_tau/2026-09_2026-09-03_cloud66pct_CLOUDY.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-03,2026-03-13,0.8,OK,vanh_ai_1_ha_noi/2026-03_2026-03-13_cloud1pct_OK.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-04,2026-04-07,1.0,OK,vanh_ai_1_ha_noi/2026-04_2026-04-07_cloud1pct_OK.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-05,2026-05-27,3.4,OK,vanh_ai_1_ha_noi/2026-05_2026-05-27_cloud3pct_OK.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-06,2026-06-01,55.0,CLOUDY,vanh_ai_1_ha_noi/2026-06_2026-06-01_cloud55pct_CLOUDY.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-07,2026-07-26,35.8,CLOUDY,vanh_ai_1_ha_noi/2026-07_2026-07-26_cloud36pct_CLOUDY.png
 116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-08,2026-08-10,0.0,OK,vanh_ai_1_ha_noi/2026-08_2026-08-10_cloud0pct_OK.png
+116,Vành đai 1 Hà Nội,vanh_ai_1_ha_noi,21.04453020237617,105.83401811246586,2026-09,2026-09-04,67.3,CLOUDY,vanh_ai_1_ha_noi/2026-09_2026-09-04_cloud67pct_CLOUDY.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-03,2026-03-13,2.7,OK,vanh_ai_2_5/2026-03_2026-03-13_cloud3pct_OK.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-04,2026-04-12,0.0,OK,vanh_ai_2_5/2026-04_2026-04-12_cloud0pct_OK.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-05,2026-05-27,2.6,OK,vanh_ai_2_5/2026-05_2026-05-27_cloud3pct_OK.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-06,2026-06-01,50.1,CLOUDY,vanh_ai_2_5/2026-06_2026-06-01_cloud50pct_CLOUDY.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-07,2026-07-26,73.3,CLOUDY,vanh_ai_2_5/2026-07_2026-07-26_cloud73pct_CLOUDY.png
 115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-08,2026-08-10,0.9,OK,vanh_ai_2_5/2026-08_2026-08-10_cloud1pct_OK.png
+115,Vành đai 2.5 Hà Nội,vanh_ai_2_5,21.021001031898074,105.83801792841064,2026-09,2026-09-04,97.0,CLOUDY,vanh_ai_2_5/2026-09_2026-09-04_cloud97pct_CLOUDY.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-03,2026-03-13,3.8,OK,vanh_ai_2_ha_noi/2026-03_2026-03-13_cloud4pct_OK.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-04,2026-04-07,11.5,OK,vanh_ai_2_ha_noi/2026-04_2026-04-07_cloud11pct_OK.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-05,2026-05-27,12.3,OK,vanh_ai_2_ha_noi/2026-05_2026-05-27_cloud12pct_OK.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-06,2026-06-01,43.8,CLOUDY,vanh_ai_2_ha_noi/2026-06_2026-06-01_cloud44pct_CLOUDY.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-07,2026-07-26,23.3,OK,vanh_ai_2_ha_noi/2026-07_2026-07-26_cloud23pct_OK.png
 117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-08,2026-08-10,0.0,OK,vanh_ai_2_ha_noi/2026-08_2026-08-10_cloud0pct_OK.png
+117,Vành đai 2 Hà Nội,vanh_ai_2_ha_noi,21.059979199737377,105.8501588256247,2026-09,2026-09-04,95.0,CLOUDY,vanh_ai_2_ha_noi/2026-09_2026-09-04_cloud95pct_CLOUDY.png
 92,Vành đai 2 TP.HCM,vanh_ai_2_tphcm,10.78623778897542,106.69161907498605,2026-02,2026-02-08,0.0,OK,vanh_ai_2_tphcm/2026-02_2026-02-08_cloud0pct_OK.png
 92,Vành đai 2 TP.HCM,vanh_ai_2_tphcm,10.78623778897542,106.69161907498605,2026-03,2026-04-01,0.0,OK,vanh_ai_2_tphcm/2026-03_2026-04-01_cloud0pct_OK.png
 92,Vành đai 2 TP.HCM,vanh_ai_2_tphcm,10.78623778897542,106.69161907498605,2026-04,2026-04-24,0.0,OK,vanh_ai_2_tphcm/2026-04_2026-04-24_cloud0pct_OK.png
@@ -1729,3 +1805,4 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 33,Vành đai 5 - Vùng Thủ đô Hà Nội,vanh_dai_5_thu_do,21.0,105.9,2026-06,2026-06-01,30.2,CLOUDY,vanh_dai_5_thu_do/2026-06_2026-06-01_cloud30pct_CLOUDY.png
 33,Vành đai 5 - Vùng Thủ đô Hà Nội,vanh_dai_5_thu_do,21.0,105.9,2026-07,2026-07-18,31.9,CLOUDY,vanh_dai_5_thu_do/2026-07_2026-07-18_cloud32pct_CLOUDY.png
 33,Vành đai 5 - Vùng Thủ đô Hà Nội,vanh_dai_5_thu_do,21.0,105.9,2026-08,2026-08-10,0.0,OK,vanh_dai_5_thu_do/2026-08_2026-08-10_cloud0pct_OK.png
+33,Vành đai 5 Hà Nội,vanh_dai_5_thu_do,21.0,105.9,2026-09,2026-09-04,100.0,CLOUDY,vanh_dai_5_thu_do/2026-09_2026-09-04_cloud100pct_CLOUDY.png
