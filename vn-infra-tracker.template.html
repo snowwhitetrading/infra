@@ -879,7 +879,7 @@ const P = [
 ];
 
 /* ---------- helpers ---------- */
-const toY = s => {const [y,m]=s.split('-').map(Number); return y + (m-1)/12;};
+const toY = s => {if(!s) return T0; const [y,m]=(''+s).split('-').map(Number); return (y||T0) + ((m||1)-1)/12;};
 const pct = y => Math.max(0, Math.min(100, ((y - T0) / (T1 - T0)) * 100));  // kẹp: thanh trước 2024/sau 2034 không tràn ra ngoài trục
 const nf  = n => n==null ? '—' : n.toLocaleString('vi-VN');
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

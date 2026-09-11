@@ -526,8 +526,18 @@ def main():
         p.setdefault("capex", {}); p.setdefault("huyDong", 0)
         p.setdefault("items", []); p.setdefault("marks", []); p.setdefault("phases", [])
         p.setdefault("owner", ""); p.setdefault("loc", "")
+        _todayM = dt.date.today().strftime("%Y-%m")
+        def _fixphs(phs):                     # phase thiếu 'to' → kéo tới nay (đang thi công); tránh vỡ Gantt
+            for ph in phs:
+                if ph.get("from") and not ph.get("to"):
+                    ph["to"] = max(ph["from"], _todayM)
+                    ph.setdefault("state", "ongoing")
+        _fixphs(p["phases"])
+        p["marks"] = [m for m in p["marks"] if m.get("date")]   # bỏ mark thiếu ngày
         for it in p["items"]:
             it.setdefault("phases", []); it.setdefault("marks", [])
+            _fixphs(it["phases"])
+            it["marks"] = [m for m in it["marks"] if m.get("date")]
     tid2cat = category_map(c)
     for p in projects:                    # phân 18 dự án gốc vào 8 nhóm như các dự án khác (bỏ I-IV)
         p["g"] = tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
