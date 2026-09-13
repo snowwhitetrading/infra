@@ -91,8 +91,8 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 
 /* ---------- gantt ---------- */
 .scroller{overflow-x:auto;border:1px solid var(--rule);border-top:none;background:var(--card)}
-:root{--gcols:238px 104px 66px 96px 104px 150px}   /* name · status · form · type · investment · location */
-.chart{min-width:1360px}
+:root{--gcols:224px 100px 62px 92px 96px 82px 142px}   /* name · status · form · type · investment · deadline · location */
+.chart{min-width:1450px}
 .row{display:grid;grid-template-columns:var(--gcols) 1fr;border-top:1px solid var(--rule)}
 .row:first-child{border-top:none}
 .lbl{padding:9px 10px 9px 14px;border-right:1px solid var(--rule);position:relative}
@@ -109,7 +109,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .ghead .track{color:rgba(255,255,255,.85);padding-left:8px}
 
 .grp-row{background:var(--sunk);border-top:1px solid var(--rule2)}
-.grp-row .lbl{grid-column:1 / 7;padding:7px 14px;border-right:1px solid var(--rule2)}
+.grp-row .lbl{grid-column:1 / 8;padding:7px 14px;border-right:1px solid var(--rule2)}
 .grp-name{font-size:12px;font-weight:600;letter-spacing:.01em}
 .grp-meta{font-size:11px;color:var(--ink3);font-family:"Manrope",monospace;margin-top:1px}
 .grp-row .track{min-height:0;display:flex;align-items:center;padding-left:8px}
@@ -139,7 +139,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .today{position:absolute;top:0;bottom:0;width:1px;background:var(--alert);opacity:.7}
 
 .axis{display:grid;grid-template-columns:var(--gcols) 1fr;border-top:1px solid var(--rule2);background:var(--sunk)}
-.axis .lbl{grid-column:1 / 7}
+.axis .lbl{grid-column:1 / 8}
 .axis .track{min-height:26px}
 .ylab{position:absolute;top:6px;font-size:10px;font-family:"Manrope",monospace;
   color:var(--ink3);padding-left:5px;letter-spacing:.05em}
@@ -199,7 +199,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 
 /* sub rows (hạng mục) */
 .sub-row{display:grid;grid-template-columns:var(--gcols) 1fr;max-width:none;border-top:1px dotted var(--rule2);background:var(--card)}
-.sub-row .lbl{grid-column:1 / 7;padding:5px 12px 5px 34px;border-right:1px solid var(--rule2)}
+.sub-row .lbl{grid-column:1 / 8;padding:5px 12px 5px 34px;border-right:1px solid var(--rule2)}
 .sub-row .track{min-height:26px}
 .sub-row .lbl{display:flex;flex-direction:column;justify-content:center}
 .sname{font-size:12px;color:var(--ink2)}
@@ -301,6 +301,14 @@ table.fin td:last-child{text-align:right;font-family:"Manrope",monospace;font-we
 .db-kpi{font-size:12px;color:var(--ink2);font-family:"Manrope",monospace;white-space:nowrap}
 .db-kpi b{font-size:13px}
 .db-cap{font-size:10.5px;color:var(--ink3);margin:4px 0 0}
+.db-brks{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:2px 0 18px}
+.db-brk-h{font-size:11px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:0 0 7px;padding-bottom:4px;border-bottom:1px solid var(--rule)}
+.db-brk-row{display:grid;grid-template-columns:1fr 52px 1fr 42px 88px;gap:9px;align-items:center;padding:4px 0;font-size:12px}
+.db-brk-nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.db-brk-n{font-family:"Manrope",monospace;font-size:11px;color:var(--ink3);text-align:right}
+.db-brk-p{font-family:"Manrope",monospace;font-weight:600;text-align:right}
+.db-brk-v{font-family:"Manrope",monospace;font-size:11px;color:var(--ink3);text-align:right}
+@media(max-width:720px){.db-brks{grid-template-columns:1fr}}
 .sum-sec{margin:0 0 22px}
 .sum-h{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
 .sumt{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -1043,6 +1051,9 @@ function schedWhyOf(p){
 function _form(p){ return p.ppp?'PPP':(p.owner==='Nhà nước'?'Công':'Tư'); }
 function _formCls(p){ return p.ppp?'ppp':(p.owner==='Nhà nước'?'cong':'tu'); }
 function _tmdtShort(t){ return t?(t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t))):'—'; }   // tỷ đồng; ≥1000 → K = nghìn tỷ
+function _dl(p){ const d=(p.marks||[]).filter(m=>m.tier==='deadline'&&m.date).map(m=>m.date).sort(); return d.length?d[d.length-1]:''; }
+function _dlShow(p){ const d=_dl(p); if(!d) return '—'; const [y,m]=d.split('-'); return (m==='12'||!m)?y:(+m)+'/'+y; }   // hạn hoàn thành (năm hoặc M/YYYY)
+function _dlSrc(p){ const m=(p.marks||[]).filter(x=>x.tier==='deadline'&&x.date).pop(); return m?(m.src||''):''; }
 function _searchOk(p){ return !_q || (p.name+' '+(p.owner||'')).toLowerCase().includes(_q); }
 let minTier = 0;
 let open = new Set();
@@ -1176,7 +1187,7 @@ function render(){
   let h = '', shown = 0;
   const YEARLABELS = Array.from({length:T1-T0},(_,i)=>`<span class="ylab" style="left:${pct(T0+i)}%">${T0+i}</span>`).join('');
   h += `<div class="ghead"><div>Dự án</div><div>Tiến độ</div><div>Hình thức</div><div>Loại hình</div>
-        <div class="num">TMĐT (tỷ)</div><div>Vị trí</div><div class="track">Trục thời gian</div></div>`;
+        <div class="num">TMĐT (tỷ)</div><div>Hạn HT</div><div>Vị trí</div><div class="track">Trục thời gian</div></div>`;
   sections().forEach(g=>{
     const rows = g.rows;
     if(!rows.length) return;                 // ẩn nhóm rỗng
@@ -1192,10 +1203,11 @@ function render(){
       h += `<div class="row">
           <div class="lbl"><button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>${jumps?`<div class="pjumps">${jumps}</div>`:''}</div>
-          <div class="gcell"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span>${_sortMode==='news'?`<span class="pctchip" style="margin-left:5px">${newsN(p)}</span>`:''}</div>
+          <div class="gcell"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span></div>
           <div class="gcell"><span class="fchip f-${_formCls(p)}">${_form(p)}</span></div>
           <div class="gcell">${esc(p.g||'—')}</div>
           <div class="gcell num" title="${p.tmdt?nf(p.tmdt)+' tỷ đồng'+(p.tmdtSrc?' · '+esc(p.tmdtSrc):''):'chưa có'}">${_tmdtShort(p.tmdt)}</div>
+          <div class="gcell num" title="${_dl(p)?'Hạn hoàn thành '+_dl(p)+(_dlSrc(p)?' · '+esc(_dlSrc(p)):''):'chưa có hạn từ nguồn'}">${_dlShow(p)}</div>
           <div class="gcell loc-c" title="${esc(p.loc||'')}">${esc(p.loc||'—')}</div>
           <div class="track">${gridHTML()}${barsHTML(p.phases,p.marks,p)}</div></div>`;
 
@@ -1630,9 +1642,16 @@ function renderDisb(){
   const asof=rows.length?(rows[0].as_of||''):'';
   document.getElementById('db-note').innerHTML=`Nguồn <b>Bộ Tài chính</b> · ${rows.length} dự án · số liệu tới ${esc(asof)}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm (không phải % hoàn thành công trình).`;
   // ---- summary riêng cho tab giải ngân ----
+  rows.forEach(r=>{ r._pj=P.find(x=>x.id===r.tid); if(r._pj) r.name=r._pj.name; });   // map sang dự án tracker
   const tKH=rows.reduce((a,r)=>a+(r.kh||0),0), tGN=rows.reduce((a,r)=>a+(r.gn||0),0);
   const oPct=tKH?tGN/tKH*100:0, oc=oPct>=60?'g':oPct>=30?'m':'l';
   const bk={g:0,m:0,l:0}; rows.forEach(r=>{const p=r.pct||0; bk[p>=60?'g':p>=30?'m':'l']++;});
+  const _dbAgg=(kf)=>{const g={}; rows.forEach(r=>{const k=kf(r); if(!k)return; (g[k]=g[k]||{n:0,kh:0,gn:0}); g[k].n++; g[k].kh+=r.kh||0; g[k].gn+=r.gn||0;}); return g;};
+  const _dbBrk=(title,kf,order)=>{const g=_dbAgg(kf); const keys=(order||Object.keys(g).sort((a,b)=>g[b].kh-g[a].kh)).filter(k=>g[k]);
+    if(!keys.length) return ''; return `<div class="db-brk"><div class="db-brk-h">${title}</div>${keys.map(k=>{const a=g[k],p=a.kh?a.gn/a.kh*100:0,c=p>=60?'g':p>=30?'m':'l';
+      return `<div class="db-brk-row"><span class="db-brk-nm">${esc(k)}</span><span class="db-brk-n">${a.n} DA</span>
+        <div class="db-barwrap"><div class="db-bar db-${c}" style="width:${Math.min(100,p)}%"></div></div>
+        <span class="db-brk-p db-${c}">${p.toFixed(0)}%</span><span class="db-brk-v">${_kt(a.gn)}/${_kt(a.kh)}</span></div>`;}).join('')}</div>`;};
   const dbSum=`<div class="kpiband">
     <div class="kpi"><div class="kpi-k">Số dự án</div><div class="kpi-v">${rows.length}</div></div>
     <div class="kpi"><div class="kpi-k">Kế hoạch vốn năm</div><div class="kpi-v">${_kt(tKH)}<span class="kpi-u">nghìn tỷ</span></div></div>
@@ -1642,11 +1661,14 @@ function renderDisb(){
       <div class="sg-legend"><span><i class="db-l" style="background:var(--alert)"></i>Thấp &lt;30%: ${bk.l}</span>
         <span><i class="db-m" style="background:var(--gold)"></i>TB 30–60%: ${bk.m}</span>
         <span><i class="db-g" style="background:var(--done)"></i>Cao ≥60%: ${bk.g}</span></div></div>
+  </div>
+  <div class="db-brks">
+    ${_dbBrk('Theo hình thức', r=>r._pj?_form(r._pj):null, ['Công','Tư','PPP'])}
+    ${_dbBrk('Theo loại hình', r=>r._pj?r._pj.g:null)}
   </div>`;
   el.innerHTML=(rows.length?dbSum:'')+rows.map(r=>{
     const p=r.pct||0, cls=p>=60?'g':p>=30?'m':'l';
-    const pj=P.find(x=>x.id===r.tid), sc=pj?schedOf(pj):'';
-    r.name = pj?pj.name:r.name;                       // ưu tiên tên tracker cho khớp các tab khác
+    const pj=r._pj, sc=pj?schedOf(pj):'';
     const ser=(r.series||[]).slice();
     const maxGn=Math.max(1,...ser.map(s=>s.gn||0));                 // chuẩn hoá chiều cao theo số tuyệt đối lớn nhất
     const ts = ser.length ? `<div class="db-ts">${ser.map(s=>{

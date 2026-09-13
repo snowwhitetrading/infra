@@ -64,6 +64,8 @@ REPORT_OVERRIDE = {
     112: (34826, "2027"), 57: (128872, "2030"), 61: (46300, "2030"), 102: (13200, "2029"),
     83: (9200, "2028"), 214: (45268, "2028"), 2: (22588, "2027"),
     251: (146990, "2026-07"),   # Cao tốc Bắc–Nam phía Đông GĐ2 (BĐS Q2/2026)
+    268: (24269, "2028"),       # Cao tốc TP.HCM–Thủ Dầu Một–Chơn Thành (BĐS Q2/2026)
+    269: (46279, "2028"),       # Sân bay Vân Đồn – mở rộng GĐ2 (BĐS Q2/2026)
 }
 _PRIVATE_OWNERS = [
     (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
@@ -594,6 +596,16 @@ def main():
             p["marks"].append({"date": dl, "type": "ms", "tier": "deadline",
                                "label": "Hạn dự kiến hoàn thành (theo tin)",
                                "src": p.get("deadlineLLMSrc") or "theo tin"})
+        # ĐỒNG BỘ hạn ↔ Gantt: kéo phase thi công CUỐI về đúng hạn → thanh vẽ mũi tên hạn CÓ NGUỒN
+        # (nếu không, phase.to lệch mark hạn → barsHTML coi là "chưa có hạn từ nguồn").
+        dls = [m["date"] for m in p.get("marks", []) if m.get("tier") == "deadline" and m.get("date")]
+        if dls:
+            rd2 = max(dls)
+            bphs = [ph for ph in p.get("phases", []) if ph.get("kind") not in ("gpmb", "swap") and ph.get("from")]
+            if bphs:
+                last = max(bphs, key=lambda ph: ph["from"])
+                if rd2 >= last["from"]:
+                    last["to"] = rd2
         # NHỊP ĐỘ: agent đọc-hiểu ưu tiên hơn regex
         if p.get("paceLLM") is not None:
             p["paceAuto"] = p["paceLLM"]

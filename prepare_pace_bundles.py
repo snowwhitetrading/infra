@@ -58,7 +58,7 @@ def run(months, maxn, out):
         for tid in d.get("projects", []):
             if tid in tr_meta and any(r.search(ti) for r in t2rx.get(tid, [])):
                 news_by_tid[tid].append({"date": date, "source": d.get("source", "?"),
-                                         "title": ti, "desc": (d.get("description") or "")[:280]})
+                                         "title": ti, "desc": (d.get("description") or "")[:160]})
 
     for tid, arts in news_by_tid.items():
         seen, uniq = set(), []

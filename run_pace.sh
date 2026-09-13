@@ -7,12 +7,13 @@ export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"   # cron thiếu PATH → khai 
 export PYTHONIOENCODING=utf-8
 cd "$(dirname "$0")"
 
-BATCH=20
+BATCH=30
 LOG="run_pace.log"
 echo "==== $(date '+%F %T') bắt đầu ====" | tee -a "$LOG"
 
 # 1) Gom tin gần đây → pace_bundles.json (pymongo, đọc DB)
-python3 prepare_pace_bundles.py --months 10 --maxn 30 | tee -a "$LOG"
+#    maxn 14 + months 8 + desc 160 (prepare) → giảm ~60% token so với 30 tin/280 ký tự, vẫn "nhiều tin + gần đây".
+python3 prepare_pace_bundles.py --months 8 --maxn 14 | tee -a "$LOG"
 
 # 2) Chia lô
 rm -rf pace_batches && mkdir -p pace_batches
