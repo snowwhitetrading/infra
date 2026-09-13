@@ -184,6 +184,16 @@ def fetch_satellite(client):
     return data
 
 
+def fetch_disbursement(client):
+    """Tiến độ giải ngân (Bộ Tài chính) theo tid: {tid: {name, kh, gn, pct, as_of, series:[{ky,pct}]}}."""
+    out = {}
+    for d in client[DB]["Infra_Disbursement"].find({}, {"_id": 0}):
+        out[str(d["tid"])] = {"name": d.get("name", ""), "kh": d.get("kh"), "gn": d.get("gn"),
+                              "pct": d.get("pct"), "as_of": d.get("as_of", ""),
+                              "series": d.get("series", [])}
+    return out
+
+
 def fetch_newsflow(client, projects, tid2cat):
     """Dòng tin từng bài — đọc thẳng từ Infra_Newsflow (tách khỏi progress/digest)."""
     from lib_projects import project_names_by_tid
@@ -599,6 +609,8 @@ def main():
     print(f"Newsflow: {len(newsflow)} tin")
     satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
+    disb = fetch_disbursement(c)
+    print(f"Giải ngân: {len(disb)} dự án")
     caf_lines, caf_points, caf_projects = fetch_cafeland_map(c)
     print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến · {len(caf_points)} điểm · "
           f"{len(caf_projects)} dự án+KCN")
@@ -660,6 +672,7 @@ def main():
     out = out.replace("const CAF_POINTS = []", "const CAF_POINTS = " + json.dumps(caf_points, ensure_ascii=False), 1)
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
+    out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 

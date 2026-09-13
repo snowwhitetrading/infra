@@ -257,6 +257,17 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .satobs{padding:9px 12px;border:1px solid var(--rule2);border-left:3px solid var(--gpmb);border-radius:var(--radius);
   font-size:12px;color:var(--ink2);line-height:1.6;background:var(--card);margin-bottom:4px}
 .satobs b{font-weight:500;color:var(--gpmb)}
+.db-row{padding:10px 0;border-top:1px solid var(--rule2)}
+.db-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.db-nm{font-size:13px;color:var(--ink);font-weight:500}
+.db-pct{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600}
+.db-g{color:var(--done)} .db-m{color:var(--gpmb)} .db-l{color:var(--alert)}
+.db-barwrap{height:7px;background:var(--sunk);border-radius:4px;margin:5px 0;overflow:hidden}
+.db-bar{height:100%;border-radius:4px}
+.db-bar.db-g{background:var(--done)} .db-bar.db-m{background:var(--gpmb)} .db-bar.db-l{background:var(--alert)}
+.db-meta{font-size:11.5px;color:var(--ink3)}
+.db-spark{display:inline-flex;align-items:flex-end;gap:2px;height:16px;vertical-align:bottom}
+.db-sp{width:4px;background:var(--build);opacity:.6;border-radius:1px}
 .warn{margin-top:12px;padding:9px 11px;border-left:2px solid var(--alert);background:var(--card);
   font-size:12px;color:var(--ink2)}
 .warn b{color:var(--ink);font-weight:500}
@@ -415,6 +426,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
   <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
   <button class="tab" data-view="sat" aria-pressed="false">Vệ tinh</button>
+  <button class="tab" data-view="disb" aria-pressed="false">Giải ngân</button>
   <button class="tab" data-view="map" aria-pressed="false">Bản đồ</button>
 </div>
 
@@ -470,6 +482,19 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
   </div>
 </div>
 
+<div id="view-disb" class="hidden">
+  <div class="map-bar">
+    <div class="mf"><span>Sắp xếp</span><select id="db-sort">
+      <option value="pct" selected>% giải ngân</option>
+      <option value="kh">Kế hoạch vốn</option>
+      <option value="gn">Đã giải ngân</option>
+    </select></div>
+    <div class="mf"><span>Tìm</span><input id="db-search" type="search" placeholder="Tên dự án" autocomplete="off"></div>
+  </div>
+  <p class="cap" id="db-note" style="margin:2px 0 12px"></p>
+  <div id="disb-list"></div>
+</div>
+
 <div id="view-map" class="hidden">
   <div class="map-bar">
     <div class="mf"><span>Vùng</span><select id="mf-region"></select></div>
@@ -512,6 +537,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 
 const NEWSFLOW = [];
 const SATELLITE = {};
+const DISB = {};
 const MAPPTS = [];
 const CAT_ORDER = [];
 const CAF_LINES = [];
@@ -998,6 +1024,7 @@ function detailHTML(p){
     <p class="dh">Đánh giá tiến độ</p>
     <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}</div>
     ${p.satObs?`<div class="satobs">🛰 <b>Vệ tinh — ${esc(p.satTrend||'')}.</b> ${esc(p.satObs)}${p.satAt?` <span class="cap">(ảnh tới ${esc((p.satAt||'').slice(0,7))})</span>`:''}</div>`:''}
+    ${DISB[p.id]?`<div class="satobs" style="border-left-color:var(--build)">💰 <b>Giải ngân ${(DISB[p.id].pct||0).toFixed(1)}%.</b> Đã giải ngân ${nf(DISB[p.id].gn||0)}/${nf(DISB[p.id].kh||0)} tỷ kế hoạch năm <span class="cap">(Bộ Tài chính${DISB[p.id].as_of?', tới '+esc(DISB[p.id].as_of):''})</span></div>`:''}
     <div class="dgrid" style="margin-top:20px">
     <div>
       ${(p.tmdt||p.tmdtDc||p.tuCo||p.huyDong)?`<p class="dh">Vốn (tỷ đồng)</p>
@@ -1430,11 +1457,32 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.getElementById('view-gantt').classList.toggle('hidden', v!=='gantt');
   document.getElementById('view-news').classList.toggle('hidden', v!=='news');
   document.getElementById('view-sat').classList.toggle('hidden', v!=='sat');
+  document.getElementById('view-disb').classList.toggle('hidden', v!=='disb');
   document.getElementById('view-map').classList.toggle('hidden', v!=='map');
   if(v==='news') renderNews();
   if(v==='sat') renderSat();
+  if(v==='disb') renderDisb();
   if(v==='map') renderMap();
 });
+function renderDisb(){
+  const el=document.getElementById('disb-list'); if(!el) return;
+  const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search');
+  if(!sortEl.dataset.init){ sortEl.onchange=renderDisb; qEl.oninput=renderDisb; sortEl.dataset.init='1'; }
+  const sort=sortEl.value, q=_norm(qEl.value||'');
+  let rows=Object.keys(DISB).map(tid=>Object.assign({tid:+tid}, DISB[tid]));
+  rows=rows.filter(r=>!q||_norm(r.name).includes(q));
+  rows.sort((a,b)=> sort==='kh'?((b.kh||0)-(a.kh||0)) : sort==='gn'?((b.gn||0)-(a.gn||0)) : ((b.pct||0)-(a.pct||0)));
+  const asof=rows.length?(rows[0].as_of||''):'';
+  document.getElementById('db-note').innerHTML=`Nguồn <b>Bộ Tài chính</b> · ${rows.length} dự án · số liệu tới ${esc(asof)}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm (không phải % hoàn thành công trình).`;
+  el.innerHTML=rows.map(r=>{
+    const p=r.pct||0, cls=p>=60?'g':p>=30?'m':'l';
+    const spark=(r.series||[]).map(s=>`<span class="db-sp" style="height:${Math.max(2,Math.round((s.pct||0)*0.14))}px" title="${esc(s.ky)}: ${s.pct}%"></span>`).join('');
+    const pj=P.find(x=>x.id===r.tid), sc=pj?schedOf(pj):'';
+    return `<div class="db-row"><div class="db-top"><span class="db-nm">${esc(r.name)}${sc?` <span class="sched s-${SCHED_CLS2[sc]}" style="margin-left:4px">${esc(sc)}</span>`:''}</span><span class="db-pct db-${cls}">${p.toFixed(1)}%</span></div>
+      <div class="db-barwrap"><div class="db-bar db-${cls}" style="width:${Math.min(100,p)}%"></div></div>
+      <div class="db-meta">KH ${nf(r.kh||0)} tỷ · đã giải ngân ${nf(r.gn||0)} tỷ${spark?` &nbsp; <span class="db-spark">${spark}</span>`:''}</div></div>`;
+  }).join('') || '<div class="mp-empty">Chưa có dữ liệu giải ngân (chạy ingest_disbursement.py).</div>';
+}
 
 render();
 </script>

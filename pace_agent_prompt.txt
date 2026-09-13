@@ -4,7 +4,11 @@ Với TỪNG dự án, ĐỌC-HIỂU tin và rút 4 nhóm thông tin — CHỈ k
 
 A) NHỊP ĐỘ (pace): "vượt tiến độ" / "đúng tiến độ" / "chậm tiến độ" / "" (chưa đủ căn cứ).
    - Bỏ qua tin giá vé/thu phí/tuyển dụng/kẹt xe/tai nạn/cháy/phê duyệt vốn/di dời di tích-mộ/đào tạo/sai phạm.
-   - NGỮ CẢNH: "tăng tốc/đẩy nhanh/chạy đua" KÈM điểm nghẽn/vướng mắc/%thấp/chậm mặt bằng → chậm (đang bù). "về đích sớm/xong trước hạn" → vượt. "bám sát/đảm bảo đúng tiến độ/đúng mốc" → đúng. Đạt 1 mốc (hợp long/thông xe 1 đoạn) KHÔNG tự là vượt. Deadline đã qua mà chưa hoàn thành → chậm. Ưu tiên tin MỚI NHẤT.
+   - NGỮ CẢNH: "tăng tốc/đẩy nhanh/chạy đua" KÈM điểm nghẽn/vướng mắc/%thấp/chậm mặt bằng → chậm (đang bù). "về đích sớm/xong trước hạn" → vượt. "bám sát/đảm bảo đúng tiến độ/đúng mốc" → đúng. Đạt 1 mốc (hợp long/thông xe 1 đoạn) KHÔNG tự là vượt. Deadline đã qua mà chưa hoàn thành → chậm.
+   - KẾT HỢP THÊM 2 TÍN HIỆU nếu có trong dữ liệu (TỔNG HỢP, không để riêng):
+     * "disbursement" = giải ngân vốn (Bộ Tài chính): pct = đã giải ngân/kế hoạch NĂM, kèm trend theo kỳ. Giải ngân **rất thấp so với thời điểm trong năm** (vd cuối năm mà <30%) hoặc trend ì ạch → thiên về CHẬM; giải ngân cao/bứt tốc → củng cố ĐÚNG/VƯỢT. Lưu ý pct là % vốn năm, KHÔNG phải % hoàn thành công trình; dự án PPP giải ngân vốn NN thường thấp — đừng chỉ vì thế mà kết luận chậm nếu tin nói khác.
+     * "satellite" = quan sát ảnh vệ tinh (obs + trend). "ít thay đổi/chưa khởi công" củng cố CHẬM; "tiến triển" củng cố ĐÚNG/VƯỢT.
+   - Khi các nguồn MÂU THUẪN: ưu tiên bằng chứng CỤ THỂ + MỚI NHẤT; nêu rõ trong "why" đã dựa vào nguồn nào (tin/giải ngân/vệ tinh). Ưu tiên tin MỚI NHẤT.
 
 B) HẠN HOÀN THÀNH (deadline) — dạng "YYYY-MM", hoặc "" nếu tin không nêu.
    - CHỈ lấy hạn HOÀN THÀNH/khai thác toàn dự án (KHÔNG lấy ngày khởi công, ngày khởi công giai đoạn, mốc trung gian). Nếu nhiều tin nêu hạn khác nhau → lấy hạn TIN MỚI NHẤT/chính thức nhất. Ví dụ "dự kiến hoàn thành quý II/2027" → "2027-06"; "cuối năm 2026" → "2026-12".

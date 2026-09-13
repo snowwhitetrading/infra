@@ -44,7 +44,8 @@ def run(months, maxn, out):
     cutoff = _minus_months(dt.date.today().strftime("%Y-%m"), months)
     bundles = {}
     tr_meta = {p["id"]: p for p in tr.find({"_key": "project"},
-               {"id": 1, "name": 1, "loc": 1, "phases": 1, "marks": 1})}
+               {"id": 1, "name": 1, "loc": 1, "phases": 1, "marks": 1, "satObs": 1, "satTrend": 1})}
+    disb = {d["tid"]: d for d in c[DB]["Infra_Disbursement"].find({}, {"_id": 0})}   # giải ngân BTC
     news_by_tid = defaultdict(list)
     for d in raw.find({"projects": {"$ne": []}},
                       {"title": 1, "description": 1, "date": 1, "source": 1, "projects": 1}):
@@ -73,8 +74,15 @@ def run(months, maxn, out):
         phz = [{"kind": ph.get("kind"), "from": ph.get("from"), "to": ph.get("to"),
                 "state": ph.get("state")} for ph in p.get("phases", [])]
         dl = [m for m in p.get("marks", []) if m.get("tier") == "deadline"]
-        bundles[str(tid)] = {"name": p.get("name", ""), "loc": p.get("loc", ""),
-                             "phases": phz, "deadline": dl[-1] if dl else None, "news": uniq}
+        b = {"name": p.get("name", ""), "loc": p.get("loc", ""),
+             "phases": phz, "deadline": dl[-1] if dl else None, "news": uniq}
+        if tid in disb:                                  # tín hiệu giải ngân (BTC): % + xu hướng
+            d = disb[tid]
+            b["disbursement"] = {"pct": d.get("pct"), "kh": d.get("kh"), "as_of": d.get("as_of"),
+                                 "trend": [f"{s.get('ky')}:{s.get('pct')}%" for s in d.get("series", [])]}
+        if p.get("satObs"):                              # quan sát vệ tinh (nếu có)
+            b["satellite"] = {"obs": p.get("satObs"), "trend": p.get("satTrend")}
+        bundles[str(tid)] = b
 
     with open(os.path.join(HERE, out), "w", encoding="utf-8") as f:
         json.dump(bundles, f, ensure_ascii=False, indent=1)
