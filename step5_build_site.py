@@ -599,8 +599,10 @@ def main():
             floor = (p.get("tuCo") or 0) + (p.get("huyDong") or 0)
             for cand, src in ((p.get("tmdtLLM"), p.get("tmdtLLMSrc")),
                               (p.get("tmdtAuto"), p.get("tmdtAutoSrc"))):
-                if cand and cand >= floor:                                        # nhỏ hơn floor → gán nhầm dự án khác
+                if cand and cand >= floor * 0.5:                                  # chỉ loại khi NHỎ HƠN NHIỀU (gán nhầm hạng mục); dung sai nhiễu số liệu
                     p["tmdt"] = cand; p["tmdtSrc"] = src or "theo tin"; break
+            if not p.get("tmdt") and floor > 0:                                   # TMĐT ≥ vốn tự có + huy động đã biết (Phụ lục I)
+                p["tmdt"] = floor; p["tmdtSrc"] = "vốn tự có + huy động (Phụ lục I)"
         # HẠN: report đã lo ở trên; nếu chưa có → LLM (có nguồn) thay mark regex (guard: ≥ lúc khởi công)
         dl = p.get("deadlineLLM")
         if not rep and dl and (not froms or dl >= min(froms)):
