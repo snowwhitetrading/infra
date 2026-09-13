@@ -67,6 +67,11 @@ def _num(x):
         return None
 
 
+def _ky_key(ky):
+    m = re.match(r"(\d+)T(\d{4})", ky or "")
+    return (int(m.group(2)), int(m.group(1))) if m else (0, 0)     # (nam, thang) de sap xep tang dan
+
+
 def run(csv_path, dry):
     rows = list(csv.DictReader(open(csv_path, encoding="utf-8")))
     # gom theo khoa_du_an cac dong cap 'group' hoac tuyen metro (item co 'tuyen_')
@@ -79,7 +84,7 @@ def run(csv_path, dry):
         is_metro = cap == "item" and ("tuyen_" in khoa or "van_cao" in khoa)
         if cap != "group" and not is_metro:
             continue
-        want[khoa][r.get("as_of", "")] = r
+        want[khoa][r.get("ky", "")] = r          # gom chuoi theo KY (as_of rong toan bo do BOM)
         names[khoa] = r.get("ten_du_an", "")
 
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
@@ -103,20 +108,20 @@ def run(csv_path, dry):
     for khoa, byas in want.items():
         tid = match_tid(khoa, names[khoa])
         series = []
-        for as_of in sorted(byas):
-            r = byas[as_of]
+        for ky in sorted(byas, key=_ky_key):     # sap theo thoi gian: 2T2025 -> 7T2026
+            r = byas[ky]
             pct, gn, kh = _num(r.get("gn_ty_le")), _num(r.get("gn_tong")), _num(r.get("kh_tong"))
             if pct is not None:
-                series.append({"ky": r.get("ky", ""), "as_of": as_of, "pct": pct, "gn": gn, "kh": kh})
+                series.append({"ky": ky, "pct": pct, "gn": gn, "kh": kh})
         if not series:
             continue
         if not tid:
             unmatched.append((khoa, names[khoa]))
             continue
         last = series[-1]
-        c_doc = {"tid": tid, "name": names[khoa], "khoa": khoa, "as_of": last["as_of"],
+        c_doc = {"tid": tid, "name": names[khoa], "khoa": khoa, "as_of": last["ky"],
                  "kh": last["kh"], "gn": last["gn"], "pct": last["pct"],
-                 "series": [{"ky": s["ky"], "pct": s["pct"]} for s in series]}
+                 "series": [{"ky": s["ky"], "pct": s["pct"], "gn": s["gn"]} for s in series]}
         matched += 1
         if not dry:
             c["Infra_Disbursement"].update_one({"tid": tid}, {"$set": c_doc}, upsert=True)
