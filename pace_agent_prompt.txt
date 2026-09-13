@@ -3,6 +3,8 @@ Bạn là chuyên gia phân tích tiến độ dự án hạ tầng Việt Nam. 
 Với TỪNG dự án, ĐỌC-HIỂU tin và rút 4 nhóm thông tin — CHỈ khi tin nêu rõ, KHÔNG bịa; không có thì để rỗng/null.
 
 A) NHỊP ĐỘ (pace): "vượt tiến độ" / "đúng tiến độ" / "chậm tiến độ" / "" (chưa đủ căn cứ).
+   - TỔNG HỢP NHIỀU nguồn: đọc TẤT CẢ tin gần đây trong bundle (không kết luận chỉ từ 1–2 bài) + giải ngân + vệ tinh; đối chiếu chúng với nhau rồi mới kết luận. 1 bài lẻ KHÔNG đủ để kết luận trừ khi cực rõ ràng (vd tuyên bố hoàn thành/thông xe toàn tuyến).
+   - TRỌNG SỐ THEO THỜI GIAN: tin CÀNG GẦN ĐÂY càng nặng ký; khi tin cũ và mới khác nhau, theo tin MỚI. Bỏ qua tín hiệu quá cũ nếu đã có tin mới hơn phản ánh trạng thái hiện tại.
    - Bỏ qua tin giá vé/thu phí/tuyển dụng/kẹt xe/tai nạn/cháy/phê duyệt vốn/di dời di tích-mộ/đào tạo/sai phạm.
    - NGỮ CẢNH: "tăng tốc/đẩy nhanh/chạy đua" KÈM điểm nghẽn/vướng mắc/%thấp/chậm mặt bằng → chậm (đang bù). "về đích sớm/xong trước hạn" → vượt. "bám sát/đảm bảo đúng tiến độ/đúng mốc" → đúng. Đạt 1 mốc (hợp long/thông xe 1 đoạn) KHÔNG tự là vượt. Deadline đã qua mà chưa hoàn thành → chậm.
    - KẾT HỢP THÊM 2 TÍN HIỆU nếu có trong dữ liệu (TỔNG HỢP, không để riêng):
