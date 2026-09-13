@@ -1616,7 +1616,7 @@ function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
   const all=P.filter(p=>newsN(p)>=5);        // đồng bộ với tab Tiến độ (chỉ dự án đang theo dõi ≥5 tin)
   const ppp=all.filter(p=>p.ppp), cong=all.filter(p=>!p.ppp&&p.owner==='Nhà nước'), tu=all.filter(p=>!p.ppp&&p.owner!=='Nhà nước');
-  const CH=['Vingroup','Sun Group','Masterise','Sovico'];
+  const CH=['Vingroup','Sun Group','Masterise'];
   const byProv=b=>cong.filter(p=>_region(p)===b);
   const byType=b=>all.filter(p=>_typeB(p)===b);
   const A=_agg(all);
