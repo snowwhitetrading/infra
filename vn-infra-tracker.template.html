@@ -254,6 +254,9 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .schedbox.s-ahead{border-color:var(--done)} .schedbox.s-ahead b{color:var(--done)}
 .schedbox.s-late{border-color:var(--alert)} .schedbox.s-late b{color:var(--alert)}
 .schedbox.s-unknown{border-style:dashed}
+.satobs{padding:9px 12px;border:1px solid var(--rule2);border-left:3px solid var(--gpmb);border-radius:var(--radius);
+  font-size:12px;color:var(--ink2);line-height:1.6;background:var(--card);margin-bottom:4px}
+.satobs b{font-weight:500;color:var(--gpmb)}
 .warn{margin-top:12px;padding:9px 11px;border-left:2px solid var(--alert);background:var(--card);
   font-size:12px;color:var(--ink2)}
 .warn b{color:var(--ink);font-weight:500}
@@ -994,6 +997,7 @@ function detailHTML(p){
   return `<div class="detail"><div class="pad">
     <p class="dh">Đánh giá tiến độ</p>
     <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}</div>
+    ${p.satObs?`<div class="satobs">🛰 <b>Vệ tinh — ${esc(p.satTrend||'')}.</b> ${esc(p.satObs)}${p.satAt?` <span class="cap">(ảnh tới ${esc((p.satAt||'').slice(0,7))})</span>`:''}</div>`:''}
     <div class="dgrid" style="margin-top:20px">
     <div>
       ${(p.tmdt||p.tmdtDc||p.tuCo||p.huyDong)?`<p class="dh">Vốn (tỷ đồng)</p>
