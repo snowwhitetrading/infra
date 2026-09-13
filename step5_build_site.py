@@ -50,7 +50,7 @@ DB, COLL = "dc_commodity", "Infra_Project_Tracker"
 NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
 # CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
-OWNER_OVERRIDE = {11: "Masterise", 102: "Vingroup", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Vingroup · HSR Bắc-Nam=Nhà nước
+OWNER_OVERRIDE = {11: "Masterise", 102: "Masterise", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Masterise · HSR Bắc-Nam=Nhà nước
 # TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
 # Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
@@ -546,15 +546,27 @@ def main():
     projects = projects + build_auto_rows(c, projects)
     for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
-        raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("owner") or p.get("ownerAuto")   # tín hiệu tốt nhất
+        # CHỦ ĐẦU TƯ: override thủ công > LLM (có nguồn) > curated > regex
+        raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("ownerLLM") or p.get("owner") or p.get("ownerAuto")
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
-        if not p.get("tmdt") and p.get("tmdtAuto"):                               # TMĐT thiếu → lấy từ tin (có nguồn)
-            floor = (p.get("tuCo") or 0) + (p.get("huyDong") or 0)                # TMĐT phải ≥ tự có + huy động
-            if p["tmdtAuto"] >= floor:                                            # nhỏ hơn → tin gán nhầm dự án khác (vd sân bay↔đường)
-                p["tmdt"] = p["tmdtAuto"]
-                p["tmdtSrc"] = p.get("tmdtAutoSrc") or "theo tin"
-        if p.get("paceLLM") is not None:                                          # AGENT đọc-hiểu ưu tiên hơn regex (paceAuto)
+        # TMĐT: giữ curated (Phụ lục I); thiếu → LLM (có nguồn) > regex; đều phải ≥ vốn tự có+huy động
+        if not p.get("tmdt"):
+            floor = (p.get("tuCo") or 0) + (p.get("huyDong") or 0)
+            for cand, src in ((p.get("tmdtLLM"), p.get("tmdtLLMSrc")),
+                              (p.get("tmdtAuto"), p.get("tmdtAutoSrc"))):
+                if cand and cand >= floor:                                        # nhỏ hơn floor → gán nhầm dự án khác
+                    p["tmdt"] = cand; p["tmdtSrc"] = src or "theo tin"; break
+        # HẠN: LLM (có nguồn) ưu tiên → thay mark deadline của regex (guard: ≥ lúc khởi công)
+        dl = p.get("deadlineLLM")
+        froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
+        if dl and (not froms or dl >= min(froms)):
+            p["marks"] = [m for m in p.get("marks", []) if m.get("tier") != "deadline"]
+            p["marks"].append({"date": dl, "type": "ms", "tier": "deadline",
+                               "label": "Hạn dự kiến hoàn thành (theo tin)",
+                               "src": p.get("deadlineLLMSrc") or "theo tin"})
+        # NHỊP ĐỘ: agent đọc-hiểu ưu tiên hơn regex
+        if p.get("paceLLM") is not None:
             p["paceAuto"] = p["paceLLM"]
             p["paceWhy"] = p.get("paceWhyLLM") or p.get("paceWhy", "")
     used = {p["g"] for p in projects}
