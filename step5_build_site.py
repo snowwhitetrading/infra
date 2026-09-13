@@ -55,6 +55,8 @@ OWNER_OVERRIDE = {11: "Masterise", 102: "Masterise", 20: "Nhà nước"}   # Gia
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
 # Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
 SAT_SITE_BLOCK = {"giabinh_airport"}         # AOI 106.28 lệch ~8km (đúng phải 106.20, dùng site 'gia_binh')
+# Dự án PPP (đối tác công-tư) — tách riêng khỏi công/tư trong tab Tổng quan. (theo báo cáo BTC/S&I: các cao tốc PPP)
+PPP_TIDS = {62, 63, 64, 65, 37, 59, 60, 230}   # Đồng Đăng-Trà Linh · Hữu Nghị-Chi Lăng · Tân Phú-Bảo Lộc · Dầu Giây-Tân Phú · Bảo Lộc-Liên Khương · TP.HCM-Mộc Bài · Gia Nghĩa-Chơn Thành · Pháp Vân-Cầu Giẽ
 # TMĐT (tỷ đồng) + HẠN từ báo cáo S&I Ratings Q2/2026 — nguồn có thẩm quyền, ƯU TIÊN CAO NHẤT. {tid: (tmdt, "YYYY"|"YYYY-MM")}
 REPORT_OVERRIDE = {
     20: (1713548, "2035"), 11: (196378, "2027"), 21: (183856, "2030"), 19: (109111, "2026-12"),
@@ -566,6 +568,7 @@ def main():
         # CHỦ ĐẦU TƯ: override thủ công > LLM (có nguồn) > curated > regex
         raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("ownerLLM") or p.get("owner") or p.get("ownerAuto")
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
+        p["ppp"] = p.get("id") in PPP_TIDS                                         # đối tác công-tư (tab Tổng quan)
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
         froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
         rep = REPORT_OVERRIDE.get(p.get("id"))                                     # báo cáo S&I: TMĐT+hạn ưu tiên cao nhất

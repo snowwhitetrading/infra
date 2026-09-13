@@ -268,6 +268,16 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .db-meta{font-size:11.5px;color:var(--ink3)}
 .db-spark{display:inline-flex;align-items:flex-end;gap:2px;height:16px;vertical-align:bottom}
 .db-sp{width:4px;background:var(--build);opacity:.6;border-radius:1px}
+.sum-sec{margin:0 0 22px}
+.sum-h{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
+.sumt{width:100%;border-collapse:collapse;font-size:12.5px}
+.sumt th{text-align:right;font-weight:500;color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:5px 8px;border-bottom:1px solid var(--rule2)}
+.sumt th:first-child{text-align:left}
+.sumt td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--rule2);font-family:"IBM Plex Mono",monospace}
+.sumt td.sc-nm{text-align:left;font-family:inherit;color:var(--ink);font-weight:500}
+.sumt td.sc-tm{font-weight:600;color:var(--ink)}
+.sc-late{color:var(--alert)} .sc-ontime{color:var(--ink2)} .sc-ahead{color:var(--done)} .sc-na{color:var(--ink3)}
+.sc-t{font-size:10px;opacity:.7}
 .warn{margin-top:12px;padding:9px 11px;border-left:2px solid var(--alert);background:var(--card);
   font-size:12px;color:var(--ink2)}
 .warn b{color:var(--ink);font-weight:500}
@@ -423,14 +433,17 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
 
 
 <div class="tabs">
-  <button class="tab" data-view="gantt" aria-pressed="true">Tiến độ</button>
+  <button class="tab" data-view="summary" aria-pressed="true">Tổng quan</button>
+  <button class="tab" data-view="gantt" aria-pressed="false">Tiến độ</button>
   <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
   <button class="tab" data-view="sat" aria-pressed="false">Vệ tinh</button>
   <button class="tab" data-view="disb" aria-pressed="false">Giải ngân</button>
   <button class="tab" data-view="map" aria-pressed="false">Bản đồ</button>
 </div>
 
-<div id="view-gantt">
+<div id="view-summary"></div>
+
+<div id="view-gantt" class="hidden">
 <div class="map-bar">
   <div class="mf"><span>Sắp xếp</span><select id="g-sort">
     <option value="news" selected>Số lượng tin tức</option>
@@ -1454,16 +1467,54 @@ function renderMap(){
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   const v=t.dataset.view;
   document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed', x===t));
+  document.getElementById('view-summary').classList.toggle('hidden', v!=='summary');
   document.getElementById('view-gantt').classList.toggle('hidden', v!=='gantt');
   document.getElementById('view-news').classList.toggle('hidden', v!=='news');
   document.getElementById('view-sat').classList.toggle('hidden', v!=='sat');
   document.getElementById('view-disb').classList.toggle('hidden', v!=='disb');
   document.getElementById('view-map').classList.toggle('hidden', v!=='map');
+  if(v==='summary') renderSummary();
   if(v==='news') renderNews();
   if(v==='sat') renderSat();
   if(v==='disb') renderDisb();
   if(v==='map') renderMap();
 });
+// ---------- Tổng quan ----------
+function _paceB(p){const s=schedOf(p);return s.indexOf('vượt')>=0?'vượt':s.indexOf('chậm')>=0?'chậm':s.indexOf('đúng')>=0?'đúng':'na';}
+function _agg(list){const a={n:0,tmdt:0,vượt:{n:0,t:0},'đúng':{n:0,t:0},'chậm':{n:0,t:0},na:{n:0,t:0}};
+  list.forEach(p=>{const t=p.tmdt||0,b=_paceB(p);a.n++;a.tmdt+=t;a[b].n++;a[b].t+=t;});return a;}
+function _overall(a){const c=[['chậm',a['chậm'].t,a['chậm'].n],['đúng',a['đúng'].t,a['đúng'].n],['vượt',a['vượt'].t,a['vượt'].n]]
+    .sort((x,y)=>(y[1]-x[1])||(y[2]-x[2]));
+  if(c[0][1]===0&&c[0][2]===0)return{l:'chưa đánh giá',c:'unknown'};
+  return{l:c[0][0]+' tiến độ',c:{'chậm':'late','đúng':'ontime','vượt':'ahead'}[c[0][0]]};}
+function _kt(t){return t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t));}   // nghìn tỷ (K) cho gọn
+function _sumRows(groups){return groups.map(([label,list])=>{const a=_agg(list),o=_overall(a);
+  const cell=k=>`${a[k].n}<span class="sc-t">${a[k].t?' · '+_kt(a[k].t):''}</span>`;
+  return `<tr><td class="sc-nm">${esc(label)}</td><td class="sc-n">${a.n}</td><td class="sc-tm">${_kt(a.tmdt)}</td>
+    <td class="sc-late">${cell('chậm')}</td><td class="sc-ontime">${cell('đúng')}</td><td class="sc-ahead">${cell('vượt')}</td>
+    <td class="sc-na">${a.na.n}</td><td><span class="sched s-${o.c}">${esc(o.l)}</span></td></tr>`;}).join('');}
+function _sumTable(title, groups){return `<div class="sum-sec"><h3 class="sum-h">${esc(title)}</h3>
+  <div style="overflow-x:auto"><table class="sumt"><thead><tr><th>Nhóm</th><th>Số DA</th><th>TMĐT</th>
+    <th>Chậm</th><th>Đúng</th><th>Vượt</th><th>Chưa ĐG</th><th>Đánh giá chung</th></tr></thead>
+    <tbody>${_sumRows(groups)}</tbody></table></div></div>`;}
+function _region(p){const pr=(p.prov||'')+' '+(p.loc||'');
+  if(/hà nội/i.test(pr))return'Hà Nội'; if(/hồ chí minh|hcm|sài gòn/i.test(pr))return'TP.HCM';
+  if(/[-–]/.test(p.name||''))return'Liên tỉnh'; return'Nội tỉnh';}
+function _typeB(p){const g=p.g||'';if(g==='Đường bộ')return'Đường bộ';if(g==='Đường sắt/Metro')return'Đường sắt/Metro';if(g==='Sân bay')return'Sân bay';return'Loại hình khác';}
+function renderSummary(){
+  const el=document.getElementById('view-summary'); if(!el) return;
+  const all=P.slice();
+  const ppp=all.filter(p=>p.ppp), cong=all.filter(p=>!p.ppp&&p.owner==='Nhà nước'), tu=all.filter(p=>!p.ppp&&p.owner!=='Nhà nước');
+  const CH=['Vingroup','Sun Group','Masterise','Sovico'];
+  const byProv=b=>cong.filter(p=>_region(p)===b);
+  const byType=b=>all.filter(p=>_typeB(p)===b);
+  let h=`<p class="cap" style="margin:2px 0 14px">Tổng hợp theo <b>nhịp độ (news + giải ngân + vệ tinh)</b>. TMĐT đơn vị <b>K = nghìn tỷ đồng</b>; "Chưa ĐG" = chưa đủ căn cứ / chưa thi công. Đánh giá chung = nhịp độ chiếm TMĐT lớn nhất trong nhóm.</p>`;
+  h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]]);
+  h+=_sumTable('Dự án tư — theo chủ đầu tư',[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]]);
+  h+=_sumTable('Dự án công — theo phạm vi',[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]]);
+  h+=_sumTable('Theo loại hình',[['Đường bộ',byType('Đường bộ')],['Đường sắt/Metro',byType('Đường sắt/Metro')],['Sân bay',byType('Sân bay')],['Loại hình khác',byType('Loại hình khác')]]);
+  el.innerHTML=h;
+}
 function renderDisb(){
   const el=document.getElementById('disb-list'); if(!el) return;
   const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search');
@@ -1485,6 +1536,7 @@ function renderDisb(){
 }
 
 render();
+renderSummary();
 </script>
 </body>
 </html>
