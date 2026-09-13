@@ -55,6 +55,13 @@ OWNER_OVERRIDE = {11: "Masterise", 102: "Masterise", 20: "Nhà nước"}   # Gia
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
 # Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
 SAT_SITE_BLOCK = {"giabinh_airport"}         # AOI 106.28 lệch ~8km (đúng phải 106.20, dùng site 'gia_binh')
+# TMĐT (tỷ đồng) + HẠN từ báo cáo S&I Ratings Q2/2026 — nguồn có thẩm quyền, ƯU TIÊN CAO NHẤT. {tid: (tmdt, "YYYY"|"YYYY-MM")}
+REPORT_OVERRIDE = {
+    20: (1713548, "2035"), 11: (196378, "2027"), 21: (183856, "2030"), 19: (109111, "2026-12"),
+    10: (147370, "2029"), 206: (85813, "2027"), 32: (72000, "2029"), 26: (51750, "2030"),
+    112: (34826, "2027"), 57: (128872, "2030"), 61: (46300, "2030"), 102: (13200, "2029"),
+    83: (9200, "2028"), 214: (45268, "2028"), 2: (22588, "2027"),
+}
 _PRIVATE_OWNERS = [
     (re.compile(r"vinspeed|vingroup|vinhomes|\bvic\b"), "Vingroup"),
     (re.compile(r"sun ?group|mặt trời"), "Sun Group"),
@@ -550,17 +557,25 @@ def main():
         raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("ownerLLM") or p.get("owner") or p.get("ownerAuto")
         p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
-        # TMĐT: giữ curated (Phụ lục I); thiếu → LLM (có nguồn) > regex; đều phải ≥ vốn tự có+huy động
+        froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
+        rep = REPORT_OVERRIDE.get(p.get("id"))                                     # báo cáo S&I: TMĐT+hạn ưu tiên cao nhất
+        if rep:
+            p["tmdt"] = rep[0]; p["tmdtSrc"] = "S&I Ratings Q2/2026"
+            rd = rep[1] if len(rep[1]) == 7 else rep[1] + "-12"                    # chỉ có năm → cuối năm
+            if not froms or rd >= min(froms):
+                p["marks"] = [m for m in p.get("marks", []) if m.get("tier") != "deadline"]
+                p["marks"].append({"date": rd, "type": "ms", "tier": "deadline",
+                                   "label": "Hạn dự kiến hoàn thành (S&I Ratings)", "src": "S&I Ratings Q2/2026"})
+        # TMĐT: report > curated (Phụ lục I) > LLM (có nguồn) > regex; LLM/regex phải ≥ vốn tự có+huy động
         if not p.get("tmdt"):
             floor = (p.get("tuCo") or 0) + (p.get("huyDong") or 0)
             for cand, src in ((p.get("tmdtLLM"), p.get("tmdtLLMSrc")),
                               (p.get("tmdtAuto"), p.get("tmdtAutoSrc"))):
                 if cand and cand >= floor:                                        # nhỏ hơn floor → gán nhầm dự án khác
                     p["tmdt"] = cand; p["tmdtSrc"] = src or "theo tin"; break
-        # HẠN: LLM (có nguồn) ưu tiên → thay mark deadline của regex (guard: ≥ lúc khởi công)
+        # HẠN: report đã lo ở trên; nếu chưa có → LLM (có nguồn) thay mark regex (guard: ≥ lúc khởi công)
         dl = p.get("deadlineLLM")
-        froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
-        if dl and (not froms or dl >= min(froms)):
+        if not rep and dl and (not froms or dl >= min(froms)):
             p["marks"] = [m for m in p.get("marks", []) if m.get("tier") != "deadline"]
             p["marks"].append({"date": dl, "type": "ms", "tier": "deadline",
                                "label": "Hạn dự kiến hoàn thành (theo tin)",
