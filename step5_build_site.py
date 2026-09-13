@@ -50,7 +50,20 @@ DB, COLL = "dc_commodity", "Infra_Project_Tracker"
 NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do step3_newsflow.py ghi)
 
 # CHỦ ĐẦU TƯ: chỉ 2 loại — TẬP ĐOÀN TƯ NHÂN (whitelist) hoặc "Nhà nước" (còn lại: state/tỉnh/EVN/unknown).
-OWNER_OVERRIDE = {11: "Masterise", 102: "Masterise", 20: "Nhà nước"}   # Gia Bình=Masterise · Cầu Cần Giờ=Masterise · HSR Bắc-Nam=Nhà nước
+# CHỦ ĐẦU TƯ — whitelist do Claude thẩm định (KHÔNG regex). Chỉ liệt kê dự án có chủ đầu tư TƯ NHÂN THẬT
+# (chủ đầu tư/vận hành, không phải đề xuất/nghiên cứu hay liên danh nhà thầu). Còn lại mặc định "Nhà nước".
+OWNER_OVERRIDE = {
+    # Vingroup / VinSpeed
+    9: "Vingroup", 10: "Vingroup", 88: "Vingroup", 236: "Vingroup",
+    # Sun Group (vận hành sân bay / BT / dự án du lịch)
+    1: "Sun Group", 2: "Sun Group", 6: "Sun Group", 7: "Sun Group", 8: "Sun Group",
+    73: "Sun Group", 184: "Sun Group", 269: "Sun Group",
+    # Masterise (tổ hợp Gia Bình + Cầu Cần Giờ)
+    11: "Masterise", 12: "Masterise", 13: "Masterise", 14: "Masterise", 15: "Masterise",
+    16: "Masterise", 17: "Masterise", 18: "Masterise", 102: "Masterise",
+    # PPP/BOT tư nhân xác nhận
+    74: "T&T", 57: "MSC/TIL", 83: "Geleximco",
+}
 # TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
 # Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
@@ -569,8 +582,7 @@ def main():
     for p in projects:                    # vùng+tỉnh cho filter tab Tiến độ (giống Bản đồ)
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
         # CHỦ ĐẦU TƯ: override thủ công > LLM (có nguồn) > curated > regex
-        raw = OWNER_OVERRIDE.get(p.get("id")) or p.get("ownerLLM") or p.get("owner") or p.get("ownerAuto")
-        p["owner"] = canon_owner(raw)                                              # → tập đoàn tư nhân / Nhà nước
+        p["owner"] = OWNER_OVERRIDE.get(p.get("id"), "Nhà nước")                  # whitelist Claude thẩm định, KHÔNG regex
         p["ppp"] = p.get("id") in PPP_TIDS                                         # đối tác công-tư (tab Tổng quan)
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
         froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
