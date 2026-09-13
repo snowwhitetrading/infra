@@ -1629,9 +1629,24 @@ function renderDisb(){
   rows.sort((a,b)=> sort==='kh'?((b.kh||0)-(a.kh||0)) : sort==='gn'?((b.gn||0)-(a.gn||0)) : ((b.pct||0)-(a.pct||0)));
   const asof=rows.length?(rows[0].as_of||''):'';
   document.getElementById('db-note').innerHTML=`Nguồn <b>Bộ Tài chính</b> · ${rows.length} dự án · số liệu tới ${esc(asof)}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm (không phải % hoàn thành công trình).`;
-  el.innerHTML=rows.map(r=>{
+  // ---- summary riêng cho tab giải ngân ----
+  const tKH=rows.reduce((a,r)=>a+(r.kh||0),0), tGN=rows.reduce((a,r)=>a+(r.gn||0),0);
+  const oPct=tKH?tGN/tKH*100:0, oc=oPct>=60?'g':oPct>=30?'m':'l';
+  const bk={g:0,m:0,l:0}; rows.forEach(r=>{const p=r.pct||0; bk[p>=60?'g':p>=30?'m':'l']++;});
+  const dbSum=`<div class="kpiband">
+    <div class="kpi"><div class="kpi-k">Số dự án</div><div class="kpi-v">${rows.length}</div></div>
+    <div class="kpi"><div class="kpi-k">Kế hoạch vốn năm</div><div class="kpi-v">${_kt(tKH)}<span class="kpi-u">nghìn tỷ</span></div></div>
+    <div class="kpi"><div class="kpi-k">Đã giải ngân</div><div class="kpi-v">${_kt(tGN)}<span class="kpi-u">nghìn tỷ</span></div></div>
+    <div class="kpi kpi-wide"><div class="kpi-k">Tỷ lệ giải ngân chung <b class="db-${oc}">${oPct.toFixed(1)}%</b></div>
+      <div class="db-barwrap" style="margin:9px 0 8px"><div class="db-bar db-${oc}" style="width:${Math.min(100,oPct)}%"></div></div>
+      <div class="sg-legend"><span><i class="db-l" style="background:var(--alert)"></i>Thấp &lt;30%: ${bk.l}</span>
+        <span><i class="db-m" style="background:var(--gold)"></i>TB 30–60%: ${bk.m}</span>
+        <span><i class="db-g" style="background:var(--done)"></i>Cao ≥60%: ${bk.g}</span></div></div>
+  </div>`;
+  el.innerHTML=(rows.length?dbSum:'')+rows.map(r=>{
     const p=r.pct||0, cls=p>=60?'g':p>=30?'m':'l';
     const pj=P.find(x=>x.id===r.tid), sc=pj?schedOf(pj):'';
+    r.name = pj?pj.name:r.name;                       // ưu tiên tên tracker cho khớp các tab khác
     const ser=(r.series||[]).slice();
     const maxGn=Math.max(1,...ser.map(s=>s.gn||0));                 // chuẩn hoá chiều cao theo số tuyệt đối lớn nhất
     const ts = ser.length ? `<div class="db-ts">${ser.map(s=>{
