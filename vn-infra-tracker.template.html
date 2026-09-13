@@ -1584,10 +1584,13 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 function _paceB(p){const s=schedOf(p);return s.indexOf('vượt')>=0?'vượt':s.indexOf('chậm')>=0?'chậm':s.indexOf('đúng')>=0?'đúng':'na';}
 function _agg(list){const a={n:0,tmdt:0,vượt:{n:0,t:0},'đúng':{n:0,t:0},'chậm':{n:0,t:0},na:{n:0,t:0}};
   list.forEach(p=>{const t=p.tmdt||0,b=_paceB(p);a.n++;a.tmdt+=t;a[b].n++;a[b].t+=t;});return a;}
-function _overall(a){const c=[['chậm',a['chậm'].t,a['chậm'].n],['đúng',a['đúng'].t,a['đúng'].n],['vượt',a['vượt'].t,a['vượt'].n]]
-    .sort((x,y)=>(y[1]-x[1])||(y[2]-x[2]));
-  if(c[0][1]===0&&c[0][2]===0)return{l:'chưa đánh giá',c:'unknown'};
-  return{l:c[0][0]+' tiến độ',c:{'chậm':'late','đúng':'ontime','vượt':'ahead'}[c[0][0]]};}
+function _overall(a){                       // TRỌNG SỐ theo TMĐT: net = (vượt − chậm)/(chậm+đúng+vượt)
+  const t=a['chậm'].t+a['đúng'].t+a['vượt'].t;
+  if(!t) return (a['chậm'].n+a['đúng'].n+a['vượt'].n)?{l:'đúng tiến độ',c:'ontime'}:{l:'chưa đánh giá',c:'unknown'};
+  const w=(a['vượt'].t-a['chậm'].t)/t;
+  if(w<=-0.15) return{l:'chậm tiến độ',c:'late'};
+  if(w>=0.15) return{l:'vượt tiến độ',c:'ahead'};
+  return{l:'đúng tiến độ',c:'ontime'};}
 function _kt(t){return t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t));}   // nghìn tỷ (K) cho gọn
 function _segBar(a){
   const tot=a.tmdt||1;
@@ -1611,7 +1614,7 @@ function _region(p){const pr=(p.prov||'')+' '+(p.loc||'');
 function _typeB(p){const g=p.g||'';if(g==='Đường bộ')return'Đường bộ';if(g==='Đường sắt/Metro')return'Đường sắt/Metro';if(g==='Sân bay')return'Sân bay';return'Loại hình khác';}
 function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
-  const all=P.slice();
+  const all=P.filter(p=>newsN(p)>=5);        // đồng bộ với tab Tiến độ (chỉ dự án đang theo dõi ≥5 tin)
   const ppp=all.filter(p=>p.ppp), cong=all.filter(p=>!p.ppp&&p.owner==='Nhà nước'), tu=all.filter(p=>!p.ppp&&p.owner!=='Nhà nước');
   const CH=['Vingroup','Sun Group','Masterise','Sovico'];
   const byProv=b=>cong.filter(p=>_region(p)===b);
@@ -1626,7 +1629,7 @@ function renderSummary(){
         <span><i class="sg-ahead"></i>Vượt ${A['vượt'].n} · ${_kt(A['vượt'].t)}</span>
         <span><i class="sg-na2"></i>Chưa có TT ${A.na.n}</span></div></div>
   </div>
-  <p class="cap" style="margin:2px 0 16px">Thanh ngang = cơ cấu <b>nhịp độ theo TMĐT</b> (đỏ chậm · xanh đúng · xanh lá vượt · xám chưa có TT). Nhịp độ từ tin/agent, thiếu thì đối chiếu <b>lịch thi công dự kiến</b>. Đánh giá chung = nhịp độ chiếm TMĐT lớn nhất nhóm.</p>`;
+  <p class="cap" style="margin:2px 0 16px">Thanh ngang = cơ cấu <b>nhịp độ theo TMĐT</b> (đỏ chậm · xanh đúng · xanh lá vượt · xám chưa có TT). Chỉ tính dự án đang theo dõi (≥5 tin, khớp tab Tiến độ). Đánh giá chung = <b>trọng số theo TMĐT</b> (net vượt−chậm).</p>`;
   h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]]);
   h+=_sumTable('Dự án tư — theo chủ đầu tư',[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]]);
   h+=_sumTable('Dự án công — theo phạm vi',[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]]);
