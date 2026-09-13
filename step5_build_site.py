@@ -53,16 +53,16 @@ NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do ste
 # CHỦ ĐẦU TƯ — whitelist do Claude thẩm định (KHÔNG regex). Chỉ liệt kê dự án có chủ đầu tư TƯ NHÂN THẬT
 # (chủ đầu tư/vận hành, không phải đề xuất/nghiên cứu hay liên danh nhà thầu). Còn lại mặc định "Nhà nước".
 OWNER_OVERRIDE = {
-    # Vingroup / VinSpeed
-    9: "Vingroup", 10: "Vingroup", 88: "Vingroup", 236: "Vingroup",
+    # Vingroup / VinSpeed  (id88 Vượt biển Cần Giờ–Vũng Tàu là PPP TP.HCM, chưa chọn NĐT tư → Nhà nước)
+    9: "Vingroup", 10: "Vingroup", 236: "Vingroup",
     # Sun Group (vận hành sân bay / BT / dự án du lịch)
     1: "Sun Group", 2: "Sun Group", 6: "Sun Group", 7: "Sun Group", 8: "Sun Group",
     73: "Sun Group", 184: "Sun Group", 269: "Sun Group",
     # Masterise (tổ hợp Gia Bình + Cầu Cần Giờ)
     11: "Masterise", 12: "Masterise", 13: "Masterise", 14: "Masterise", 15: "Masterise",
     16: "Masterise", 17: "Masterise", 18: "Masterise", 102: "Masterise",
-    # PPP/BOT tư nhân xác nhận
-    74: "T&T", 57: "MSC/TIL", 83: "Geleximco",
+    # PPP/BOT tư nhân xác nhận (tin nêu rõ chủ đầu tư/nhà đầu tư)
+    74: "T&T", 57: "MSC/TIL", 83: "Geleximco", 36: "Geleximco",
 }
 # TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
