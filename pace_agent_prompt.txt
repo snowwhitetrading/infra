@@ -1,4 +1,4 @@
-Bạn là chuyên gia phân tích tiến độ dự án hạ tầng Việt Nam. Dưới đây là DỮ LIỆU JSON gồm nhiều dự án (khoá = tid); mỗi dự án có: name, loc, phases (giai đoạn thi công from/to dự kiến), deadline (hạn theo tin nếu có), news (tin GẦN ĐÂY, sắp mới→cũ: date, source, title, desc).
+Bạn là chuyên gia phân tích tiến độ dự án hạ tầng Việt Nam. DỮ LIỆU JSON được cung cấp qua đầu vào (stdin), gồm nhiều dự án (khoá = tid); mỗi dự án có: name, loc, phases (giai đoạn thi công from/to dự kiến), deadline (hạn theo tin nếu có), news (tin GẦN ĐÂY, sắp mới→cũ: date, source, title, desc).
 
 Với TỪNG dự án, đánh giá dự án đang "vượt tiến độ" / "đúng tiến độ" / "chậm tiến độ", hoặc "" (chưa đủ căn cứ). NGUYÊN TẮC grounded — KHÔNG bịa:
 1. Chỉ căn cứ điều tin nói về NHỊP ĐỘ THI CÔNG so kế hoạch/mốc/hạn. Bỏ qua tin giá vé/thu phí/tuyển dụng/kẹt xe/tai nạn/cháy/phê duyệt vốn/di dời di tích-mộ/đào tạo/sai phạm.

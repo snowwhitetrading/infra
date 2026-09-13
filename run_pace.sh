@@ -31,10 +31,7 @@ PY
 for f in pace_batches/batch_*.json; do
   i=$(basename "$f" | tr -dc '0-9')
   echo "  → đánh giá lô $i ..." | tee -a "$LOG"
-  claude -p "$(cat pace_agent_prompt.txt)
-
-DỮ LIỆU JSON:
-$(cat "$f")" --output-format text > "pace_batches/raw_${i}.txt" 2>>"$LOG" || { echo "  ! lô $i lỗi claude" | tee -a "$LOG"; continue; }
+  cat "$f" | claude -p "$(cat pace_agent_prompt.txt)" --output-format text > "pace_batches/raw_${i}.txt" 2>>"$LOG" || { echo "  ! lô $i lỗi claude" | tee -a "$LOG"; continue; }
   # trích object JSON từ output
   python3 - "$i" <<'PY'
 import re, sys
