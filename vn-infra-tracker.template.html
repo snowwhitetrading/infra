@@ -162,6 +162,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .s-ontime{color:var(--accent);border-color:var(--accent);background:transparent}
 .s-late{color:var(--alert);border-color:var(--alert);background:transparent}
 .s-unknown{color:var(--ink3);border-color:var(--rule2);border-style:dashed;background:transparent}
+.s-propose{color:var(--gold);border-color:var(--gold);border-style:dashed;background:transparent}
 .s-building{color:var(--build);border-color:var(--build);background:transparent}
 .schedbox.s-building{border-color:var(--build)} .schedbox.s-building b{color:var(--build)}
 .tabjump{border:none;background:none;cursor:pointer;font-size:12px;padding:0 2px;line-height:1;opacity:.6}
@@ -1014,14 +1015,15 @@ function laneOf(mark, proj){
 let gRegion = '', gProv = '', _sortMode = 'news', _q = '';    // vùng · tỉnh · sắp xếp (mặc định số tin) · tìm
 const _NEWSN = {}; NEWSFLOW.forEach(n=>{ _NEWSN[n.pname] = (_NEWSN[n.pname]||0) + 1; });   // đếm tin/dự án
 const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late',
-                    'chưa có thông tin':'unknown'};
-const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','chưa có thông tin'];
+                    'đang đề xuất':'propose','chưa có thông tin':'unknown'};
+const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','đang đề xuất','chưa có thông tin'];
 function newsN(p){ return _NEWSN[p.name] || 0; }
 // Nhãn tiến độ CHỈ 4 giá trị: vượt/đúng/chậm tiến độ · "chưa có thông tin" (hạn chế dùng).
 // Ưu tiên đánh giá từ tin/agent (paceAuto/paceLLM). Không có → SUY từ LỊCH THI CÔNG DỰ KIẾN
 // (đã curate, grounded): quá hạn kế hoạch / lẽ ra đã khởi công mà chưa → chậm; đang trong
 // tiến độ kế hoạch → đúng; hoàn toàn không có mốc kế hoạch → chưa có thông tin.
 function schedOf(p){
+  if(p.proposal) return 'đang đề xuất';        // 1 đơn vị tư nhân đề xuất, chưa được giao chính thức
   if(p.paceAuto) return p.paceAuto;
   const phz = p.phases||[];
   const bph = phz.filter(ph=>ph.kind!=='gpmb'&&ph.kind!=='swap');
@@ -1037,6 +1039,7 @@ function schedOf(p){
   return 'chưa có thông tin';
 }
 function schedWhyOf(p){
+  if(p.proposal) return `Đang ở giai đoạn đề xuất/nghiên cứu (đơn vị đề xuất: ${p.owner}), chưa được giao chủ đầu tư chính thức.`;
   if(p.paceWhy) return p.paceWhy;
   const phz = (p.phases||[]).filter(ph=>ph.kind!=='gpmb'&&ph.kind!=='swap');
   const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
@@ -1595,7 +1598,7 @@ function _kt(t){return t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t));}   
 function _segBar(a){
   const tot=a.tmdt||1;
   const seg=(k,cls,lbl)=>a[k].t?`<span class="sg-seg ${cls}" style="width:${(a[k].t/tot*100).toFixed(2)}%" title="${lbl}: ${a[k].n} dự án · ${_kt(a[k].t)} nghìn tỷ"></span>`:'';
-  const na=a.na.t?`<span class="sg-seg sg-na2" style="width:${(a.na.t/tot*100).toFixed(2)}%" title="Chưa có TT: ${a.na.n} dự án · ${_kt(a.na.t)} nghìn tỷ"></span>`:'';
+  const na=a.na.t?`<span class="sg-seg sg-na2" style="width:${(a.na.t/tot*100).toFixed(2)}%" title="Khác (chưa có TT, đang đề xuất): ${a.na.n} dự án · ${_kt(a.na.t)} nghìn tỷ"></span>`:'';
   return `<div class="sg-bar">${seg('chậm','sg-late','Chậm')}${seg('đúng','sg-ontime','Đúng')}${seg('vượt','sg-ahead','Vượt')}${na}</div>`;
 }
 function _sumRows(groups){return groups.map(([label,list])=>{const a=_agg(list),o=_overall(a);
@@ -1616,7 +1619,7 @@ function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
   const all=P.filter(p=>newsN(p)>=5);        // đồng bộ với tab Tiến độ (chỉ dự án đang theo dõi ≥5 tin)
   const ppp=all.filter(p=>p.ppp), cong=all.filter(p=>!p.ppp&&p.owner==='Nhà nước'), tu=all.filter(p=>!p.ppp&&p.owner!=='Nhà nước');
-  const CH=['Vingroup','Sun Group','Masterise'];
+  const CH=['Vingroup','Sun Group','Masterise','Sovico'];
   const byProv=b=>cong.filter(p=>_region(p)===b);
   const byType=b=>all.filter(p=>_typeB(p)===b);
   const A=_agg(all);
@@ -1627,9 +1630,9 @@ function renderSummary(){
       <div class="sg-legend"><span><i class="sg-late"></i>Chậm ${A['chậm'].n} · ${_kt(A['chậm'].t)}</span>
         <span><i class="sg-ontime"></i>Đúng ${A['đúng'].n} · ${_kt(A['đúng'].t)}</span>
         <span><i class="sg-ahead"></i>Vượt ${A['vượt'].n} · ${_kt(A['vượt'].t)}</span>
-        <span><i class="sg-na2"></i>Chưa có TT ${A.na.n}</span></div></div>
+        <span><i class="sg-na2"></i>Khác (chưa có TT, đang đề xuất) ${A.na.n}</span></div></div>
   </div>
-  <p class="cap" style="margin:2px 0 16px">Thanh ngang = cơ cấu <b>nhịp độ theo TMĐT</b> (đỏ chậm · xanh đúng · xanh lá vượt · xám chưa có TT). Chỉ tính dự án đang theo dõi (≥5 tin, khớp tab Tiến độ). Đánh giá chung = <b>trọng số theo TMĐT</b> (net vượt−chậm).</p>`;
+  <p class="cap" style="margin:2px 0 16px">Thanh ngang = cơ cấu <b>nhịp độ theo TMĐT</b> (đỏ chậm · xanh đúng · xanh lá vượt · xám Khác: chưa có TT / đang đề xuất). Chỉ tính dự án đang theo dõi (≥5 tin, khớp tab Tiến độ). Đánh giá chung = <b>trọng số theo TMĐT</b> (net vượt−chậm).</p>`;
   h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]]);
   h+=_sumTable('Dự án tư — theo chủ đầu tư',[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]]);
   h+=_sumTable('Dự án công — theo phạm vi',[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]]);

@@ -64,6 +64,9 @@ OWNER_OVERRIDE = {
     # PPP/BOT tư nhân xác nhận (tin nêu rõ chủ đầu tư/nhà đầu tư)
     74: "T&T", 57: "MSC/TIL", 83: "Geleximco", 36: "Geleximco",
 }
+# Dự án 1 ĐƠN VỊ tư nhân ĐỀ XUẤT/nghiên cứu (chưa được giao chính thức): ghi tên đơn vị + trạng thái "đang đề xuất".
+PROPOSAL_OWNER = {27: "Sovico", 104: "Vingroup", 30: "Đức Long Gia Lai",
+                  34: "THACO – Becamex", 139: "Thaco (liên danh)"}
 # TOẠ ĐỘ ĐÚNG (lat, lng) ghi đè cho dự án bị cắm sai trên bản đồ — key theo pid (tid).
 COORD_OVERRIDE = {11: (21.0487, 106.1994)}   # Sân bay Gia Bình — node OSM chính danh 106.2015 ≈ Cafeland/AOI gia_binh
 # Site_key vệ tinh SAI toạ độ (AOI lệch) — bỏ khỏi tab Vệ tinh.
@@ -583,6 +586,8 @@ def main():
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
         # CHỦ ĐẦU TƯ: override thủ công > LLM (có nguồn) > curated > regex
         p["owner"] = OWNER_OVERRIDE.get(p.get("id"), "Nhà nước")                  # whitelist Claude thẩm định, KHÔNG regex
+        if p.get("id") in PROPOSAL_OWNER:                                          # đề xuất bởi 1 đơn vị tư nhân
+            p["owner"] = PROPOSAL_OWNER[p["id"]]; p["proposal"] = True
         p["ppp"] = p.get("id") in PPP_TIDS                                         # đối tác công-tư (tab Tổng quan)
         p["name"] = proper_case(p.get("name", ""))                                # Title-Case → proper text
         froms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") in ("build", "gpmb") and ph.get("from")]
