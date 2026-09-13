@@ -150,6 +150,12 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .tabjump:hover{opacity:1;transform:scale(1.15)}
 .pctchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 5px;border-radius:2px;
   background:var(--gpmb-bg);color:var(--gpmb);letter-spacing:.03em}
+.fchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:2px;font-weight:600;letter-spacing:.03em}
+.f-cong{background:#e3ecfb;color:#1f5bbf}.f-tu{background:#fdeede;color:#c0651a}.f-ppp{background:#e7f3ea;color:#2e7d46}
+.tchip{font-family:"IBM Plex Mono",monospace;font-size:10px;padding:1px 6px;border-radius:2px;background:var(--rule2);color:var(--ink2)}
+:root:not([data-theme="light"]) .f-cong{background:#1c2c47;color:#8fb6f0}
+:root:not([data-theme="light"]) .f-tu{background:#3a2a17;color:#e0a86a}
+:root:not([data-theme="light"]) .f-ppp{background:#1b3324;color:#7fc999}
 .bar-g{height:6px;top:11px;background:var(--gpmb)}
 .bar-b{height:10px;top:20px;background:var(--build)}
 .bar-s{height:8px;top:21px;background:var(--swap)}
@@ -266,8 +272,13 @@ table.fin td:last-child{text-align:right;font-family:"IBM Plex Mono",monospace;f
 .db-bar{height:100%;border-radius:4px}
 .db-bar.db-g{background:var(--done)} .db-bar.db-m{background:var(--gpmb)} .db-bar.db-l{background:var(--alert)}
 .db-meta{font-size:11.5px;color:var(--ink3)}
-.db-spark{display:inline-flex;align-items:flex-end;gap:2px;height:16px;vertical-align:bottom}
-.db-sp{width:4px;background:var(--build);opacity:.6;border-radius:1px}
+.db-ts{display:flex;align-items:flex-end;gap:10px;margin-top:8px;padding:8px 4px 2px;border-top:1px dashed var(--rule2);overflow-x:auto}
+.db-col{display:flex;flex-direction:column;align-items:center;min-width:34px;flex:0 0 auto}
+.db-colpct{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink2);margin-bottom:3px}
+.db-colv{height:44px;display:flex;align-items:flex-end}
+.db-colbar{width:16px;border-radius:2px 2px 0 0}
+.db-colbar.db-g{background:var(--done)} .db-colbar.db-m{background:var(--gpmb)} .db-colbar.db-l{background:var(--alert)}
+.db-collab{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3);margin-top:4px;white-space:nowrap}
 .sum-sec{margin:0 0 22px}
 .sum-h{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
 .sumt{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -534,7 +545,7 @@ footer code{font-family:"IBM Plex Mono",monospace;background:var(--sunk);padding
    capex:  {2026:..,2027:..}  (vốn huy động, tỷ đồng — Phụ lục I)
    ============================================================ */
 
-const T0 = 2024, T1 = 2034;              // trục thời gian
+const T0 = 2024, T1 = 2030;              // trục thời gian (2024–2030; thanh vượt 2030 dồn về mép phải)
 const TODAY = 2026 + (7/12);             // 3/8/2026
 
 const TIER_RANK = {actual:4, contract:3, directive:2, company:1, inferred:0, superseded:0, auto:0};
@@ -946,16 +957,42 @@ function laneOf(mark, proj){
 let gRegion = '', gProv = '', _sortMode = 'news', _q = '';    // vùng · tỉnh · sắp xếp (mặc định số tin) · tìm
 const _NEWSN = {}; NEWSFLOW.forEach(n=>{ _NEWSN[n.pname] = (_NEWSN[n.pname]||0) + 1; });   // đếm tin/dự án
 const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime','chậm tiến độ':'late',
-                    'đang thi công':'building','chưa thi công':'unknown'};
-const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','đang thi công','chưa thi công'];
+                    'chưa có thông tin':'unknown'};
+const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','chưa có thông tin'];
 function newsN(p){ return _NEWSN[p.name] || 0; }
-// Nhãn tiến độ: dùng ĐÁNH GIÁ MÁY paceAuto (step4b — kết hợp: tin nói rõ chậm/vượt/đúng ·
-// quá hạn · hạn bị lùi · % so kỳ vọng — đều CÓ NGUỒN). Không đủ tín hiệu → theo trạng thái thi công.
+// Nhãn tiến độ CHỈ 4 giá trị: vượt/đúng/chậm tiến độ · "chưa có thông tin" (hạn chế dùng).
+// Ưu tiên đánh giá từ tin/agent (paceAuto/paceLLM). Không có → SUY từ LỊCH THI CÔNG DỰ KIẾN
+// (đã curate, grounded): quá hạn kế hoạch / lẽ ra đã khởi công mà chưa → chậm; đang trong
+// tiến độ kế hoạch → đúng; hoàn toàn không có mốc kế hoạch → chưa có thông tin.
 function schedOf(p){
   if(p.paceAuto) return p.paceAuto;
-  const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
-  return started ? 'đang thi công' : 'chưa thi công';
+  const phz = p.phases||[];
+  const bph = phz.filter(ph=>ph.kind!=='gpmb'&&ph.kind!=='swap');
+  const froms = bph.filter(ph=>ph.from).map(ph=>toY(ph.from));
+  const tos   = bph.filter(ph=>ph.to).map(ph=>toY(ph.to));
+  const started = phz.some(ph=>ph.from && toY(ph.from) <= TODAY);
+  if(started){
+    if(tos.length && Math.max(...tos) < TODAY) return 'chậm tiến độ';   // quá hạn hoàn thành kế hoạch
+    if(tos.length || froms.length) return 'đúng tiến độ';               // đang trong tiến độ kế hoạch
+    return 'chưa có thông tin';
+  }
+  if(froms.length && Math.min(...froms) < TODAY) return 'chậm tiến độ';  // lẽ ra đã khởi công theo kế hoạch mà chưa
+  return 'chưa có thông tin';
 }
+function schedWhyOf(p){
+  if(p.paceWhy) return p.paceWhy;
+  const phz = (p.phases||[]).filter(ph=>ph.kind!=='gpmb'&&ph.kind!=='swap');
+  const started = (p.phases||[]).some(ph=>ph.from && toY(ph.from) <= TODAY);
+  const tos = phz.filter(ph=>ph.to).map(ph=>toY(ph.to));
+  const s = schedOf(p);
+  if(s==='chậm tiến độ') return started
+    ? 'Đã quá hạn hoàn thành dự kiến theo lịch thi công công bố, chưa có tin xác nhận hoàn thành.'
+    : 'Theo kế hoạch lẽ ra đã khởi công nhưng chưa có tin khởi công.';
+  if(s==='đúng tiến độ') return 'Đang trong tiến độ theo lịch kế hoạch công bố, chưa có tín hiệu chậm/vượt từ tin.';
+  return 'Chưa có mốc kế hoạch hay tin đủ căn cứ để đánh giá nhịp độ.';
+}
+function _form(p){ return p.ppp?'PPP':(p.owner==='Nhà nước'?'Công':'Tư'); }
+function _formCls(p){ return p.ppp?'ppp':(p.owner==='Nhà nước'?'cong':'tu'); }
 function _searchOk(p){ return !_q || (p.name+' '+(p.owner||'')).toLowerCase().includes(_q); }
 let minTier = 0;
 let open = new Set();
@@ -1035,7 +1072,7 @@ function detailHTML(p){
   const news = NEWSFLOW.filter(n=>n.pname===p.name).sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   return `<div class="detail"><div class="pad">
     <p class="dh">Đánh giá tiến độ</p>
-    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(p.paceWhy || (schedOf(p)==='đang thi công'?'Đã khởi công nhưng chưa có hạn/tin đủ căn cứ để đánh giá đúng/chậm/vượt.':schedOf(p)==='chưa thi công'?'Dự án chưa khởi công.':''))}</div>
+    <div class="schedbox s-${SCHED_CLS2[schedOf(p)]}"><b>${schedOf(p)}.</b> ${esc(schedWhyOf(p))}</div>
     ${p.satObs?`<div class="satobs">🛰 <b>Vệ tinh — ${esc(p.satTrend||'')}.</b> ${esc(p.satObs)}${p.satAt?` <span class="cap">(ảnh tới ${esc((p.satAt||'').slice(0,7))})</span>`:''}</div>`:''}
     ${DISB[p.id]?`<div class="satobs" style="border-left-color:var(--build)">💰 <b>Giải ngân ${(DISB[p.id].pct||0).toFixed(1)}%.</b> Đã giải ngân ${nf(DISB[p.id].gn||0)}/${nf(DISB[p.id].kh||0)} tỷ kế hoạch năm <span class="cap">(Bộ Tài chính${DISB[p.id].as_of?', tới '+esc(DISB[p.id].as_of):''})</span></div>`:''}
     <div class="dgrid" style="margin-top:20px">
@@ -1102,7 +1139,8 @@ function render(){
       h += `<div class="row"><div class="lbl">
           <button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>
-          <div class="pmeta"><span class="sched s-${SCHED_CLS2[schedOf(p)]}" title="${esc(p.schedWhy||'')}">${schedOf(p)}</span>
+          <div class="pmeta"><span class="sched s-${SCHED_CLS2[schedOf(p)]}" title="${esc(schedWhyOf(p))}">${schedOf(p)}</span>
+            <span class="fchip f-${_formCls(p)}">${_form(p)}</span>${p.g?`<span class="tchip">${esc(p.g)}</span>`:''}
             ${_sortMode==='news'?`<span class="pctchip">${newsN(p)} tin</span>`:''}
             <span class="cap">${esc(p.owner)}</span>
             ${SATELLITE[p.id]?`<button class="tabjump" onclick="_focusSat(${p.id})" title="Xem ảnh vệ tinh">🛰</button>`:''}
@@ -1326,7 +1364,7 @@ function _mapProj(pid){
   const news = NEWSFLOW.filter(n=>n.pname===p.name)
     .sort((a,b)=>{const ka=nfKey(a),kb=nfKey(b);return ka<kb?1:ka>kb?-1:0;});
   const sc = schedOf(p);
-  const sched = `<div class="schedbox s-${SCHED_CLS2[sc]}" style="margin:6px 0 8px"><b>${esc(sc)}.</b> ${esc(p.paceWhy||'')}</div>`;
+  const sched = `<div class="schedbox s-${SCHED_CLS2[sc]}" style="margin:6px 0 8px"><b>${esc(sc)}.</b> ${esc(schedWhyOf(p))}</div>`;
   const info = [['Trạng thái',p.status],['Tổng mức đầu tư',p.tmdt?nf(p.tmdt)+' tỷ':''],
                 ['Chủ đầu tư',p.owner],['Địa điểm',p.loc]]
     .filter(([k,v])=>v).map(([k,v])=>`<div class="mp-row"><span class="mp-k">${esc(k)}</span><span class="mp-v">${esc(String(v))}</span></div>`).join('');
@@ -1495,7 +1533,8 @@ function _sumRows(groups){return groups.map(([label,list])=>{const a=_agg(list),
     <td class="sc-na">${a.na.n}</td><td><span class="sched s-${o.c}">${esc(o.l)}</span></td></tr>`;}).join('');}
 function _sumTable(title, groups){return `<div class="sum-sec"><h3 class="sum-h">${esc(title)}</h3>
   <div style="overflow-x:auto"><table class="sumt"><thead><tr><th>Nhóm</th><th>Số DA</th><th>TMĐT</th>
-    <th>Chậm</th><th>Đúng</th><th>Vượt</th><th>Chưa ĐG</th><th>Đánh giá chung</th></tr></thead>
+    <th>Chậm</th><th>Đúng</th><th>Vượt</th><th title="Chưa có mốc kế hoạch/tin đủ căn cứ">Chưa có TT</th>
+    <th>Đánh giá chung</th></tr></thead>
     <tbody>${_sumRows(groups)}</tbody></table></div></div>`;}
 function _region(p){const pr=(p.prov||'')+' '+(p.loc||'');
   if(/hà nội/i.test(pr))return'Hà Nội'; if(/hồ chí minh|hcm|sài gòn/i.test(pr))return'TP.HCM';
@@ -1508,7 +1547,7 @@ function renderSummary(){
   const CH=['Vingroup','Sun Group','Masterise','Sovico'];
   const byProv=b=>cong.filter(p=>_region(p)===b);
   const byType=b=>all.filter(p=>_typeB(p)===b);
-  let h=`<p class="cap" style="margin:2px 0 14px">Tổng hợp theo <b>nhịp độ (news + giải ngân + vệ tinh)</b>. TMĐT đơn vị <b>K = nghìn tỷ đồng</b>; "Chưa ĐG" = chưa đủ căn cứ / chưa thi công. Đánh giá chung = nhịp độ chiếm TMĐT lớn nhất trong nhóm.</p>`;
+  let h=`<p class="cap" style="margin:2px 0 14px">Tổng hợp theo <b>nhịp độ (news + giải ngân + vệ tinh)</b>. TMĐT đơn vị <b>K = nghìn tỷ đồng</b>. Nhịp độ suy từ tin/agent, thiếu thì đối chiếu <b>lịch thi công dự kiến</b>; <b>Chưa có TT</b> = không có mốc kế hoạch/tin đủ căn cứ. Đánh giá chung = nhịp độ chiếm TMĐT lớn nhất trong nhóm.</p>`;
   h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]]);
   h+=_sumTable('Dự án tư — theo chủ đầu tư',[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]]);
   h+=_sumTable('Dự án công — theo phạm vi',[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]]);
@@ -1527,13 +1566,24 @@ function renderDisb(){
   document.getElementById('db-note').innerHTML=`Nguồn <b>Bộ Tài chính</b> · ${rows.length} dự án · số liệu tới ${esc(asof)}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm (không phải % hoàn thành công trình).`;
   el.innerHTML=rows.map(r=>{
     const p=r.pct||0, cls=p>=60?'g':p>=30?'m':'l';
-    const spark=(r.series||[]).map(s=>`<span class="db-sp" style="height:${Math.max(2,Math.round((s.pct||0)*0.14))}px" title="${esc(s.ky)}: ${s.pct}%"></span>`).join('');
     const pj=P.find(x=>x.id===r.tid), sc=pj?schedOf(pj):'';
+    const ser=(r.series||[]).slice();
+    const ts = ser.length ? `<div class="db-ts">${ser.map(s=>{
+        const sp=s.pct||0, c2=sp>=60?'g':sp>=30?'m':'l';
+        return `<div class="db-col" title="${esc(_kyLong(s.ky))} — giải ngân ${sp}%${s.gn!=null?' ('+nf(s.gn)+' tỷ)':''}">
+          <div class="db-colpct">${sp.toFixed(0)}%</div>
+          <div class="db-colv"><div class="db-colbar db-${c2}" style="height:${Math.max(3,Math.round(sp*0.42))}px"></div></div>
+          <div class="db-collab">${esc(_kyShort(s.ky))}</div></div>`;
+      }).join('')}</div>` : '';
     return `<div class="db-row"><div class="db-top"><span class="db-nm">${esc(r.name)}${sc?` <span class="sched s-${SCHED_CLS2[sc]}" style="margin-left:4px">${esc(sc)}</span>`:''}</span><span class="db-pct db-${cls}">${p.toFixed(1)}%</span></div>
       <div class="db-barwrap"><div class="db-bar db-${cls}" style="width:${Math.min(100,p)}%"></div></div>
-      <div class="db-meta">KH ${nf(r.kh||0)} tỷ · đã giải ngân ${nf(r.gn||0)} tỷ${spark?` &nbsp; <span class="db-spark">${spark}</span>`:''}</div></div>`;
+      <div class="db-meta">KH ${nf(r.kh||0)} tỷ · đã giải ngân ${nf(r.gn||0)} tỷ${ser.length>1?' · diễn biến theo kỳ ↓':ser.length===1?' · 1 kỳ (chờ thêm số liệu)':''}</div>
+      ${ts}</div>`;
   }).join('') || '<div class="mp-empty">Chưa có dữ liệu giải ngân (chạy ingest_disbursement.py).</div>';
 }
+// "7T2026" → nhãn kỳ. T = luỹ kế tới hết tháng đó.
+function _kyShort(k){const m=/(\d+)T(\d{4})/.exec(k||'');return m?`T${+m[1]}/${m[2]}`:(k||'');}
+function _kyLong(k){const m=/(\d+)T(\d{4})/.exec(k||'');return m?`Luỹ kế ${+m[1]} tháng ${m[2]}`:(k||'');}
 
 render();
 renderSummary();
