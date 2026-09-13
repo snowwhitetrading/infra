@@ -27,7 +27,7 @@ DB = "dc_commodity"
 DISB_MAP = {
     "duong_sat_toc_do_cao_tren_truc_bac_nam": 20,
     "duong_sat_lao_cai_ha_noi_hai_phong": 21,
-    "vanh_dai_4_vung_thu_do_ha_noi": 206,
+    "vanh_dai_4_vung_thu_do_ha_noi": 56,
     "vanh_dai_3_tp_ho_chi_minh": 55,
     "khanh_hoa_buon_ma_thuot_gd1": 163,
     "bien_hoa_vung_tau_gd1": 24,
