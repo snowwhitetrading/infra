@@ -1587,9 +1587,9 @@ function _agg(list){const a={n:0,tmdt:0,vượt:{n:0,t:0},'đúng':{n:0,t:0},'ch
 function _overall(a){                       // TRỌNG SỐ theo TMĐT: net = (vượt − chậm)/(chậm+đúng+vượt)
   const t=a['chậm'].t+a['đúng'].t+a['vượt'].t;
   if(!t) return (a['chậm'].n+a['đúng'].n+a['vượt'].n)?{l:'đúng tiến độ',c:'ontime'}:{l:'chưa đánh giá',c:'unknown'};
-  const w=(a['vượt'].t-a['chậm'].t)/t;
-  if(w<=-0.15) return{l:'chậm tiến độ',c:'late'};
-  if(w>=0.15) return{l:'vượt tiến độ',c:'ahead'};
+  const w=(a['vượt'].t-a['chậm'].t)/t;       // net theo TMĐT (đúng = trung tính); band ±1/3
+  if(w<=-1/3) return{l:'chậm tiến độ',c:'late'};
+  if(w>=1/3) return{l:'vượt tiến độ',c:'ahead'};
   return{l:'đúng tiến độ',c:'ontime'};}
 function _kt(t){return t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t));}   // nghìn tỷ (K) cho gọn
 function _segBar(a){
