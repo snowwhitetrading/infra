@@ -1629,27 +1629,36 @@ function _topDrag(list,keyfn){var m={};list.forEach(function(p){if(_paceB(p)==='
 function _narrAll(list){
   const a=_agg(list),o=_overall(a),big=_bigIn(list,'chậm'),up=_bigIn(list,'vượt');
   const dragType=_topDrag(list,_typeB), dragForm=_topDrag(list,function(p){return p.ppp?'PPP':(p.owner==='Nhà nước'?'khối Nhà nước':'khối tư nhân');});
+  // tập trung vốn chậm: 3 dự án chậm lớn nhất chiếm bao nhiêu % tổng vốn chậm
+  const chams=list.filter(function(p){return _paceB(p)==='chậm';}).sort(function(x,y){return (y.tmdt||0)-(x.tmdt||0);});
+  const top3=chams.slice(0,3).reduce(function(s,p){return s+(p.tmdt||0);},0);
+  const conc=a['chậm'].t?Math.round(top3/a['chậm'].t*100):0;
   let s='Toàn cảnh <b>'+a.n+' dự án</b> đang theo dõi, tổng vốn <b>'+_kt(a.tmdt)+' nghìn tỷ đồng</b>: '
-    +'<b>'+_sh(a,'chậm')+'% vốn đang chậm</b>, '+_sh(a,'đúng')+'% bám tiến độ, chỉ '+_sh(a,'vượt')+'% vượt — bức tranh chung <b>'+o.l+'</b>.';
-  if(dragType||dragForm) s+=' Phần chậm dồn chủ yếu vào '+(dragType?'<b>'+dragType+'</b>':'')+(dragType&&dragForm?' và ':'')+(dragForm?'<b>'+dragForm+'</b>':'')+'.';
-  if(big) s+=' Nút thắt vốn lớn nhất là '+_citeP(big)+'.';
-  if(up) s+=' Ở chiều ngược lại, '+_citeP(up)+' đang vượt tiến độ.';
+    +'<b>'+_sh(a,'chậm')+'% vốn chậm</b>, '+_sh(a,'đúng')+'% bám tiến độ, '+_sh(a,'vượt')+'% vượt — bức tranh chung <b>'+o.l+'</b>.';
+  if(dragType||dragForm) s+=' Phần chậm dồn vào '+(dragType?'<b>'+dragType+'</b>':'')+(dragType&&dragForm?' và ':'')+(dragForm?'<b>'+dragForm+'</b>':'')+'';
+  if(conc>=40&&chams.length>=3) s+=', và <b>rất tập trung</b>: chỉ 3 dự án lớn nhất đã chiếm '+conc+'% tổng vốn chậm — tức nhịp độ chung phụ thuộc vào vài siêu dự án.';
+  else s+='.';
+  if(big) s+=' Nút thắt lớn nhất: '+_citeP(big)+'.';
+  if(up) s+=' Điểm sáng: '+_citeP(up)+' đang vượt tiến độ.';
   return s;
 }
 function _narrGroups(intro,groups){
-  const rows=groups.map(function(g){const a=_agg(g[1]);return{label:g[0],list:g[1],a:a,net:_net(a),cham:_sh(a,'chậm'),ass:a['chậm'].t+a['đúng'].t+a['vượt'].t};}).filter(function(r){return r.a.n>0&&r.ass>0;});
+  const rows=groups.map(function(g){const a=_agg(g[1]);return{label:g[0],list:g[1],a:a,net:_net(a),cham:_sh(a,'chậm'),o:_overall(a).l,n:a.n};}).filter(function(r){return r.n>0&&(r.a['chậm'].t+r.a['đúng'].t+r.a['vượt'].t)>0;});
   const pre=intro?intro+' ':'';
   if(!rows.length) return pre+'chưa đủ dữ liệu để đánh giá.';
   rows.sort(function(x,y){return y.net-x.net;});
   const fast=rows[0],slow=rows[rows.length-1];
-  const d=function(r){return '<b>'+esc(r.label)+'</b> ('+_overall(r.a).l+', '+r.cham+'% vốn chậm)';};
-  if(fast===slow) return pre+d(fast)+'.';
-  const gap=slow.cham-fast.cham;
-  let s=pre+d(fast)+' dẫn đầu, trong khi '+d(slow)+' đuối nhất';
-  s+=gap>=15?(' — cách biệt '+gap+' điểm % vốn chậm'):'';
-  const slowBig=_bigIn(slow.list,'chậm');
-  if(slowBig&&slowBig.paceWhy) s+='; điển hình '+_citeP(slowBig);
-  return s+'.';
+  // liệt kê ĐẦY ĐỦ các nhóm, xếp tốt→đuối theo % vốn chậm
+  const rank=rows.map(function(r){return '<b>'+esc(r.label)+'</b> '+r.cham+'%';}).join(' · ');
+  let s=pre+'xếp theo % vốn chậm (thấp→cao): '+rank+'.';
+  if(fast!==slow){
+    s+=' <b>'+esc(fast.label)+'</b> bám tiến độ tốt nhất ('+fast.o+'), '+'<b>'+esc(slow.label)+'</b> đuối nhất ('+slow.o+')';
+    const gap=slow.cham-fast.cham; s+=gap>=15?(' — chênh '+gap+' điểm %'):'';
+    const slowBig=_bigIn(slow.list,'chậm');
+    if(slowBig&&slowBig.paceWhy) s+='; điển hình '+_citeP(slowBig);
+    s+='.';
+  }
+  return s;
 }
 function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
