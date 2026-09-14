@@ -9,11 +9,21 @@ cd "$(dirname "$0")"
 
 BATCH=30
 LOG="run_pace.log"
-echo "==== $(date '+%F %T') bắt đầu ====" | tee -a "$LOG"
+MODE="${1:-stale}"    # mặc định: chỉ chấm nhóm LỖI THỜI (stale_pace.json).  './run_pace.sh all' = chấm hết.
+echo "==== $(date '+%F %T') bắt đầu (mode=$MODE) ====" | tee -a "$LOG"
 
 # 1) Gom tin gần đây → pace_bundles.json (pymongo, đọc DB)
-#    maxn 14 + months 8 + desc 160 (prepare) → giảm ~60% token so với 30 tin/280 ký tự, vẫn "nhiều tin + gần đây".
-python3 prepare_pace_bundles.py --months 8 --maxn 14 | tee -a "$LOG"
+#    maxn 14 + months 8 + desc 160 → tiết kiệm token, vẫn "nhiều tin + gần đây".
+if [ "$MODE" = "all" ]; then
+  python3 prepare_pace_bundles.py --months 8 --maxn 14 | tee -a "$LOG"
+else
+  # QA phát hiện dự án có tin MỚI hơn đánh giá → stale_pace.json; chỉ chấm lại nhóm này (nhanh, đỡ token)
+  python3 qa_check.py | tee -a "$LOG"
+  python3 prepare_pace_bundles.py --months 8 --maxn 14 --only stale_pace.json | tee -a "$LOG"
+fi
+# Không có dự án cần chấm → dừng sớm
+N=$(python3 -c 'import json;print(len(json.load(open("pace_bundles.json"))))' 2>/dev/null || echo 0)
+if [ "$N" = "0" ]; then echo "Không có dự án cần chấm lại — xong." | tee -a "$LOG"; exit 0; fi
 
 # 2) Chia lô
 rm -rf pace_batches && mkdir -p pace_batches

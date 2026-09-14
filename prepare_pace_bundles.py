@@ -30,8 +30,13 @@ def _minus_months(ym, k):
     return f"{t // 12:04d}-{t % 12 + 1:02d}"
 
 
-def run(months, maxn, out):
+def run(months, maxn, out, only=None):
     import datetime as dt
+    only_set = None
+    if only:
+        with open(os.path.join(HERE, only), encoding="utf-8") as f:
+            only_set = set(json.load(f))
+        print(f"CHỈ chấm {len(only_set)} dự án trong {only} (nhóm lỗi thời)")
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)
     tr = c[DB]["Infra_Project_Tracker"]
     raw = c["dc_news"]["project_news_raw"]
@@ -61,6 +66,8 @@ def run(months, maxn, out):
                                          "title": ti, "desc": (d.get("description") or "")[:160]})
 
     for tid, arts in news_by_tid.items():
+        if only_set is not None and tid not in only_set:      # chỉ chấm nhóm lỗi thời
+            continue
         seen, uniq = set(), []
         for a in sorted(arts, key=lambda x: x["date"], reverse=True):
             k = a["title"][:80]
@@ -95,5 +102,6 @@ if __name__ == "__main__":
     ap.add_argument("--months", type=int, default=10)
     ap.add_argument("--maxn", type=int, default=30)
     ap.add_argument("--out", default="pace_bundles.json")
+    ap.add_argument("--only", default=None, help="file JSON danh sách tid (chỉ chấm nhóm này, vd stale_pace.json)")
     a = ap.parse_args()
-    run(a.months, a.maxn, a.out)
+    run(a.months, a.maxn, a.out, a.only)
