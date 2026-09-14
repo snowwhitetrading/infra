@@ -64,6 +64,11 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step4b_deadlines.py || echo "deadlines skipped"
 
+      # Lấy CODE MỚI NHẤT ngay trước build → job hourly dài (scrape ~15') không deploy template CŨ
+      # đè bản fast-deploy mới hơn (hết clobber). Không hủy scrape, chỉ đồng bộ template.
+      - name: Pull latest before build
+        run: git pull --ff-only origin main || echo "pull skipped (đã mới nhất hoặc lệch nhánh)"
+
       # Dựng site từ DB (Tracker chi tiết + mark auto)
       - name: Build site
         env:
