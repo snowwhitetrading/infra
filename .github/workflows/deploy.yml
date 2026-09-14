@@ -64,6 +64,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python step4b_deadlines.py || echo "deadlines skipped"
 
+      # QA tự động: tắt dự án ẢO radar vừa add (entity/generic) + log pace lỗi thời (Claude chấm lại sau)
+      - name: QA cross-check
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python qa_check.py --fix || echo "qa skipped"
+
       # Lấy CODE MỚI NHẤT ngay trước build → job hourly dài (scrape ~15') không deploy template CŨ
       # đè bản fast-deploy mới hơn (hết clobber). Không hủy scrape, chỉ đồng bộ template.
       - name: Pull latest before build
