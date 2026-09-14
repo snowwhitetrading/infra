@@ -55,10 +55,11 @@ NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do ste
 OWNER_OVERRIDE = {
     # Vingroup / VinSpeed  (id88 Vượt biển Cần Giờ–Vũng Tàu là PPP TP.HCM, chưa chọn NĐT tư → Nhà nước)
     9: "Vingroup", 10: "Vingroup", 236: "Vingroup",
-    # Sun Group (vận hành sân bay / BT / dự án du lịch)
-    1: "Sun Group", 2: "Sun Group", 6: "Sun Group", 7: "Sun Group", 8: "Sun Group",
+    # Sun Group (vận hành sân bay / dự án du lịch)
+    1: "Sun Group", 2: "Sun Group", 6: "Sun Group",
     73: "Sun Group", 184: "Sun Group", 269: "Sun Group",
-    # Masterise (tổ hợp Gia Bình + Cầu Cần Giờ)
+    # Masterise (TOÀN BỘ tổ hợp Gia Bình: sân bay + ATC + BT + đường nối + Cầu Cần Giờ) — theo audit CSV
+    7: "Masterise", 8: "Masterise",
     11: "Masterise", 12: "Masterise", 13: "Masterise", 14: "Masterise", 15: "Masterise",
     16: "Masterise", 17: "Masterise", 18: "Masterise", 102: "Masterise",
     # PPP/BOT tư nhân xác nhận (tin nêu rõ chủ đầu tư/nhà đầu tư)
@@ -577,8 +578,12 @@ def main():
             _fixphs(it["phases"])
             it["marks"] = [m for m in it["marks"] if m.get("date")]
     tid2cat = category_map(c)
+    # Sửa nhóm sai (audit CSV): cao tốc/đường nối/đường liên-cảng bị xếp nhầm Kênh/Cảng/Cầu/Đường sắt → Đường bộ;
+    # bến xe (không phải đường) → Toà nhà.
+    GROUP_OVERRIDE = {180: "Đường bộ", 113: "Đường bộ", 7: "Đường bộ", 106: "Đường bộ",
+                      8: "Đường bộ", 189: "Toà nhà"}
     for p in projects:                    # phân 18 dự án gốc vào 8 nhóm như các dự án khác (bỏ I-IV)
-        p["g"] = tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
+        p["g"] = GROUP_OVERRIDE.get(p["id"]) or tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
     print(f"Đọc từ DB: {len(projects)} dự án curated")
 
     projects = projects + build_auto_rows(c, projects)
@@ -633,6 +638,13 @@ def main():
     groups = [{"id": cid, "name": cname, "meta": cmeta, "huyDong": 0}
               for cid, cname, cmeta in CAT_META if cid in used]
     print(f"  {len(projects)} dòng · {len(groups)} nhóm: {', '.join(g['id'] for g in groups)}")
+
+    # PASS CUỐI: sửa nhóm sai (audit CSV) trên TOÀN BỘ projects (gồm cả registry-only auto) trước khi serialize
+    _GRP_FIX = {180: "Đường bộ", 113: "Đường bộ", 7: "Đường bộ", 106: "Đường bộ",
+                8: "Đường bộ", 189: "Toà nhà"}
+    for p in projects:
+        if p.get("id") in _GRP_FIX:
+            p["g"] = _GRP_FIX[p["id"]]
 
     tpl = open(TEMPLATE, encoding="utf-8").read()
     old_g = extract_array(tpl, "const GROUPS")
