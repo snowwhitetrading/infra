@@ -310,6 +310,9 @@ table.fin td:last-child{text-align:right;font-family:"Manrope",monospace;font-we
 .db-brk-p{font-family:"Manrope",monospace;font-weight:600;text-align:right}
 .db-brk-v{font-family:"Manrope",monospace;font-size:11px;color:var(--ink3);text-align:right}
 @media(max-width:720px){.db-brks{grid-template-columns:1fr}}
+.narr{margin:0 0 14px;padding:10px 14px;background:var(--callout);border-left:3px solid var(--accent);
+  border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;color:var(--ink2)}
+.narr b{color:var(--ink);font-weight:600}
 .sum-sec{margin:0 0 22px}
 .sum-h{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
 .sumt{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -1615,6 +1618,27 @@ function _region(p){const pr=(p.prov||'')+' '+(p.loc||'');
   if(/hà nội/i.test(pr))return'Hà Nội'; if(/hồ chí minh|hcm|sài gòn/i.test(pr))return'TP.HCM';
   if(/[-–]/.test(p.name||''))return'Liên tỉnh'; return'Nội tỉnh';}
 function _typeB(p){const g=p.g||'';if(g==='Đường bộ')return'Đường bộ';if(g==='Đường sắt/Metro')return'Đường sắt/Metro';if(g==='Sân bay')return'Sân bay';return'Loại hình khác';}
+/* ---------- narrative tự sinh từ số liệu (Claude-authored, cập nhật theo dữ liệu) ---------- */
+function _net(a){const t=a['chậm'].t+a['đúng'].t+a['vượt'].t;return t?(a['vượt'].t-a['chậm'].t)/t:0;}
+function _sh(a,k){const t=a['chậm'].t+a['đúng'].t+a['vượt'].t;return t?Math.round(a[k].t/t*100):0;}
+function _bigIn(list,b){let best=null;list.forEach(function(p){if(_paceB(p)===b&&(!best||(p.tmdt||0)>(best.tmdt||0)))best=p;});return best;}
+function _narrAll(list){
+  const a=_agg(list),o=_overall(a),big=_bigIn(list,'chậm'),up=_bigIn(list,'vượt');
+  let s='Trong <b>'+a.n+' dự án</b> đang theo dõi (TMĐT '+_kt(a.tmdt)+' nghìn tỷ), xét theo vốn có <b>'+_sh(a,'chậm')+'% chậm</b>, '+_sh(a,'đúng')+'% đúng và '+_sh(a,'vượt')+'% vượt tiến độ — nhìn chung <b>'+o.l+'</b>.';
+  if(big) s+=' Điểm nghẽn vốn lớn nhất: <b>'+esc(big.name)+'</b> ('+_kt(big.tmdt)+' nghìn tỷ)'+(big.paceWhy?' — '+esc(big.paceWhy):'')+'.';
+  if(up) s+=' Điểm sáng: <b>'+esc(up.name)+'</b> vượt tiến độ.';
+  return s;
+}
+function _narrGroups(intro,groups){
+  const rows=groups.map(function(g){const a=_agg(g[1]);return{label:g[0],a:a,net:_net(a),ass:a['chậm'].t+a['đúng'].t+a['vượt'].t};}).filter(function(r){return r.a.n>0&&r.ass>0;});
+  const pre=intro?intro+' ':'';
+  if(!rows.length) return pre+'chưa đủ dữ liệu đánh giá.';
+  rows.sort(function(x,y){return y.net-x.net;});
+  const fast=rows[0],slow=rows[rows.length-1];
+  const d=function(r){return '<b>'+esc(r.label)+'</b> ('+_overall(r.a).l+', '+_sh(r.a,'chậm')+'% vốn chậm)';};
+  if(fast===slow) return pre+d(fast)+'.';
+  return pre+'bám tiến độ tốt nhất là '+d(fast)+'; chậm nhất là '+d(slow)+'.';
+}
 function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
   const all=P.filter(p=>newsN(p)>=5);        // đồng bộ với tab Tiến độ (chỉ dự án đang theo dõi ≥5 tin)
@@ -1633,10 +1657,19 @@ function renderSummary(){
         <span><i class="sg-na2"></i>Khác (chưa có TT, đang đề xuất) ${A.na.n}</span></div></div>
   </div>
   <p class="cap" style="margin:2px 0 16px">Thanh ngang = cơ cấu <b>nhịp độ theo TMĐT</b> (đỏ chậm · xanh đúng · xanh lá vượt · xám Khác: chưa có TT / đang đề xuất). Chỉ tính dự án đang theo dõi (≥5 tin, khớp tab Tiến độ). Đánh giá chung = <b>trọng số theo TMĐT</b> (net vượt−chậm).</p>`;
-  h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]]);
-  h+=_sumTable('Dự án tư — theo chủ đầu tư',[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]]);
-  h+=_sumTable('Dự án công — theo phạm vi',[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]]);
-  h+=_sumTable('Theo loại hình',[['Đường bộ',byType('Đường bộ')],['Đường sắt/Metro',byType('Đường sắt/Metro')],['Sân bay',byType('Sân bay')],['Loại hình khác',byType('Loại hình khác')]]);
+  const gForm=[['Dự án công',cong],['Dự án tư',tu],['Dự án PPP',ppp]];
+  const gComp=[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]];
+  const gReg=[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]];
+  const gType=[['Đường bộ',byType('Đường bộ')],['Đường sắt/Metro',byType('Đường sắt/Metro')],['Sân bay',byType('Sân bay')],['Loại hình khác',byType('Loại hình khác')]];
+  h+=`<p class="narr">${_narrAll(all)}</p>`;
+  h+=`<p class="narr">Theo hình thức, ${_narrGroups('',gForm)}</p>`;
+  h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],...gForm]);
+  h+=`<p class="narr">Trong khối tư nhân, ${_narrGroups('',gComp)}</p>`;
+  h+=_sumTable('Dự án tư — theo chủ đầu tư',gComp);
+  h+=`<p class="narr">Dự án công theo địa bàn, ${_narrGroups('',gReg)}</p>`;
+  h+=_sumTable('Dự án công — theo phạm vi',gReg);
+  h+=`<p class="narr">Theo loại hình, ${_narrGroups('',gType)}</p>`;
+  h+=_sumTable('Theo loại hình',gType);
   el.innerHTML=h;
 }
 function renderDisb(){
