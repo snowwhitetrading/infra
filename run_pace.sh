@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # run_pace.sh — Đánh giá NHỊP ĐỘ dự án bằng Claude Code (Pro/Max, headless) trên server.
 #   prepare (pymongo) → chia lô → claude -p đọc-hiểu từng lô → gộp → apply (pymongo).
-# Chạy tay: ./run_pace.sh   ·   Cron: 0 11 * * 5  (18h thứ 6 VN = 11h UTC)
+# Chạy tay: ./run_pace.sh   ·   Cron: 0 11 * * 6  (18h thứ 7 VN = 11h UTC)
 set -euo pipefail
 export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"   # cron thiếu PATH → khai báo rõ
 export PYTHONIOENCODING=utf-8
