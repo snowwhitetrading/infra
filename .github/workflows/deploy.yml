@@ -70,6 +70,12 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: python qa_check.py --fix || echo "qa skipped"
 
+      # Lịch sử nhịp độ: điền điểm THÁNG HIỆN TẠI nếu còn trống ($setOnInsert, không đè điểm LLM)
+      - name: Seed pace history
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python seed_pace_history.py || echo "seed skipped"
+
       # Lấy CODE MỚI NHẤT ngay trước build → job hourly dài (scrape ~15') không deploy template CŨ
       # đè bản fast-deploy mới hơn (hết clobber). Không hủy scrape, chỉ đồng bộ template.
       - name: Pull latest before build

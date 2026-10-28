@@ -216,6 +216,16 @@ def fetch_disbursement(client):
     return out
 
 
+def fetch_pace_history(client):
+    """Lịch sử điểm nhịp độ theo tháng: {tid: [[month, score], ...]} (sắp theo thời gian)."""
+    from collections import defaultdict
+    h = defaultdict(list)
+    for d in client[DB]["Infra_Pace_History"].find({}, {"_id": 0, "tid": 1, "month": 1, "score": 1}):
+        if d.get("month") and d.get("score") is not None:
+            h[str(d["tid"])].append((d["month"], d["score"]))
+    return {t: sorted(v) for t, v in h.items()}
+
+
 def fetch_newsflow(client, projects, tid2cat):
     """Dòng tin từng bài — đọc thẳng từ Infra_Newsflow (tách khỏi progress/digest)."""
     from lib_projects import project_names_by_tid
@@ -658,6 +668,8 @@ def main():
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
     disb = fetch_disbursement(c)
     print(f"Giải ngân: {len(disb)} dự án")
+    pace_hist = fetch_pace_history(c)
+    print(f"Lịch sử nhịp độ: {len(pace_hist)} dự án · {sum(len(v) for v in pace_hist.values())} điểm")
     caf_lines, caf_points, caf_projects = fetch_cafeland_map(c)
     print(f"Bản đồ (Cafeland): {len(caf_lines)} tuyến · {len(caf_points)} điểm · "
           f"{len(caf_projects)} dự án+KCN")
@@ -720,6 +732,7 @@ def main():
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
+    out = out.replace("const PACE_HIST = {}", "const PACE_HIST = " + json.dumps(pace_hist, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
 

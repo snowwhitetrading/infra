@@ -9,6 +9,7 @@ Field nào rỗng/null/không hợp lệ → BỎ QUA (không ghi) → step5 t�
   python apply_pace_llm.py [--in pace_verdicts.json]
 """
 import argparse
+import datetime as dt
 import json
 import os
 import re
@@ -23,12 +24,32 @@ _PACE = {"vượt tiến độ", "chậm tiến độ", "đúng tiến độ", "
 _YM = re.compile(r"^\d{4}-\d{2}$")
 
 
+def _score_of(v, pace):
+    """Điểm nhịp độ -5..+5 (0 = đúng tiến độ). Ưu tiên 'score' do agent cho; thiếu thì suy từ nhãn."""
+    s = v.get("score")
+    try:
+        s = int(round(float(s)))
+        return max(-5, min(5, s))
+    except (TypeError, ValueError):
+        pass
+    if "vượt" in pace:
+        return 2
+    if "chậm" in pace:
+        return -3
+    if "đúng" in pace:
+        return 0
+    return None
+
+
 def run(inp):
     with open(os.path.join(HERE, inp), encoding="utf-8") as f:
         verdicts = json.load(f)
-    tr = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]["Infra_Project_Tracker"]
-    ops, bad = [], 0
-    n_dl = n_tmdt = n_own = 0
+    db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
+    tr = db["Infra_Project_Tracker"]
+    hist = db["Infra_Pace_History"]
+    month = dt.date.today().strftime("%Y-%m")
+    ops, hops, bad = [], [], 0
+    n_dl = n_tmdt = n_own = n_sc = 0
     for tid, v in verdicts.items():
         pace = (v.get("pace") or "").strip()
         if pace not in _PACE:
@@ -39,6 +60,18 @@ def run(inp):
         src = (v.get("src") or "").strip()
         st["paceWhyLLM"] = why + (f" (theo {src})" if src and pace else "")
         unset = {}
+
+        score = _score_of(v, pace)                        # điểm -5..+5, snapshot theo tháng
+        if score is not None:
+            st["paceScore"] = score
+            n_sc += 1
+            hops.append(UpdateOne(
+                {"tid": int(tid), "month": month},
+                {"$set": {"tid": int(tid), "month": month, "score": score,
+                          "pace": pace, "why": why, "src": src,
+                          "at": dt.datetime.utcnow().isoformat()}}, upsert=True))
+        else:
+            unset["paceScore"] = ""
 
         dl = (v.get("deadline") or "").strip()
         if _YM.match(dl):
@@ -78,7 +111,10 @@ def run(inp):
         from collections import Counter
         dist = Counter((v.get("pace") or "(chưa đủ căn cứ)") for v in verdicts.values())
         print(f"Ghi LLM: {r.modified_count} dự án · pace {dict(dist)}")
-        print(f"  có hạn: {n_dl} · có TMĐT: {n_tmdt} · có chủ đầu tư: {n_own} · bỏ (pace sai): {bad}")
+        print(f"  có hạn: {n_dl} · có TMĐT: {n_tmdt} · có chủ đầu tư: {n_own} · có điểm: {n_sc} · bỏ (pace sai): {bad}")
+        if hops:
+            hr = hist.bulk_write(hops)
+            print(f"  lịch sử {month}: ghi {hr.upserted_count + hr.modified_count} điểm → Infra_Pace_History")
     else:
         print("Không có verdict hợp lệ.")
 

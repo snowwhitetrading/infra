@@ -11,6 +11,8 @@ A) NHỊP ĐỘ (pace): "vượt tiến độ" / "đúng tiến độ" / "chậm
      * "disbursement" = giải ngân vốn (Bộ Tài chính): pct = đã giải ngân/kế hoạch NĂM, kèm trend theo kỳ. Giải ngân **rất thấp so với thời điểm trong năm** (vd cuối năm mà <30%) hoặc trend ì ạch → thiên về CHẬM; giải ngân cao/bứt tốc → củng cố ĐÚNG/VƯỢT. Lưu ý pct là % vốn năm, KHÔNG phải % hoàn thành công trình; dự án PPP giải ngân vốn NN thường thấp — đừng chỉ vì thế mà kết luận chậm nếu tin nói khác.
      * "satellite" = quan sát ảnh vệ tinh (obs + trend). "ít thay đổi/chưa khởi công" củng cố CHẬM; "tiến triển" củng cố ĐÚNG/VƯỢT.
    - Khi các nguồn MÂU THUẪN: ưu tiên bằng chứng CỤ THỂ + MỚI NHẤT; nêu rõ trong "why" đã dựa vào nguồn nào (tin/giải ngân/vệ tinh). Ưu tiên tin MỚI NHẤT.
+   - ĐIỂM (score): số NGUYÊN -5..+5 lượng hoá mức độ, 0 = ĐÚNG tiến độ. Âm = chậm (càng âm càng trễ nặng), dương = vượt (càng dương càng sớm).
+     Gợi ý: 0 = bám đúng; -1/-2 = chậm nhẹ/cục bộ; -3 = chậm rõ; -4 = quá hạn, khối lượng thấp; -5 = quá hạn lâu, gần đình trệ. +1/+2 = nhanh hơn chút; +3 = về đích sớm rõ; +4/+5 = sớm nhiều. Để null nếu pace rỗng (chưa đủ căn cứ).
 
 B) HẠN HOÀN THÀNH (deadline) — dạng "YYYY-MM", hoặc "" nếu tin không nêu.
    - CHỈ lấy hạn HOÀN THÀNH/khai thác toàn dự án (KHÔNG lấy ngày khởi công, ngày khởi công giai đoạn, mốc trung gian). Nếu nhiều tin nêu hạn khác nhau → lấy hạn TIN MỚI NHẤT/chính thức nhất. Ví dụ "dự kiến hoàn thành quý II/2027" → "2027-06"; "cuối năm 2026" → "2026-12".
@@ -24,6 +26,7 @@ D) CHỦ ĐẦU TƯ (owner) — tên đơn vị, hoặc "".
 ĐẦU RA: In DUY NHẤT một object JSON hợp lệ (không markdown, không giải thích), dạng:
 {"<tid>": {
   "pace": "vượt tiến độ|chậm tiến độ|đúng tiến độ|",
+  "score": <số nguyên -5..5, 0=đúng; null nếu pace rỗng>,
   "why": "<1 câu lý do có bằng chứng>",
   "src": "<source> <YYYY-MM>",
   "confidence": "cao|vừa|thấp",

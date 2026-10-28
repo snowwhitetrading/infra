@@ -123,6 +123,14 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .open .caret{transform:rotate(90deg)}
 .pmeta{display:flex;gap:8px;align-items:center;margin-top:5px;padding-left:14px;flex-wrap:wrap}
 .pjumps{display:flex;gap:4px;margin-top:5px;padding-left:14px}
+/* sparkline xu hướng điểm nhịp độ */
+.gc-stat{flex-direction:column;align-items:flex-start;gap:3px;justify-content:center}
+.pspark{display:inline-flex;align-items:center;gap:4px}
+.psbars{display:inline-flex;align-items:center;height:20px;gap:2px}
+.psb{display:inline-block;width:3px;border-radius:1px;align-self:center}
+.psb.neg{background:var(--alert)} .psb.pos{background:var(--done)} .psb.zero{background:var(--ink3);height:3px!important}
+.psv{font-family:"Manrope",monospace;font-size:10px;font-weight:600}
+.psv.neg{color:var(--alert)} .psv.pos{color:var(--done)} .psv.zero{color:var(--ink3)}
 .tag{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
   letter-spacing:.03em}
 .t-gpmb{background:var(--gpmb-bg);color:var(--gpmb)}
@@ -623,6 +631,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 const NEWSFLOW = [];
 const SATELLITE = {};
 const DISB = {};
+const PACE_HIST = {};   // {tid:[[YYYY-MM, score -5..+5], ...]} — lịch sử điểm nhịp độ theo tháng
 const MAPPTS = [];
 const CAT_ORDER = [];
 const CAF_LINES = [];
@@ -1057,6 +1066,15 @@ function schedWhyOf(p){
 function _form(p){ return p.ppp?'PPP':(p.owner==='Nhà nước'?'Công':'Tư'); }
 function _formCls(p){ return p.ppp?'ppp':(p.owner==='Nhà nước'?'cong':'tu'); }
 function _tmdtShort(t){ return t?(t>=1000?nf(Math.round(t/1000))+'K':nf(Math.round(t))):'—'; }   // tỷ đồng; ≥1000 → K = nghìn tỷ
+// sparkline lịch sử điểm nhịp độ (-5..+5, 0=đúng). Thanh lên/xuống quanh vạch 0.
+function _paceSpark(tid){
+  const h=PACE_HIST[tid]; if(!h||!h.length) return '';
+  const bars=h.map(function(x){const s=x[1],cls=s<0?'neg':s>0?'pos':'zero',hpx=Math.max(2,Math.round(Math.abs(s)/5*9));
+    return '<i class="psb '+cls+'" style="height:'+hpx+'px" title="'+x[0]+': '+(s>0?'+':'')+s+'"></i>';}).join('');
+  const last=h[h.length-1][1], lc=last<0?'neg':last>0?'pos':'zero';
+  return '<span class="pspark" title="Điểm nhịp độ theo tháng (−5 chậm nặng · 0 đúng · +5 vượt), '+h.length+' kỳ">'
+    +'<span class="psbars">'+bars+'</span><b class="psv '+lc+'">'+(last>0?'+':'')+last+'</b></span>';
+}
 function _dl(p){ const d=(p.marks||[]).filter(m=>m.tier==='deadline'&&m.date).map(m=>m.date).sort(); return d.length?d[d.length-1]:''; }
 function _dlShow(p){ const d=_dl(p); if(!d) return '—'; const [y,m]=d.split('-'); return (m==='12'||!m)?y:(+m)+'/'+y; }   // hạn hoàn thành (năm hoặc M/YYYY)
 function _dlSrc(p){ const m=(p.marks||[]).filter(x=>x.tier==='deadline'&&x.date).pop(); return m?(m.src||''):''; }
@@ -1210,7 +1228,7 @@ function render(){
       h += `<div class="row">
           <div class="lbl"><button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>${jumps?`<div class="pjumps">${jumps}</div>`:''}</div>
-          <div class="gcell"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span></div>
+          <div class="gcell gc-stat"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span>${_paceSpark(p.id)}</div>
           <div class="gcell"><span class="fchip f-${_formCls(p)}">${_form(p)}</span></div>
           <div class="gcell">${esc(p.g||'—')}</div>
           <div class="gcell" title="${esc(p.owner||'')}">${esc(p.owner||'—')}</div>
