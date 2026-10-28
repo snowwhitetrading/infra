@@ -12,6 +12,7 @@ Ra: pace_bundles.json = {tid: {name, prov, news:[{date, source, title, desc}], m
 import argparse
 import json
 import os
+import re
 from collections import defaultdict
 
 from pymongo import MongoClient
@@ -30,7 +31,13 @@ def _minus_months(ym, k):
     return f"{t // 12:04d}-{t % 12 + 1:02d}"
 
 
-def run(months, maxn, out, only=None):
+def _ky_ym(ky):
+    """'5T2026' -> '2026-05' để so với asof."""
+    m = re.match(r"(\d+)T(\d{4})", ky or "")
+    return f"{m.group(2)}-{int(m.group(1)):02d}" if m else ""
+
+
+def run(months, maxn, out, only=None, asof=None):
     import datetime as dt
     only_set = None
     if only:
@@ -46,7 +53,8 @@ def run(months, maxn, out, only=None):
         if pid in p2t:
             t2rx[p2t[pid]].append(r)
 
-    cutoff = _minus_months(dt.date.today().strftime("%Y-%m"), months)
+    anchor = asof if asof else dt.date.today().strftime("%Y-%m")   # mốc "hiện tại" (hồi tố: hết tháng asof)
+    cutoff = _minus_months(anchor, months)
     bundles = {}
     tr_meta = {p["id"]: p for p in tr.find({"_key": "project"},
                {"id": 1, "name": 1, "loc": 1, "phases": 1, "marks": 1, "satObs": 1, "satTrend": 1})}
@@ -56,7 +64,7 @@ def run(months, maxn, out, only=None):
                       {"title": 1, "description": 1, "date": 1, "source": 1, "projects": 1}):
         ti = d.get("title") or ""
         date = (d.get("date") or "")[:10]
-        if len(date) < 7 or date[:7] < cutoff:      # chỉ tin trong khoảng gần đây
+        if len(date) < 7 or date[:7] < cutoff or date[:7] > anchor:   # trong [cutoff, asof] — hồi tố không lấy tin TƯƠNG LAI
             continue
         if RX_NOISE.search(ti):                      # bỏ nhiễu
             continue
@@ -85,8 +93,14 @@ def run(months, maxn, out, only=None):
              "phases": phz, "deadline": dl[-1] if dl else None, "news": uniq}
         if tid in disb:                                  # tín hiệu giải ngân (BTC): % + xu hướng
             d = disb[tid]
-            b["disbursement"] = {"pct": d.get("pct"), "kh": d.get("kh"), "as_of": d.get("as_of"),
-                                 "trend": [f"{s.get('ky')}:{s.get('pct')}%" for s in d.get("series", [])]}
+            ser = d.get("series", [])
+            if asof:                                     # hồi tố: chỉ kỳ ≤ asof
+                ser = [s for s in ser if _ky_ym(s.get("ky")) and _ky_ym(s.get("ky")) <= asof]
+            b["disbursement"] = {"kh": d.get("kh"),
+                                 "pct": (ser[-1].get("pct") if ser else None) if asof else d.get("pct"),
+                                 "trend": [f"{s.get('ky')}:{s.get('pct')}%" for s in ser]}
+            if not asof:
+                b["disbursement"]["as_of"] = d.get("as_of")
         if p.get("satObs"):                              # quan sát vệ tinh (nếu có)
             b["satellite"] = {"obs": p.get("satObs"), "trend": p.get("satTrend")}
         bundles[str(tid)] = b
@@ -103,5 +117,6 @@ if __name__ == "__main__":
     ap.add_argument("--maxn", type=int, default=30)
     ap.add_argument("--out", default="pace_bundles.json")
     ap.add_argument("--only", default=None, help="file JSON danh sách tid (chỉ chấm nhóm này, vd stale_pace.json)")
+    ap.add_argument("--asof", default=None, help="HỒI TỐ: chỉ lấy tin/giải ngân ≤ tháng này (YYYY-MM)")
     a = ap.parse_args()
-    run(a.months, a.maxn, a.out, a.only)
+    run(a.months, a.maxn, a.out, a.only, a.asof)

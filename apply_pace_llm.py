@@ -41,13 +41,13 @@ def _score_of(v, pace):
     return None
 
 
-def run(inp):
+def run(inp, month=None, hist_only=False):
     with open(os.path.join(HERE, inp), encoding="utf-8") as f:
         verdicts = json.load(f)
     db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB]
     tr = db["Infra_Project_Tracker"]
     hist = db["Infra_Pace_History"]
-    month = dt.date.today().strftime("%Y-%m")
+    month = month or dt.date.today().strftime("%Y-%m")   # hồi tố: ghi vào tháng được chỉ định
     ops, hops, bad = [], [], 0
     n_dl = n_tmdt = n_own = n_sc = 0
     for tid, v in verdicts.items():
@@ -101,11 +101,20 @@ def run(inp):
         else:
             unset["ownerLLM"] = ""; unset["ownerLLMSrc"] = ""
 
-        upd = {"$set": st}
-        if unset:
-            upd["$unset"] = unset       # rỗng → xoá field cũ để không dùng nhầm giá trị lần trước
-        ops.append(UpdateOne({"_key": "project", "id": int(tid)}, upd))
+        if not hist_only:               # hồi tố: CHỈ ghi lịch sử, KHÔNG đè verdict hiện tại trên tracker
+            upd = {"$set": st}
+            if unset:
+                upd["$unset"] = unset   # rỗng → xoá field cũ để không dùng nhầm giá trị lần trước
+            ops.append(UpdateOne({"_key": "project", "id": int(tid)}, upd))
 
+    # hồi tố: ghi lịch sử kể cả khi không đụng tracker
+    if hist_only:
+        if hops:
+            hr = hist.bulk_write(hops)
+            print(f"Hồi tố {month}: ghi {hr.upserted_count + hr.modified_count} điểm · bỏ (pace sai): {bad}")
+        else:
+            print(f"Hồi tố {month}: không có điểm hợp lệ")
+        return
     if ops:
         r = tr.bulk_write(ops)
         from collections import Counter
@@ -122,4 +131,7 @@ def run(inp):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="inp", default="pace_verdicts.json")
-    run(ap.parse_args().inp)
+    ap.add_argument("--month", default=None, help="HỒI TỐ: ghi điểm vào tháng này (YYYY-MM)")
+    ap.add_argument("--hist-only", action="store_true", help="HỒI TỐ: chỉ ghi lịch sử, không đè verdict hiện tại")
+    a = ap.parse_args()
+    run(a.inp, a.month, a.hist_only)
