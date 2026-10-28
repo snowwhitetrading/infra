@@ -1,13 +1,16 @@
-# Hướng dẫn dùng VPS Vietnix
+# Hướng dẫn dùng VPS Viettel
 
 Server riêng chạy pipeline Claude (đánh giá tiến độ, vệ tinh…) cho dự án **infra**.
 
 | Mục | Giá trị |
 |---|---|
-| Nhà cung cấp | **Vietnix** (portal.vietnix.vn / my.vietnix.vn) |
-| Kết nối | `ssh root@14.225.212.181` · port 22 |
+| Nhà cung cấp | **Viettel IDC / Viettel Cloud** (viettelidc.com.vn · viettelcloud.vn) |
+| Kết nối | `ssh root@14.225.212.181` · port 22 · user `root` |
+| Đăng nhập | Mật khẩu root + tài khoản portal Viettel: **lưu riêng ngoài repo** (đã trao đổi trong chat) — KHÔNG commit vào GitHub |
 | Thư mục code | `~/infra` |
 | Môi trường | Python 3 + pymongo (nối thẳng Mongo, không cần MCP) · **Claude Code đăng nhập Pro/Max** (`claude -p` không tốn phí API) |
+
+> 🔒 **Bảo mật:** repo có thể public → **không** ghi mật khẩu/token vào file này. Giữ creds ở nơi riêng (trình quản lý mật khẩu, hoặc file ngoài repo). Nếu lỡ lộ mật khẩu root, đổi ngay bằng `passwd` trên server.
 
 ---
 
@@ -81,7 +84,7 @@ Không phải lỗi lệnh — là **server không phản hồi**. Thứ tự x�
 
 1. **Thử 4G** (loại trừ mạng công ty chặn cổng 22).
 2. **Ping thử:** `ping 14.225.212.181` (nhiều VPS chặn ping nên timeout ping chưa chắc là chết — SSH timeout mới là tín hiệu chính).
-3. **Vào portal Vietnix** → mục **VPS / Cloud Server**:
+3. **Vào portal Viettel IDC / Viettel Cloud** → mục **VPS / Cloud Server**:
    - Server còn **Running** không? → nếu tắt, bấm **Start / Reboot**.
    - **IP** còn đúng `14.225.212.181`? → nếu đổi, dùng IP mới.
    - **Firewall / Security Group** có chặn cổng 22?
