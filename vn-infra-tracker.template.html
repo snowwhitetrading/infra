@@ -131,10 +131,11 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .psb.neg{background:var(--alert)} .psb.pos{background:var(--done)} .psb.zero{background:var(--ink3);height:3px!important}
 .psv{font-family:"Manrope",monospace;font-size:10px;font-weight:600}
 .psv.neg{color:var(--alert)} .psv.pos{color:var(--done)} .psv.zero{color:var(--ink3)}
-/* % hoàn thành công trình (progress) */
-.pprog{display:inline-flex;align-items:center;gap:5px}
-.ppbar{position:relative;width:52px;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
-.ppbar>i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--accent)}
+/* % hoàn thành công trình theo tháng (progress trajectory) */
+.pprog{display:inline-flex;align-items:center;gap:4px}
+.ppbars{display:inline-flex;align-items:flex-end;height:16px;gap:2px}
+.ppb{display:inline-block;width:3px;border-radius:1px;background:var(--accent);opacity:.45}
+.ppb.last{opacity:1}
 .ppv{font-family:"Manrope",monospace;font-size:10px;font-weight:600;color:var(--accent)}
 .tag{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
   letter-spacing:.03em}
@@ -1087,12 +1088,18 @@ function _progOf(tid,p){   // % hoàn thành mới nhất: ưu tiên lịch sử
   if(hh){ for(let i=hh.length-1;i>=0;i--){ const v=hh[i][2]; if(v!==null&&v!==undefined) return v; } }
   const pp=p&&p.paceProgress; return (pp!==null&&pp!==undefined)?pp:null;
 }
-function _progBar(tid,p){   // thanh % hoàn thành công trình (khác điểm nhịp độ)
-  const v=_progOf(tid,p); if(v===null) return '';
-  const hh=PACE_HIST[tid]||[], kys=hh.filter(function(x){return x[2]!==null&&x[2]!==undefined;}).length;
-  return '<span class="pprog" title="% hoàn thành công trình'+(kys>1?' ('+kys+' kỳ)':'')+'">'
-    +'<span class="ppbar"><i style="width:'+Math.max(2,Math.min(100,v))+'%"></i></span>'
-    +'<b class="ppv">'+Math.round(v)+'%</b></span>';
+function _progBar(tid,p){   // sparkline % HOÀN THÀNH theo TỪNG THÁNG (trajectory, khác điểm nhịp độ)
+  const hh=PACE_HIST[tid]||[];
+  let pts=hh.filter(function(x){return x[2]!==null&&x[2]!==undefined;});   // [month, score, progress]
+  if(!pts.length){                                                        // chưa có lịch sử → 1 cột từ paceProgress
+    const pp=p&&p.paceProgress; if(pp===null||pp===undefined) return '';
+    pts=[['', null, pp]];
+  }
+  const last=pts[pts.length-1][2];
+  const bars=pts.map(function(x,i){const v=Math.max(0,Math.min(100,x[2])),hpx=Math.max(1,Math.round(v/100*14));
+    return '<i class="ppb'+(i===pts.length-1?' last':'')+'" style="height:'+hpx+'px" title="'+x[0]+': '+Math.round(x[2])+'%"></i>';}).join('');
+  return '<span class="pprog" title="% hoàn thành theo tháng ('+pts.length+' kỳ) — cao dần = tiến triển">'
+    +'<span class="ppbars">'+bars+'</span><b class="ppv">'+Math.round(last)+'%</b></span>';
 }
 function _dl(p){ const d=(p.marks||[]).filter(m=>m.tier==='deadline'&&m.date).map(m=>m.date).sort(); return d.length?d[d.length-1]:''; }
 function _dlShow(p){ const d=_dl(p); if(!d) return '—'; const [y,m]=d.split('-'); return (m==='12'||!m)?y:(+m)+'/'+y; }   // hạn hoàn thành (năm hoặc M/YYYY)
