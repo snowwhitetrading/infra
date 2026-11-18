@@ -634,6 +634,11 @@ def main():
             p["marks"].append({"date": dl, "type": "ms", "tier": "deadline",
                                "label": "Hạn dự kiến hoàn thành (theo tin)",
                                "src": p.get("deadlineLLMSrc") or "theo tin"})
+        # HẠN VÔ LÝ: mốc HOÀN THÀNH không thể TRƯỚC khi bắt đầu thi công → bỏ (chống đọc nhầm, vd tid 97)
+        bfroms = [ph["from"] for ph in p.get("phases", []) if ph.get("kind") == "build" and ph.get("from")]
+        if bfroms:
+            p["marks"] = [m for m in p.get("marks", [])
+                          if not (m.get("tier") == "deadline" and m.get("date") and m["date"] < min(bfroms))]
         # ĐỒNG BỘ hạn ↔ Gantt: kéo phase thi công CUỐI về đúng hạn → thanh vẽ mũi tên hạn CÓ NGUỒN
         # (nếu không, phase.to lệch mark hạn → barsHTML coi là "chưa có hạn từ nguồn").
         dls = [m["date"] for m in p.get("marks", []) if m.get("tier") == "deadline" and m.get("date")]

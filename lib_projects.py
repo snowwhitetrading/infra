@@ -415,11 +415,22 @@ def known_token_sets(reg, cat_fn):
     return out
 
 
+def _guard_alias(a):
+    """Escape + chặn khớp một phần SỐ: alias kết thúc bằng chữ số không được khớp số dài hơn
+    ('Quốc lộ 1' KHÔNG khớp 'Quốc lộ 13', 'Vành đai 1' ≠ 'Vành đai 10', 'Metro số 1' ≠ 'số 12')."""
+    esc = re.escape(a)
+    if a[:1].isdigit():
+        esc = r"(?<!\d)" + esc
+    if a[-1:].isdigit():
+        esc = esc + r"(?!\d)"
+    return esc
+
+
 def build_alias_regex():
     """Trả về {project_id: compiled_regex} dò bất kỳ alias nào của dự án (từ registry)."""
     out = {}
     for p in load_registry():
-        parts = sorted({re.escape(a) for a in p["aliases"]}, key=len, reverse=True)
+        parts = sorted({_guard_alias(a) for a in p["aliases"]}, key=len, reverse=True)
         if parts:
             out[p["id"]] = re.compile("|".join(parts), re.IGNORECASE)
     return out
