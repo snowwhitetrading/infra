@@ -13,6 +13,7 @@ A) NHỊP ĐỘ (pace): "vượt tiến độ" / "đúng tiến độ" / "chậm
    - Khi các nguồn MÂU THUẪN: ưu tiên bằng chứng CỤ THỂ + MỚI NHẤT; nêu rõ trong "why" đã dựa vào nguồn nào (tin/giải ngân/vệ tinh). Ưu tiên tin MỚI NHẤT.
    - ĐIỂM (score): số NGUYÊN -5..+5 lượng hoá mức độ, 0 = ĐÚNG tiến độ. Âm = chậm (càng âm càng trễ nặng), dương = vượt (càng dương càng sớm).
      Gợi ý: 0 = bám đúng; -1/-2 = chậm nhẹ/cục bộ; -3 = chậm rõ; -4 = quá hạn, khối lượng thấp; -5 = quá hạn lâu, gần đình trệ. +1/+2 = nhanh hơn chút; +3 = về đích sớm rõ; +4/+5 = sớm nhiều. Để null nếu pace rỗng (chưa đủ căn cứ).
+   - % HOÀN THÀNH (progress): số 0..100 — mức độ HOÀN THÀNH công trình (KHÁC score). Ưu tiên: (1) % nêu thẳng trong tin ("đạt X% tiến độ/sản lượng/khối lượng"); (2) suy từ cột mốc: khởi công ~5 · GPMB xong ~15 · thi công rầm rộ 30-70 · hợp long/thông xe kỹ thuật ~85 · thông xe/khai thác ~95 · khánh thành/hoàn thành 100; (3) nếu không có tín hiệu → null. KHÔNG bịa; chưa khởi công/đề xuất → 0 hoặc null.
 
 B) HẠN HOÀN THÀNH (deadline) — dạng "YYYY-MM", hoặc "" nếu tin không nêu.
    - CHỈ lấy hạn HOÀN THÀNH/khai thác toàn dự án (KHÔNG lấy ngày khởi công, ngày khởi công giai đoạn, mốc trung gian). Nếu nhiều tin nêu hạn khác nhau → lấy hạn TIN MỚI NHẤT/chính thức nhất. Ví dụ "dự kiến hoàn thành quý II/2027" → "2027-06"; "cuối năm 2026" → "2026-12".
@@ -27,6 +28,7 @@ D) CHỦ ĐẦU TƯ (owner) — tên đơn vị, hoặc "".
 {"<tid>": {
   "pace": "vượt tiến độ|chậm tiến độ|đúng tiến độ|",
   "score": <số nguyên -5..5, 0=đúng; null nếu pace rỗng>,
+  "progress": <số 0..100 % hoàn thành công trình, hoặc null>,
   "why": "<1 câu lý do có bằng chứng>",
   "src": "<source> <YYYY-MM>",
   "confidence": "cao|vừa|thấp",

@@ -62,15 +62,27 @@ def run(inp, month=None, hist_only=False):
         unset = {}
 
         score = _score_of(v, pace)                        # điểm -5..+5, snapshot theo tháng
-        if score is not None:
-            st["paceScore"] = score
-            n_sc += 1
-            hops.append(UpdateOne(
-                {"tid": int(tid), "month": month},
-                {"$set": {"tid": int(tid), "month": month, "score": score,
-                          "pace": pace, "why": why, "src": src,
-                          "at": dt.datetime.utcnow().isoformat()}}, upsert=True))
+        prog = v.get("progress")                          # % hoàn thành 0..100
+        try:
+            prog = max(0, min(100, int(round(float(prog))))) if prog is not None and str(prog).strip() != "" else None
+        except (ValueError, TypeError):
+            prog = None
+        if prog is not None:
+            st["paceProgress"] = prog
         else:
+            unset["paceProgress"] = ""
+        if score is not None or prog is not None:
+            st["paceScore"] = score if score is not None else st.get("paceScore")
+            if score is not None:
+                n_sc += 1
+            hdoc = {"tid": int(tid), "month": month, "pace": pace, "why": why, "src": src,
+                    "at": dt.datetime.now(dt.UTC).isoformat()}
+            if score is not None:
+                hdoc["score"] = score
+            if prog is not None:
+                hdoc["progress"] = prog
+            hops.append(UpdateOne({"tid": int(tid), "month": month}, {"$set": hdoc}, upsert=True))
+        if score is None:
             unset["paceScore"] = ""
 
         dl = (v.get("deadline") or "").strip()

@@ -217,13 +217,17 @@ def fetch_disbursement(client):
 
 
 def fetch_pace_history(client):
-    """Lịch sử điểm nhịp độ theo tháng: {tid: [[month, score], ...]} (sắp theo thời gian)."""
+    """Lịch sử theo tháng: {tid: [[month, score, progress], ...]} (sắp theo thời gian).
+    score = điểm nhịp độ -5..+5 (null nếu chưa chấm); progress = % hoàn thành 0..100 (null nếu chưa có)."""
     from collections import defaultdict
-    h = defaultdict(list)
-    for d in client[DB]["Infra_Pace_History"].find({}, {"_id": 0, "tid": 1, "month": 1, "score": 1}):
-        if d.get("month") and d.get("score") is not None:
-            h[str(d["tid"])].append((d["month"], d["score"]))
-    return {t: sorted(v) for t, v in h.items()}
+    h = defaultdict(dict)                                # {tid: {month: [score, progress]}}
+    for d in client[DB]["Infra_Pace_History"].find(
+            {}, {"_id": 0, "tid": 1, "month": 1, "score": 1, "progress": 1}):
+        m = d.get("month")
+        if not m or (d.get("score") is None and d.get("progress") is None):
+            continue
+        h[str(d["tid"])][m] = [d.get("score"), d.get("progress")]
+    return {t: [[m, v[0], v[1]] for m, v in sorted(mv.items())] for t, mv in h.items()}
 
 
 def fetch_newsflow(client, projects, tid2cat):

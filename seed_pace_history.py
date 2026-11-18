@@ -78,18 +78,24 @@ def run():
     month = TODAY.strftime("%Y-%m")
     ops = []
     for p in db["Infra_Project_Tracker"].find({"_key": "project"},
-              {"id": 1, "paceLLM": 1, "paceAuto": 1, "paceScore": 1, "proposal": 1, "phases": 1}):
+              {"id": 1, "paceLLM": 1, "paceAuto": 1, "paceScore": 1, "paceProgress": 1,
+               "proposal": 1, "phases": 1}):
         if p["id"] not in active:
             continue
         label = sched_of(p)
         s = score_of(p, label)
         if s is None:
             continue
+        doc = {"tid": p["id"], "month": month, "score": s, "pace": label,
+               "at": dt.datetime.now(dt.UTC).isoformat(), "seed": True}
+        try:                                    # % hoàn thành nếu verdict đã có (không bịa)
+            if p.get("paceProgress") is not None:
+                doc["progress"] = max(0, min(100, int(p["paceProgress"])))
+        except (ValueError, TypeError):
+            pass
         # CHỈ điền khi tháng đó CHƯA có điểm (không đè điểm LLM từ run_pace/apply_pace_llm)
         ops.append(UpdateOne({"tid": p["id"], "month": month},
-                   {"$setOnInsert": {"tid": p["id"], "month": month, "score": s, "pace": label,
-                                     "at": dt.datetime.now(dt.UTC).isoformat(), "seed": True}},
-                   upsert=True))
+                   {"$setOnInsert": doc}, upsert=True))
     if ops:
         r = db["Infra_Pace_History"].bulk_write(ops)
         print(f"Seed {month}: {r.upserted_count + r.modified_count} điểm → Infra_Pace_History")
