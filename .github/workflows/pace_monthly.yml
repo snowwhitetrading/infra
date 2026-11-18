@@ -1,4 +1,4 @@
-name: Cập nhật tiến độ hàng tháng (Claude API)
+name: Cập nhật tiến độ hàng tháng (Claude Pro/Max)
 
 on:
   schedule:
@@ -14,23 +14,13 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
 
-      - name: Xác định tháng mục tiêu (tháng vừa kết thúc)
-        id: m
-        run: |
-          echo "month=$(python -c "import datetime as d;t=d.date.today().replace(day=1)-d.timedelta(days=1);print(t.strftime('%Y-%m'))")" >> "$GITHUB_OUTPUT"
-
-      - name: Dựng bundle as-of tháng mục tiêu
+      - name: Chấm + ghi tiến độ tháng (Claude Pro/Max, không tính phí token)
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python prepare_pace_bundles.py --asof ${{ steps.m.outputs.month }} --months 11 --maxn 20
-
-      - name: Chấm pace + % hoàn thành (Claude API)
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python score_pace_api.py --asof ${{ steps.m.outputs.month }}
-
-      - name: Ghi điểm vào Mongo (tracker + lịch sử tháng)
-        env:
-          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
-        run: python apply_pace_llm.py --in pace_verdicts.json --month ${{ steps.m.outputs.month }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: bash run_pace_monthly.sh
