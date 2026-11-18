@@ -1,0 +1,36 @@
+name: Cập nhật tiến độ hàng tháng (Claude API)
+
+on:
+  schedule:
+    - cron: '0 1 1 * *'      # 01:00 UTC ngày 1 hàng tháng = 08:00 VN — chấm tháng vừa kết thúc
+  workflow_dispatch:          # cho phép bấm chạy tay (test / chạy bù)
+
+jobs:
+  pace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+
+      - name: Xác định tháng mục tiêu (tháng vừa kết thúc)
+        id: m
+        run: |
+          echo "month=$(python -c "import datetime as d;t=d.date.today().replace(day=1)-d.timedelta(days=1);print(t.strftime('%Y-%m'))")" >> "$GITHUB_OUTPUT"
+
+      - name: Dựng bundle as-of tháng mục tiêu
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python prepare_pace_bundles.py --asof ${{ steps.m.outputs.month }} --months 11 --maxn 20
+
+      - name: Chấm pace + % hoàn thành (Claude API)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python score_pace_api.py --asof ${{ steps.m.outputs.month }}
+
+      - name: Ghi điểm vào Mongo (tracker + lịch sử tháng)
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: python apply_pace_llm.py --in pace_verdicts.json --month ${{ steps.m.outputs.month }}
