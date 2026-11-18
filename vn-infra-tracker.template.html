@@ -125,20 +125,19 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .pjumps{display:flex;gap:4px;margin-top:5px;padding-left:14px}
 .gc-stat{flex-direction:column;align-items:flex-start;gap:3px;justify-content:center}
 .ppv{font-family:"Manrope",monospace;font-size:10px;font-weight:600;color:var(--accent)}
-/* HÀNG % HOÀN THÀNH THEO TỪNG THÁNG (dưới mỗi dự án khi mở) */
+/* HÀNG % HOÀN THÀNH THEO TỪNG THÁNG (dưới mỗi dự án khi mở) — tách khỏi trục năm Gantt */
 .prog-row{background:var(--card);border-top:1px dotted var(--rule2)}
-.prog-row .lbl{grid-column:1 / 9;padding:6px 12px 6px 34px;display:flex;flex-direction:column;
-  justify-content:center;border-right:1px solid var(--rule2)}
+.prog-row .prog-wrap{grid-column:1 / -1;padding:8px 16px 8px 34px}
+.prog-head{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
 .prog-title{font-size:11px;font-weight:600;color:var(--accent)}
 .prog-sub{font-size:9.5px;color:var(--ink3)}
-.prog-row .track{min-height:0;display:flex;align-items:flex-end}
-.pmchart{display:flex;align-items:flex-end;gap:3px;width:100%;height:58px;padding:7px 12px 2px}
-.pmcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}
-.pmbar{width:72%;max-width:22px;background:var(--accent);border-radius:2px 2px 0 0;min-height:2px}
-.pmcol.nodata .pmbar{background:var(--line)}
-.pmval{font-size:9px;font-weight:600;color:var(--accent);line-height:1;margin-bottom:2px;height:10px}
-.pmcol.nodata .pmval{color:transparent}
-.pmlab{font-size:9px;color:var(--ink3);margin-top:3px;line-height:1}
+.pmchart{display:flex;align-items:flex-end;gap:4px;height:64px;max-width:860px}
+.pmcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;max-width:66px}
+.pmbar{width:58%;max-width:22px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.pmbar:hover{background:var(--brand)}
+.pmval{font-size:9.5px;font-weight:600;color:var(--accent);line-height:1;margin-bottom:3px}
+.pmlab{font-size:9px;color:var(--ink3);margin-top:4px;line-height:1;white-space:nowrap}
+.pmlab.yr{color:var(--ink2);font-weight:600}
 .tag{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
   letter-spacing:.03em}
 .t-gpmb{background:var(--gpmb-bg);color:var(--gpmb)}
@@ -1089,23 +1088,23 @@ function _progNow(p){   // % hoàn thành HIỆN TẠI (cho ô Tiến độ) —
   let v = ks.length ? mp[ks[ks.length-1]] : (p.paceProgress!=null?p.paceProgress:null);
   return (v===null||v===undefined) ? '' : '<b class="ppv" title="% hoàn thành công trình (mở dòng để xem theo tháng)">'+Math.round(v)+'% HT</b>';
 }
-function _pmChart(p){   // biểu đồ CỘT % hoàn thành TỪNG THÁNG từ 1/2026 (hàng riêng khi mở dự án)
+function _pmChart(p){   // biểu đồ CỘT % hoàn thành TỪNG THÁNG (bắt đầu từ tháng ĐẦU có số liệu → nay)
   const mp=_progData(p.id), ks=Object.keys(mp).sort();
   if(!ks.length) return '';
-  const first=ks[0], end=ks[ks.length-1] > '2026-11' ? ks[ks.length-1] : '2026-11';
-  const months=_monthsRange('2026-01', end);
-  let last=null;
+  const first=ks[0], lastM=ks[ks.length-1];
+  const end = lastM > '2026-11' ? lastM : '2026-11';       // kéo tới tháng hiện tại (carry-forward mức gần nhất)
+  const months=_monthsRange(first, end);
+  let last=mp[first];
   const cols=months.map(function(mm){
-    if(mp[mm]!==undefined) last=mp[mm];
-    const has = mm>=first && mm<=ks[ks.length-1];           // trong khoảng có dữ liệu → carry-forward
-    const v = mp[mm]!==undefined ? mp[mm] : (has?last:null);
-    const lab = +mm.slice(5,7);
-    if(v===null||v===undefined)
-      return '<div class="pmcol nodata"><span class="pmval"></span><span class="pmbar" style="height:2px"></span><span class="pmlab">'+lab+'</span></div>';
-    const hpx=Math.max(2,Math.round(Math.max(0,Math.min(100,v))/100*38));
+    if(mp[mm]!==undefined) last=mp[mm];                    // tháng có số liệu mới thì cập nhật, không thì giữ
+    const v=Math.max(0,Math.min(100,last));
+    const mo=+mm.slice(5,7), yy=mm.slice(2,4);
+    const isYr = mo===1 || mm===first;                     // nhãn kèm năm ở tháng 1 và cột đầu
+    const lab = isYr ? ('<span class="pmlab yr">'+mo+'/'+yy+'</span>') : ('<span class="pmlab">'+mo+'</span>');
+    const hpx=Math.max(2,Math.round(v/100*44));
     return '<div class="pmcol"><span class="pmval">'+Math.round(v)+'</span>'
-      +'<span class="pmbar" style="height:'+hpx+'px" title="'+mm+': '+Math.round(v)+'%"></span>'
-      +'<span class="pmlab">'+lab+'</span></div>';
+      +'<span class="pmbar" style="height:'+hpx+'px" title="Tháng '+mo+'/'+mm.slice(0,4)+': '+Math.round(v)+'% hoàn thành"></span>'
+      +lab+'</div>';
   }).join('');
   return '<div class="pmchart">'+cols+'</div>';
 }
@@ -1272,11 +1271,11 @@ function render(){
           <div class="track">${gridHTML()}${barsHTML(p.phases,p.marks,p)}</div></div>`;
 
       if(isOpen){
-        const pm=_pmChart(p);                      // hàng % hoàn thành theo tháng (từ 1/2026)
-        if(pm) h += `<div class="row prog-row"><div class="lbl">
-            <span class="prog-title">% hoàn thành theo tháng</span>
-            <span class="prog-sub">từ 1/2026 · rê chuột xem từng tháng</span></div>
-          <div class="track">${pm}</div></div>`;
+        const pm=_pmChart(p);                      // hàng % hoàn thành theo tháng
+        if(pm) h += `<div class="row prog-row"><div class="prog-wrap">
+            <div class="prog-head"><span class="prog-title">% hoàn thành theo tháng</span>
+              <span class="prog-sub">từ tháng đầu có số liệu → nay · rê chuột xem chi tiết</span></div>
+            ${pm}</div></div>`;
         if(p.items.length){
           p.items.forEach(it=>{
             const isc = itemSched(it.prog);
