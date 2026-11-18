@@ -71,10 +71,12 @@ def run(inp, month=None, hist_only=False):
             st["paceProgress"] = prog
         else:
             unset["paceProgress"] = ""
-        if score is not None or prog is not None:
-            st["paceScore"] = score if score is not None else st.get("paceScore")
-            if score is not None:
-                n_sc += 1
+        if score is not None:                             # paceScore CHỈ ở $set HOẶC $unset (tránh conflict Mongo)
+            st["paceScore"] = score
+            n_sc += 1
+        else:
+            unset["paceScore"] = ""
+        if score is not None or prog is not None:         # snapshot lịch sử nếu có điểm hoặc %
             hdoc = {"tid": int(tid), "month": month, "pace": pace, "why": why, "src": src,
                     "at": dt.datetime.now(dt.UTC).isoformat()}
             if score is not None:
@@ -82,8 +84,6 @@ def run(inp, month=None, hist_only=False):
             if prog is not None:
                 hdoc["progress"] = prog
             hops.append(UpdateOne({"tid": int(tid), "month": month}, {"$set": hdoc}, upsert=True))
-        if score is None:
-            unset["paceScore"] = ""
 
         dl = (v.get("deadline") or "").strip()
         if _YM.match(dl):
