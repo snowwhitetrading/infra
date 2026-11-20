@@ -1,0 +1,41 @@
+name: Tiến độ · Hồi tố % theo tháng (1 lần · Claude Pro/Max)
+
+on:
+  workflow_dispatch:          # chỉ chạy tay, 1 lần để lấp đầy Jan→Nov 2026
+
+jobs:
+  backfill:
+    strategy:
+      max-parallel: 3          # 3 tháng chạy song song (tránh vượt giới hạn Pro/Max)
+      fail-fast: false
+      matrix:
+        month:
+          - '2026-01'
+          - '2026-02'
+          - '2026-03'
+          - '2026-04'
+          - '2026-05'
+          - '2026-06'
+          - '2026-07'
+          - '2026-08'
+          - '2026-09'
+          - '2026-10'
+          - '2026-11'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Hồi tố tháng ${{ matrix.month }}
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: bash backfill_pace_monthly.sh ${{ matrix.month }}
