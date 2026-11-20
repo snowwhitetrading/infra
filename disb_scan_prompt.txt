@@ -1,0 +1,9 @@
+Mỗi ảnh được liệt kê là MỘT trang của báo cáo giải ngân Bộ Tài chính. Nhiệm vụ: CHỈ xác định trang nào là BẢNG GIẢI NGÂN THEO TỪNG DỰ ÁN ngành GIAO THÔNG VẬN TẢI / ĐƯỜNG SẮT.
+
+Trang CẦN (giữ): bảng có cột STT | Tên Dự án | Kế hoạch (vốn) | Giải ngân (số vốn, Tỷ lệ %); các DÒNG là công trình cụ thể (cao tốc …, cầu …, đường sắt …, tuyến metro …, Vành đai …). Thường có số La Mã A/B/C (Đường bộ/Hàng không/Đường sắt) và I.xx hoặc L.xx.
+
+Trang BỎ: công văn/thư (toàn chữ, chữ ký), mục lục, Phụ lục phân bổ theo BỘ/NGÀNH/ĐỊA PHƯƠNG (không phải theo dự án GTVT), Chương trình mục tiêu quốc gia, trang trắng.
+
+Tên file ảnh có dạng page_NN.png. ĐẦU RA: DUY NHẤT một JSON (không giải thích):
+{"keep": [<các số NN của trang cần giữ>]}
+Nếu không có trang nào là bảng dự án GTVT → {"keep": []}.

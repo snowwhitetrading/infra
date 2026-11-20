@@ -30,3 +30,4 @@ _disb_pages/
 disb_out/
 disb_verdicts.json
 disbursement_data/*.pdf
+_disb_hi/
