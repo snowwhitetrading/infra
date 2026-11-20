@@ -1,0 +1,31 @@
+name: Giải ngân · Tự động từ mof.gov.vn (hằng tháng · Claude Pro/Max)
+
+on:
+  schedule:
+    - cron: '0 2 5 * *'       # 02:00 UTC ngày 5 hàng tháng = 09:00 VN (chờ BTC công bố đầu tháng)
+  workflow_dispatch:
+
+jobs:
+  disb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt pymupdf
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Trust workspace (để Claude Read ảnh)
+        run: |
+          python -c "import json,os,pathlib;p=pathlib.Path.home()/'.claude.json';d=json.loads(p.read_text()) if p.exists() else {};d.setdefault('projects',{})[os.getcwd()]={'hasTrustDialogAccepted':True};p.write_text(json.dumps(d))"
+
+      - name: Tải báo cáo BTC + trích + ghi Mongo
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: bash run_disb_auto.sh
