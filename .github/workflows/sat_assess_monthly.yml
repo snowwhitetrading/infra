@@ -1,4 +1,4 @@
-name: Nhận xét vệ tinh hàng tháng (Claude Pro/Max)
+name: Vệ tinh · Nhận xét ảnh (hằng tháng · Claude)
 
 on:
   schedule:

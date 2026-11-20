@@ -1,4 +1,4 @@
-name: Data pipeline + deploy (hourly)
+name: Site · Pipeline dữ liệu + deploy (hằng giờ)
 
 on:
   schedule:

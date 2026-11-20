@@ -1,4 +1,4 @@
-name: Cập nhật tiến độ hàng tháng (Claude Pro/Max)
+name: Tiến độ · Chấm nhịp độ + % (hằng tháng · Claude)
 
 on:
   schedule:

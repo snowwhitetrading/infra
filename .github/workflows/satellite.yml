@@ -1,4 +1,4 @@
-name: Satellite export (monthly)
+name: Vệ tinh · Xuất ảnh Sentinel-2 (hằng tuần)
 
 on:
   schedule:

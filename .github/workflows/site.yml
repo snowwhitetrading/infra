@@ -1,4 +1,4 @@
-name: Deploy site (fast, on push)
+name: Site · Deploy nhanh (khi push)
 
 on:
   push:
