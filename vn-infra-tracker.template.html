@@ -27,6 +27,10 @@
   --gold:#B4551F; --teal:#008478; --orange:#B4551F;
   --callout:#E6F3F2;   /* nền hộp nhấn mint */
   --gpmb-bg:#F5E5D8; --build-bg:#DCEEEB; --swap-bg:#EDE6DF;
+  --radius:10px; --radius-sm:6px;
+  --shadow:0 1px 2px rgba(16,24,22,.04), 0 2px 8px rgba(16,24,22,.05);
+  --shadow-sm:0 1px 2px rgba(16,24,22,.05);
+  --hover:rgba(0,132,120,.05);   /* nền hover nhạt theo accent */
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -38,6 +42,9 @@
     --gold:#D68A54; --teal:#33B3A6; --orange:#D68A54;
     --callout:#14322E;
     --gpmb-bg:#33261B; --build-bg:#153230; --swap-bg:#2C2620;
+    --shadow:0 1px 2px rgba(0,0,0,.25), 0 2px 10px rgba(0,0,0,.3);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --hover:rgba(51,179,166,.08);
   }
 }
 *{box-sizing:border-box}
@@ -511,6 +518,19 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
 .map-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px var(--rule2)}
 .leaflet-popup-content{font-family:inherit;font-size:13px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+/* ===== POLISH TỔNG THỂ ===== */
+.tab,button.chip,.bar select,.nf-filters select,.pname,.tabjump,.mp-open,
+.row,.sub-row,.nf-item{transition:background-color .14s ease, color .14s ease, border-color .14s ease, box-shadow .14s ease}
+/* chiều sâu + bo góc nhất quán cho khối chính */
+.strip{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.legend{border-radius:var(--radius) var(--radius) 0 0}
+.scroller{border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow)}
+/* hover theo dòng (bảng Tiến độ rộng → dễ dò ngang) */
+.row:not(.grp-row):not(.axis):not(.prog-row):hover{background:var(--hover)}
+.sub-row:hover,.nf-item:hover{background:var(--hover)}
+.pname:hover .ptxt{text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--rule2)}
+.tabjump:hover{background:var(--build-bg)}
+.nf-filters select{border-radius:var(--radius-sm)}
 </style>
 </head>
 <body>
