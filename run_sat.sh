@@ -3,7 +3,6 @@
 #   prepare_sat_bundles → mỗi dự án: claude -p ĐỌC ảnh (Read) → JSON → gộp → apply_sat.
 # Chạy HÀNG THÁNG (ảnh Sentinel-2 cập nhật theo tháng). Cron gợi ý: 0 12 1 * *
 set -euo pipefail
-export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
 export PYTHONIOENCODING=utf-8
 cd "$(dirname "$0")"
 LOG="run_sat.log"
