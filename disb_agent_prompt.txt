@@ -1,8 +1,10 @@
 Bạn đọc ẢNH các trang "Phụ lục III" báo cáo giải ngân vốn đầu tư công của Bộ Tài chính (bảng theo TỪNG DỰ ÁN). Hãy Read từng file ảnh được liệt kê rồi TRÍCH SỐ.
 
-CẤU TRÚC BẢNG (cột trái → phải):
-  STT | Tên Dự án | KẾ HOẠCH: Tổng số, NSTW, NSĐP | GIẢI NGÂN đến hết <ngày>: Tổng số (Số vốn, Tỷ lệ), NSTW (Số vốn, Tỷ lệ), NSĐP (Số vốn, Tỷ lệ)
-  (đánh số cột: 4=Tổng KH, 5=NSTW KH, 6=NSĐP KH, 7=Tổng GN, 8=Tỷ lệ tổng, 9=NSTW GN, 10=Tỷ lệ NSTW, 11=NSĐP GN, 12=Tỷ lệ NSĐP)
+CẤU TRÚC BẢNG (CÓ THỂ KHÁC NHAU GIỮA CÁC KỲ — hãy map theo NGHĨA cột, không theo vị trí cứng):
+  STT | Tên Dự án/Nội dung | nhóm cột KẾ HOẠCH | nhóm cột GIẢI NGÂN/LŨY KẾ THANH TOÁN đến hết <ngày>
+  BẮT BUỘC lấy (luôn có): kh_tong = TỔNG kế hoạch vốn ; gn_tong = TỔNG đã giải ngân/thanh toán ; gn_ty_le = tỷ lệ % tổng (gn_tong/kh_tong).
+  NẾU bảng có tách NSTW (ngân sách trung ương) / NSĐP (ngân sách địa phương): lấy kh_nstw, kh_nsdp, gn_nstw, gn_nstw_ty_le, gn_nsdp, gn_nsdp_ty_le. KHÔNG có cột đó → để null.
+  (Một số báo cáo thêm cột "vốn năm trước kéo dài", "KH Thủ tướng giao", "tỷ lệ so KH TTCP" — BỎ QUA các cột phụ này, chỉ cần Tổng KH + Tổng giải ngân + tỷ lệ.)
 
 ĐỊNH DẠNG SỐ (Việt Nam): dấu CHẤM = phân cách nghìn, dấu PHẨY = thập phân. Vd "2.302,1" → 2302.1 ; "27.617,0" → 27617.0 ; "80,6" → 80.6. Ô trống/gạch → null.
 
