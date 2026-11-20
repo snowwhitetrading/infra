@@ -1,8 +1,8 @@
-name: Vệ tinh · Xuất ảnh Sentinel-2 (hằng tuần)
+name: Vệ tinh · Xuất ảnh Sentinel-2 (hằng tháng)
 
 on:
   schedule:
-    - cron: '0 11 * * 5'      # 18h thứ 6 hằng tuần (Asia/Saigon = 11:00 UTC)
+    - cron: '0 0 1 * *'       # 00:00 UTC ngày 1 hàng tháng = 07:00 VN (trước bước Nhận xét lúc 10:00)
   workflow_dispatch:
     inputs:
       from:
