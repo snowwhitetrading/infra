@@ -48,5 +48,6 @@ done
 # 5) Gộp → ghi verdict + điểm/% tháng M vào Mongo (tracker + Infra_Pace_History)
 python3 merge_pace_verdicts.py
 python3 apply_pace_llm.py --month "$M"
+python3 enforce_progress_monotonic.py     # % hoàn thành chỉ tăng (ép đơn điệu sau khi ghi)
 
 echo "==== $(date '+%F %T') XONG (tháng $M) ===="
