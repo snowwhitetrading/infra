@@ -1,0 +1,20 @@
+Bạn đọc ẢNH các trang "Phụ lục III" báo cáo giải ngân vốn đầu tư công của Bộ Tài chính (bảng theo TỪNG DỰ ÁN). Hãy Read từng file ảnh được liệt kê rồi TRÍCH SỐ.
+
+CẤU TRÚC BẢNG (cột trái → phải):
+  STT | Tên Dự án | KẾ HOẠCH: Tổng số, NSTW, NSĐP | GIẢI NGÂN đến hết <ngày>: Tổng số (Số vốn, Tỷ lệ), NSTW (Số vốn, Tỷ lệ), NSĐP (Số vốn, Tỷ lệ)
+  (đánh số cột: 4=Tổng KH, 5=NSTW KH, 6=NSĐP KH, 7=Tổng GN, 8=Tỷ lệ tổng, 9=NSTW GN, 10=Tỷ lệ NSTW, 11=NSĐP GN, 12=Tỷ lệ NSĐP)
+
+ĐỊNH DẠNG SỐ (Việt Nam): dấu CHẤM = phân cách nghìn, dấu PHẨY = thập phân. Vd "2.302,1" → 2302.1 ; "27.617,0" → 27617.0 ; "80,6" → 80.6. Ô trống/gạch → null.
+
+LẤY GÌ:
+- as_of: ngày trong tiêu đề cột "Giải ngân đến hết <DD/MM/YYYY>" → "YYYY-MM-DD".
+- Mỗi DÒNG có STT (vd "I.16", "I.27", "C", "I") + tên + số → 1 object. Lấy HẾT các dòng dự án/tuyến (kể cả dòng con "Dự án thành phần", "- Trên địa bàn...", tuyến đường sắt). KHÔNG bịa số; đọc đúng cột.
+- Tên dự án: chép nguyên văn (có thể bỏ dấu tiếng Việt cũng được).
+
+ĐẦU RA: DUY NHẤT một JSON (không markdown), dạng:
+{"as_of":"YYYY-MM-DD",
+ "rows":[
+   {"ma":"I.16","ten":"Dong Dang - Tra Linh, giai doan 1 (PPP)","kh_tong":2302.1,"kh_nstw":1410.0,"kh_nsdp":892.1,"gn_tong":668.3,"gn_ty_le":29.0,"gn_nstw":0.0,"gn_nstw_ty_le":0.0,"gn_nsdp":668.3,"gn_nsdp_ty_le":74.9},
+   ...
+ ]}
+Field nào không đọc được rõ → để null (KHÔNG đoán bừa). Trả về MỌI dòng đọc được trên các trang.

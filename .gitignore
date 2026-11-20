@@ -24,3 +24,9 @@ pace_batches/
 pace_verdicts.json
 giai_ngan_ha_tang_2025_2026.csv
 stale_pace.json
+
+# giải ngân (flow local): file tạm render + PDF nguồn (nặng, giữ local)
+_disb_pages/
+disb_out/
+disb_verdicts.json
+disbursement_data/*.pdf
