@@ -131,12 +131,15 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .prog-head{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
 .prog-title{font-size:11px;font-weight:600;color:var(--accent)}
 .prog-sub{font-size:9.5px;color:var(--ink3)}
-.pmchart{display:flex;align-items:flex-end;gap:4px;height:64px;max-width:860px}
-.pmcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;max-width:66px}
-.pmbar{width:58%;max-width:22px;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
-.pmbar:hover{background:var(--brand)}
+.pmchart{display:flex;align-items:flex-end;gap:4px;max-width:880px}
+.pmcol{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0;max-width:62px}
+.pmtrack{position:relative;width:60%;max-width:22px;height:48px;background:var(--line);border-radius:3px;
+  display:flex;align-items:flex-end;overflow:hidden;margin-bottom:4px}
+.pmtrack::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--rule2)}  /* vạch 50% */
+.pmfill{width:100%;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px;transition:height .2s}
+.pmcol:hover .pmfill{background:var(--brand)}
 .pmval{font-size:9.5px;font-weight:600;color:var(--accent);line-height:1;margin-bottom:3px}
-.pmlab{font-size:9px;color:var(--ink3);margin-top:4px;line-height:1;white-space:nowrap}
+.pmlab{font-size:9px;color:var(--ink3);margin-top:1px;line-height:1;white-space:nowrap}
 .pmlab.yr{color:var(--ink2);font-weight:600}
 .tag{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
   letter-spacing:.03em}
@@ -1101,9 +1104,10 @@ function _pmChart(p){   // biểu đồ CỘT % hoàn thành TỪNG THÁNG (bắ
     const mo=+mm.slice(5,7), yy=mm.slice(2,4);
     const isYr = mo===1 || mm===first;                     // nhãn kèm năm ở tháng 1 và cột đầu
     const lab = isYr ? ('<span class="pmlab yr">'+mo+'/'+yy+'</span>') : ('<span class="pmlab">'+mo+'</span>');
-    const hpx=Math.max(2,Math.round(v/100*44));
+    const hpct=Math.max(3,Math.round(v));                   // chiều cao cột = % của thang 0–100
     return '<div class="pmcol"><span class="pmval">'+Math.round(v)+'</span>'
-      +'<span class="pmbar" style="height:'+hpx+'px" title="Tháng '+mo+'/'+mm.slice(0,4)+': '+Math.round(v)+'% hoàn thành"></span>'
+      +'<span class="pmtrack" title="Tháng '+mo+'/'+mm.slice(0,4)+': '+Math.round(v)+'% hoàn thành">'
+      +'<i class="pmfill" style="height:'+hpct+'%"></i></span>'
       +lab+'</div>';
   }).join('');
   return '<div class="pmchart">'+cols+'</div>';
