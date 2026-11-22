@@ -132,7 +132,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .gc-stat{flex-direction:column;align-items:flex-start;gap:3px;justify-content:center}
 .ppv{font-family:"Manrope",monospace;font-size:10px;font-weight:600;color:var(--accent)}
 /* ---------- % HOÀN THÀNH: THỰC TẾ (vùng tô) so với KẾ HOẠCH (nét đứt) — thay trục thời gian ---------- */
-.pc{display:flex;align-items:stretch;min-height:56px;--pc:var(--ink3)}
+.pc{display:flex;align-items:stretch;min-height:60px;--pc:var(--ink3)}
 .pc.c-late{--pc:var(--alert)} .pc.c-ontime{--pc:var(--accent)} .pc.c-ahead{--pc:var(--done)} .pc.c-done{--pc:var(--ink2)}
 .pc-plot{flex:1;position:relative;min-width:0;margin:7px 0 7px 12px;
   border-left:1px solid var(--rule2);border-bottom:1px solid var(--rule2)}
@@ -153,6 +153,19 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .pc-empty{flex:1;display:flex;align-items:center;padding-left:14px;font-size:10.5px;color:var(--ink3)}
 .mf-chk{flex-direction:row;align-items:center;gap:6px;align-self:flex-end;padding-bottom:6px;font-size:12px;color:var(--ink2);cursor:pointer}
 .mf-chk input{margin:0;accent-color:var(--build)}
+/* cột % theo tháng trên dòng: số ở đầu cột, vạch ngang = kế hoạch */
+.pb{flex:1;min-width:0;display:flex;align-items:stretch;gap:3px;padding:5px 0 6px 12px}
+.pb-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.pb-n{font-family:"Manrope",monospace;font-size:9.5px;font-weight:600;line-height:1;height:11px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.pb-col.now .pb-n{color:var(--ink);font-weight:700;font-size:10.5px}
+.pb-t{position:relative;display:block;width:100%;max-width:26px;height:36px;background:var(--sunk);border-radius:2px 2px 0 0;
+  border-bottom:1px solid var(--rule2)}
+.pb-f{position:absolute;left:0;right:0;bottom:0;background:var(--pc);opacity:.5;border-radius:2px 2px 0 0}
+.pb-col.now .pb-f{opacity:1}
+.pb-k{position:absolute;left:-2px;right:-2px;height:2px;background:var(--ink);transform:translateY(50%);border-radius:1px}
+.pc-axis .pb{padding:4px 0 4px 12px}
+.pb-axl{font-size:9.5px;color:var(--ink3);font-family:"Manrope",monospace;justify-content:center;white-space:nowrap}
+.pb-axl.yr{color:var(--ink2);font-weight:600}
 /* trục tháng ở hàng nhóm — thẳng cột với vùng vẽ của từng dòng */
 .grp-row .track{min-height:0;padding:0;display:block}
 .pc-axis{min-height:0}
@@ -241,6 +254,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .lgsw{display:inline-block;vertical-align:middle}
 .lgsw.a{width:18px;height:9px;background:var(--accent);opacity:.35;border-top:2px solid var(--accent)}
 .lgsw.p{width:20px;height:0;border-top:1.5px dashed var(--ink2)}
+.lgsw.k{width:18px;height:2px;background:var(--ink);border-radius:1px}
 .tag{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;
   letter-spacing:.03em}
 .t-gpmb{background:var(--gpmb-bg);color:var(--gpmb)}
@@ -666,7 +680,7 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
 <div id="view-gantt" class="hidden">
 <div class="map-bar">
   <div class="mf"><span>Sắp xếp</span><select id="g-sort">
-    <option value="news" selected>Số lượng tin tức</option>
+    <option value="news" selected>Số lượng tin tức (mặc định)</option>
     <option value="sched">Tiến độ</option>
     <option value="gap">Lệch kế hoạch (sau nhiều nhất trước)</option>
     <option value="cat">Loại hình</option>
@@ -683,8 +697,8 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
 <div class="legend">
   <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">nhịp độ của dự án đang thực hiện — rê chuột để xem căn cứ</span></div>
   <div class="lg"><span class="sched s-done" style="padding:0 5px">đã hoàn thành</span><span class="sched s-notyet" style="padding:0 5px">chưa thực hiện</span><span class="lgtxt">giai đoạn — không chấm chậm/đúng/vượt</span></div>
-  <div class="lg"><span class="lgsw a"></span><span class="lgtxt"><b>thực tế</b> — % hoàn thành theo tháng</span></div>
-  <div class="lg"><span class="lgsw p"></span><span class="lgtxt"><b>kế hoạch</b> — nối các mốc đã cam kết; chưa có mốc thì là đường chuẩn lý thuyết (ghi “chuẩn ~”)</span></div>
+  <div class="lg"><span class="lgsw a"></span><span class="lgtxt"><b>cột</b> — % hoàn thành cuối mỗi tháng, số ghi trên đầu cột</span></div>
+  <div class="lg"><span class="lgsw k"></span><span class="lgtxt"><b>vạch ngang · kế hoạch</b> — nối các mốc đã cam kết; chưa có mốc thì là đường chuẩn lý thuyết (ghi “chuẩn ~”)</span></div>
   <div class="lg"><span class="lgtxt">mọi dòng cùng thang 0–100% và cùng khung tháng nên so sánh trực tiếp được</span></div>
 </div>
 <details class="meth" id="meth">
@@ -753,6 +767,10 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
 
 <div id="view-sat" class="hidden">
   <div class="sat-top">
+    <div class="grp"><span>Sắp xếp</span><select id="sat-sort" style="min-width:0">
+      <option value="news" selected>Số lượng tin tức (mặc định)</option>
+      <option value="name">Tên dự án</option>
+    </select></div>
     <div class="grp"><span>Dự án</span><select id="sat-proj"></select></div>
     <div class="grp"><span>Tìm</span><input id="sat-search" type="search" placeholder="Tên dự án" autocomplete="off"></div>
     <span class="sat-cap" id="sat-cap"></span>
@@ -1324,6 +1342,10 @@ function _monthsRange(start,end){   // list 'YYYY-MM' từ start đến end (bao
 }
 function _dl(p){ const d=(p.marks||[]).filter(m=>m.tier==='deadline'&&m.date).map(m=>m.date).sort(); return d.length?d[d.length-1]:''; }
 function _dlShow(p){ const d=_dl(p); if(!d) return '—'; const [y,m]=d.split('-'); return (m==='12'||!m)?y:(+m)+'/'+y; }   // hạn hoàn thành (năm hoặc M/YYYY)
+function _dlEff(p){            // hạn hoàn thành TOÀN BỘ dùng cho đường kế hoạch: hạn có nguồn, hoặc hạn trong tin nếu muộn hơn hạn báo cáo
+  const d=_dl(p), n=/^\d{4}-\d{2}$/.test(p.deadlineNews||'')?p.deadlineNews:'';
+  return (n && (!d || n>d)) ? n : d;
+}
 function _dlSrc(p){ const m=(p.marks||[]).filter(x=>x.tier==='deadline'&&x.date).pop(); return m?(m.src||''):''; }
 function _searchOk(p){ return !_q || (p.name+' '+(p.owner||'')).toLowerCase().includes(_q); }
 let minTier = 0;
@@ -1374,8 +1396,9 @@ function _planSpan(p){          // {t0, t1, nodes, real, ...} hoặc null (khôn
     .sort((a,b)=>a.x-b.x || a.v-b.v);
   const end100=raw.filter(x=>x.v>=100);
   if(!dl && !end100.length) return null;                     // không có hạn có nguồn lẫn mốc cam kết hoàn thành
+  const dlEff=_dlEff(p);                                     // hạn hoàn thành TOÀN BỘ (tin mới có thể muộn hơn hạn trong báo cáo)
   const fr=(p.phases||[]).filter(ph=>ph.from && ph.kind!=='swap').map(ph=>ph.from).sort();
-  const t1 = dl ? _mi(dl)+1 : end100[0].x;                   // hạn = hết tháng hạn
+  const t1 = dlEff ? _mi(dlEff)+1 : end100[0].x;             // hạn = hết tháng hạn
   let t0 = fr.length ? _mi(fr[0]) : (raw.length ? raw[0].x-1 : null);
   if(t0===null || t1-t0 < 3) return null;
   // nút của đường kế hoạch: khởi động → các mốc cam kết nằm giữa → hạn (100%)
@@ -1388,9 +1411,9 @@ function _planSpan(p){          // {t0, t1, nodes, real, ...} hoặc null (khôn
     nodes.push(q);
   });
   nodes.push({x:t1, v:100, label:'hoàn thành toàn bộ'});
-  const first=(/^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && dl && p.paceDeadlineFirst<dl) ? p.paceDeadlineFirst : '';
-  return {t0:t0, t1:t1, from:fr[0]||'', to:dl||'', est:!(fr.length && anchors(p).has(fr[0])),
-          nodes:nodes, real:nodes.length>2, first:first, slip:first?(_mi(dl)-_mi(first)):0};
+  const first=(/^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && dlEff && p.paceDeadlineFirst<dlEff) ? p.paceDeadlineFirst : '';
+  return {t0:t0, t1:t1, from:fr[0]||'', to:dlEff||'', rep:(dl&&dlEff&&dlEff>dl)?dl:'', est:!(fr.length && anchors(p).has(fr[0])),
+          nodes:nodes, real:nodes.length>2, first:first, slip:first?(_mi(dlEff)-_mi(first)):0};
 }
 function _planWhy(p){           // vì sao không vẽ được đường kế hoạch
   if(p.proposal) return 'dự án đang ở giai đoạn đề xuất';
@@ -1454,19 +1477,16 @@ function _win(){
   let lo=Infinity;
   Object.keys(PACE_HIST).forEach(function(t){ PACE_HIST[t].forEach(function(x){ if(x[2]!=null){ const i=_mi(x[0]); if(i<lo) lo=i; } }); });
   if(!isFinite(lo)) lo=Math.floor(NOW_I)-11;
-  lo=Math.max(lo, Math.floor(NOW_I)-23);
+  lo=Math.max(lo, Math.floor(NOW_I)-11);                     // tối đa 12 cột tháng gần nhất
   return _WIN={m0:lo, x0:lo+1, x1:Math.max(NOW_I, lo+2)};
 }
-function _axisHTML(){           // nhãn tháng (đặt tại điểm cuối tháng)
-  const w=_win(); let h='';
-  const last=Math.floor(NOW_I), n=last-w.m0+1, step=n>14?3:(n>8?2:1);
+function _axisHTML(){           // nhãn tháng — cùng lưới cột với biểu đồ của từng dòng
+  const w=_win(), last=Math.floor(NOW_I); let h='';
   for(let k=w.m0;k<=last;k++){
-    if((last-k)%step) continue;
-    const x=Math.min(k+1, NOW_I), left=(x-w.x0)/(w.x1-w.x0)*100, mo=(k%12)+1;
-    const yr = mo===1 || k===w.m0 || k===last;
-    h+='<span class="pc-ax'+(yr?' yr':'')+(k===last?' e':(k===w.m0?' s':''))+'" style="left:'+left.toFixed(2)+'%">'+(yr?mo+'/'+String(Math.floor(k/12)).slice(2):mo)+'</span>';
+    const mo=(k%12)+1, yr = mo===1 || k===w.m0 || k===last;
+    h+='<span class="pb-col pb-axl'+(yr?' yr':'')+'">'+(yr?mo+'/'+String(Math.floor(k/12)).slice(2):mo)+'</span>';
   }
-  return '<div class="pc pc-axis"><div class="pc-plot">'+h+'</div><div class="pc-sum">thực tế · kế hoạch · lệch</div></div>';
+  return '<div class="pc pc-axis"><div class="pb">'+h+'</div><div class="pc-sum">thực tế · kế hoạch · lệch</div></div>';
 }
 function _rowChart(p){          // biểu đồ nhỏ trên dòng: vùng tô = thực tế, nét đứt = kế hoạch
   const s=_pstat(p), w=_win();
@@ -1487,26 +1507,22 @@ function _rowChart(p){          // biểu đồ nhỏ trên dòng: vùng tô = t
         :'<div class="pc-d mut">'+(s.sp?'khởi động KH '+_miLab(s.sp.t0):_planWhy(p))+'</div>')
     +((mt && !(gt&&s.act>=100))?'<div class="pc-d mut">'+mt+'</div>':'');
   if(s.act===null && !s.sp) return '<div class="pc"><div class="pc-empty">—</div><div class="pc-sum">'+sum+'</div></div>';
-  let g='<line class="pc-g" x1="0" x2="100" y1="'+f(Y(50))+'" y2="'+f(Y(50))+'"/><line class="pc-g" x1="0" x2="100" y1="'+f(Y(100))+'" y2="'+f(Y(100))+'"/>';
-  let dots='';
-  if(s.sp){                       // kế hoạch
-    const a=Math.max(w.x0, s.sp.t0); let d='';
-    for(let x=a; x<=w.x1+1e-6; x+=0.25){ const v=_planAt(s.sp, Math.min(x,w.x1)); d+=(d?'L':'M')+f(X(Math.min(x,w.x1)))+','+f(Y(v)); }
-    if(d && a<w.x1){ g+='<path class="pc-p" d="'+d+'"/>';
-      dots+='<i class="pc-pdot" style="left:100%;top:'+f(Y(_planAt(s.sp,w.x1))/42*100)+'%"></i>'; }
+  // CỘT theo tháng, số % ghi trên đầu cột; vạch ngang đậm = mức kế hoạch của tháng đó
+  const byM={}; s.ser.forEach(function(d){ byM[d.m]=d; });
+  const last=Math.floor(NOW_I); let cols='';
+  for(let k=w.m0;k<=last;k++){
+    const mm=Math.floor(k/12)+'-'+String((k%12)+1).padStart(2,'0'), d=byM[mm];
+    const pl = s.sp ? _planAt(s.sp, Math.min(k+1, NOW_I)) : null;
+    const lab=((k%12)+1)+'/'+Math.floor(k/12);
+    const tip=lab+': '+(d?Math.round(d.v)+'% hoàn thành':'chưa có số liệu')+(pl!==null?' · kế hoạch '+Math.round(pl)+'%':'');
+    cols+='<span class="pb-col'+(k===last?' now':'')+'" title="'+esc(tip)+'">'
+      +'<b class="pb-n">'+(d?Math.round(d.v):'')+'</b>'
+      +'<span class="pb-t">'+(d?'<i class="pb-f" style="height:'+Math.max(2,d.v).toFixed(1)+'%"></i>':'')
+      +(pl!==null?'<i class="pb-k" style="bottom:'+Math.min(100,pl).toFixed(1)+'%"></i>':'')+'</span></span>';
   }
-  const pts=s.ser.filter(d=>d.x>=w.x0-1e-6);
-  if(pts.length>1){               // thực tế
-    const line=pts.map((d,i)=>(i?'L':'M')+f(X(d.x))+','+f(Y(d.v))).join('');
-    g+='<path class="pc-a" d="'+line+'L'+f(X(pts[pts.length-1].x))+',41L'+f(X(pts[0].x))+',41Z"/><path class="pc-l" d="'+line+'"/>';
-  }
-  if(pts.length){ const l=pts[pts.length-1]; dots+='<i class="pc-dot" style="left:'+f(X(l.x))+'%;top:'+f(Y(l.v)/42*100)+'%"></i>'; }
-  const tip='Thực tế '+(s.act===null?'chưa có':Math.round(s.act)+'%')
-    +(s.plan!==null?' · kế hoạch hôm nay '+Math.round(s.plan)+'%':'')
-    +(s.sp?' · khởi động '+_miLab(s.sp.t0)+(s.sp.est?' (ước lượng)':'')+' → hạn '+_miLab(s.sp.t1-1):' · không vẽ kế hoạch: '+_planWhy(p))
+  const tip='Cột = % hoàn thành cuối mỗi tháng (số trên đầu cột)'+(s.sp?' · vạch ngang = kế hoạch '+(s.sp.real?'theo mốc cam kết':'(đường chuẩn lý thuyết)'):' · không có kế hoạch: '+_planWhy(p))
     +' · mở dòng để xem biểu đồ đầy đủ';
-  return '<div class="pc'+_pcCls(p)+'" title="'+esc(tip)+'"><div class="pc-plot">'
-    +'<svg viewBox="0 0 100 42" preserveAspectRatio="none" aria-hidden="true">'+g+'</svg>'+dots+'</div>'
+  return '<div class="pc'+_pcCls(p)+'" title="'+esc(tip)+'"><div class="pb">'+cols+'</div>'
     +'<div class="pc-sum">'+sum+'</div></div>';
 }
 
@@ -1590,6 +1606,7 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
   if(s.gap!==null) side+='<div class="bc-kv"><span>Lệch</span><b class="'+(s.gap<=-5?'neg':(s.gap>=5?'pos':''))+'">'+(s.gap>0?'+':'')+s.gap+' điểm</b></div>';
   if(gt && s.act!==null && s.stage!=='done') side+='<div class="bc-kv"><span>Kết luận</span><b class="'+gt.cls+'">'+gt.txt.replace(/ \([^)]*\)$/,'')+'</b></div>';
   if(mt) side+='<div class="bc-kv"><span>Đà gần đây</span><b>'+mt+'</b></div>';
+  if(sp && sp.rep) side+='<div class="bc-kv"><span>Hạn theo báo cáo → toàn bộ theo tin</span><b>'+_ymVN(sp.rep)+' → '+_ymVN(sp.to)+'</b></div>';
   if(sp && sp.first) side+='<div class="bc-kv"><span>Hạn ban đầu → hiện tại</span><b class="neg">'+_ymVN(sp.first)+' → '+_ymVN(sp.to)+' (lùi '+sp.slip+' tháng)</b></div>';
   if(sp && s.stage!=='done') side+='<p class="bc-note">'+(sp.real?'Đường kế hoạch nối '+(sp.nodes.length-2)+' mốc đã được cam kết hoặc giao (rê chuột vào ◇ để xem).'
     :'Chưa có mốc cam kết trung gian nên dùng đường chuẩn lý thuyết từ khởi động tới hạn; chỉ để tham khảo.')+'</p>';
@@ -1792,7 +1809,7 @@ function render(){
           <div class="gcell">${esc(p.g||'—')}</div>
           <div class="gcell" title="${esc(p.owner||'')}">${esc(p.owner||'—')}</div>
           <div class="gcell num" title="${p.tmdt?nf(p.tmdt)+' tỷ đồng'+(p.tmdtSrc?' · '+esc(p.tmdtSrc):''):'chưa có'}">${_tmdtShort(p.tmdt)}</div>
-          <div class="gcell num" title="${_dl(p)?'Hạn hoàn thành '+_dl(p)+(_dlSrc(p)?' · '+esc(_dlSrc(p)):''):'chưa có hạn từ nguồn'}">${_dlShow(p)}</div>
+          <div class="gcell num" title="${_dl(p)?'Hạn hoàn thành '+_dl(p)+(_dlSrc(p)?' · '+esc(_dlSrc(p)):'')+(_dlEff(p)>_dl(p)?' — tin mới nêu hoàn thành toàn bộ '+_dlEff(p)+' ('+esc(p.deadlineNewsSrc||'theo tin')+')':''):'chưa có hạn từ nguồn'}"><div style="text-align:right">${_dlShow(p)}${_dlEff(p)>_dl(p)?'<span class="cap" style="display:block">toàn bộ '+_ymVN(_dlEff(p))+'</span>':''}</div></div>
           <div class="gcell loc-c" title="${esc(p.loc||'')}">${esc(p.loc||'—')}</div>
           <div class="track">${_rowChart(p)}</div></div>`;
 
@@ -1921,7 +1938,14 @@ function _satFill(q){
 function renderSat(){
   const sel=document.getElementById('sat-proj'), slider=document.getElementById('sat-slider');
   if(!sel.dataset.init){
-    _satTids=Object.keys(SATELLITE).filter(t=>P.some(p=>p.id==t)).sort((a,b)=>a-b);   // chỉ dự án đang theo dõi (bỏ ảnh dự án đã tắt)
+    const _pj=t=>P.find(p=>p.id==t), so=document.getElementById('sat-sort');
+    const _order=()=>{                             // mặc định cùng thứ tự tab Tiến độ: nhiều tin → ít, rồi theo tên
+      const byName=(a,b)=>satName(a).localeCompare(satName(b),'vi');
+      _satTids=Object.keys(SATELLITE).filter(t=>P.some(p=>p.id==t))                     // chỉ dự án đang theo dõi (bỏ ảnh dự án đã tắt)
+        .sort((so&&so.value==='name') ? byName : ((a,b)=>newsN(_pj(b))-newsN(_pj(a)) || byName(a,b)));
+    };
+    _order();
+    if(so) so.onchange=()=>{ _order(); const ss=document.getElementById('sat-search'); _satFill(ss?ss.value:''); };
     _satFill('');
     sel.dataset.init='1';
     sel.onchange=()=>{slider.value=(SATELLITE[sel.value]||[]).length-1; drawSat();};

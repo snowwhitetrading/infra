@@ -58,10 +58,11 @@ def aoi_bbox(lat, lon, km):
 
 
 def read_band(href, bbox_ll, px, resampling):
+    shape = px if isinstance(px, tuple) else (px, px)            # (cao, rộng) — site cũ có khung không vuông
     with rasterio.open(href) as src:
         l, b, r, t = transform_bounds("EPSG:4326", src.crs, *bbox_ll, densify_pts=21)
         win = from_bounds(l, b, r, t, src.transform)
-        return src.read(1, window=win, out_shape=(px, px), boundless=True,
+        return src.read(1, window=win, out_shape=shape, boundless=True,
                         fill_value=0, resampling=resampling)
 
 
@@ -103,6 +104,79 @@ def pick_scene(client, bbox_ll, month, candidates):
     return best, best_c
 
 
+# SITE CŨ đã chỉnh tay AOI (11 công trường đầu tiên): không có trong registry với đúng toạ độ nên trước đây
+# job hằng tháng bỏ sót → tab Vệ tinh kẹt ở ảnh cũ. Xuất tiếp cho chúng với ĐÚNG khung hình ban đầu:
+# tâm = lat/lon trong manifest, kích thước = cỡ ảnh gốc × 10 m/px (ảnh gốc ở độ phân giải gốc Sentinel-2).
+# site cũ → tid (khớp SITEKEY2TID trong step5_build_site.py). Dự án registry trùng tid KHÔNG xuất nữa:
+# toạ độ registry của chúng lệch AOI (vd Gia Bình 106.28 thay vì 106.20) → chỉ tốn tải và sinh ảnh sai chỗ.
+LEGACY_TID = {"apec_center": 1, "pq_airport": 2, "bai_dat_do": 3, "nui_ong_quan": 4, "pq_tram": 5,
+              "rach_chiec": 6, "gb_road_hn": 7, "gb_road_bn": 8, "cangio_depot": 9, "halong_depot": 10,
+              "gia_binh": 11}
+LEGACY_SITES = tuple(LEGACY_TID)
+
+
+def legacy_sites(rows):
+    """{site_key: {lat, lon, folder, shape(h,w), bbox, no, name}} — suy từ manifest + ảnh gốc sớm nhất."""
+    out = {}
+    for sk in LEGACY_SITES:
+        rs = sorted((r for r in rows if r["site_key"] == sk), key=lambda r: r["month"])
+        if not rs:
+            continue
+        first = rs[0]
+        folder = first["file"].split("/")[0]
+        try:
+            w, h = Image.open(os.path.join(OUT_DIR, first["file"])).size
+        except OSError:
+            continue
+        lat, lon = float(first["lat"]), float(first["lon"])
+        dlat = (h * 10.0 / 2000.0) / 111.0
+        dlon = (w * 10.0 / 2000.0) / (111.0 * max(0.1, math.cos(math.radians(lat))))
+        out[sk] = {"lat": lat, "lon": lon, "folder": folder, "shape": (h, w),
+                   "bbox": [lon - dlon, lat - dlat, lon + dlon, lat + dlat],
+                   "no": first["project_no"], "name": first["project_name"]}
+    return out
+
+
+def export_legacy(a, client, rows):
+    """Xuất các tháng còn thiếu (hoặc sai khung) cho site cũ, vào đúng thư mục gốc của site. Trả (rows, số ảnh thêm)."""
+    added = 0
+    for sk, s in legacy_sites(rows).items():
+        folder = os.path.join(OUT_DIR, s["folder"])
+        for month in months(a.date_from, a.date_to):
+            cur = [f for f in os.listdir(folder) if f.startswith(month + "_") and f.endswith(".png")]
+            good = [f for f in cur if Image.open(os.path.join(folder, f)).size == (s["shape"][1], s["shape"][0])]
+            if good and not a.force:
+                continue                                      # đã có ảnh đúng khung của tháng này
+            try:
+                item, cloud = pick_scene(client, s["bbox"], month, a.candidates)
+            except Exception as e:
+                print(f"  ! {sk} {month}: search lỗi ({e})")
+                continue
+            if not item:
+                continue
+            date = item.datetime.date().isoformat()
+            status = "OK" if cloud < a.max_cloud else "CLOUDY"
+            fname = f"{month}_{date}_cloud{int(round(cloud))}pct_{status}.png"
+            print(f"  {sk:24} {month}  {date}  cloud {cloud:4.1f}%  {status}  (site cũ, {s['shape'][1]}x{s['shape'][0]})", flush=True)
+            if a.dry_run:
+                added += 1
+                continue
+            try:
+                img = render_rgb(item, s["bbox"], s["shape"])
+            except Exception as e:
+                print(f"    ! render lỗi: {e}")
+                continue
+            for f in cur:                                     # thay ảnh cũ của tháng (sai khung / nhiều mây)
+                os.remove(os.path.join(folder, f))
+            Image.fromarray(img).save(os.path.join(folder, fname))
+            rows = [r for r in rows if not (r["site_key"] == sk and r["month"] == month)]
+            rows.append({"project_no": s["no"], "project_name": s["name"], "site_key": sk,
+                         "lat": s["lat"], "lon": s["lon"], "month": month, "capture_date": date,
+                         "aoi_cloud_pct": round(cloud, 1), "status": status, "file": f"{s['folder']}/{fname}"})
+            added += 1
+    return rows, added
+
+
 def load_manifest():
     path = os.path.join(OUT_DIR, "manifest.csv")
     if not os.path.exists(path):
@@ -136,8 +210,17 @@ def run(a):
 
     client = Client.open(STAC)
     rows = load_manifest()
-    have = {(r["site_key"], r["month"]) for r in rows}       # (site, tháng) đã có trong manifest
     added = 0
+    if not a.projects or a.legacy_only:                      # site cũ đã chỉnh tay AOI: luôn xuất tiếp, đúng khung gốc
+        rows, n_leg = export_legacy(a, client, rows)
+        added += n_leg
+    if a.legacy_only:
+        projects = []
+    skip = [p["id"] for p in projects if p["tid"] in LEGACY_TID.values()]
+    if skip:
+        print(f"Bỏ {len(skip)} dự án registry đã có site cũ đúng AOI: {', '.join(skip)}")
+        projects = [p for p in projects if p["tid"] not in LEGACY_TID.values()]
+    have = {(r["site_key"], r["month"]) for r in rows}       # (site, tháng) đã có trong manifest
     for p in projects:
         pid, tid, name = p["id"], p["tid"], p.get("name", "")
         bbox = aoi_bbox(p["lat"], p["lon"], a.radius_km)
@@ -192,6 +275,7 @@ if __name__ == "__main__":
     ap.add_argument("--max-cloud", type=float, default=30.0, help="ngưỡng OK/CLOUDY")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--legacy-only", action="store_true", help="chỉ xuất 11 site cũ đã chỉnh tay AOI")
     ap.add_argument("--dry-run", action="store_true")
     with rasterio.Env(**GDAL_ENV):
         run(ap.parse_args())

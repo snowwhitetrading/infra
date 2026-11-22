@@ -126,11 +126,11 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-04,2026-04-04,0.7,OK,01_apec_center/2026-04_2026-04-04_cloud1pct_OK.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-05,2026-05-22,41.9,CLOUDY,01_apec_center/2026-05_2026-05-22_cloud42pct_CLOUDY.png
 01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-06,2026-06-16,1.8,OK,01_apec_center/2026-06_2026-06-16_cloud2pct_OK.png
-1,Trung tâm tổ chức hội nghị APEC,apec_center,10.046,103.999,2026-07,2026-07-16,1.9,OK,apec_center/2026-07_2026-07-16_cloud2pct_OK.png
-1,Trung tâm tổ chức hội nghị APEC,apec_center,10.046,103.999,2026-08,2026-08-02,14.3,OK,apec_center/2026-08_2026-08-02_cloud14pct_OK.png
-1,Trung tâm tổ chức hội nghị APEC,apec_center,10.046,103.999,2026-09,2026-09-16,3.4,OK,apec_center/2026-09_2026-09-16_cloud3pct_OK.png
-1,Trung tâm tổ chức hội nghị APEC,apec_center,10.046,103.999,2026-10,2026-10-29,72.6,CLOUDY,apec_center/2026-10_2026-10-29_cloud73pct_CLOUDY.png
-1,Trung tâm tổ chức hội nghị APEC,apec_center,10.046,103.999,2026-11,2026-11-08,12.3,OK,apec_center/2026-11_2026-11-08_cloud12pct_OK.png
+01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-07,2026-07-16,1.0,OK,01_apec_center/2026-07_2026-07-16_cloud1pct_OK.png
+01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-08,2026-08-02,13.0,OK,01_apec_center/2026-08_2026-08-02_cloud13pct_OK.png
+01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-09,2026-09-16,2.3,OK,01_apec_center/2026-09_2026-09-16_cloud2pct_OK.png
+01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-10,2026-10-29,68.4,CLOUDY,01_apec_center/2026-10_2026-10-29_cloud68pct_CLOUDY.png
+01,TT hoi nghi APEC,apec_center,10.0464,103.9996,2026-11,2026-11-08,11.4,OK,01_apec_center/2026-11_2026-11-08_cloud11pct_OK.png
 12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-01,2025-01-17,0.0,OK,atc_tower/2025-01_2025-01-17_cloud0pct_OK.png
 12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-03,2025-03-23,37.8,CLOUDY,atc_tower/2025-03_2025-03-23_cloud38pct_CLOUDY.png
 12,Đài kiểm soát không lưu ATC (Gia Bình),atc_tower,21.0487,106.1994,2025-05,2025-05-12,10.1,OK,atc_tower/2025-05_2025-05-12_cloud10pct_OK.png
@@ -168,11 +168,11 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-04,2026-04-19,0.2,OK,03_bai_dat_do/2026-04_2026-04-19_cloud0pct_OK.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-05,2026-05-22,47.8,CLOUDY,03_bai_dat_do/2026-05_2026-05-22_cloud48pct_CLOUDY.png
 03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-06,2026-06-28,1.4,OK,03_bai_dat_do/2026-06_2026-06-28_cloud1pct_OK.png
-3,Khu đô thị hỗn hợp - Bãi Đất Đỏ,bai_dat_do,10.04,104.0,2026-07,2026-07-16,1.5,OK,bai_dat_do/2026-07_2026-07-16_cloud2pct_OK.png
-3,Khu đô thị hỗn hợp - Bãi Đất Đỏ,bai_dat_do,10.04,104.0,2026-08,2026-08-22,5.8,OK,bai_dat_do/2026-08_2026-08-22_cloud6pct_OK.png
-3,Khu đô thị hỗn hợp - Bãi Đất Đỏ,bai_dat_do,10.04,104.0,2026-09,2026-09-16,2.5,OK,bai_dat_do/2026-09_2026-09-16_cloud3pct_OK.png
-3,Khu đô thị hỗn hợp - Bãi Đất Đỏ,bai_dat_do,10.04,104.0,2026-10,2026-10-29,40.5,CLOUDY,bai_dat_do/2026-10_2026-10-29_cloud41pct_CLOUDY.png
-3,Khu đô thị hỗn hợp - Bãi Đất Đỏ,bai_dat_do,10.04,104.0,2026-11,2026-11-08,15.1,OK,bai_dat_do/2026-11_2026-11-08_cloud15pct_OK.png
+03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-07,2026-07-16,1.0,OK,03_bai_dat_do/2026-07_2026-07-16_cloud1pct_OK.png
+03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-08,2026-08-02,7.0,OK,03_bai_dat_do/2026-08_2026-08-02_cloud7pct_OK.png
+03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-09,2026-09-16,3.5,OK,03_bai_dat_do/2026-09_2026-09-16_cloud4pct_OK.png
+03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-10,2026-10-29,40.4,CLOUDY,03_bai_dat_do/2026-10_2026-10-29_cloud40pct_CLOUDY.png
+03,KDT hon hop Bai Dat Do,bai_dat_do,10.0393,104.0025,2026-11,2026-11-08,15.0,OK,03_bai_dat_do/2026-11_2026-11-08_cloud15pct_OK.png
 189,Bến Xe Liên Tỉnh Đà Lạt,ben_xe_lien_tinh_a_lat,11.927120887619386,108.44558116994861,2026-02,2026-02-20,14.6,OK,ben_xe_lien_tinh_a_lat/2026-02_2026-02-20_cloud15pct_OK.png
 189,Bến Xe Liên Tỉnh Đà Lạt,ben_xe_lien_tinh_a_lat,11.927120887619386,108.44558116994861,2026-03,2026-03-27,0.0,OK,ben_xe_lien_tinh_a_lat/2026-03_2026-03-27_cloud0pct_OK.png
 189,Bến Xe Liên Tỉnh Đà Lạt,ben_xe_lien_tinh_a_lat,11.927120887619386,108.44558116994861,2026-04,2026-04-21,72.4,CLOUDY,ben_xe_lien_tinh_a_lat/2026-04_2026-04-21_cloud72pct_CLOUDY.png
@@ -351,10 +351,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-04,2026-04-26,0.0,OK,08_cangio_depot/2026-04_2026-04-26_cloud0pct_OK.png
 08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-05,2026-05-01,0.0,OK,08_cangio_depot/2026-05_2026-05-01_cloud0pct_OK.png
 08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-06,2026-06-15,26.6,OK,08_cangio_depot/2026-06_2026-06-15_cloud27pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-07,2026-07-20,27.0,OK,08_cangio_depot/2026-07_2026-07-20_cloud27pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-08,2026-08-04,0.0,OK,08_cangio_depot/2026-08_2026-08-04_cloud0pct_OK.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-09,2026-09-08,35.6,CLOUDY,08_cangio_depot/2026-09_2026-09-08_cloud36pct_CLOUDY.png
-08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-10,2026-10-20,2.2,OK,08_cangio_depot/2026-10_2026-10-20_cloud2pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-07,2026-07-20,26.6,OK,08_cangio_depot/2026-07_2026-07-20_cloud27pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-08,2026-08-04,4.7,OK,08_cangio_depot/2026-08_2026-08-04_cloud5pct_OK.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-09,2026-09-28,64.1,CLOUDY,08_cangio_depot/2026-09_2026-09-28_cloud64pct_CLOUDY.png
+08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-10,2026-10-20,14.1,OK,08_cangio_depot/2026-10_2026-10-20_cloud14pct_OK.png
 08,Depot 39ha Can Gio (DS Ben Thanh-Can Gio),cangio_depot,10.395,106.917,2026-11,2026-11-22,0.0,OK,08_cangio_depot/2026-11_2026-11-22_cloud0pct_OK.png
 24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-02,2026-02-15,100.0,CLOUDY,cao_t_c_bi_n_h_a_v_ng_t_u/2026-02_2026-02-15_cloud100pct_CLOUDY.png
 24,Cao tốc Biên Hòa - Vũng Tàu,cao_t_c_bi_n_h_a_v_ng_t_u,10.65,107.1,2026-03,2026-03-22,0.0,OK,cao_t_c_bi_n_h_a_v_ng_t_u/2026-03_2026-03-22_cloud0pct_OK.png
@@ -1256,8 +1256,8 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-04,2026-04-12,0.3,OK,07b_gb_road_bn/2026-04_2026-04-12_cloud0pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-05,2026-05-27,0.3,OK,07b_gb_road_bn/2026-05_2026-05-27_cloud0pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-06,2026-06-01,19.7,OK,07b_gb_road_bn/2026-06_2026-06-01_cloud20pct_OK.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-07,2026-07-26,48.5,CLOUDY,07b_gb_road_bn/2026-07_2026-07-26_cloud49pct_CLOUDY.png
-07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-08,2026-08-15,0.4,OK,07b_gb_road_bn/2026-08_2026-08-15_cloud0pct_OK.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-07,2026-07-26,58.8,CLOUDY,07b_gb_road_bn/2026-07_2026-07-26_cloud59pct_CLOUDY.png
+07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-08,2026-08-15,0.9,OK,07b_gb_road_bn/2026-08_2026-08-15_cloud1pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-09,2026-09-29,0.0,OK,07b_gb_road_bn/2026-09_2026-09-29_cloud0pct_OK.png
 07b,Duong GB-HN doan Bac Ninh (Thuan Thanh),gb_road_bn,21.049,106.0817,2026-10,2026-10-06,0.0,OK,07b_gb_road_bn/2026-10_2026-10-06_cloud0pct_OK.png
 07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2025-01,2025-01-27,0.0,OK,07a_gb_road_hn/2025-01_2025-01-27_cloud0pct_OK.png
@@ -1278,10 +1278,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-04,2026-04-12,3.9,OK,07a_gb_road_hn/2026-04_2026-04-12_cloud4pct_OK.png
 07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-05,2026-05-27,55.7,CLOUDY,07a_gb_road_hn/2026-05_2026-05-27_cloud56pct_CLOUDY.png
 07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-06,2026-06-21,20.8,OK,07a_gb_road_hn/2026-06_2026-06-21_cloud21pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-07,2026-07-18,80.6,CLOUDY,07a_gb_road_hn/2026-07_2026-07-18_cloud81pct_CLOUDY.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-07,2026-07-18,60.2,CLOUDY,07a_gb_road_hn/2026-07_2026-07-18_cloud60pct_CLOUDY.png
 07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-08,2026-08-10,0.0,OK,07a_gb_road_hn/2026-08_2026-08-10_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-09,2026-09-29,0.0,OK,07a_gb_road_hn/2026-09_2026-09-29_cloud0pct_OK.png
-07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-10,2026-10-09,0.0,OK,07a_gb_road_hn/2026-10_2026-10-09_cloud0pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-09,2026-09-29,0.6,OK,07a_gb_road_hn/2026-09_2026-09-29_cloud1pct_OK.png
+07a,Duong GB-HN doan Ha Noi,gb_road_hn,21.08,105.93,2026-10,2026-10-06,0.0,OK,07a_gb_road_hn/2026-10_2026-10-06_cloud0pct_OK.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-01,2025-01-27,0.0,OK,10_gia_binh/2025-01_2025-01-27_cloud0pct_OK.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-02,2025-02-11,3.5,OK,10_gia_binh/2025-02_2025-02-11_cloud4pct_OK.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2025-03,2025-03-23,14.5,OK,10_gia_binh/2025-03_2025-03-23_cloud14pct_OK.png
@@ -1300,10 +1300,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-04,2026-04-12,0.8,OK,10_gia_binh/2026-04_2026-04-12_cloud1pct_OK.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-05,2026-05-27,31.0,CLOUDY,10_gia_binh/2026-05_2026-05-27_cloud31pct_CLOUDY.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-06,2026-06-21,22.3,OK,10_gia_binh/2026-06_2026-06-21_cloud22pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-07,2026-07-26,9.9,OK,10_gia_binh/2026-07_2026-07-26_cloud10pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-07,2026-07-26,49.5,CLOUDY,10_gia_binh/2026-07_2026-07-26_cloud50pct_CLOUDY.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-08,2026-08-10,0.0,OK,10_gia_binh/2026-08_2026-08-10_cloud0pct_OK.png
 10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-09,2026-09-29,0.0,OK,10_gia_binh/2026-09_2026-09-29_cloud0pct_OK.png
-10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-10,2026-10-06,0.0,OK,10_gia_binh/2026-10_2026-10-06_cloud0pct_OK.png
+10,San bay Gia Binh + cum BT1/2/3,gia_binh,21.0487,106.1994,2026-10,2026-10-06,0.7,OK,10_gia_binh/2026-10_2026-10-06_cloud1pct_OK.png
 11,Cảng hàng không quốc tế Gia Bình,giabinh_airport,21.05,106.28,2026-03,2026-03-13,0.0,OK,giabinh_airport/2026-03_2026-03-13_cloud0pct_OK.png
 11,Cảng hàng không quốc tế Gia Bình,giabinh_airport,21.05,106.28,2026-04,2026-04-12,0.0,OK,giabinh_airport/2026-04_2026-04-12_cloud0pct_OK.png
 11,Cảng hàng không quốc tế Gia Bình,giabinh_airport,21.05,106.28,2026-05,2026-05-27,2.2,OK,giabinh_airport/2026-05_2026-05-27_cloud2pct_OK.png
@@ -1330,10 +1330,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-04,2026-04-09,56.9,CLOUDY,09_halong_depot/2026-04_2026-04-09_cloud57pct_CLOUDY.png
 09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-05,2026-05-26,0.0,OK,09_halong_depot/2026-05_2026-05-26_cloud0pct_OK.png
 09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-06,2026-06-23,82.1,CLOUDY,09_halong_depot/2026-06_2026-06-23_cloud82pct_CLOUDY.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-07,2026-07-13,0.3,OK,09_halong_depot/2026-07_2026-07-13_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-07,2026-07-13,0.2,OK,09_halong_depot/2026-07_2026-07-13_cloud0pct_OK.png
 09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-08,2026-08-12,0.0,OK,09_halong_depot/2026-08_2026-08-12_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-09,2026-09-21,0.0,OK,09_halong_depot/2026-09_2026-09-21_cloud0pct_OK.png
-09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-10,2026-10-11,0.0,OK,09_halong_depot/2026-10_2026-10-11_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-09,2026-09-21,0.1,OK,09_halong_depot/2026-09_2026-09-21_cloud0pct_OK.png
+09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-10,2026-10-11,2.4,OK,09_halong_depot/2026-10_2026-10-11_cloud2pct_OK.png
 09,Ga Ha Long/Tuan Chau (DS HN-Quang Ninh),halong_depot,20.9274,106.986,2026-11,2026-11-10,100.0,CLOUDY,09_halong_depot/2026-11_2026-11-10_cloud100pct_CLOUDY.png
 20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-02,2026-02-20,3.3,OK,hsr_bac_nam/2026-02_2026-02-20_cloud3pct_OK.png
 20,Đường sắt tốc độ cao Bắc - Nam,hsr_bac_nam,16.05,108.2,2026-03,2026-03-27,0.0,OK,hsr_bac_nam/2026-03_2026-03-27_cloud0pct_OK.png
@@ -1559,9 +1559,9 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-06,2026-06-16,0.2,OK,04_nui_ong_quan/2026-06_2026-06-16_cloud0pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-07,2026-07-16,1.5,OK,04_nui_ong_quan/2026-07_2026-07-16_cloud2pct_OK.png
 04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-08,2026-08-02,13.2,OK,04_nui_ong_quan/2026-08_2026-08-02_cloud13pct_OK.png
-04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-09,2026-09-16,0.0,OK,04_nui_ong_quan/2026-09_2026-09-16_cloud0pct_OK.png
-04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-10,2026-10-29,72.5,CLOUDY,04_nui_ong_quan/2026-10_2026-10-29_cloud73pct_CLOUDY.png
-04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-11,2026-11-08,10.6,OK,04_nui_ong_quan/2026-11_2026-11-08_cloud11pct_OK.png
+04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-09,2026-09-16,0.4,OK,04_nui_ong_quan/2026-09_2026-09-16_cloud0pct_OK.png
+04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-10,2026-10-29,70.3,CLOUDY,04_nui_ong_quan/2026-10_2026-10-29_cloud70pct_CLOUDY.png
+04,KDL sinh thai Nui Ong Quan,nui_ong_quan,10.046,104.0,2026-11,2026-11-08,11.3,OK,04_nui_ong_quan/2026-11_2026-11-08_cloud11pct_OK.png
 224,Nút Giao An Phú,nut_giao_an_phu,10.792155513318395,106.75181779142665,2026-02,2026-02-03,0.8,OK,nut_giao_an_phu/2026-02_2026-02-03_cloud1pct_OK.png
 224,Nút Giao An Phú,nut_giao_an_phu,10.792155513318395,106.75181779142665,2026-03,2026-03-17,0.0,OK,nut_giao_an_phu/2026-03_2026-03-17_cloud0pct_OK.png
 224,Nút Giao An Phú,nut_giao_an_phu,10.792155513318395,106.75181779142665,2026-04,2026-05-01,0.0,OK,nut_giao_an_phu/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1720,10 +1720,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-05,2026-05-27,0.4,OK,02_pq_airport/2026-05_2026-05-27_cloud0pct_OK.png
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-06,2026-06-13,9.1,OK,02_pq_airport/2026-06_2026-06-13_cloud9pct_OK.png
 02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-07,2026-07-18,12.2,OK,02_pq_airport/2026-07_2026-07-18_cloud12pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-08,2026-08-02,44.0,CLOUDY,02_pq_airport/2026-08_2026-08-02_cloud44pct_CLOUDY.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-09,2026-09-16,0.8,OK,02_pq_airport/2026-09_2026-09-16_cloud1pct_OK.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-10,2026-10-29,59.4,CLOUDY,02_pq_airport/2026-10_2026-10-29_cloud59pct_CLOUDY.png
-02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-11,2026-11-08,0.0,OK,02_pq_airport/2026-11_2026-11-08_cloud0pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-08,2026-08-12,21.1,OK,02_pq_airport/2026-08_2026-08-12_cloud21pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-09,2026-09-16,6.7,OK,02_pq_airport/2026-09_2026-09-16_cloud7pct_OK.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-10,2026-10-01,62.0,CLOUDY,02_pq_airport/2026-10_2026-10-01_cloud62pct_CLOUDY.png
+02,Mo rong CHKQT Phu Quoc,pq_airport,10.1628,103.998,2026-11,2026-11-18,0.0,OK,02_pq_airport/2026-11_2026-11-18_cloud0pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-01,2025-01-07,0.0,OK,05_pq_tram/2025-01_2025-01-07_cloud0pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-02,2025-02-08,0.0,OK,05_pq_tram/2025-02_2025-02-08_cloud0pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2025-03,2025-03-10,0.1,OK,05_pq_tram/2025-03_2025-03-10_cloud0pct_OK.png
@@ -1743,10 +1743,10 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-05,2026-05-27,18.0,OK,05_pq_tram/2026-05_2026-05-27_cloud18pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-06,2026-06-13,5.9,OK,05_pq_tram/2026-06_2026-06-13_cloud6pct_OK.png
 05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-07,2026-07-21,12.5,OK,05_pq_tram/2026-07_2026-07-21_cloud12pct_OK.png
-05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-08,2026-08-12,17.9,OK,05_pq_tram/2026-08_2026-08-12_cloud18pct_OK.png
-05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-09,2026-09-16,19.6,OK,05_pq_tram/2026-09_2026-09-16_cloud20pct_OK.png
-05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-10,2026-10-11,90.9,CLOUDY,05_pq_tram/2026-10_2026-10-11_cloud91pct_CLOUDY.png
-05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-11,2026-11-18,0.0,OK,05_pq_tram/2026-11_2026-11-18_cloud0pct_OK.png
+05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-08,2026-08-12,12.4,OK,05_pq_tram/2026-08_2026-08-12_cloud12pct_OK.png
+05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-09,2026-09-16,24.1,OK,05_pq_tram/2026-09_2026-09-16_cloud24pct_OK.png
+05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-10,2026-10-11,71.1,CLOUDY,05_pq_tram/2026-10_2026-10-11_cloud71pct_CLOUDY.png
+05,Tau dien do thi PQ doan 1 (CHUA XAC MINH),pq_tram,10.105,103.999,2026-11,2026-11-10,1.5,OK,05_pq_tram/2026-11_2026-11-10_cloud1pct_OK.png
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-02,2026-02-10,100.0,CLOUDY,quoc_lo_51/2026-02_2026-02-10_cloud100pct_CLOUDY.png
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-03,2026-03-22,0.0,OK,quoc_lo_51/2026-03_2026-03-22_cloud0pct_OK.png
 200,Quốc Lộ 51,quoc_lo_51,10.820209023215785,106.94224275661345,2026-04,2026-05-01,0.0,OK,quoc_lo_51/2026-04_2026-05-01_cloud0pct_OK.png
@@ -1785,11 +1785,11 @@ project_no,project_name,site_key,lat,lon,month,capture_date,aoi_cloud_pct,status
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-04,2026-04-26,0.0,OK,06_rach_chiec/2026-04_2026-04-26_cloud0pct_OK.png
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-05,2026-05-01,0.0,OK,06_rach_chiec/2026-05_2026-05-01_cloud0pct_OK.png
 06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-06,2026-06-05,44.0,CLOUDY,06_rach_chiec/2026-06_2026-06-05_cloud44pct_CLOUDY.png
-6,Khu Liên hợp Thể dục thể thao Quốc gia Rạch Chiếc,rach_chiec,10.797,106.755,2026-07,2026-07-20,31.1,CLOUDY,rach_chiec/2026-07_2026-07-20_cloud31pct_CLOUDY.png
-6,Khu Liên hợp Thể dục thể thao Quốc gia Rạch Chiếc,rach_chiec,10.797,106.755,2026-08,2026-08-22,63.6,CLOUDY,rach_chiec/2026-08_2026-08-22_cloud64pct_CLOUDY.png
-6,Khu Liên hợp Thể dục thể thao Quốc gia Rạch Chiếc,rach_chiec,10.797,106.755,2026-09,2026-09-30,0.0,OK,rach_chiec/2026-09_2026-09-30_cloud0pct_OK.png
-6,Khu Liên hợp Thể dục thể thao Quốc gia Rạch Chiếc,rach_chiec,10.797,106.755,2026-10,2026-10-20,8.9,OK,rach_chiec/2026-10_2026-10-20_cloud9pct_OK.png
-6,Khu Liên hợp Thể dục thể thao Quốc gia Rạch Chiếc,rach_chiec,10.797,106.755,2026-11,2026-11-05,0.0,OK,rach_chiec/2026-11_2026-11-05_cloud0pct_OK.png
+06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-07,2026-07-20,49.0,CLOUDY,06_rach_chiec/2026-07_2026-07-20_cloud49pct_CLOUDY.png
+06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-08,2026-08-02,95.0,CLOUDY,06_rach_chiec/2026-08_2026-08-02_cloud95pct_CLOUDY.png
+06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-09,2026-09-28,47.8,CLOUDY,06_rach_chiec/2026-09_2026-09-28_cloud48pct_CLOUDY.png
+06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-10,2026-10-20,13.5,OK,06_rach_chiec/2026-10_2026-10-20_cloud14pct_OK.png
+06,Khu LH TDTT QG Rach Chiec,rach_chiec,10.8116,106.7587,2026-11,2026-11-22,0.0,OK,06_rach_chiec/2026-11_2026-11-22_cloud0pct_OK.png
 98,Rạch Xuyên Tâm,rach_xuyen_tam,10.808361925107643,106.70303497832359,2026-02,2026-02-08,0.0,OK,rach_xuyen_tam/2026-02_2026-02-08_cloud0pct_OK.png
 98,Rạch Xuyên Tâm,rach_xuyen_tam,10.808361925107643,106.70303497832359,2026-03,2026-04-01,0.0,OK,rach_xuyen_tam/2026-03_2026-04-01_cloud0pct_OK.png
 98,Rạch Xuyên Tâm,rach_xuyen_tam,10.808361925107643,106.70303497832359,2026-04,2026-04-24,0.0,OK,rach_xuyen_tam/2026-04_2026-04-24_cloud0pct_OK.png

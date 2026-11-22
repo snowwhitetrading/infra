@@ -638,6 +638,12 @@ def main():
                 p["tmdt"] = floor; p["tmdtSrc"] = "vốn tự có + huy động (Phụ lục I)"
         # HẠN: report đã lo ở trên; nếu chưa có → LLM (có nguồn) thay mark regex (guard: ≥ lúc khởi công)
         dl = p.get("deadlineLLM")
+        # Báo cáo và tin LỆCH nhau: tin (mới hơn) nêu hạn hoàn thành TOÀN BỘ muộn hơn hạn trong báo cáo
+        # (báo cáo thường ghi hạn của giai đoạn 1 / mốc khai thác đầu) → giữ cả hai để trang nói rõ và
+        # đường kế hoạch chạy tới mốc hoàn thành toàn bộ, không ép về 100% ở hạn sớm hơn.
+        if rep and dl and dl > (rep[1] if len(rep[1]) == 7 else rep[1] + "-12"):
+            p["deadlineNews"] = dl
+            p["deadlineNewsSrc"] = p.get("deadlineLLMSrc") or "theo tin"
         if not rep and dl and (not froms or dl >= min(froms)):
             p["marks"] = [m for m in p.get("marks", []) if m.get("tier") != "deadline"]
             p["marks"].append({"date": dl, "type": "ms", "tier": "deadline",
