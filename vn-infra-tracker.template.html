@@ -307,33 +307,73 @@ table.fin td:last-child{text-align:right;font-family:"Manrope",monospace;font-we
 .satobs{padding:9px 12px;border:1px solid var(--rule2);border-left:3px solid var(--gpmb);border-radius:var(--radius);
   font-size:12px;color:var(--ink2);line-height:1.6;background:var(--card);margin-bottom:4px}
 .satobs b{font-weight:500;color:var(--gpmb)}
-.db-row{padding:10px 0;border-top:1px solid var(--rule2)}
-.db-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.db-nm{font-size:13px;color:var(--ink);font-weight:500}
-.db-pct{font-family:"Manrope",monospace;font-size:13px;font-weight:600}
+/* ---------- tab Giải ngân ---------- */
 .db-g{color:var(--done)} .db-m{color:var(--gpmb)} .db-l{color:var(--alert)}
-.db-barwrap{height:7px;background:var(--sunk);border-radius:4px;margin:5px 0;overflow:hidden}
+.db-barwrap{height:7px;background:var(--sunk);border-radius:4px;margin:5px 0;position:relative}
 .db-bar{height:100%;border-radius:4px}
 .db-bar.db-g{background:var(--done)} .db-bar.db-m{background:var(--gpmb)} .db-bar.db-l{background:var(--alert)}
-.db-meta{font-size:11.5px;color:var(--ink3)}
-.db-ts{display:flex;align-items:flex-end;gap:12px;margin-top:6px;padding:10px 4px 2px;border-top:1px dashed var(--rule2);overflow-x:auto}
-.db-col{display:flex;flex-direction:column;align-items:center;min-width:40px;flex:0 0 auto}
-.db-colv{height:66px;display:flex;align-items:flex-end}
-.db-colbar{width:22px;border-radius:3px 3px 0 0;transition:height .2s}
-.db-colbar.db-g{background:var(--done)} .db-colbar.db-m{background:var(--gold)} .db-colbar.db-l{background:var(--alert)}
-.db-colabs{font-family:"Manrope",monospace;font-size:11px;font-weight:600;color:var(--ink);margin-top:4px}
-.db-colpct{font-family:"Manrope",monospace;font-size:9.5px;margin-top:1px}
-.db-collab{font-family:"Manrope",monospace;font-size:9.5px;color:var(--ink3);margin-top:2px;white-space:nowrap}
-.db-kpi{font-size:12px;color:var(--ink2);font-family:"Manrope",monospace;white-space:nowrap}
-.db-kpi b{font-size:13px}
-.db-cap{font-size:10.5px;color:var(--ink3);margin:4px 0 0}
+.db-tick{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px;transform:translateX(-50%)}
+.db-notebox{font-size:12.5px;color:var(--ink2);margin:2px 0 14px;line-height:1.5}
+.db-notebox b{color:var(--ink);font-weight:600}
+.db-notebox a{color:var(--build);text-underline-offset:2px}
+.db-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.db-chip{font:inherit;font-size:12px;padding:5px 11px;border:1px solid var(--rule2);border-radius:999px;background:var(--card);
+  color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.db-chip i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.db-chip b{font-family:"Manrope",monospace;color:var(--ink)}
+.db-chip:hover{border-color:var(--ink3)}
+.db-chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.db-chip[aria-pressed="true"] b{color:var(--paper)}
+.db-chip:focus-visible,.dbr-h:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .db-brks{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:2px 0 18px}
-.db-brk-h{font-size:11px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:0 0 7px;padding-bottom:4px;border-bottom:1px solid var(--rule)}
+.db-brk-h{font-size:11px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin:0 0 7px;padding-bottom:4px;border-bottom:1px solid var(--rule2)}
 .db-brk-row{display:grid;grid-template-columns:1fr 52px 1fr 42px 88px;gap:9px;align-items:center;padding:4px 0;font-size:12px}
 .db-brk-nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .db-brk-n{font-family:"Manrope",monospace;font-size:11px;color:var(--ink3);text-align:right}
 .db-brk-p{font-family:"Manrope",monospace;font-weight:600;text-align:right}
 .db-brk-v{font-family:"Manrope",monospace;font-size:11px;color:var(--ink3);text-align:right}
+/* bảng dự án: 1 dòng / dự án, bấm để mở biểu đồ */
+.db-tbl{border:1px solid var(--rule);background:var(--card);overflow-x:auto}
+.db-thead,.dbr-h{display:grid;grid-template-columns:minmax(230px,1.7fr) minmax(150px,1.3fr) 62px 104px 150px 78px;gap:14px;align-items:center;min-width:860px}
+.db-thead{padding:8px 14px;background:var(--brand);color:#fff;font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.db-thead .r{text-align:right}
+.dbr{border-top:1px solid var(--rule)}
+.dbr-h{width:100%;padding:10px 14px;background:none;border:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.dbr-h:hover{background:var(--hover)}
+.dbr-nm{font-size:13px;font-weight:500;color:var(--ink);display:flex;gap:7px;align-items:baseline;min-width:0}
+.dbr-nm .caret{flex:none}
+.dbr.open .caret{transform:rotate(90deg)}
+.dbr-nm span.t{overflow:hidden;text-overflow:ellipsis}
+.dbr-tag{flex:none;font-family:"Manrope",monospace;font-size:9.5px;padding:0 5px;border:1px dashed var(--rule2);border-radius:2px;color:var(--ink3);white-space:nowrap}
+.dbr-tag.w{border-color:var(--gpmb);color:var(--gpmb);border-style:solid}
+.dbr-pct{font-family:"Manrope",monospace;font-size:14px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.dbr-num{font-family:"Manrope",monospace;font-size:11.5px;color:var(--ink2);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dbr-num b{color:var(--ink);font-weight:600}
+.dbr-d.up{color:var(--done)} .dbr-d.flat{color:var(--ink3)}
+.db-sec{padding:8px 14px;background:var(--sunk);border-top:1px solid var(--rule2);font-size:11.5px;color:var(--ink2);font-weight:600}
+.dbx{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start;padding:6px 14px 16px 34px;border-top:1px dotted var(--rule2)}
+.dbx-svg{flex:1 1 420px;max-width:560px;min-width:0}
+.dbx-svg svg{width:100%;height:auto;display:block;overflow:visible}
+.dbx-svg text{font-family:"Manrope",monospace;font-size:10px;fill:var(--ink3)}
+.dbx-svg text.v{font-size:10.5px;font-weight:700;fill:var(--ink)}
+.dbx-grid{stroke:var(--rule);stroke-width:1}
+.dbx-exp{fill:none;stroke:var(--ink2);stroke-width:1.3;stroke-dasharray:5 4}
+.dbx-line{fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.dbx-area{fill-opacity:.13}
+.dbx-pt{fill:var(--card);stroke-width:1.8}
+.dbx.c-g .dbx-line,.dbx.c-g .dbx-pt{stroke:var(--done)} .dbx.c-g .dbx-area{fill:var(--done)}
+.dbx.c-m .dbx-line,.dbx.c-m .dbx-pt{stroke:var(--gpmb)} .dbx.c-m .dbx-area{fill:var(--gpmb)}
+.dbx.c-l .dbx-line,.dbx.c-l .dbx-pt{stroke:var(--alert)} .dbx.c-l .dbx-area{fill:var(--alert)}
+.dbx-lg{display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:var(--ink3);margin-top:6px}
+.dbx-lg i{display:inline-block;vertical-align:middle;margin-right:5px}
+.dbx-lg .la{width:16px;height:0;border-top:2.2px solid var(--ink2)} .dbx-lg .lp{width:18px;height:0;border-top:1.3px dashed var(--ink2)}
+.dbx-side{flex:1 1 300px;max-width:460px;font-size:12px;color:var(--ink2)}
+.dbx-t{width:100%;border-collapse:collapse;font-size:11.5px}
+.dbx-t th{text-align:right;font-weight:500;color:var(--ink3);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;padding:4px 6px;border-bottom:1px solid var(--rule2)}
+.dbx-t th:first-child,.dbx-t td:first-child{text-align:left}
+.dbx-t td{padding:5px 6px;text-align:right;border-bottom:1px dotted var(--rule2);font-family:"Manrope",monospace;font-variant-numeric:tabular-nums}
+.dbx-note{font-size:11px;color:var(--ink3);line-height:1.45;margin:8px 0 0}
+.dbx-note.w{color:var(--gpmb)}
 @media(max-width:720px){.db-brks{grid-template-columns:1fr}}
 .narr{margin:0 0 14px;padding:10px 14px;background:var(--callout);border-left:3px solid var(--accent);
   border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;color:var(--ink2)}
@@ -606,15 +646,18 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
 
 <div id="view-disb" class="hidden">
   <div class="map-bar">
+    <div class="mf"><span>Năm kế hoạch</span><select id="db-year"></select></div>
     <div class="mf"><span>Sắp xếp</span><select id="db-sort">
-      <option value="prog" selected>Theo tab Tiến độ</option>
-      <option value="pct">% giải ngân</option>
+      <option value="gap" selected>Thấp so với thời gian trước</option>
+      <option value="pct">% giải ngân cao → thấp</option>
+      <option value="delta">Tăng nhiều nhất so kỳ trước</option>
       <option value="kh">Kế hoạch vốn</option>
       <option value="gn">Đã giải ngân</option>
+      <option value="name">Tên dự án</option>
     </select></div>
     <div class="mf"><span>Tìm</span><input id="db-search" type="search" placeholder="Tên dự án" autocomplete="off"></div>
   </div>
-  <p class="cap" id="db-note" style="margin:2px 0 12px"></p>
+  <p class="db-notebox" id="db-note"></p>
   <div id="disb-list"></div>
 </div>
 
@@ -661,6 +704,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 const NEWSFLOW = [];
 const SATELLITE = {};
 const DISB = {};
+const DISB_META = {};   // {ky: {title, url, source, as_of}} — báo cáo nguồn của từng kỳ giải ngân
 const PACE_HIST = {};   // {tid:[[YYYY-MM, score -5..+5|null, progress 0..100|null], ...]} — lịch sử nhịp độ + % hoàn thành theo tháng
 const MAPPTS = [];
 const CAT_ORDER = [];
@@ -1778,60 +1822,153 @@ function renderSummary(){
   h+=_sumTable('Theo loại hình',gType);
   el.innerHTML=h;
 }
+/* ============================================================
+   TAB GIẢI NGÂN
+   - Xem theo NĂM KẾ HOẠCH (luỹ kế giải ngân tính lại từ 0 mỗi năm → không nối 2 năm thành 1 dãy).
+   - Mốc so sánh = % thời gian của năm đã trôi tại kỳ số liệu (kỳ 10 tháng → 83%).
+     Mức: Tốt = cách mốc không quá 10 điểm · Trung bình = kém 10–30 điểm · Thấp = kém hơn 30 điểm.
+   - Dự án không có trong kỳ mới nhất: ghi rõ "số liệu tới Tx", KHÔNG cộng vào tổng.
+   ============================================================ */
+let _dbYear=null, _dbCls='';
+const _dbOpen=new Set();
+const DB_CLS={g:'Tốt', m:'Trung bình', l:'Thấp'};
+const _kyP = k => { const m=/(\d+)T(\d{4})/.exec(k||''); return m?{y:+m[2], m:+m[1]}:null; };
+function _dbCalc(year){
+  const rows=[]; let latest=0;
+  Object.keys(DISB).forEach(function(tid){
+    const d=DISB[tid];
+    const ser=(d.series||[]).map(s=>Object.assign({p:_kyP(s.ky)}, s)).filter(s=>s.p && s.p.y===year).sort((a,b)=>a.p.m-b.p.m);
+    if(!ser.length) return;
+    ser.forEach(function(s){ if(s.kh==null && s.pct>0 && s.gn!=null) s.kh=s.gn/s.pct*100; });   // kỳ cũ không lưu KH → suy từ số giải ngân và tỷ lệ
+    const last=ser[ser.length-1], prev=ser.length>1?ser[ser.length-2]:null;
+    if(last.kh==null && d.as_of===last.ky && d.kh!=null) last.kh=d.kh;
+    latest=Math.max(latest, last.p.m);
+    const pj=P.find(x=>x.id===+tid);
+    rows.push({tid:+tid, pj:pj, name:pj?pj.name:(d.name||''), ser:ser, last:last, prev:prev,
+      pct:last.pct||0, gn:last.gn||0, kh:last.kh||0, d:prev?(last.pct||0)-(prev.pct||0):null,
+      warn:ser.some((s,i)=>i>0 && (ser[i-1].gn||0)-(s.gn||0) > Math.max(10, (ser[i-1].gn||0)*0.05))});   // luỹ kế GIẢM rõ (>5% và >10 tỷ) trong cùng năm → cần kiểm tra
+  });
+  const el=m=>Math.min(100, m/12*100);
+  rows.forEach(function(r){ r.stale=r.last.p.m<latest; r.gap=r.pct-el(r.last.p.m); r.cls=r.gap>=-10?'g':(r.gap>=-30?'m':'l'); });
+  return {rows:rows, latest:latest, exp:el(latest)};
+}
+function _dbBarHTML(pct, cls, exp){
+  return `<div class="db-barwrap"><div class="db-bar db-${cls}" style="width:${Math.min(100,pct)}%"></div><i class="db-tick" style="left:${exp}%"></i></div>`;
+}
+function _dbChart(r){            // luỹ kế % theo tháng trong năm + đường "lẽ ra" đều theo thời gian
+  const W=520,H=190,L=32,R=14,T=16,B=26, pw=W-L-R, ph=H-T-B;
+  const ymax=Math.max(100, ...r.ser.map(s=>s.pct||0));
+  const X=m=>L+m/12*pw, Y=v=>T+ph-(v/ymax)*ph, f=n=>n.toFixed(1);
+  let g='';
+  [0,50,100].forEach(function(v){ g+=`<line class="dbx-grid" x1="${L}" x2="${W-R}" y1="${f(Y(v))}" y2="${f(Y(v))}"/><text x="${L-5}" y="${f(Y(v)+3.5)}" text-anchor="end">${v}${v===100?'%':''}</text>`; });
+  for(let m=1;m<=12;m++) g+=`<text x="${f(X(m))}" y="${H-8}" text-anchor="middle">T${m}</text>`;
+  g+=`<line class="dbx-exp" x1="${f(X(0))}" y1="${f(Y(0))}" x2="${f(X(12))}" y2="${f(Y(100))}"/>`;
+  const pts=[{m:0,v:0}].concat(r.ser.map(s=>({m:Math.min(12,s.p.m), v:s.pct||0, s:s})));
+  const line=pts.map((p,i)=>(i?'L':'M')+f(X(p.m))+','+f(Y(p.v))).join('');
+  g+=`<path class="dbx-area" d="${line}L${f(X(pts[pts.length-1].m))},${f(Y(0))}L${f(X(0))},${f(Y(0))}Z"/><path class="dbx-line" d="${line}"/>`;
+  pts.slice(1).forEach(function(p){
+    g+=`<circle class="dbx-pt" cx="${f(X(p.m))}" cy="${f(Y(p.v))}" r="3.4"><title>${esc(_kyLong(p.s.ky))}: ${nf(p.s.gn||0)} tỷ · ${(p.v).toFixed(1)}% kế hoạch năm</title></circle>`
+      +`<text class="v" x="${f(X(p.m))}" y="${f(Y(p.v)-8)}" text-anchor="middle">${p.v.toFixed(0)}%</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tỷ lệ giải ngân luỹ kế theo tháng">${g}</svg>
+    <div class="dbx-lg"><span><i class="la"></i>đã giải ngân (luỹ kế, % kế hoạch năm)</span><span><i class="lp"></i>mốc đều theo thời gian</span></div>`;
+}
+function _dbDetail(r){
+  const el=m=>Math.min(100, m/12*100);
+  const trs=r.ser.slice().reverse().map(function(s){ const g=(s.pct||0)-el(s.p.m);
+    return `<tr><td>${esc(_kyLong(s.ky))}</td><td>${s.kh!=null?nf(Math.round(s.kh)):'—'}</td><td>${nf(Math.round((s.gn||0)*10)/10)}</td><td><b>${(s.pct||0).toFixed(1)}%</b></td><td>${g>0?'+':''}${g.toFixed(0)} điểm</td></tr>`; }).join('');
+  const ht = r.pj ? ((typeof _pstat==='function' ? _pstat(r.pj).act : null) ?? r.pj.paceProgress) : null;
+  return `<div class="dbx c-${r.cls}"><div class="dbx-svg">${_dbChart(r)}</div>
+    <div class="dbx-side">
+      <table class="dbx-t"><tr><th>Kỳ</th><th>KH vốn năm (tỷ)</th><th>Đã giải ngân (tỷ)</th><th>Tỷ lệ</th><th>So mốc thời gian</th></tr>${trs}</table>
+      ${r.warn?'<p class="dbx-note w">⚠ Số luỹ kế có kỳ thấp hơn kỳ trước trong cùng năm — có thể do điều chỉnh kế hoạch vốn hoặc sai số liệu nguồn, cần kiểm tra lại.</p>':''}
+      ${r.stale?`<p class="dbx-note">Dự án không có trong báo cáo kỳ mới nhất; số liệu dừng ở ${esc(_kyLong(r.last.ky)).toLowerCase()} và không được cộng vào tổng.</p>`:''}
+      ${ht!=null?`<p class="dbx-note">% hoàn thành công trình (tab Tiến độ): <b style="color:var(--ink)">${Math.round(ht)}%</b>. Tỷ lệ giải ngân là vốn đã chi so với kế hoạch vốn của năm, không phải % hoàn thành.</p>`:''}
+    </div></div>`;
+}
 function renderDisb(){
   const el=document.getElementById('disb-list'); if(!el) return;
-  const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search');
-  if(!sortEl.dataset.init){ sortEl.onchange=renderDisb; qEl.oninput=renderDisb; sortEl.dataset.init='1'; }
-  const sort=sortEl.value, q=_norm(qEl.value||'');
-  let rows=Object.keys(DISB).map(tid=>Object.assign({tid:+tid}, DISB[tid]));
-  rows.forEach(r=>{ r._pj=P.find(x=>x.id===r.tid); if(r._pj) r.name=r._pj.name; });   // map sang dự án tracker (dùng chung tên/thứ tự)
-  rows=rows.filter(r=>!q||_norm(r.name).includes(q));
-  // 'prog' (mặc định) = thứ tự như tab Tiến độ (số tin nhiều→ít); còn lại theo % / KH / GN
-  rows.sort((a,b)=> sort==='kh'?((b.kh||0)-(a.kh||0)) : sort==='gn'?((b.gn||0)-(a.gn||0)) : sort==='pct'?((b.pct||0)-(a.pct||0))
-    : ((a._pj?newsN(a._pj):0)<(b._pj?newsN(b._pj):0)?1:(a._pj?newsN(a._pj):0)>(b._pj?newsN(b._pj):0)?-1: a.name.localeCompare(b.name,'vi')));
-  const asof=rows.length?(rows[0].as_of||''):'';
-  document.getElementById('db-note').innerHTML=`Nguồn <b>Bộ Tài chính</b> · ${rows.length} dự án · số liệu tới ${esc(asof)}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm (không phải % hoàn thành công trình).`;
-  // ---- summary riêng cho tab giải ngân ----
-  const tKH=rows.reduce((a,r)=>a+(r.kh||0),0), tGN=rows.reduce((a,r)=>a+(r.gn||0),0);
-  const oPct=tKH?tGN/tKH*100:0, oc=oPct>=60?'g':oPct>=30?'m':'l';
-  const bk={g:0,m:0,l:0}; rows.forEach(r=>{const p=r.pct||0; bk[p>=60?'g':p>=30?'m':'l']++;});
-  const _dbAgg=(kf)=>{const g={}; rows.forEach(r=>{const k=kf(r); if(!k)return; (g[k]=g[k]||{n:0,kh:0,gn:0}); g[k].n++; g[k].kh+=r.kh||0; g[k].gn+=r.gn||0;}); return g;};
-  const _dbBrk=(title,kf,order)=>{const g=_dbAgg(kf); const keys=(order||Object.keys(g).sort((a,b)=>g[b].kh-g[a].kh)).filter(k=>g[k]);
-    if(!keys.length) return ''; return `<div class="db-brk"><div class="db-brk-h">${title}</div>${keys.map(k=>{const a=g[k],p=a.kh?a.gn/a.kh*100:0,c=p>=60?'g':p>=30?'m':'l';
+  const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search'), yEl=document.getElementById('db-year');
+  if(!sortEl.dataset.init){
+    const years=[...new Set([].concat(...Object.keys(DISB).map(t=>(DISB[t].series||[]).map(s=>(_kyP(s.ky)||{}).y))).filter(Boolean))].sort((a,b)=>b-a);
+    yEl.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    _dbYear=years[0]||null;
+    sortEl.onchange=renderDisb; qEl.oninput=renderDisb;
+    yEl.onchange=function(){ _dbYear=+yEl.value; _dbCls=''; _dbOpen.clear(); renderDisb(); };
+    sortEl.dataset.init='1';
+  }
+  if(!_dbYear){ el.innerHTML='<div class="mp-empty">Chưa có dữ liệu giải ngân.</div>'; return; }
+  const C=_dbCalc(_dbYear), sort=sortEl.value, q=_norm(qEl.value||'');
+  const cur=C.rows.filter(r=>!r.stale), old=C.rows.filter(r=>r.stale);
+
+  // ---- dòng nguồn ----
+  const meta=DISB_META[C.latest+'T'+_dbYear];
+  const doc=meta&&meta.title?esc(meta.title.split(':')[0].trim()):'';
+  document.getElementById('db-note').innerHTML=
+    `Kế hoạch vốn năm <b>${_dbYear}</b> · số liệu luỹ kế tới hết <b>tháng ${C.latest}/${_dbYear}</b>`
+    +(doc?` · theo báo cáo <b>${doc}</b> của Bộ Tài chính`:' · nguồn Bộ Tài chính')
+    +(meta&&meta.url?` · <a href="${esc(meta.url)}" target="_blank" rel="noopener">xem văn bản gốc${meta.source?' ('+esc(meta.source)+')':''} ↗</a>`:'')
+    +`<br>Vạch đen trên mỗi thanh là mốc so sánh: tới kỳ này đã qua <b>${C.exp.toFixed(0)}%</b> thời gian của năm. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm, không phải % hoàn thành công trình.`;
+
+  // ---- tổng hợp (chỉ dự án có trong kỳ mới nhất) ----
+  const tKH=cur.reduce((a,r)=>a+r.kh,0), tGN=cur.reduce((a,r)=>a+r.gn,0);
+  const oPct=tKH?tGN/tKH*100:0, og=oPct-C.exp, oc=og>=-10?'g':(og>=-30?'m':'l');
+  const bk={g:0,m:0,l:0}; cur.forEach(r=>bk[r.cls]++);
+  const _dbBrk=function(title,kf,order){
+    const g={}; cur.forEach(function(r){ const k=kf(r); if(!k) return; (g[k]=g[k]||{n:0,kh:0,gn:0}); g[k].n++; g[k].kh+=r.kh; g[k].gn+=r.gn; });
+    const keys=(order||Object.keys(g).sort((a,b)=>g[b].kh-g[a].kh)).filter(k=>g[k]);
+    if(!keys.length) return '';
+    return `<div class="db-brk"><div class="db-brk-h">${title}</div>${keys.map(function(k){ const a=g[k], p=a.kh?a.gn/a.kh*100:0, gp=p-C.exp, c=gp>=-10?'g':(gp>=-30?'m':'l');
       return `<div class="db-brk-row"><span class="db-brk-nm">${esc(k)}</span><span class="db-brk-n">${a.n} DA</span>
-        <div class="db-barwrap"><div class="db-bar db-${c}" style="width:${Math.min(100,p)}%"></div></div>
-        <span class="db-brk-p db-${c}">${p.toFixed(0)}%</span><span class="db-brk-v">${_kt(a.gn)}/${_kt(a.kh)}</span></div>`;}).join('')}</div>`;};
-  const dbSum=`<div class="kpiband">
-    <div class="kpi"><div class="kpi-k">Số dự án</div><div class="kpi-v">${rows.length}</div></div>
-    <div class="kpi"><div class="kpi-k">Kế hoạch vốn năm</div><div class="kpi-v">${_kt(tKH)}<span class="kpi-u">nghìn tỷ</span></div></div>
-    <div class="kpi"><div class="kpi-k">Đã giải ngân</div><div class="kpi-v">${_kt(tGN)}<span class="kpi-u">nghìn tỷ</span></div></div>
-    <div class="kpi kpi-wide"><div class="kpi-k">Tỷ lệ giải ngân chung <b class="db-${oc}">${oPct.toFixed(1)}%</b></div>
-      <div class="db-barwrap" style="margin:9px 0 8px"><div class="db-bar db-${oc}" style="width:${Math.min(100,oPct)}%"></div></div>
-      <div class="sg-legend"><span><i class="db-l" style="background:var(--alert)"></i>Thấp &lt;30%: ${bk.l}</span>
-        <span><i class="db-m" style="background:var(--gold)"></i>TB 30–60%: ${bk.m}</span>
-        <span><i class="db-g" style="background:var(--done)"></i>Cao ≥60%: ${bk.g}</span></div></div>
+        ${_dbBarHTML(p,c,C.exp)}
+        <span class="db-brk-p db-${c}">${p.toFixed(0)}%</span><span class="db-brk-v">${_kt(a.gn)}/${_kt(a.kh)}</span></div>`; }).join('')}</div>`;
+  };
+  const big=t=>t>=1000?[nf(Math.round(t/100)/10),'nghìn tỷ đồng']:[nf(Math.round(t)),'tỷ đồng'];   // 175.4 nghìn tỷ (không ghi "175K nghìn tỷ")
+  const chip=(k,label,n,color)=>`<button type="button" class="db-chip" data-cls="${k}" aria-pressed="${_dbCls===k}">${color?`<i style="background:${color}"></i>`:''}${label} <b>${n}</b></button>`;
+  const sum=`<div class="kpiband">
+    <div class="kpi"><div class="kpi-k">Kế hoạch vốn năm ${_dbYear}</div><div class="kpi-v">${big(tKH)[0]}<span class="kpi-u">${big(tKH)[1]}</span></div></div>
+    <div class="kpi"><div class="kpi-k">Đã giải ngân</div><div class="kpi-v">${big(tGN)[0]}<span class="kpi-u">${big(tGN)[1]}</span></div></div>
+    <div class="kpi kpi-wide"><div class="kpi-k">Tỷ lệ giải ngân chung <b class="db-${oc}">${oPct.toFixed(1)}%</b> · mốc thời gian ${C.exp.toFixed(0)}% · ${og>=0?'vượt':'kém'} mốc ${Math.abs(og).toFixed(0)} điểm</div>
+      <div style="margin:9px 0 4px">${_dbBarHTML(oPct,oc,C.exp)}</div>
+      <div class="sg-legend"><span>${cur.length} dự án có số liệu kỳ này${old.length?` · ${old.length} dự án số liệu cũ không tính vào tổng`:''}</span></div></div>
   </div>
   <div class="db-brks">
-    ${_dbBrk('Theo hình thức', r=>r._pj?_form(r._pj):null, ['Công','Tư','PPP'])}
-    ${_dbBrk('Theo loại hình', r=>r._pj?r._pj.g:null)}
+    ${_dbBrk('Theo hình thức', r=>r.pj?_form(r.pj):null, ['Công','Tư','PPP'])}
+    ${_dbBrk('Theo loại hình', r=>r.pj?r.pj.g:null)}
+  </div>
+  <div class="db-chips" title="Tốt: cách mốc thời gian không quá 10 điểm · Trung bình: kém 10–30 điểm · Thấp: kém hơn 30 điểm">
+    ${chip('', 'Tất cả', cur.length, '')}${chip('l','Thấp',bk.l,'var(--alert)')}${chip('m','Trung bình',bk.m,'var(--gpmb)')}${chip('g','Tốt',bk.g,'var(--done)')}
   </div>`;
-  el.innerHTML=(rows.length?dbSum:'')+rows.map(r=>{
-    const p=r.pct||0, cls=p>=60?'g':p>=30?'m':'l';
-    const ser=(r.series||[]).slice();
-    const maxGn=Math.max(1,...ser.map(s=>s.gn||0));                 // chuẩn hoá chiều cao theo số tuyệt đối lớn nhất
-    const ts = ser.length ? `<div class="db-ts">${ser.map(s=>{
-        const gn=s.gn||0, sp=s.pct||0, c2=sp>=60?'g':sp>=30?'m':'l';
-        return `<div class="db-col" title="${esc(_kyLong(s.ky))}: đã giải ngân ${nf(gn)} tỷ · ${sp}% kế hoạch năm">
-          <div class="db-colv"><div class="db-colbar db-${c2}" style="height:${Math.max(3,Math.round(gn/maxGn*66))}px"></div></div>
-          <div class="db-colabs">${_tmdtShort(gn)}</div>
-          <div class="db-colpct db-${c2}">${sp.toFixed(0)}%</div>
-          <div class="db-collab">${esc(_kyShort(s.ky))}</div></div>`;
-      }).join('')}</div>` : '';
-    return `<div class="db-row"><div class="db-top"><span class="db-nm">${esc(r.name)}</span>
-        <span class="db-kpi"><b class="db-${cls}">${nf(r.gn||0)}</b> / ${nf(r.kh||0)} tỷ <span class="db-pct db-${cls}">${p.toFixed(1)}%</span></span></div>
-      ${ser.length>1?`<div class="db-cap">Cột = số tiền đã giải ngân luỹ kế (tỷ đồng) · nhãn % = so kế hoạch vốn năm</div>`:''}
-      ${ts||`<div class="db-meta">1 kỳ (chờ thêm số liệu) · KH ${nf(r.kh||0)} tỷ · đã giải ngân ${nf(r.gn||0)} tỷ</div>`}</div>`;
-  }).join('') || '<div class="mp-empty">Chưa có dữ liệu giải ngân (chạy ingest_disbursement.py).</div>';
+
+  // ---- bảng ----
+  const srt=function(a,b){
+    return sort==='pct'?(b.pct-a.pct) : sort==='kh'?(b.kh-a.kh) : sort==='gn'?(b.gn-a.gn)
+      : sort==='delta'?((b.d==null?-1e9:b.d)-(a.d==null?-1e9:a.d)) : sort==='name'?a.name.localeCompare(b.name,'vi')
+      : (a.gap-b.gap) || a.name.localeCompare(b.name,'vi');
+  };
+  const pass=r=>(!q||_norm(r.name).includes(q)) && (!_dbCls||r.cls===_dbCls);
+  const rowHTML=function(r){
+    const open=_dbOpen.has(r.tid);
+    const dtxt = r.d==null ? '<span class="dbr-d flat">kỳ đầu</span>'
+      : `<span class="dbr-d ${r.d>0.05?'up':'flat'}">${r.d>0?'+':''}${r.d.toFixed(1)} điểm</span><br><span style="font-size:10px;color:var(--ink3)">so ${esc(_kyShort(r.prev.ky))}</span>`;
+    const ht = r.pj ? ((typeof _pstat==='function' ? _pstat(r.pj).act : null) ?? r.pj.paceProgress) : null;
+    return `<div class="dbr${open?' open':''}"><button type="button" class="dbr-h" data-tid="${r.tid}" aria-expanded="${open}">
+        <span class="dbr-nm"><span class="caret">▶</span><span class="t">${esc(r.name)}</span>${r.stale?`<span class="dbr-tag">tới ${esc(_kyShort(r.last.ky))}</span>`:''}${r.warn?'<span class="dbr-tag w" title="Số luỹ kế có kỳ giảm so với kỳ trước — cần kiểm tra">⚠ kiểm tra</span>':''}</span>
+        <span title="Vạch đen = ${Math.min(100,r.last.p.m/12*100).toFixed(0)}% thời gian của năm đã trôi">${_dbBarHTML(r.pct,r.cls,Math.min(100,r.last.p.m/12*100))}</span>
+        <span class="dbr-pct db-${r.cls}">${r.pct.toFixed(1)}%</span>
+        <span class="dbr-num">${dtxt}</span>
+        <span class="dbr-num"><b>${nf(Math.round(r.gn))}</b> / ${nf(Math.round(r.kh))} tỷ</span>
+        <span class="dbr-num" title="% hoàn thành công trình theo tab Tiến độ">${ht!=null?Math.round(ht)+'%':'—'}</span>
+      </button>${open?_dbDetail(r):''}</div>`;
+  };
+  const A=cur.filter(pass).sort(srt), B=old.filter(pass).sort(srt);
+  const tbl=`<div class="db-tbl"><div class="db-thead"><span>Dự án</span><span>Tỷ lệ giải ngân so với mốc thời gian</span><span class="r">Tỷ lệ</span>
+      <span class="r">So kỳ trước</span><span class="r">Đã giải ngân / KH năm</span><span class="r">% hoàn thành</span></div>
+    ${A.map(rowHTML).join('')||'<div class="mp-empty" style="padding:16px">Không có dự án khớp bộ lọc.</div>'}
+    ${B.length?`<div class="db-sec">Không có trong báo cáo kỳ mới nhất (${B.length}) — số liệu cũ, không tính vào tổng</div>${B.map(rowHTML).join('')}`:''}</div>`;
+  el.innerHTML=(C.rows.length?sum+tbl:'<div class="mp-empty">Chưa có dữ liệu giải ngân.</div>');
+  el.querySelectorAll('.db-chip').forEach(function(b){ b.onclick=function(){ _dbCls=b.dataset.cls; renderDisb(); }; });
+  el.querySelectorAll('.dbr-h').forEach(function(b){ b.onclick=function(){ const t=+b.dataset.tid; _dbOpen.has(t)?_dbOpen.delete(t):_dbOpen.add(t); renderDisb(); }; });
 }
 // "7T2026" → nhãn kỳ. T = luỹ kế tới hết tháng đó.
 function _kyShort(k){const m=/(\d+)T(\d{4})/.exec(k||'');return m?`T${+m[1]}/${(''+m[2]).slice(2)}`:(k||'');}

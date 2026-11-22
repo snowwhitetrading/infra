@@ -216,6 +216,13 @@ def fetch_disbursement(client):
     return out
 
 
+def fetch_disb_reports(client):
+    """Báo cáo nguồn của từng kỳ giải ngân: {ky: {title, url, source, as_of}} (apply_disb_mongo.py ghi)."""
+    return {d["ky"]: {"title": d.get("title", ""), "url": d.get("url", ""), "source": d.get("source", ""),
+                      "as_of": d.get("as_of", "")}
+            for d in client[DB]["Infra_Disbursement_Reports"].find({}, {"_id": 0}) if d.get("ky")}
+
+
 def fetch_pace_history(client):
     """Lịch sử theo tháng: {tid: [[month, score, progress], ...]} (sắp theo thời gian).
     score = điểm nhịp độ -5..+5 (null nếu chưa chấm); progress = % hoàn thành 0..100 (null nếu chưa có)."""
@@ -741,6 +748,7 @@ def main():
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
+    out = out.replace("const DISB_META = {}", "const DISB_META = " + json.dumps(fetch_disb_reports(c), ensure_ascii=False), 1)
     out = out.replace("const PACE_HIST = {}", "const PACE_HIST = " + json.dumps(pace_hist, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
     out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
