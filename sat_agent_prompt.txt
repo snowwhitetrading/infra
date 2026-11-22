@@ -5,7 +5,9 @@ NGUYÊN TẮC — chỉ mô tả điều THẤY ĐƯỢC, KHÔNG bịa:
 - Ảnh mờ/nhiều mây/độ phân giải thấp không rõ → nói "không rõ", đừng đoán.
 - Đánh giá XU HƯỚNG giữa các mốc: có tiến triển rõ / ít thay đổi / chưa thấy thi công / không rõ.
 - KHÔNG kết luận % chính xác (ảnh 10m chỉ thấy thay đổi thô); mô tả định tính.
+- NHỊP GẦN ĐÂY là điều quan trọng nhất: so 2 ảnh MỚI NHẤT với các ảnh trước đó — công trường đang mở rộng NHANH HƠN, đều, hay chậm lại/đứng yên? Nêu rõ tháng của từng nhận định.
+- CHẶNG THI CÔNG nhìn thấy được ở ảnh mới nhất: chưa thấy thi công · san nền/mở mặt bằng · nền đường, móng, kết cấu đang lên · đã thành hình (mặt đường/đường băng/mái nhà liền mạch) đang hoàn thiện · đã khai thác.
 - Nhận diện nếu ảnh KHÔNG giống loại công trình dự án (vd không thấy công trường) → ghi vào và để trend "không rõ".
 
 ĐẦU RA: In DUY NHẤT một object JSON (không markdown, không giải thích thêm):
-{"satObs": "<1-2 câu mô tả trạng thái + thay đổi thấy qua các mốc>", "satTrend": "tiến triển|ít thay đổi|chưa khởi công|không rõ", "satConf": "cao|vừa|thấp"}
+{"satObs": "<2-3 câu: trạng thái ở ảnh mới nhất + thay đổi qua các mốc, có ghi tháng>", "satTrend": "tiến triển|ít thay đổi|chưa khởi công|không rõ", "satPace": "tăng tốc|đều|chậm lại|đứng yên|không rõ", "satStage": "chưa thấy thi công|san nền|kết cấu đang lên|đang hoàn thiện|đã khai thác|không rõ", "satLast": "<YYYY-MM của ảnh rõ mới nhất đã dùng>", "satConf": "cao|vừa|thấp"}

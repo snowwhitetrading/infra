@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 prepare_sat_bundles.py — Chọn ẢNH VỆ TINH đại diện mỗi dự án (để agent thị giác đánh giá diễn biến).
-Chỉ lấy dự án ĐANG/ĐÃ khởi công (build phase) có ≥2 ảnh; mỗi dự án ≤3 ảnh: sớm nhất + giữa + mới nhất
+Chỉ lấy dự án ĐANG/ĐÃ khởi công (build phase) có ≥2 ảnh; mỗi dự án ≤6 ảnh: sớm nhất + trải giữa + 2 ảnh rõ mới nhất
 (ưu tiên ảnh OK ít mây). Ra sat_bundles.json = {tid: {name, deadline, imgs:[{month,file}]}}.
 
   python prepare_sat_bundles.py [--maximg 3]
@@ -23,11 +23,15 @@ def _pick(imgs, k):
     ok = [im for im in imgs if im.get("ok")] or imgs
     if len(ok) <= k:
         return ok
-    idx = [round(i * (len(ok) - 1) / (k - 1)) for i in range(k)]   # sớm nhất, giữa, mới nhất
-    return [ok[i] for i in sorted(set(idx))]
+    # LUÔN giữ 2 ảnh rõ MỚI NHẤT (để thấy nhịp thi công gần đây) + ảnh sớm nhất; phần còn lại trải đều ở giữa.
+    # Trước đây chỉ 3 ảnh (sớm/giữa/mới) → nhận xét hay dừng ở ảnh cũ, không bắt được giai đoạn tăng tốc gần đây.
+    head, tail = ok[:-2], ok[-2:]
+    n = max(1, k - 2)
+    idx = [round(i * (len(head) - 1) / (n - 1)) for i in range(n)] if n > 1 else [0]
+    return [head[i] for i in sorted(set(idx))] + tail
 
 
-def run(maximg):
+def run(maximg, out="sat_bundles.json"):
     from step5_build_site import fetch_satellite
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)
     sat = fetch_satellite(c)                       # {str(tid): [{month,date,cloud,ok,file}] sắp theo tháng}
@@ -50,7 +54,7 @@ def run(maximg):
                           "deadline": (dl[-1]["date"] if dl else ""),
                           "imgs": [{"month": im["month"], "file": im["file"], "cloud": im["cloud"]}
                                    for im in chosen]}
-    with open(os.path.join(HERE, "sat_bundles.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(HERE, out), "w", encoding="utf-8") as f:
         json.dump(bundles, f, ensure_ascii=False, indent=1)
     nimg = sum(len(b["imgs"]) for b in bundles.values())
     print(f"Sat bundle: {len(bundles)} dự án đang thi công · {nimg} ảnh (≤{maximg}/dự án) → sat_bundles.json")
@@ -58,5 +62,7 @@ def run(maximg):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--maximg", type=int, default=3)
-    run(ap.parse_args().maximg)
+    ap.add_argument("--maximg", type=int, default=6)
+    ap.add_argument("--out", default="sat_bundles.json")
+    a = ap.parse_args()
+    run(a.maximg, a.out)

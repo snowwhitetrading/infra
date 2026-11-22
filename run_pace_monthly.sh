@@ -7,13 +7,14 @@ set -euo pipefail
 export PYTHONIOENCODING=utf-8
 cd "$(dirname "$0")"
 
-BATCH=20
+BATCH=10    # bundle giờ lớn hơn (tin trải nhiều tháng + quỹ đạo) → lô nhỏ cho chắc
 # Tháng mục tiêu = tháng dương lịch LIỀN TRƯỚC hôm nay (chạy 1/12 → chấm tháng 11)
 M="$(python3 -c "import datetime as d;t=d.date.today().replace(day=1)-d.timedelta(days=1);print(t.strftime('%Y-%m'))")"
 echo "==== $(date '+%F %T') · cập nhật tiến độ tháng $M ===="
 
 # 1) Gom tin as-of tháng M → pace_bundles.json (pymongo)
-python3 prepare_pace_bundles.py --asof "$M" --months 11 --maxn 14
+# --history 6: mỗi tháng ƯỚC LƯỢNG LẠI quỹ đạo % của 6 tháng liền trước (tin đến muộn sẽ sửa được đường cũ)
+python3 prepare_pace_bundles.py --asof "$M" --months 11 --maxn 30 --history 6
 N=$(python3 -c 'import json;print(len(json.load(open("pace_bundles.json"))))' 2>/dev/null || echo 0)
 if [ "$N" = "0" ]; then echo "Không có dự án có tin tới $M — xong."; exit 0; fi
 

@@ -14,6 +14,8 @@ from lib_db import mongo_uri
 HERE = os.path.dirname(os.path.abspath(__file__))
 DB = "dc_commodity"
 _TREND = {"tiến triển", "ít thay đổi", "chưa khởi công", "không rõ"}
+_PACE = {"tăng tốc", "đều", "chậm lại", "đứng yên", "không rõ"}                       # nhịp thi công gần đây trên ảnh
+_STAGE = {"chưa thấy thi công", "san nền", "kết cấu đang lên", "đang hoàn thiện", "đã khai thác", "không rõ"}
 
 
 def run(inp):
@@ -26,9 +28,14 @@ def run(inp):
         trend = (v.get("satTrend") or "").strip()
         if not obs or trend not in _TREND:
             continue
-        ops.append(UpdateOne({"_key": "project", "id": int(tid)},
-                   {"$set": {"satObs": obs, "satTrend": trend,
-                             "satConf": v.get("satConf", ""), "satAt": today}}))
+        st = {"satObs": obs, "satTrend": trend, "satConf": v.get("satConf", ""), "satAt": today}
+        if (v.get("satPace") or "").strip() in _PACE:
+            st["satPace"] = v["satPace"].strip()
+        if (v.get("satStage") or "").strip() in _STAGE:
+            st["satStage"] = v["satStage"].strip()
+        if len(str(v.get("satLast") or "")) == 7:
+            st["satLast"] = str(v["satLast"])
+        ops.append(UpdateOne({"_key": "project", "id": int(tid)}, {"$set": st}))
     if ops:
         r = tr.bulk_write(ops)
         from collections import Counter

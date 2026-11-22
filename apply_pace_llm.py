@@ -46,7 +46,8 @@ def _score_of(v, pace):
 
 
 W_PARTS = {"A": 5, "G": 10, "C": 80, "F": 5}     # trọng số thang vòng đời chuẩn (tổng = 100)
-_BASIS = {"reported", "items", "milestone"}
+_BASIS = {"reported", "items", "milestone", "activity"}   # activity = ước lượng theo cường độ thi công + thời gian
+_CONF = {"cao", "vừa", "thấp"}
 _STAGE = {"chưa thực hiện", "đang thực hiện", "đã hoàn thành"}   # giai đoạn dự án — tách khỏi nhịp độ
 _BLOCK = {"mặt bằng", "vốn", "vật liệu", "thủ tục", "nhà thầu", "kỹ thuật", "khác"}   # nhóm vướng mắc (Tổng quan tổng hợp)
 
@@ -113,7 +114,7 @@ def run(inp, month=None, hist_only=False):
     hist = db["Infra_Pace_History"]
     month = month or dt.date.today().strftime("%Y-%m")   # hồi tố: ghi vào tháng được chỉ định
     ops, hops, bad = [], [], 0
-    n_dl = n_tmdt = n_own = n_sc = n_it = 0
+    n_dl = n_tmdt = n_own = n_sc = n_it = n_hist = 0
     cur_items = {d["id"]: d.get("items", []) for d in tr.find(
         {"_key": "project", "id": {"$in": [int(t) for t in verdicts]}}, {"id": 1, "items": 1})}
     for tid, v in verdicts.items():
@@ -162,6 +163,47 @@ def run(inp, month=None, hist_only=False):
             st["paceProgress"] = prog
         else:
             unset["paceProgress"] = ""
+        # MỐC KẾ HOẠCH THẬT (cam kết/chỉ đạo/hợp đồng) → trang vẽ đường "lẽ ra" từ cam kết thay cho đường lý thuyết
+        pp = []
+        for x in (v.get("plan_points") or []) if isinstance(v.get("plan_points"), list) else []:
+            if isinstance(x, dict) and _YM.match(str(x.get("month") or "")) and _clean_pct(x.get("pct")) is not None:
+                pp.append({"month": x["month"], "pct": _clean_pct(x.get("pct")),
+                           "label": str(x.get("label") or "")[:120], "kind": str(x.get("kind") or "")[:20]})
+        pp.sort(key=lambda x: (x["month"], x["pct"]))
+        mx = 0
+        for x in pp:                                      # kế hoạch cũng không giảm theo thời gian
+            mx = max(mx, x["pct"]); x["pct"] = mx
+        if pp:
+            st["pacePlanPoints"] = pp[:24]
+        else:
+            unset["pacePlanPoints"] = ""
+        df = (v.get("deadline_first") or "").strip()
+        if _YM.match(df):
+            st["paceDeadlineFirst"] = df
+        else:
+            unset["paceDeadlineFirst"] = ""
+        conf = (v.get("progress_conf") or "").strip()     # độ tin cậy của con số %
+        if prog is not None and conf in _CONF:
+            st["paceProgressConf"] = conf
+        else:
+            unset["paceProgressConf"] = ""
+        # QUỸ ĐẠO các tháng trước (agent ước lượng lại cả chuỗi cùng lúc): chỉ ghi progress của tháng đó,
+        # giữ nguyên score/why cũ; ép không giảm và không vượt mức tháng đang chấm.
+        hv = v.get("history")
+        if isinstance(hv, dict) and prog is not None:
+            run_max = None
+            for hm in sorted(k for k in hv if _YM.match(str(k)) and str(k) < month):
+                hp = _clean_pct(hv[hm])
+                if hp is None:                            # agent: tháng đó CHƯA có thông tin → bỏ số cũ của tháng (tránh số cũ cao hơn kéo cả chuỗi lên khi ép đơn điệu)
+                    hops.append(UpdateOne({"tid": int(tid), "month": hm}, {"$unset": {"progress": ""}}))
+                    continue
+                hp = min(hp, prog)
+                run_max = hp if run_max is None else max(run_max, hp)
+                hops.append(UpdateOne({"tid": int(tid), "month": hm},
+                                      {"$set": {"tid": int(tid), "month": hm, "progress": run_max,
+                                                "traj": True, "traj_at": dt.datetime.now(dt.UTC).isoformat()}},
+                                      upsert=True))
+                n_hist += 1
         if prog is not None and parts is not None:        # thành phần A/G/C/F + cách xác định → hiện ở trang
             st["paceParts"] = parts
             st["paceProgressBasis"] = basis
@@ -239,7 +281,7 @@ def run(inp, month=None, hist_only=False):
         from collections import Counter
         dist = Counter((v.get("pace") or "(chưa đủ căn cứ)") for v in verdicts.values())
         print(f"Ghi LLM: {r.modified_count} dự án · pace {dict(dist)}")
-        print(f"  có hạn: {n_dl} · có TMĐT: {n_tmdt} · có chủ đầu tư: {n_own} · có điểm: {n_sc} · % hạng mục: {n_it} · bỏ (pace sai): {bad}")
+        print(f"  có hạn: {n_dl} · có TMĐT: {n_tmdt} · có chủ đầu tư: {n_own} · có điểm: {n_sc} · % hạng mục: {n_it} · điểm quỹ đạo tháng cũ: {n_hist} · bỏ (pace sai): {bad}")
         if hops:
             hr = hist.bulk_write(hops)
             print(f"  lịch sử {month}: ghi {hr.upserted_count + hr.modified_count} điểm → Infra_Pace_History")

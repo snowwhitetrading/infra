@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 LOG="run_sat.log"
 echo "==== $(date '+%F %T') SAT bắt đầu ====" | tee -a "$LOG"
 
-python3 prepare_sat_bundles.py --maximg 3 | tee -a "$LOG"
+python3 prepare_sat_bundles.py --maximg 6 | tee -a "$LOG"
 PROMPT="$(cat sat_agent_prompt.txt)"
 rm -rf sat_out && mkdir -p sat_out
 

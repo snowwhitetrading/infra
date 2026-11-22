@@ -175,6 +175,7 @@ button.chip:focus-visible{outline:2px solid var(--build);outline-offset:2px}
 .bc-a{fill:var(--pc);fill-opacity:.15}
 .bc-l{fill:none;stroke:var(--pc);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
 .bc-p{fill:none;stroke:var(--ink2);stroke-width:1.5;stroke-dasharray:5 4}
+.bc-mk{fill:var(--card);stroke:var(--ink2);stroke-width:1.4;cursor:help}
 .bc-pt{fill:var(--card);stroke:var(--pc);stroke-width:1.6}
 .bc-now{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3;opacity:.55}
 .bc-dl{stroke:var(--gpmb);stroke-width:1.3}
@@ -683,7 +684,7 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
   <div class="lg"><span class="sched s-late" style="padding:0 5px">chậm</span><span class="sched s-ontime" style="padding:0 5px">đúng</span><span class="sched s-ahead" style="padding:0 5px">vượt</span><span class="lgtxt">nhịp độ của dự án đang thực hiện — rê chuột để xem căn cứ</span></div>
   <div class="lg"><span class="sched s-done" style="padding:0 5px">đã hoàn thành</span><span class="sched s-notyet" style="padding:0 5px">chưa thực hiện</span><span class="lgtxt">giai đoạn — không chấm chậm/đúng/vượt</span></div>
   <div class="lg"><span class="lgsw a"></span><span class="lgtxt"><b>thực tế</b> — % hoàn thành theo tháng</span></div>
-  <div class="lg"><span class="lgsw p"></span><span class="lgtxt"><b>kế hoạch</b> — đường chuẩn từ khởi công tới hạn hoàn thành</span></div>
+  <div class="lg"><span class="lgsw p"></span><span class="lgtxt"><b>kế hoạch</b> — nối các mốc đã cam kết; chưa có mốc thì là đường chuẩn lý thuyết (ghi “chuẩn ~”)</span></div>
   <div class="lg"><span class="lgtxt">mọi dòng cùng thang 0–100% và cùng khung tháng nên so sánh trực tiếp được</span></div>
 </div>
 <details class="meth" id="meth">
@@ -700,22 +701,27 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
       <tr><td>F · Hoàn thành</td><td class="n">5</td><td>Đủ khi đã nghiệm thu, đưa toàn bộ dự án vào khai thác</td></tr>
     </table>
     <p>Vì vậy các mốc có cùng ý nghĩa ở mọi dự án: chưa khởi công không quá 15% · đang thi công nằm trong 15–95% · khai thác toàn bộ là 100%.</p>
-    <h4>2. Phần xây lắp (C) lấy từ đâu</h4>
-    <ol>
-      <li><b>Số công bố</b>: tin nêu thẳng % sản lượng hoặc khối lượng của toàn dự án. Con số của riêng một gói thầu, một đoạn hay một hạng mục không được dùng cho cả dự án.</li>
-      <li><b>Tổng hợp hạng mục</b>: bình quân % các hạng mục xây lắp, theo tỷ trọng vốn hoặc chiều dài nếu có, không thì chia đều.</li>
-      <li><b>Suy từ mốc thi công</b> theo bảng mốc chuẩn của từng loại hình, ví dụ đường bộ: làm nền 10–35% · móng và cầu 35–60% · thảm nhựa 60–85% · thông xe kỹ thuật 90%; cầu, hầm: hợp long hoặc thông hầm 85%; sân bay, nhà ga: xong phần thô 70%.</li>
-      <li>Không có căn cứ nào thì để trống, không ước đoán.</li>
-    </ol>
-    <p>% giải ngân vốn không được tính là % xây lắp. % hoàn thành chỉ tăng theo thời gian; tháng không có tin mới thì giữ mức tháng trước.</p>
+    <h4>2. Phần xây lắp (C) được ước lượng thế nào</h4>
+    <p>Công thức trên chỉ là thước đo chung. Phần xây lắp được đánh giá như một người theo dõi dự án làm, bằng cách đối chiếu mọi bằng chứng có được chứ không tra bảng:</p>
+    <ul>
+      <li><b>Con số công bố</b>: % sản lượng, khối lượng, số km, số nhịp cầu… quy về toàn dự án.</li>
+      <li><b>Hạng mục đang làm</b> cho biết dự án ở chặng nào: san nền, đóng cọc là chặng đầu; lắp thiết bị, hoàn thiện, thảm nhựa, chạy thử là chặng cuối.</li>
+      <li><b>Cường độ thi công</b>: tăng tốc, dồn lực, làm ba ca, hay cầm chừng, dừng chờ mặt bằng hoặc vốn.</li>
+      <li><b>Ảnh vệ tinh</b>: công trường mở rộng, có kết cấu mới, hay không đổi.</li>
+      <li><b>Thời gian</b> đã thi công so với hạn, và việc hạn có bị lùi không.</li>
+    </ul>
+    <p>Công trường đang chạy thì % phải nhích, kể cả khi báo chí không nêu con số mới; đường chỉ đi ngang khi có bằng chứng dừng hoặc chờ. Mỗi con số ghi kèm căn cứ chính (số công bố · tổng hợp hạng mục · mốc thi công · ước lượng theo cường độ thi công) và độ tin cậy. % giải ngân vốn không được tính là % xây lắp, và % hoàn thành không giảm theo thời gian.</p>
+    <p>Mỗi tháng, quỹ đạo của các tháng gần đây được ước lượng lại cùng lúc, nên thông tin đến muộn vẫn sửa được đoạn đường cũ.</p>
     <h4>3. % hoàn thành của hạng mục</h4>
     <p>Mỗi hạng mục được chấm 0–100% trên phạm vi của chính nó, cùng cách đo: hạng mục mặt bằng theo tỷ lệ bàn giao, hạng mục xây lắp theo sản lượng hoặc bảng mốc chuẩn, đạt 100% khi đưa vào sử dụng. Nhãn “số công bố” hoặc “theo mốc” cho biết căn cứ.</p>
     <h4>4. Đường kế hoạch</h4>
-    <p>Đường nét đứt là mức lẽ ra phải đạt nếu dự án đi đều từ ngày khởi động (ngày bắt đầu giải phóng mặt bằng hoặc thi công, tuỳ ngày nào sớm hơn) tới hạn hoàn thành. Mọi dự án dùng chung một dạng đường cong chữ S quen thuộc của ngành xây dựng (chậm lúc đầu, nhanh ở giữa, chậm lại khi hoàn thiện), đi từ 5% lúc khởi động tới 100% đúng hạn.</p>
+    <p>Đường nét đứt là mức lẽ ra phải đạt. Nó được dựng theo hai cách, và trang luôn ghi rõ đang dùng cách nào:</p>
     <ul>
-      <li>Chỉ vẽ khi dự án có hạn hoàn thành có nguồn và đã có ngày khởi động; thiếu một trong hai thì không vẽ.</li>
-      <li><b>Lệch</b> = thực tế trừ kế hoạch tại hôm nay, tính bằng điểm phần trăm. <b>Sau hoặc trước kế hoạch bao nhiêu tháng</b> = khoảng cách từ hôm nay tới thời điểm đường kế hoạch đạt đúng mức thực tế hiện tại; chỉ nêu khi cả hai đang nằm trong khoảng 10–90%, vì ở hai đầu phẳng của đường cong vài điểm phần trăm đã tương ứng nhiều tháng.</li>
-      <li>Đây là đường chuẩn để so sánh giữa các dự án, không phải tiến độ hợp đồng của nhà thầu. Nhãn chậm, đúng, vượt vẫn được đánh giá riêng từ nội dung tin, nên đôi khi khác với dấu của độ lệch.</li>
+      <li><b>Theo mốc cam kết</b> (ghi “KH”): nối ngày khởi động, các mốc mà chủ đầu tư hoặc cơ quan quản lý đã cam kết hay được giao (ví dụ xong mặt bằng, xong phần thô, thông xe kỹ thuật) và hạn hoàn thành. Mỗi mốc được quy ra % toàn dự án; trên biểu đồ lớn mốc hiện bằng hình thoi, rê chuột để xem nội dung.</li>
+      <li><b>Đường chuẩn lý thuyết</b> (ghi “chuẩn ~”): khi chưa có mốc cam kết trung gian, dùng một đường cong chữ S chung đi từ 5% lúc khởi động tới 100% đúng hạn. Đây chỉ là giả định để tham khảo, không phải tiến độ của dự án.</li>
+      <li>Không có hạn hoàn thành có nguồn thì không vẽ. Nếu hạn đã từng bị lùi, biểu đồ đánh dấu thêm hạn ban đầu và số tháng đã lùi.</li>
+      <li><b>Lệch</b> = thực tế trừ kế hoạch tại hôm nay, tính bằng điểm phần trăm. <b>Sau hoặc trước kế hoạch bao nhiêu tháng</b> = khoảng cách từ hôm nay tới thời điểm đường kế hoạch đạt đúng mức thực tế hiện tại.</li>
+      <li>Nhãn chậm, đúng, vượt được đánh giá riêng từ toàn bộ bằng chứng, nên đôi khi khác với dấu của độ lệch.</li>
     </ul>
     <h4>5. Giai đoạn dự án</h4>
     <ul>
@@ -1358,23 +1364,45 @@ function _seriesRaw(p){
   });
   return out;
 }
-function _planSpan(p){          // {t0, t1} hoặc null (thiếu hạn có nguồn / thiếu ngày khởi động)
+function _planSpan(p){          // {t0, t1, nodes, real, ...} hoặc null (không có điểm đầu/điểm cuối có căn cứ)
   if(p.autoRow || p.proposal) return null;
-  const dl=_dl(p); if(!dl) return null;
+  const dl=_dl(p);
+  const raw=(Array.isArray(p.pacePlanPoints)?p.pacePlanPoints:[])
+    .filter(x=>x && /^\d{4}-\d{2}$/.test(x.month||'') && typeof x.pct==='number')
+    .map(x=>({x:_mi(x.month)+1, v:Math.max(0,Math.min(100,x.pct)), label:x.label||'', kind:x.kind||'', month:x.month}))
+    .sort((a,b)=>a.x-b.x || a.v-b.v);
+  const end100=raw.filter(x=>x.v>=100);
+  if(!dl && !end100.length) return null;                     // không có hạn có nguồn lẫn mốc cam kết hoàn thành
   const fr=(p.phases||[]).filter(ph=>ph.from && ph.kind!=='swap').map(ph=>ph.from).sort();
-  if(!fr.length) return null;
-  const t0=_mi(fr[0]), t1=_mi(dl)+1;                        // hạn = hết tháng hạn
-  if(t1-t0 < 3) return null;
-  return {t0:t0, t1:t1, from:fr[0], to:dl, est:!anchors(p).has(fr[0])};
+  const t1 = dl ? _mi(dl)+1 : end100[0].x;                   // hạn = hết tháng hạn
+  let t0 = fr.length ? _mi(fr[0]) : (raw.length ? raw[0].x-1 : null);
+  if(t0===null || t1-t0 < 3) return null;
+  // nút của đường kế hoạch: khởi động → các mốc cam kết nằm giữa → hạn (100%)
+  const nodes=[{x:t0, v:PLAN_BASE}];
+  raw.forEach(function(q){
+    if(q.x<=t0 || q.x>=t1 || q.v<=PLAN_BASE || q.v>=100) return;
+    const last=nodes[nodes.length-1];
+    if(q.x===last.x){ if(q.v>last.v){ last.v=q.v; last.label=q.label; last.kind=q.kind; } return; }
+    if(q.v<last.v) return;                                   // kế hoạch không giảm theo thời gian
+    nodes.push(q);
+  });
+  nodes.push({x:t1, v:100, label:'hoàn thành toàn bộ'});
+  const first=(/^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && dl && p.paceDeadlineFirst<dl) ? p.paceDeadlineFirst : '';
+  return {t0:t0, t1:t1, from:fr[0]||'', to:dl||'', est:!(fr.length && anchors(p).has(fr[0])),
+          nodes:nodes, real:nodes.length>2, first:first, slip:first?(_mi(dl)-_mi(first)):0};
 }
 function _planWhy(p){           // vì sao không vẽ được đường kế hoạch
   if(p.proposal) return 'dự án đang ở giai đoạn đề xuất';
-  if(!_dl(p)) return 'chưa có hạn hoàn thành có nguồn';
+  if(!_dl(p) && !(p.pacePlanPoints||[]).some(x=>x&&x.pct>=100)) return 'chưa có hạn hoàn thành có nguồn';
   if(p.autoRow || !(p.phases||[]).some(ph=>ph.from && ph.kind!=='swap')) return 'chưa có ngày khởi động';
   return 'khoảng thời gian kế hoạch quá ngắn';
 }
 function _planAt(sp,x){ if(x<sp.t0) return null; if(x>=sp.t1) return 100;
-  return PLAN_BASE + (100-PLAN_BASE)*_sCurve((x-sp.t0)/(sp.t1-sp.t0)); }
+  if(sp.real){                    // có mốc cam kết → nối thẳng giữa các mốc (đúng cam kết, không uốn theo giả định)
+    const n=sp.nodes; for(let i=1;i<n.length;i++) if(x<=n[i].x) return n[i-1].v + (n[i].v-n[i-1].v)*(x-n[i-1].x)/(n[i].x-n[i-1].x);
+    return 100;
+  }
+  return PLAN_BASE + (100-PLAN_BASE)*_sCurve((x-sp.t0)/(sp.t1-sp.t0)); }   // chưa có mốc cam kết → đường chuẩn lý thuyết (chữ S)
 function _planInv(sp,v){        // thời điểm đường kế hoạch đạt mức v
   if(v<=PLAN_BASE) return sp.t0; if(v>=100) return sp.t1;
   let lo=sp.t0, hi=sp.t1;
@@ -1390,7 +1418,7 @@ function _pstat(p){             // số liệu tổng hợp của 1 dự án (ca
   if(o.stage==='done'){ o.act=100; o.plan=null; return p._ps=o; }      // đã xong: không so kế hoạch, không tính lệch/quá hạn/đà
   if(act!==null && plan!==null){
     o.gap = Math.round(act-plan);
-    const steep = plan>=10 && plan<=90 && act>=10 && act<=90;          // hai đầu phẳng của chữ S: vài điểm % = nhiều tháng → không quy ra tháng
+    const steep = sp.real || (plan>=10 && plan<=90 && act>=10 && act<=90);          // hai đầu phẳng của chữ S: vài điểm % = nhiều tháng → không quy ra tháng
     o.lagM = (act>=100 || !steep) ? 0 : Math.round(NOW_I - _planInv(sp,act));      // >0 = sau kế hoạch
   }
   if(sp && act!==null && act<100 && NOW_I>sp.t1) o.overM = Math.max(1, Math.round(NOW_I-sp.t1));
@@ -1413,7 +1441,7 @@ function _gapText(s){           // {cls, txt} — dòng kết luận
 }
 function _momText(s){           // đà gần đây
   if(!s.mom) return '';
-  if(s.flat>=2 && s.act<100) return 'không tăng '+s.flat+' tháng';
+  if(s.flat>=2 && s.act<100) return 'đi ngang '+s.flat+' tháng';
   return (s.mom.d>0?'+':'')+s.mom.d+' điểm trong '+s.mom.n+' tháng';
 }
 function _pcCls(p){ const c=SCHED_CLS2[schedOf(p)]; return (c==='late'||c==='ontime'||c==='ahead'||c==='done')?' c-'+c:''; }
@@ -1453,7 +1481,7 @@ function _rowChart(p){          // biểu đồ nhỏ trên dòng: vùng tô = t
   if(s.stage==='done'){ const dm=_doneMonth(p);
     sum='<div class="pc-v">100%</div><div class="pc-d">đã hoàn thành'+(dm?' '+_ymVN(dm):'')+'</div>'; }
   else if(s.act===null) sum='<div class="pc-d mut">chưa có số liệu %</div>';
-  else sum='<div class="pc-v">'+Math.round(s.act)+'%'+(s.plan!==null?'<small>KH '+Math.round(s.plan)+'%</small>':'')+'</div>'
+  else sum='<div class="pc-v">'+Math.round(s.act)+'%'+(s.plan!==null?'<small title="'+(s.sp.real?'Theo '+(s.sp.nodes.length-2)+' mốc cam kết':'Đường chuẩn lý thuyết — chưa có mốc cam kết')+'">'+(s.sp.real?'KH ':'chuẩn ~')+Math.round(s.plan)+'%</small>':'')+'</div>'
     +(gt?'<div class="pc-d '+gt.cls+'">'+gt.txt+'</div>'
         :'<div class="pc-d mut">'+(s.sp?'khởi động KH '+_miLab(s.sp.t0):_planWhy(p))+'</div>')
     +((mt && !(gt&&s.act>=100))?'<div class="pc-d mut">'+mt+'</div>':'');
@@ -1482,7 +1510,7 @@ function _rowChart(p){          // biểu đồ nhỏ trên dòng: vùng tô = t
 }
 
 const PARTS_DEF=[['A','Chuẩn bị',5],['G','Mặt bằng',10],['C','Xây lắp',80],['F','Hoàn thành',5]];
-const BASIS_VN={reported:'số công bố trong tin', items:'tổng hợp từ hạng mục', milestone:'suy từ mốc thi công'};
+const BASIS_VN={reported:'số công bố trong tin', items:'tổng hợp từ hạng mục', milestone:'suy từ mốc thi công', activity:'ước lượng theo cường độ thi công và thời gian'};
 function _openMeth(){ const m=document.getElementById('meth'); if(m){ m.open=true; m.scrollIntoView({block:'start',behavior:'smooth'}); } }
 function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: từ khởi động → hạn, trục thời gian thật
   const s=_pstat(p), sp=s.sp, ser=s.ser;
@@ -1491,6 +1519,7 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
       +(f?' · kế hoạch khởi công '+_ymVN(f):'')+(d?' · hạn hoàn thành '+_ymVN(d):'')+'.</p>'; }
   const W=820,H=250,L=36,R=74,T=26,B=28, pw=W-L-R, ph=H-T-B;
   let xa = Math.min(sp?sp.t0:Infinity, ser.length?ser[0].x-1:Infinity, NOW_I-3);
+  const firstX = (sp && sp.first) ? _mi(sp.first)+1 : null;        // hạn công bố ban đầu (trước khi lùi)
   let xb = Math.max(sp?sp.t1:-Infinity, NOW_I);
   xa -= 0.5; xb += Math.max(1,(xb-xa)*0.03);
   const X=x=>L+(x-xa)/(xb-xa)*pw, Y=v=>T+ph-(v/100)*ph, f=n=>n.toFixed(1);
@@ -1512,8 +1541,16 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
   }
   if(sp){                          // đường kế hoạch + mốc khởi động + cờ hạn
     let d='';
-    for(let x=sp.t0; x<sp.t1; x+=Math.max(0.1,(sp.t1-sp.t0)/80)) d+=(d?'L':'M')+f(X(x))+','+f(Y(_planAt(sp,x)));
+    if(sp.real) sp.nodes.slice(0,-1).forEach(function(q){ d+=(d?'L':'M')+f(X(q.x))+','+f(Y(q.v)); });
+    else for(let x=sp.t0; x<sp.t1; x+=Math.max(0.1,(sp.t1-sp.t0)/80)) d+=(d?'L':'M')+f(X(x))+','+f(Y(_planAt(sp,x)));
     d+='L'+f(X(sp.t1))+','+f(Y(100))+'L'+f(X(xb))+','+f(Y(100));
+    if(firstX!==null && firstX>xa) g+='<line class="bc-st" x1="'+f(X(firstX))+'" x2="'+f(X(firstX))+'" y1="'+(T+10)+'" y2="'+(T+ph)+'"/>'
+      +'<text x="'+f(X(firstX)-4)+'" y="'+(T+20)+'" text-anchor="end">hạn ban đầu '+_miLab(firstX-1)+'</text>';
+    if(sp.real) sp.nodes.slice(1,-1).forEach(function(q){        // mốc cam kết: hình thoi, rê chuột xem nội dung
+      const cx=X(q.x), cy=Y(q.v);
+      g+='<path class="bc-mk" d="M'+f(cx)+','+f(cy-4.5)+'L'+f(cx+4.5)+','+f(cy)+'L'+f(cx)+','+f(cy+4.5)+'L'+f(cx-4.5)+','+f(cy)+'Z"><title>'
+        +esc('Mốc '+(q.kind||'cam kết')+' '+_miLab(q.x-1)+': '+q.label+' — tương ứng khoảng '+Math.round(q.v)+'% toàn dự án')+'<\/title></path>';
+    });
     g+='<path class="bc-p" d="'+d+'"/>'
       +'<line class="bc-st" x1="'+f(X(sp.t0))+'" x2="'+f(X(sp.t0))+'" y1="'+(T-4)+'" y2="'+(T+ph)+'"/>'
       +'<text x="'+f(X(sp.t0)+5)+'" y="'+(T-12)+'">'+(sp.est?'≈ ':'')+'khởi động '+_miLab(sp.t0)+'</text>'
@@ -1548,10 +1585,13 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
   let side='<p class="bc-h">% hoàn thành: thực tế so với kế hoạch</p>'
     +'<div class="bc-kv"><span>Thực tế'+(ser.length?' <span class="cap">(tới '+_miLab(_mi(ser[ser.length-1].m))+')</span>':'')+'</span><b>'+(s.act===null?'—':Math.round(s.act)+'%')+'</b></div>'
     +(s.stage==='done' ? '<div class="bc-kv"><span>Hoàn thành</span><b>'+(_doneMonth(p)?_ymVN(_doneMonth(p)):'không rõ tháng')+'</b></div>'
-                       : '<div class="bc-kv"><span>Kế hoạch hôm nay</span><b>'+(s.plan===null?'—':Math.round(s.plan)+'%')+'</b></div>');
+                       : '<div class="bc-kv"><span>'+(sp&&!sp.real?'Đường chuẩn hôm nay':'Kế hoạch hôm nay')+'</span><b>'+(s.plan===null?'—':Math.round(s.plan)+'%')+'</b></div>');
   if(s.gap!==null) side+='<div class="bc-kv"><span>Lệch</span><b class="'+(s.gap<=-5?'neg':(s.gap>=5?'pos':''))+'">'+(s.gap>0?'+':'')+s.gap+' điểm</b></div>';
   if(gt && s.act!==null && s.stage!=='done') side+='<div class="bc-kv"><span>Kết luận</span><b class="'+gt.cls+'">'+gt.txt.replace(/ \([^)]*\)$/,'')+'</b></div>';
   if(mt) side+='<div class="bc-kv"><span>Đà gần đây</span><b>'+mt+'</b></div>';
+  if(sp && sp.first) side+='<div class="bc-kv"><span>Hạn ban đầu → hiện tại</span><b class="neg">'+_ymVN(sp.first)+' → '+_ymVN(sp.to)+' (lùi '+sp.slip+' tháng)</b></div>';
+  if(sp && s.stage!=='done') side+='<p class="bc-note">'+(sp.real?'Đường kế hoạch nối '+(sp.nodes.length-2)+' mốc đã được cam kết hoặc giao (rê chuột vào ◇ để xem).'
+    :'Chưa có mốc cam kết trung gian nên dùng đường chuẩn lý thuyết từ khởi động tới hạn; chỉ để tham khảo.')+'</p>';
   if(!sp && s.stage!=='done') side+='<p class="bc-note">Không vẽ đường kế hoạch: '+_planWhy(p)+'.</p>';
   const pt=p.paceParts;
   // chỉ hiện thành phần khi tổng của chúng khớp % đang hiển thị (% chỉ tăng nên có lúc giữ mức cũ cao hơn tổng mới)
@@ -1560,18 +1600,30 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
     side+='<div class="bc-parts"><p class="bc-h">Thành phần của % hoàn thành</p>'
       +PARTS_DEF.map(function(d){ const v=Math.max(0,Math.min(1,pt[d[0]]));
         return '<div class="bc-part"><span>'+d[1]+'</span><span class="t"><i style="width:'+(v*100).toFixed(0)+'%"></i></span><span class="n">'+(Math.round(v*d[2]*10)/10)+'/'+d[2]+'</span></div>'; }).join('')
-      +(BASIS_VN[p.paceProgressBasis]?'<p class="bc-note">Phần xây lắp: '+BASIS_VN[p.paceProgressBasis]+'.</p>':'')+'</div>';
+      +(BASIS_VN[p.paceProgressBasis]?'<p class="bc-note">Phần xây lắp: '+BASIS_VN[p.paceProgressBasis]+(p.paceProgressConf?' · độ tin cậy '+esc(p.paceProgressConf):'')+'.</p>':'')+'</div>';
   }
   side+='<p class="bc-note"><button type="button" onclick="_openMeth()">Cách tính % và đường kế hoạch</button></p>';
   return '<div class="bc'+_pcCls(p)+'"><div class="bc-svg"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="% hoàn thành thực tế so với kế hoạch theo thời gian">'+g+'</svg>'
-    +'<div class="bc-lg"><span><i class="la"></i>thực tế</span>'+(sp?'<span><i class="lp"></i>kế hoạch (đường chuẩn)</span>':'')+'<span>rê chuột vào điểm để xem số từng tháng</span></div></div>'
+    +'<div class="bc-lg"><span><i class="la"></i>thực tế</span>'+(sp?'<span><i class="lp"></i>'+(sp.real?'kế hoạch theo '+(sp.nodes.length-2)+' mốc cam kết (◇)':'đường chuẩn lý thuyết — chưa có mốc cam kết')+'</span>':'')+'<span>rê chuột vào điểm để xem số từng tháng</span></div></div>'
     +'<div class="bc-side">'+side+'</div></div>';
 }
 /* BA TÍN HIỆU của một dự án — đặt cạnh nhau để nhìn đa chiều: khối lượng so với kế hoạch · giải ngân so với
    nhịp thời gian của năm · nhận xét vệ tinh. tone: pos (tích cực) · mid (cần theo dõi) · neg (đáng lo) · na (chưa có). */
 function _disbKy(k){ const m=/^(\d+)T(\d{4})$/.exec(k||''); return m?{mo:+m[1],yr:+m[2]}:null; }
-function _disbStat(p){          // {pct, time, diff, ky, prev} hoặc null
+/* Vệ tinh và giải ngân CHỈ là tín hiệu khi rõ và dự án đủ lớn (cùng ngưỡng với prepare_pace_bundles.py).
+   Không đạt → không hiện thẻ, không tính vào kiểm chứng chéo, không đưa cho bộ chấm. */
+const SAT_MIN_TMDT = 10000, DISB_MIN_KH = 500;       // tỷ đồng
+let _DISB_LAST = null;
+function _disbLastKy(){          // kỳ giải ngân mới nhất của cả danh mục (YYYYMM)
+  if(_DISB_LAST!==null) return _DISB_LAST; let mx=0;
+  Object.keys(DISB).forEach(function(t){ const k=_disbKy(DISB[t].as_of); if(k) mx=Math.max(mx,k.yr*100+k.mo); });
+  return _DISB_LAST=mx;
+}
+function _satUsable(p){ return !!p.satObs && p.satTrend && p.satTrend!=='không rõ' && p.satConf!=='thấp' && (p.tmdt||0)>=SAT_MIN_TMDT; }
+function _disbStat(p){          // {pct, time, diff, ky, prev} hoặc null (không có, kế hoạch vốn nhỏ, hoặc số liệu kỳ cũ)
   const d=DISB[p.id]; if(!d || d.pct==null) return null;
+  const k0=_disbKy(d.as_of);
+  if((d.kh||0)<DISB_MIN_KH || !k0 || k0.yr*100+k0.mo<_disbLastKy()) return null;
   const k=_disbKy(d.as_of), time=k?k.mo/12*100:null;
   const ser=(d.series||[]).filter(x=>x && x.pct!=null), prev=ser.length>1?ser[ser.length-2]:null;
   return {pct:+d.pct, time:time, diff:time===null?null:(+d.pct)-time, ky:k, prev:prev, gn:d.gn, kh:d.kh};
@@ -1589,7 +1641,7 @@ function _sigVol(p){
 }
 function _sigDisb(p){
   const d=_disbStat(p);
-  if(!d) return {tone:'na', head:'không có số liệu', body:'Dự án không nằm trong báo cáo giải ngân vốn đầu tư công của Bộ Tài chính.'};
+  if(!d) return null;                               // không dùng giải ngân cho dự án này → không hiện thẻ
   let body='', tone='na';
   if(d.diff!==null){
     tone = d.diff>=-10 ? 'pos' : (d.diff>=-30 ? 'mid' : 'neg');
@@ -1601,20 +1653,22 @@ function _sigDisb(p){
   return {tone:tone, head:d.pct.toFixed(0)+'% kế hoạch vốn năm', body:body};
 }
 function _sigSat(p){
-  if(!p.satObs) return {tone:'na', head:'chưa có nhận xét', body:'Chưa có ảnh vệ tinh được đánh giá cho dự án này.'};
-  const t=p.satTrend||'không rõ', st=stageOf(p);
+  if(!_satUsable(p)) return null;                   // ảnh không rõ hoặc dự án nhỏ → không hiện thẻ
+  const t=p.satTrend, st=stageOf(p);
   const tone = t==='tiến triển' ? 'pos' : ((t==='ít thay đổi' || t==='chưa khởi công') && st==='active' ? 'neg' : 'na');
   const o=String(p.satObs), cutAt=260;
-  return {tone:tone, head:t, body:esc(o.length>cutAt ? o.slice(0,cutAt).replace(/[\s,;.]+\S*$/,'')+'…' : o)
+  const extra=[p.satPace&&p.satPace!=='không rõ'?'nhịp gần đây: '+p.satPace:'', p.satStage&&p.satStage!=='không rõ'?'chặng: '+p.satStage:''].filter(Boolean).join(' · ');
+  return {tone:(p.satPace==='tăng tốc'?'pos':tone), head:t+(extra?' · '+esc(extra):''), body:esc(o.length>cutAt ? o.slice(0,cutAt).replace(/[\s,;.]+\S*$/,'')+'…' : o)
           +(p.satAt?' <span class="cap">(ảnh tới '+esc(String(p.satAt).slice(0,7))+')</span>':'')};
 }
 function _signalsHTML(p){
-  const v=_sigVol(p), d=_sigDisb(p), t=_sigSat(p), all=[v,d,t].filter(x=>x.tone!=='na');
+  const v=_sigVol(p), d=_sigDisb(p), t=_sigSat(p), have=[v,d,t].filter(Boolean), all=have.filter(x=>x.tone!=='na');
   const card=(k,x)=>'<div class="sig-c t-'+x.tone+'"><p class="sig-k">'+k+'</p><p class="sig-h">'+x.head+'</p><p class="sig-b">'+x.body+'</p></div>';
   let sum='';
   if(stageOf(p)==='active'){
     const neg=all.filter(x=>x.tone==='neg').length, pos=all.filter(x=>x.tone==='pos').length;
-    if(all.length<2) sum='Mới có '+all.length+' trong 3 chiều dữ liệu — kết luận còn phụ thuộc nhiều vào tin tức.';
+    if(have.length<2) sum='';                                        // chỉ có khối lượng → không cần câu tổng hợp
+    else if(all.length<2) sum='';
     else if(neg===all.length) sum='<b>'+all.length+' chiều cùng chỉ về phía chậm.</b>';
     else if(pos===all.length) sum='<b>'+all.length+' chiều cùng tích cực.</b>';
     else if(neg && pos) sum='<b>Tín hiệu trái chiều</b> ('+pos+' tích cực, '+neg+' đáng lo'+(all.length-pos-neg?', '+(all.length-pos-neg)+' cần theo dõi':'')+') — nên đọc cả ba trước khi kết luận.';
@@ -1622,7 +1676,7 @@ function _signalsHTML(p){
   }
   const sc=schedOf(p);
   return '<div class="sig-wrap"><p class="sig-why"><span class="sched s-'+SCHED_CLS2[sc]+'">'+esc(sc)+'</span> '+esc(schedWhyOf(p))+'</p>'
-    +'<div class="sig">'+card('Khối lượng so với kế hoạch',v)+card('Giải ngân so với nhịp thời gian năm',d)+card('Ảnh vệ tinh',t)+'</div>'
+    +'<div class="sig" style="grid-template-columns:repeat('+have.length+',minmax(0,1fr))">'+card('Khối lượng so với kế hoạch',v)+(d?card('Giải ngân so với nhịp thời gian năm',d):'')+(t?card('Ảnh vệ tinh',t):'')+'</div>'
     +(sum?'<p class="sig-sum">'+sum+'</p>':'')+'</div>';
 }
 function _itemBar(it,p){        // % hoàn thành của 1 hạng mục (+ vạch kế hoạch nếu hạng mục có hạn có nguồn)
@@ -1632,7 +1686,7 @@ function _itemBar(it,p){        // % hoàn thành của 1 hạng mục (+ vạch
   const ph=(it.phases||[]).find(x=>x.from && x.to && A.has(x.to));
   if(ph){ const t0=_mi(ph.from), t1=_mi(ph.to)+1; if(t1>t0 && NOW_I>=t0) plan=Math.round(100*_sCurve((NOW_I-t0)/(t1-t0))); }
   const isc=itemSched(it.prog), c=isc?SCHED_CLS[isc]:'';
-  const bs=it.pctBasis==='reported'?'số công bố':(it.pctBasis==='milestone'?'theo mốc':'');
+  const bs=it.pctBasis==='reported'?'số công bố':(it.pctBasis==='milestone'?'theo mốc':(it.pctBasis==='activity'?'ước lượng':''));
   const tip='Hạng mục đạt '+Math.round(v)+'%'+(plan!==null?' · kế hoạch hôm nay '+plan+'%':'')+(it.pctAt?' · cập nhật '+_miLab(_mi(it.pctAt)):'');
   return '<div class="ib'+((c==='late'||c==='ahead')?' c-'+c:'')+'" title="'+esc(tip)+'"><div class="ib-track"><i class="ib-fill" style="width:'+v+'%"></i>'
     +(plan!==null?'<i class="ib-plan" style="left:'+plan+'%"></i>':'')+'</div>'
@@ -2198,7 +2252,7 @@ function _narrPortfolio(list){
   if(tr.length>=5){
     const stall=tr.filter(function(p){return _pstat(p).flat>=3;}), move=tr.filter(function(p){const m=_pstat(p).mom;return m&&m.d>=5;});
     const up=act.filter(function(p){const d=_scoreDelta(p);return d!==null&&d>=1;}), dn=act.filter(function(p){const d=_scoreDelta(p);return d!==null&&d<=-1;});
-    s='Ba tháng gần nhất, <b>'+stall.length+'/'+tr.length+' dự án ('+_pc(_capOf(stall),_capOf(tr))+'% vốn)</b> không tăng thêm khối lượng, trong khi '+move.length+' dự án tăng từ 5 điểm trở lên.';
+    s='Ba tháng gần nhất, <b>'+stall.length+'/'+tr.length+' dự án ('+_pc(_capOf(stall),_capOf(tr))+'% vốn)</b> đi ngang về khối lượng, trong khi '+move.length+' dự án tăng từ 5 điểm trở lên.';
     s+=' Về nhịp độ, '+up.length+' dự án đang cải thiện và '+dn.length+' dự án xấu đi so với ba kỳ trước'
       +(up.length>dn.length?' — xu hướng chung nhích lên':(dn.length>up.length?' — xu hướng chung đang yếu đi':' — chưa có chuyển biến rõ'))+'.';
     if(up.length) s+=' Cải thiện rõ nhất ở '+_nm(up,3)+'.';
@@ -2208,7 +2262,7 @@ function _narrPortfolio(list){
 
   // 4 — kiểm chứng chéo bằng giải ngân và vệ tinh
   const wd=act.map(function(p){return {p:p,d:_disbStat(p)};}).filter(function(x){return x.d&&x.d.diff!==null;});
-  const ws=act.filter(function(p){return p.satObs && p.satTrend && p.satTrend!=='không rõ';});
+  const ws=act.filter(_satUsable);
   s='';
   if(wd.length>=5){
     const kh=wd.reduce(function(t,x){return t+(x.d.kh||0);},0), gn=wd.reduce(function(t,x){return t+(x.d.gn||0);},0);
@@ -2262,7 +2316,7 @@ function _narrGroups(intro,groups){
     const cmp=slow.list.filter(function(p){return stageOf(p)==='active'&&_pstat(p).gap!==null;});
     if(cmp.length>=3) s+=' Lệch trung vị so với đường kế hoạch: '+(function(m){return (m>0?'+':'')+m;})(_median(cmp.map(function(p){return _pstat(p).gap;})))+' điểm.';
     const tr=slow.list.filter(function(p){return stageOf(p)==='active'&&_pstat(p).ser.length>=4;}), st=tr.filter(function(p){return _pstat(p).flat>=3;});
-    if(tr.length>=3&&st.length) s+=' '+st.length+'/'+tr.length+' dự án của nhóm không tăng khối lượng từ ba tháng trở lên.';
+    if(tr.length>=3&&st.length) s+=' '+st.length+'/'+tr.length+' dự án của nhóm đi ngang về khối lượng từ ba tháng trở lên.';
   }
   return s;
 }

@@ -7,7 +7,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"   # cron thiếu PATH → khai 
 export PYTHONIOENCODING=utf-8
 cd "$(dirname "$0")"
 
-BATCH=30
+BATCH=12
 LOG="run_pace.log"
 MODE="${1:-stale}"    # mặc định: chỉ chấm nhóm LỖI THỜI (stale_pace.json).  './run_pace.sh all' = chấm hết.
 echo "==== $(date '+%F %T') bắt đầu (mode=$MODE) ====" | tee -a "$LOG"
@@ -15,11 +15,11 @@ echo "==== $(date '+%F %T') bắt đầu (mode=$MODE) ====" | tee -a "$LOG"
 # 1) Gom tin gần đây → pace_bundles.json (pymongo, đọc DB)
 #    maxn 14 + months 8 + desc 160 → tiết kiệm token, vẫn "nhiều tin + gần đây".
 if [ "$MODE" = "all" ]; then
-  python3 prepare_pace_bundles.py --months 8 --maxn 14 | tee -a "$LOG"
+  python3 prepare_pace_bundles.py --months 8 --maxn 24 | tee -a "$LOG"
 else
   # QA phát hiện dự án có tin MỚI hơn đánh giá → stale_pace.json; chỉ chấm lại nhóm này (nhanh, đỡ token)
   python3 qa_check.py | tee -a "$LOG"
-  python3 prepare_pace_bundles.py --months 8 --maxn 14 --only stale_pace.json | tee -a "$LOG"
+  python3 prepare_pace_bundles.py --months 8 --maxn 24 --only stale_pace.json | tee -a "$LOG"
 fi
 # Không có dự án cần chấm → dừng sớm
 N=$(python3 -c 'import json;print(len(json.load(open("pace_bundles.json"))))' 2>/dev/null || echo 0)
