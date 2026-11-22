@@ -560,6 +560,7 @@ def build_auto_rows(client, projects):
         auto.append({
             "id": tid, "g": categorize(p["name"], loc), "name": p["name"], "status": "thi công",
             "owner": "", "loc": loc,
+            "autoRow": True,          # thanh suy từ khoảng tin, KHÔNG phải ngày khởi động thật → không vẽ đường kế hoạch
             "phases": [{"kind": "build", "from": first, "to": end,
                         "state": "ongoing", "doneTo": last}],
             "marks": marks[-30:], "items": [], "huyDong": 0, "capex": [],
@@ -751,7 +752,7 @@ def main():
     out = out.replace("const DISB_META = {}", "const DISB_META = " + json.dumps(fetch_disb_reports(c), ensure_ascii=False), 1)
     out = out.replace("const PACE_HIST = {}", "const PACE_HIST = " + json.dumps(pace_hist, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
-    out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->")
+    out = out.replace("</title>", "</title>\n<!-- built from dc_commodity.Infra_Project_Tracker -->", 1)   # chỉ thẻ <title> của trang (JS cũng có </title> trong SVG)
 
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(out)

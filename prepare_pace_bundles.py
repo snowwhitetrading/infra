@@ -57,7 +57,8 @@ def run(months, maxn, out, only=None, asof=None):
     cutoff = _minus_months(anchor, months)
     bundles = {}
     tr_meta = {p["id"]: p for p in tr.find({"_key": "project"},
-               {"id": 1, "name": 1, "loc": 1, "phases": 1, "marks": 1, "satObs": 1, "satTrend": 1})}
+               {"id": 1, "name": 1, "loc": 1, "status": 1, "phases": 1, "marks": 1, "items": 1,
+                "paceProgress": 1, "satObs": 1, "satTrend": 1})}
     disb = {d["tid"]: d for d in c[DB]["Infra_Disbursement"].find({}, {"_id": 0})}   # giải ngân BTC
     news_by_tid = defaultdict(list)
     for d in raw.find({"projects": {"$ne": []}},
@@ -90,7 +91,14 @@ def run(months, maxn, out, only=None, asof=None):
                 "state": ph.get("state")} for ph in p.get("phases", [])]
         dl = [m for m in p.get("marks", []) if m.get("tier") == "deadline"]
         b = {"name": p.get("name", ""), "loc": p.get("loc", ""),
-             "phases": phz, "deadline": dl[-1] if dl else None, "news": uniq}
+             "status": p.get("status", ""),
+             "phases": phz, "deadline": dl[-1] if dl else None,
+             # hồi tố (asof): không đưa mức % hiện tại vào, tránh rò thông tin tương lai
+             "prev_progress": None if asof else p.get("paceProgress"),
+             # hạng mục đã curate → agent chấm % TỪNG hạng mục (giữ nguyên name để apply khớp lại)
+             "items": [{"name": it.get("name", ""), "prog": (it.get("prog") or "")[:400]}
+                       for it in p.get("items", []) if it.get("name")],
+             "news": uniq}
         if tid in disb:                                  # tín hiệu giải ngân (BTC): % + xu hướng
             d = disb[tid]
             ser = d.get("series", [])
