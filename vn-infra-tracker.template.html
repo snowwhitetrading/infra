@@ -507,6 +507,8 @@ table.fin td:last-child{text-align:right;font-family:"Manrope",monospace;font-we
 .tgt-lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .linkbtn{font:inherit;font-size:10.5px;color:var(--build);background:none;border:1px solid var(--rule2);border-radius:3px;padding:0 5px;cursor:pointer;white-space:nowrap}
 .linkbtn:hover{border-color:var(--build)}
+.map-ben{margin-top:26px}
+.map-ben .tb td{padding-top:8px;padding-bottom:8px}
 .ctx-d{margin-top:8px}
 .ctx-d>summary{cursor:pointer;font-size:12px;color:var(--build);list-style:none;width:fit-content}
 .ctx-d>summary::-webkit-details-marker{display:none}
@@ -864,10 +866,10 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
     <div id="map"></div>
     <div class="map-panel" id="map-panel"><div class="mp-empty">Bấm một tuyến, điểm hạ tầng hoặc dự án trên bản đồ để xem thông tin chi tiết ở đây.</div></div>
   </div>
-  <details class="meth" id="map-ben" open style="border-top:1px solid var(--rule);margin-top:14px">
-    <summary>Bất động sản hưởng lợi từ hạ tầng</summary>
-    <div class="meth-b" id="map-ben-b" style="max-width:none"></div>
-  </details>
+  <div class="map-ben" id="map-ben">
+    <h3 class="sum-h">Bất động sản hưởng lợi từ hạ tầng</h3>
+    <div id="map-ben-b"></div>
+  </div>
 </div>
 
 </div>
@@ -2542,18 +2544,6 @@ function _nearRE(tid, km){            // số dự án bất động sản trên
   let n=0; CAF_PROJECTS.forEach(function(d){ if(d.a!=null && _kmDist(e.lat,e.lng,d.a,d.o)<=km) n++; });
   return n;
 }
-function _ownerExposure(all){         // ai gánh rủi ro: theo chủ đầu tư / nhóm doanh nghiệp (không tính Nhà nước)
-  const m={}; all.forEach(function(p){ const o=p.owner||''; if(!o || o==='Nhà nước') return; (m[o]=m[o]||[]).push(p); });
-  const ms=_milestones(all);
-  return Object.keys(m).map(function(o){ const L=m[o], slow=L.filter(function(p){return _paceB(p)==='chậm';});
-    const act=L.filter(function(p){return stageOf(p)==='active';}), cmp=act.filter(function(p){return _pstat(p).gap!==null;});
-    return {o:o, L:L, cap:_capOf(L), slowCap:_capOf(slow), nSlow:slow.length,
-      noty:L.filter(function(p){return stageOf(p)==='notyet';}).length,
-      slip:L.filter(function(p){return /^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && _dlEff(p) && p.paceDeadlineFirst<_dlEff(p);}).length,
-      hard:ms.filter(function(x){return x.p.owner===o && (x.st==='khó kịp'||x.st==='đã lỡ');}).length,
-      med:cmp.length?_median(cmp.map(function(p){return _pstat(p).gap;})):null}; })
-    .filter(function(r){return r.L.length>=2 || r.cap>=20000;}).sort(function(a,b){return b.cap-a.cap;});
-}
 function _benefitHTML(){            // bảng BĐS hưởng lợi theo từng dự án hạ tầng — hiển thị ở tab Bản đồ
   let h='';
   const bl=(CONTEXT.benefit||[]);
@@ -2586,18 +2576,6 @@ function _benefitFor(pid){          // danh sách BĐS hưởng lợi của 1 d�
   return '<p class="mp-nh">Bất động sản hưởng lợi ('+it.length+')</p>'+it.map(function(y){
     return '<div class="mp-row"><span class="mp-k">'+esc(y.name)+(y.owner?' · '+esc(y.owner):'')+'</span><span class="mp-v">'+(y.tmdt?_kt(y.tmdt)+' nghìn tỷ':'')+'</span></div>'; }).join('');
 }
-function _sumGroup3(all){
-  let h='';
-  // A) AI CHỊU RỦI RO — theo chủ đầu tư
-  const ex=_ownerExposure(all);
-  if(ex.length){
-    h+='<div class="sum-sec"><h3 class="sum-h">Ai gánh rủi ro tiến độ — theo chủ đầu tư ngoài Nhà nước</h3><table class="tb"><tr><th>Chủ đầu tư</th><th class="n">Dự án</th><th class="n">Tổng vốn</th><th class="n">Vốn bị chấm chậm</th><th class="n">Chưa khởi công</th><th class="n">Đã lùi hạn</th><th class="n">Mốc lỡ / khó kịp</th><th class="n">Lệch kế hoạch (trung vị)</th></tr>'
-      +ex.slice(0,12).map(function(r){ const sh=_pc(r.slowCap,r.cap);
-        return '<tr><td><b>'+esc(r.o)+'</b></td><td class="n">'+r.L.length+'</td><td class="n">'+_kt(r.cap)+'</td><td class="n">'+(r.nSlow?'<span class="pill '+(sh>=50?'neg':'mid')+'">'+sh+'% · '+r.nSlow+' dự án</span>':'—')+'</td><td class="n">'+(r.noty||'—')+'</td><td class="n">'+(r.slip||'—')+'</td><td class="n">'+(r.hard||'—')+'</td><td class="n">'+(r.med===null?'—':(r.med>0?'+':'')+r.med+' điểm')+'</td></tr>'; }).join('')
-      +'</table><p class="sum-note">Tổng vốn tính bằng nghìn tỷ đồng (K). Chỉ gồm chủ đầu tư có từ 2 dự án hoặc từ 20 nghìn tỷ. Dự án do Nhà nước làm chủ đầu tư xem ở các bảng theo phạm vi và loại hình bên dưới. Dữ liệu nhà thầu thi công chưa đủ để lập bảng tương tự.</p></div>';
-  }
-  return h;
-}
 function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
   const all=P.filter(p=>newsN(p)>=5 && !_isOldDone(p));   // đồng bộ với tab Tiến độ: ≥5 tin, bỏ dự án hoàn thành từ năm trước
@@ -2623,7 +2601,6 @@ function renderSummary(){
   const gType=[['Đường bộ',byType('Đường bộ')],['Đường sắt/Metro',byType('Đường sắt/Metro')],['Sân bay',byType('Sân bay')],['Loại hình khác',byType('Loại hình khác')]];
   h+=_keyPoints(all);
   h+=_narrPortfolio(all);
-  h+=_sumGroup3(all);
   h+=`<p class="narr">Theo hình thức, ${_narrGroups('',gForm)}</p>`;
   h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],...gForm]);
   h+=`<p class="narr">Trong khối tư nhân, ${_narrGroups('',gComp)}</p>`;
