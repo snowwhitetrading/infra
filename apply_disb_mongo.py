@@ -135,6 +135,9 @@ def run(verdicts, ky, dry, expect_ky="", src=None):
         db["Infra_Disbursement_Reports"].update_one({"ky": ky}, {"$set": {
             "ky": ky, "as_of": V.get("as_of"), "title": src.get("title", ""), "url": src.get("url", ""),
             "source": src.get("source", ""), "rows": n_up + n_new,
+            # dòng TỔNG SỐ của phụ lục (cả danh mục trong báo cáo) → mốc so sánh "bình quân" ở tab Giải ngân
+            "total_kh": _f((V.get("tong") or {}).get("kh_tong")), "total_gn": _f((V.get("tong") or {}).get("gn_tong")),
+            "total_pct": _f((V.get("tong") or {}).get("gn_ty_le")),
             "at": dt.datetime.now(dt.timezone.utc).isoformat()}}, upsert=True)
     print(f"Giải ngân kỳ {ky}: cập nhật {n_up} dự án · thêm mới {n_new} · ngoài danh mục theo dõi {n_skip} · chưa khớp {len(unmatched)}"
           + (" [dry-run]" if dry else ""))

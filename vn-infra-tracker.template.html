@@ -765,7 +765,8 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
   <div class="map-bar">
     <div class="mf"><span>Năm kế hoạch</span><select id="db-year"></select></div>
     <div class="mf"><span>Sắp xếp</span><select id="db-sort">
-      <option value="gap" selected>Thấp so với thời gian trước</option>
+      <option value="prog" selected>Số lượng tin tức (như tab Tiến độ)</option>
+      <option value="gap">Thấp so với bình quân trước</option>
       <option value="pct">% giải ngân cao → thấp</option>
       <option value="delta">Tăng nhiều nhất so kỳ trước</option>
       <option value="kh">Kế hoạch vốn</option>
@@ -2302,8 +2303,10 @@ function renderSummary(){
 /* ============================================================
    TAB GIẢI NGÂN
    - Xem theo NĂM KẾ HOẠCH (luỹ kế giải ngân tính lại từ 0 mỗi năm → không nối 2 năm thành 1 dãy).
-   - Mốc so sánh = % thời gian của năm đã trôi tại kỳ số liệu (kỳ 10 tháng → 83%).
-     Mức: Tốt = cách mốc không quá 10 điểm · Trung bình = kém 10–30 điểm · Thấp = kém hơn 30 điểm.
+   - Mốc so sánh = tỷ lệ giải ngân BÌNH QUÂN của cả danh mục so với kế hoạch vốn CẢ NĂM tại cùng kỳ
+     (số thực: dòng TỔNG SỐ của báo cáo nếu có trong DISB_META, không thì cộng từ các dự án trong kỳ).
+     KHÔNG dùng đường chia đều theo tháng (lý thuyết — giải ngân thực tế luôn dồn về cuối năm).
+     Mức: Tốt = cách bình quân không quá 10 điểm · Trung bình = kém 10–30 điểm · Thấp = kém hơn 30 điểm.
    - Dự án không có trong kỳ mới nhất: ghi rõ "số liệu tới Tx", KHÔNG cộng vào tổng.
    ============================================================ */
 let _dbYear=null, _dbCls='';
@@ -2325,21 +2328,31 @@ function _dbCalc(year){
       pct:last.pct||0, gn:last.gn||0, kh:last.kh||0, d:prev?(last.pct||0)-(prev.pct||0):null,
       warn:ser.some((s,i)=>i>0 && (ser[i-1].gn||0)-(s.gn||0) > Math.max(10, (ser[i-1].gn||0)*0.05))});   // luỹ kế GIẢM rõ (>5% và >10 tỷ) trong cùng năm → cần kiểm tra
   });
-  const el=m=>Math.min(100, m/12*100);
-  rows.forEach(function(r){ r.stale=r.last.p.m<latest; r.gap=r.pct-el(r.last.p.m); r.cls=r.gap>=-10?'g':(r.gap>=-30?'m':'l'); });
-  return {rows:rows, latest:latest, exp:el(latest)};
+  // bình quân danh mục theo từng kỳ: {tháng: %} — ưu tiên dòng TỔNG SỐ của báo cáo
+  const sum={};
+  rows.forEach(function(r){ r.ser.forEach(function(s){ if(s.kh>0){ (sum[s.p.m]=sum[s.p.m]||{kh:0,gn:0}); sum[s.p.m].kh+=s.kh; sum[s.p.m].gn+=(s.gn||0); } }); });
+  const avg={}, fromRep={};
+  Object.keys(sum).forEach(function(m){ avg[m]=sum[m].kh?sum[m].gn/sum[m].kh*100:0; });
+  Object.keys(avg).forEach(function(m){ const mt=DISB_META[m+'T'+year]; if(mt && typeof mt.total_pct==='number'){ avg[m]=mt.total_pct; fromRep[m]=true; } });
+  const bm=m=>(avg[m]!=null?avg[m]:0);
+  rows.forEach(function(r){ r.stale=r.last.p.m<latest; r.bm=bm(r.last.p.m); r.gap=r.pct-r.bm; r.cls=r.gap>=-10?'g':(r.gap>=-30?'m':'l'); });
+  return {rows:rows, latest:latest, exp:bm(latest), avg:avg, fromRep:!!fromRep[latest]};
 }
 function _dbBarHTML(pct, cls, exp){
   return `<div class="db-barwrap"><div class="db-bar db-${cls}" style="width:${Math.min(100,pct)}%"></div><i class="db-tick" style="left:${exp}%"></i></div>`;
 }
-function _dbChart(r){            // luỹ kế % theo tháng trong năm + đường "lẽ ra" đều theo thời gian
+function _dbChart(r, avg){       // luỹ kế % theo tháng trong năm + đường bình quân danh mục (số thực từng kỳ)
   const W=520,H=190,L=32,R=14,T=16,B=26, pw=W-L-R, ph=H-T-B;
   const ymax=Math.max(100, ...r.ser.map(s=>s.pct||0));
   const X=m=>L+m/12*pw, Y=v=>T+ph-(v/ymax)*ph, f=n=>n.toFixed(1);
   let g='';
   [0,50,100].forEach(function(v){ g+=`<line class="dbx-grid" x1="${L}" x2="${W-R}" y1="${f(Y(v))}" y2="${f(Y(v))}"/><text x="${L-5}" y="${f(Y(v)+3.5)}" text-anchor="end">${v}${v===100?'%':''}</text>`; });
   for(let m=1;m<=12;m++) g+=`<text x="${f(X(m))}" y="${H-8}" text-anchor="middle">T${m}</text>`;
-  g+=`<line class="dbx-exp" x1="${f(X(0))}" y1="${f(Y(0))}" x2="${f(X(12))}" y2="${f(Y(100))}"/>`;
+  const ap=[{m:0,v:0}].concat(Object.keys(avg).map(Number).sort((a,b)=>a-b).map(m=>({m:Math.min(12,m), v:avg[m]})));
+  if(ap.length>1){
+    g+=`<path class="dbx-exp" d="${ap.map((p,i)=>(i?'L':'M')+f(X(p.m))+','+f(Y(p.v))).join('')}"/>`;
+    ap.slice(1).forEach(function(p){ g+=`<circle cx="${f(X(p.m))}" cy="${f(Y(p.v))}" r="2.2" fill="var(--card)" stroke="var(--ink2)" stroke-width="1.2"><title>Bình quân danh mục kỳ ${p.m} tháng: ${p.v.toFixed(1)}% kế hoạch vốn cả năm</title></circle>`; });
+  }
   const pts=[{m:0,v:0}].concat(r.ser.map(s=>({m:Math.min(12,s.p.m), v:s.pct||0, s:s})));
   const line=pts.map((p,i)=>(i?'L':'M')+f(X(p.m))+','+f(Y(p.v))).join('');
   g+=`<path class="dbx-area" d="${line}L${f(X(pts[pts.length-1].m))},${f(Y(0))}L${f(X(0))},${f(Y(0))}Z"/><path class="dbx-line" d="${line}"/>`;
@@ -2348,16 +2361,15 @@ function _dbChart(r){            // luỹ kế % theo tháng trong năm + đư�
       +`<text class="v" x="${f(X(p.m))}" y="${f(Y(p.v)-8)}" text-anchor="middle">${p.v.toFixed(0)}%</text>`;
   });
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tỷ lệ giải ngân luỹ kế theo tháng">${g}</svg>
-    <div class="dbx-lg"><span><i class="la"></i>đã giải ngân (luỹ kế, % kế hoạch năm)</span><span><i class="lp"></i>mốc đều theo thời gian</span></div>`;
+    <div class="dbx-lg"><span><i class="la"></i>đã giải ngân (luỹ kế, % kế hoạch năm)</span><span><i class="lp"></i>bình quân danh mục (% kế hoạch cả năm)</span></div>`;
 }
-function _dbDetail(r){
-  const el=m=>Math.min(100, m/12*100);
-  const trs=r.ser.slice().reverse().map(function(s){ const g=(s.pct||0)-el(s.p.m);
+function _dbDetail(r, avg){
+  const trs=r.ser.slice().reverse().map(function(s){ const g=(s.pct||0)-(avg[s.p.m]||0);
     return `<tr><td>${esc(_kyLong(s.ky))}</td><td>${s.kh!=null?nf(Math.round(s.kh)):'—'}</td><td>${nf(Math.round((s.gn||0)*10)/10)}</td><td><b>${(s.pct||0).toFixed(1)}%</b></td><td>${g>0?'+':''}${g.toFixed(0)} điểm</td></tr>`; }).join('');
   const ht = r.pj ? ((typeof _pstat==='function' ? _pstat(r.pj).act : null) ?? r.pj.paceProgress) : null;
-  return `<div class="dbx c-${r.cls}"><div class="dbx-svg">${_dbChart(r)}</div>
+  return `<div class="dbx c-${r.cls}"><div class="dbx-svg">${_dbChart(r, avg)}</div>
     <div class="dbx-side">
-      <table class="dbx-t"><tr><th>Kỳ</th><th>KH vốn năm (tỷ)</th><th>Đã giải ngân (tỷ)</th><th>Tỷ lệ</th><th>So mốc thời gian</th></tr>${trs}</table>
+      <table class="dbx-t"><tr><th>Kỳ</th><th>KH vốn năm (tỷ)</th><th>Đã giải ngân (tỷ)</th><th>Tỷ lệ</th><th>So bình quân</th></tr>${trs}</table>
       ${r.warn?'<p class="dbx-note w">⚠ Số luỹ kế có kỳ thấp hơn kỳ trước trong cùng năm — có thể do điều chỉnh kế hoạch vốn hoặc sai số liệu nguồn, cần kiểm tra lại.</p>':''}
       ${r.stale?`<p class="dbx-note">Dự án không có trong báo cáo kỳ mới nhất; số liệu dừng ở ${esc(_kyLong(r.last.ky)).toLowerCase()} và không được cộng vào tổng.</p>`:''}
       ${ht!=null?`<p class="dbx-note">% hoàn thành công trình (tab Tiến độ): <b style="color:var(--ink)">${Math.round(ht)}%</b>. Tỷ lệ giải ngân là vốn đã chi so với kế hoạch vốn của năm, không phải % hoàn thành.</p>`:''}
@@ -2385,11 +2397,11 @@ function renderDisb(){
     `Kế hoạch vốn năm <b>${_dbYear}</b> · số liệu luỹ kế tới hết <b>tháng ${C.latest}/${_dbYear}</b>`
     +(doc?` · theo báo cáo <b>${doc}</b> của Bộ Tài chính`:' · nguồn Bộ Tài chính')
     +(meta&&meta.url?` · <a href="${esc(meta.url)}" target="_blank" rel="noopener">xem văn bản gốc${meta.source?' ('+esc(meta.source)+')':''} ↗</a>`:'')
-    +`<br>Vạch đen trên mỗi thanh là mốc so sánh: tới kỳ này đã qua <b>${C.exp.toFixed(0)}%</b> thời gian của năm. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn năm, không phải % hoàn thành công trình.`;
+    +`<br>Vạch đen trên mỗi thanh là mốc so sánh: bình quân cả danh mục đã giải ngân <b>${C.exp.toFixed(1)}%</b> kế hoạch vốn cả năm${C.fromRep?' (dòng tổng của báo cáo)':' (cộng từ các dự án trong kỳ)'}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn cả năm, không phải % hoàn thành công trình.`;
 
   // ---- tổng hợp (chỉ dự án có trong kỳ mới nhất) ----
   const tKH=cur.reduce((a,r)=>a+r.kh,0), tGN=cur.reduce((a,r)=>a+r.gn,0);
-  const oPct=tKH?tGN/tKH*100:0, og=oPct-C.exp, oc=og>=-10?'g':(og>=-30?'m':'l');
+  const oPct=tKH?tGN/tKH*100:0, yrEl=Math.min(100, C.latest/12*100), oc=oPct>=60?'g':(oPct>=30?'m':'l');
   const bk={g:0,m:0,l:0}; cur.forEach(r=>bk[r.cls]++);
   const _dbBrk=function(title,kf,order){
     const g={}; cur.forEach(function(r){ const k=kf(r); if(!k) return; (g[k]=g[k]||{n:0,kh:0,gn:0}); g[k].n++; g[k].kh+=r.kh; g[k].gn+=r.gn; });
@@ -2405,15 +2417,15 @@ function renderDisb(){
   const sum=`<div class="kpiband">
     <div class="kpi"><div class="kpi-k">Kế hoạch vốn năm ${_dbYear}</div><div class="kpi-v">${big(tKH)[0]}<span class="kpi-u">${big(tKH)[1]}</span></div></div>
     <div class="kpi"><div class="kpi-k">Đã giải ngân</div><div class="kpi-v">${big(tGN)[0]}<span class="kpi-u">${big(tGN)[1]}</span></div></div>
-    <div class="kpi kpi-wide"><div class="kpi-k">Tỷ lệ giải ngân chung <b class="db-${oc}">${oPct.toFixed(1)}%</b> · mốc thời gian ${C.exp.toFixed(0)}% · ${og>=0?'vượt':'kém'} mốc ${Math.abs(og).toFixed(0)} điểm</div>
-      <div style="margin:9px 0 4px">${_dbBarHTML(oPct,oc,C.exp)}</div>
+    <div class="kpi kpi-wide"><div class="kpi-k">Các dự án đang theo dõi đã giải ngân <b class="db-${oc}">${oPct.toFixed(1)}%</b> kế hoạch vốn cả năm · còn ${Math.max(0,12-C.latest)} tháng của năm (đã qua ${yrEl.toFixed(0)}%)</div>
+      <div style="margin:9px 0 4px"><div class="db-barwrap"><div class="db-bar db-${oc}" style="width:${Math.min(100,oPct)}%"></div></div></div>
       <div class="sg-legend"><span>${cur.length} dự án có số liệu kỳ này${old.length?` · ${old.length} dự án số liệu cũ không tính vào tổng`:''}</span></div></div>
   </div>
   <div class="db-brks">
     ${_dbBrk('Theo hình thức', r=>r.pj?_form(r.pj):null, ['Công','Tư','PPP'])}
     ${_dbBrk('Theo loại hình', r=>r.pj?r.pj.g:null)}
   </div>
-  <div class="db-chips" title="Tốt: cách mốc thời gian không quá 10 điểm · Trung bình: kém 10–30 điểm · Thấp: kém hơn 30 điểm">
+  <div class="db-chips" title="So với bình quân danh mục — Tốt: cách không quá 10 điểm · Trung bình: kém 10–30 điểm · Thấp: kém hơn 30 điểm">
     ${chip('', 'Tất cả', cur.length, '')}${chip('l','Thấp',bk.l,'var(--alert)')}${chip('m','Trung bình',bk.m,'var(--gpmb)')}${chip('g','Tốt',bk.g,'var(--done)')}
   </div>`;
 
@@ -2421,7 +2433,8 @@ function renderDisb(){
   const srt=function(a,b){
     return sort==='pct'?(b.pct-a.pct) : sort==='kh'?(b.kh-a.kh) : sort==='gn'?(b.gn-a.gn)
       : sort==='delta'?((b.d==null?-1e9:b.d)-(a.d==null?-1e9:a.d)) : sort==='name'?a.name.localeCompare(b.name,'vi')
-      : (a.gap-b.gap) || a.name.localeCompare(b.name,'vi');
+      : sort==='gap'?((a.gap-b.gap) || a.name.localeCompare(b.name,'vi'))
+      : ((b.pj?newsN(b.pj):0)-(a.pj?newsN(a.pj):0)) || a.name.localeCompare(b.name,'vi');   // 'prog' (mặc định): như tab Tiến độ — số tin nhiều → ít
   };
   const pass=r=>(!q||_norm(r.name).includes(q)) && (!_dbCls||r.cls===_dbCls);
   const rowHTML=function(r){
@@ -2431,15 +2444,15 @@ function renderDisb(){
     const ht = r.pj ? ((typeof _pstat==='function' ? _pstat(r.pj).act : null) ?? r.pj.paceProgress) : null;
     return `<div class="dbr${open?' open':''}"><button type="button" class="dbr-h" data-tid="${r.tid}" aria-expanded="${open}">
         <span class="dbr-nm"><span class="caret">▶</span><span class="t">${esc(r.name)}</span>${r.stale?`<span class="dbr-tag">tới ${esc(_kyShort(r.last.ky))}</span>`:''}${r.warn?'<span class="dbr-tag w" title="Số luỹ kế có kỳ giảm so với kỳ trước — cần kiểm tra">⚠ kiểm tra</span>':''}</span>
-        <span title="Vạch đen = ${Math.min(100,r.last.p.m/12*100).toFixed(0)}% thời gian của năm đã trôi">${_dbBarHTML(r.pct,r.cls,Math.min(100,r.last.p.m/12*100))}</span>
+        <span title="Vạch đen = bình quân danh mục ${r.bm.toFixed(1)}% kế hoạch vốn cả năm (kỳ ${r.last.p.m} tháng)">${_dbBarHTML(r.pct,r.cls,Math.min(100,r.bm))}</span>
         <span class="dbr-pct db-${r.cls}">${r.pct.toFixed(1)}%</span>
         <span class="dbr-num">${dtxt}</span>
         <span class="dbr-num"><b>${nf(Math.round(r.gn))}</b> / ${nf(Math.round(r.kh))} tỷ</span>
         <span class="dbr-num" title="% hoàn thành công trình theo tab Tiến độ">${ht!=null?Math.round(ht)+'%':'—'}</span>
-      </button>${open?_dbDetail(r):''}</div>`;
+      </button>${open?_dbDetail(r, C.avg):''}</div>`;
   };
   const A=cur.filter(pass).sort(srt), B=old.filter(pass).sort(srt);
-  const tbl=`<div class="db-tbl"><div class="db-thead"><span>Dự án</span><span>Tỷ lệ giải ngân so với mốc thời gian</span><span class="r">Tỷ lệ</span>
+  const tbl=`<div class="db-tbl"><div class="db-thead"><span>Dự án</span><span>Tỷ lệ giải ngân so với bình quân danh mục</span><span class="r">Tỷ lệ</span>
       <span class="r">So kỳ trước</span><span class="r">Đã giải ngân / KH năm</span><span class="r">% hoàn thành</span></div>
     ${A.map(rowHTML).join('')||'<div class="mp-empty" style="padding:16px">Không có dự án khớp bộ lọc.</div>'}
     ${B.length?`<div class="db-sec">Không có trong báo cáo kỳ mới nhất (${B.length}) — số liệu cũ, không tính vào tổng</div>${B.map(rowHTML).join('')}`:''}</div>`;

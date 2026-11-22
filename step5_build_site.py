@@ -219,7 +219,8 @@ def fetch_disbursement(client):
 def fetch_disb_reports(client):
     """Báo cáo nguồn của từng kỳ giải ngân: {ky: {title, url, source, as_of}} (apply_disb_mongo.py ghi)."""
     return {d["ky"]: {"title": d.get("title", ""), "url": d.get("url", ""), "source": d.get("source", ""),
-                      "as_of": d.get("as_of", "")}
+                      "as_of": d.get("as_of", ""), "total_pct": d.get("total_pct"),
+                      "total_kh": d.get("total_kh"), "total_gn": d.get("total_gn")}
             for d in client[DB]["Infra_Disbursement_Reports"].find({}, {"_id": 0}) if d.get("ky")}
 
 

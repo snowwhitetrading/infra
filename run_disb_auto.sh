@@ -99,13 +99,14 @@ done
 # 4) Gộp → disb_verdicts.json
 python3 - <<'PY'
 import glob, json
-rows, as_of = [], ""
+rows, as_of, tong = [], "", None
 for f in sorted(glob.glob('disb_out/verdicts_*.json')):
     try: d = json.load(open(f, encoding='utf-8'))
     except Exception: continue
     as_of = as_of or (d.get('as_of') or '')
+    tong = tong or d.get('tong')                      # dòng TỔNG SỐ chỉ có ở lô chứa trang đầu phụ lục
     rows += d.get('rows', [])
-json.dump({'as_of': as_of, 'rows': rows}, open('disb_verdicts.json', 'w', encoding='utf-8'), ensure_ascii=False)
+json.dump({'as_of': as_of, 'tong': tong, 'rows': rows}, open('disb_verdicts.json', 'w', encoding='utf-8'), ensure_ascii=False)
 print("gộp:", len(rows), "dòng · as_of", as_of)
 PY
 
