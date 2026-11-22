@@ -771,7 +771,7 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
   <div class="map-bar">
     <div class="mf"><span>Năm kế hoạch</span><select id="db-year"></select></div>
     <div class="mf"><span>Sắp xếp</span><select id="db-sort">
-      <option value="prog" selected>Số lượng tin tức (như tab Tiến độ)</option>
+      <option value="prog" selected>Số lượng tin tức (mặc định)</option>
       <option value="gap">Thấp so với bình quân trước</option>
       <option value="pct">% giải ngân cao → thấp</option>
       <option value="delta">Tăng nhiều nhất so kỳ trước</option>
@@ -779,6 +779,7 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
       <option value="gn">Đã giải ngân</option>
       <option value="name">Tên dự án</option>
     </select></div>
+    <div class="mf"><span>Dự án</span><select id="db-proj"></select></div>
     <div class="mf"><span>Tìm</span><input id="db-search" type="search" placeholder="Tên dự án" autocomplete="off"></div>
   </div>
   <p class="db-notebox" id="db-note"></p>
@@ -2363,7 +2364,7 @@ function renderSummary(){
      Mức: Tốt = cách bình quân không quá 10 điểm · Trung bình = kém 10–30 điểm · Thấp = kém hơn 30 điểm.
    - Dự án không có trong kỳ mới nhất: ghi rõ "số liệu tới Tx", KHÔNG cộng vào tổng.
    ============================================================ */
-let _dbYear=null, _dbCls='';
+let _dbYear=null, _dbCls='', _dbProj='';      // _dbProj = tid dự án đang chọn ở ô "Dự án" ('' = tất cả)
 const _dbOpen=new Set();
 const DB_CLS={g:'Tốt', m:'Trung bình', l:'Thấp'};
 const _kyP = k => { const m=/(\d+)T(\d{4})/.exec(k||''); return m?{y:+m[2], m:+m[1]}:null; };
@@ -2431,18 +2432,26 @@ function _dbDetail(r, avg){
 }
 function renderDisb(){
   const el=document.getElementById('disb-list'); if(!el) return;
-  const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search'), yEl=document.getElementById('db-year');
+  const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search'), yEl=document.getElementById('db-year'), pEl=document.getElementById('db-proj');
   if(!sortEl.dataset.init){
     const years=[...new Set([].concat(...Object.keys(DISB).map(t=>(DISB[t].series||[]).map(s=>(_kyP(s.ky)||{}).y))).filter(Boolean))].sort((a,b)=>b-a);
     yEl.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
     _dbYear=years[0]||null;
     sortEl.onchange=renderDisb; qEl.oninput=renderDisb;
-    yEl.onchange=function(){ _dbYear=+yEl.value; _dbCls=''; _dbOpen.clear(); renderDisb(); };
+    yEl.onchange=function(){ _dbYear=+yEl.value; _dbCls=''; _dbProj=''; _dbOpen.clear(); renderDisb(); };
+    pEl.onchange=function(){ _dbProj=pEl.value; _dbCls=''; if(_dbProj) _dbOpen.add(+_dbProj); renderDisb(); };   // chọn 1 dự án → chỉ hiện dự án đó, mở sẵn biểu đồ
     sortEl.dataset.init='1';
   }
   if(!_dbYear){ el.innerHTML='<div class="mp-empty">Chưa có dữ liệu giải ngân.</div>'; return; }
   const C=_dbCalc(_dbYear), sort=sortEl.value, q=_norm(qEl.value||'');
   const cur=C.rows.filter(r=>!r.stale), old=C.rows.filter(r=>r.stale);
+
+  // ---- ô chọn dự án (như tab Vệ tinh): thứ tự như tab Tiến độ (số tin nhiều → ít, rồi theo tên); ô Tìm lọc danh sách ----
+  const opts=C.rows.filter(r=>!q||_norm(r.name).includes(q))
+    .sort((a,b)=>((b.pj?newsN(b.pj):0)-(a.pj?newsN(a.pj):0)) || a.name.localeCompare(b.name,'vi'));
+  if(_dbProj && !opts.some(r=>String(r.tid)===String(_dbProj))) _dbProj='';
+  pEl.innerHTML=`<option value="">Tất cả dự án (${opts.length})</option>`+opts.map(r=>`<option value="${r.tid}">${esc(r.name)}${r.stale?' — số liệu cũ':''}</option>`).join('');
+  pEl.value=_dbProj;
 
   // ---- dòng nguồn ----
   const meta=DISB_META[C.latest+'T'+_dbYear];
@@ -2490,7 +2499,7 @@ function renderDisb(){
       : sort==='gap'?((a.gap-b.gap) || a.name.localeCompare(b.name,'vi'))
       : ((b.pj?newsN(b.pj):0)-(a.pj?newsN(a.pj):0)) || a.name.localeCompare(b.name,'vi');   // 'prog' (mặc định): như tab Tiến độ — số tin nhiều → ít
   };
-  const pass=r=>(!q||_norm(r.name).includes(q)) && (!_dbCls||r.cls===_dbCls);
+  const pass=r=>(!q||_norm(r.name).includes(q)) && (!_dbCls||r.cls===_dbCls) && (!_dbProj||String(r.tid)===String(_dbProj));
   const rowHTML=function(r){
     const open=_dbOpen.has(r.tid);
     const dtxt = r.d==null ? '<span class="dbr-d flat">kỳ đầu</span>'
@@ -2508,7 +2517,7 @@ function renderDisb(){
   const A=cur.filter(pass).sort(srt), B=old.filter(pass).sort(srt);
   const tbl=`<div class="db-tbl"><div class="db-thead"><span>Dự án</span><span>Tỷ lệ giải ngân so với bình quân danh mục</span><span class="r">Tỷ lệ</span>
       <span class="r">So kỳ trước</span><span class="r">Đã giải ngân / KH năm</span><span class="r">% hoàn thành</span></div>
-    ${A.map(rowHTML).join('')||'<div class="mp-empty" style="padding:16px">Không có dự án khớp bộ lọc.</div>'}
+    ${A.map(rowHTML).join('')||(B.length?'':'<div class="mp-empty" style="padding:16px">Không có dự án khớp bộ lọc.</div>')}
     ${B.length?`<div class="db-sec">Không có trong báo cáo kỳ mới nhất (${B.length}) — số liệu cũ, không tính vào tổng</div>${B.map(rowHTML).join('')}`:''}</div>`;
   el.innerHTML=(C.rows.length?sum+tbl:'<div class="mp-empty">Chưa có dữ liệu giải ngân.</div>');
   el.querySelectorAll('.db-chip').forEach(function(b){ b.onclick=function(){ _dbCls=b.dataset.cls; renderDisb(); }; });
