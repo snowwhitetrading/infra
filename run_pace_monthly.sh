@@ -51,4 +51,7 @@ python3 merge_pace_verdicts.py
 python3 apply_pace_llm.py --month "$M"
 python3 enforce_progress_monotonic.py     # % hoàn thành chỉ tăng (ép đơn điệu sau khi ghi)
 
+# 6) Viết lại nhận xét Tổng quan + cập nhật bảng chính sách theo số liệu vừa chấm (2 lần gọi Claude)
+python3 overview_commentary.py || echo "overview_commentary bỏ qua (lỗi/giới hạn Claude) — bản tuần sẽ chạy lại"
+
 echo "==== $(date '+%F %T') XONG (tháng $M) ===="

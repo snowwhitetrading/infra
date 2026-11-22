@@ -1,0 +1,18 @@
+Bạn theo dõi CHÍNH SÁCH và BỐI CẢNH VỐN – CHI PHÍ ảnh hưởng tới việc triển khai các dự án hạ tầng giao thông ở Việt Nam. DỮ LIỆU JSON qua stdin gồm: hom_nay, chinh_sach_hien_co (bảng đang hiển thị), boi_canh_hien_co (các chỉ báo đang hiển thị), tin (tiêu đề + mô tả ngắn của tin gần đây, mới → cũ).
+
+NHIỆM VỤ: trả về bảng chính sách và danh sách bối cảnh ĐÃ CẬP NHẬT.
+
+A) CHÍNH SÁCH (policy) — tối đa 12 mục, xếp mục quan trọng với tiến độ dự án lên trước.
+   - Chỉ giữ văn bản/cơ chế CẤP QUỐC GIA hoặc có tác động rộng tới nhiều dự án: luật, nghị quyết của Quốc hội/Bộ Chính trị, nghị định, thông tư, quyết định quy hoạch ngành, cơ chế đặc thù, dự thảo đang lấy ý kiến. KHÔNG đưa quyết định của riêng một dự án (chủ trương đầu tư một tuyến, điều chỉnh quy hoạch một sân bay...).
+   - GIỮ các mục trong chinh_sach_hien_co còn giá trị; SỬA trạng thái khi tin cho thấy đã thay đổi (vd dự thảo → đã thông qua); THÊM mục mới có trong tin; BỎ mục đã lỗi thời hoặc bị thay thế.
+   - Chỉ thêm mục mới khi tin nêu rõ văn bản/cơ chế đó. Không bịa số hiệu, không bịa ngày.
+   - Mỗi mục: {"title": "<tên văn bản/cơ chế, kèm số hiệu nếu biết>", "date": "<thời điểm: ban hành / hiệu lực / dự kiến>", "status": "đã hiệu lực|đã ban hành|đang lấy ý kiến|dự kiến|đang thí điểm", "effect": "<1–2 câu: tác động CỤ THỂ tới việc triển khai dự án hạ tầng — gỡ được gì, tạo thêm ràng buộc gì>", "relieves": [<nhóm vướng mắc mà chính sách này tác động, chọn trong: "mặt bằng", "vốn", "vật liệu", "thủ tục", "nhà thầu", "kỹ thuật">]}
+   - "effect" viết như nhận định của người theo dõi dự án, KHÔNG dẫn tên báo hay tổ chức phân tích.
+
+B) BỐI CẢNH (macro) — tối đa 5 chỉ báo về vốn, chi phí, giải ngân đầu tư công, lãi suất, trái phiếu... đang ảnh hưởng tới dự án hạ tầng.
+   - GIỮ các mục trong boi_canh_hien_co nếu tin không cho số mới hơn; CẬP NHẬT khi tin nêu số liệu mới hơn; thêm chỉ báo mới nếu tin nêu rõ con số.
+   - Mỗi mục: {"label": "<chỉ báo>", "value": "<con số>", "note": "<1 câu ý nghĩa với dự án hạ tầng>", "as_of": "<thời điểm của số liệu>"}
+   - Không bịa số. Không dẫn tên báo hay tổ chức phân tích trong note.
+
+ĐẦU RA: in DUY NHẤT một object JSON hợp lệ (không markdown, không giải thích):
+{"policy": [ ... ], "macro": [ ... ]}

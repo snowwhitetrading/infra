@@ -1,0 +1,30 @@
+name: Tổng quan · Nhận xét + bảng chính sách (hằng tuần · Claude)
+
+# Mỗi tuần: dò tin chính sách/vốn/chi phí → cập nhật bảng chính sách; tính số liệu tổng hợp của cả danh mục
+# (cùng dữ liệu với trang) → Claude viết lại 6 mục nhận xét của tab Tổng quan. 2 lần gọi Claude, ghi vào
+# dc_commodity.Infra_Overview; trang tự hiện ở lần dựng hằng giờ kế tiếp.
+on:
+  schedule:
+    - cron: '0 0 * * 1'       # 00:00 UTC thứ Hai = 07:00 VN
+  workflow_dispatch:           # cho phép bấm chạy tay
+
+jobs:
+  overview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Cập nhật chính sách + viết nhận xét Tổng quan (Claude Pro/Max)
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PYTHONIOENCODING: utf-8
+        run: python overview_commentary.py

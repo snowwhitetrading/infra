@@ -1,55 +1,465 @@
 {
- "_doc": "Bối cảnh cho tab Tổng quan — số liệu CURATE TAY từ báo cáo bên ngoài, mỗi mục ghi nguồn + thời điểm. step5_build_site.py nạp file này vào hằng CONTEXT. Cập nhật khi có báo cáo mới; đừng để số không nguồn.",
+ "_doc": "Dữ liệu CURATE TAY cho trang: (1) benefit = cặp hạ tầng – bất động sản hưởng lợi, hiện ở tab Bản đồ; (2) policy/macro/targets = mục KHỞI TẠO cho overview_commentary.py khi Mongo Infra_Overview chưa có gì (sau đó bảng chính sách và bối cảnh tự cập nhật từ tin).",
  "updated": "2026-11-23",
  "macro": [
-  {"label": "Nhu cầu vốn hạ tầng 2026–2030", "value": "≈ 450 tỷ USD", "note": "khoảng 150 tỷ USD kỳ vọng từ khu vực tư nhân; thị trường vốn 20–25 tỷ USD", "as_of": "8/2026", "src": "VIS Rating"},
-  {"label": "Giải ngân đầu tư công 6 tháng 2026", "value": "356.935 tỷ đồng", "note": "tăng 12,0% so với cùng kỳ, đạt 35,5% kế hoạch năm", "as_of": "6/2026", "src": "Bộ Tài chính, qua S&I Ratings"},
-  {"label": "Chi phí vốn của chủ đầu tư và nhà thầu", "value": "trên 12%/năm", "note": "lãi vay mua nhà 12–14%, cao nhất từ quý 1/2023", "as_of": "quý 2/2026", "src": "S&I Ratings"},
-  {"label": "Chi phí đầu vào xây dựng", "value": "+10–20%", "note": "nguyên vật liệu tăng 10–20%, nhân công có nơi tăng trên 25%", "as_of": "quý 2/2026", "src": "S&I Ratings"},
-  {"label": "Khả năng trả lãi của ngành xây dựng", "value": "≈ 1,9 lần", "note": "EBIT/lãi vay giảm từ 2,7 lần cuối 2025", "as_of": "quý 2/2026", "src": "VIS Rating, qua Thị trường Tài chính Tiền tệ"},
-  {"label": "Tín dụng cho hạ tầng", "value": "18 dự án", "note": "dự án mục tiêu quốc gia được loại trừ room tín dụng (APEC, một số PPP, đường sắt tốc độ cao, Gia Bình)", "as_of": "quý 2/2026", "src": "S&I Ratings"}
+  {
+   "label": "Nhu cầu vốn hạ tầng 2026–2030",
+   "value": "≈ 450 tỷ USD",
+   "note": "khoảng 150 tỷ USD kỳ vọng từ khu vực tư nhân; thị trường vốn 20–25 tỷ USD",
+   "as_of": "8/2026",
+   "src": "VIS Rating"
+  },
+  {
+   "label": "Giải ngân đầu tư công 6 tháng 2026",
+   "value": "356.935 tỷ đồng",
+   "note": "tăng 12,0% so với cùng kỳ, đạt 35,5% kế hoạch năm",
+   "as_of": "6/2026",
+   "src": "Bộ Tài chính, qua S&I Ratings"
+  },
+  {
+   "label": "Chi phí vốn của chủ đầu tư và nhà thầu",
+   "value": "trên 12%/năm",
+   "note": "lãi vay mua nhà 12–14%, cao nhất từ quý 1/2023",
+   "as_of": "quý 2/2026",
+   "src": "S&I Ratings"
+  },
+  {
+   "label": "Chi phí đầu vào xây dựng",
+   "value": "+10–20%",
+   "note": "nguyên vật liệu tăng 10–20%, nhân công có nơi tăng trên 25%",
+   "as_of": "quý 2/2026",
+   "src": "S&I Ratings"
+  },
+  {
+   "label": "Khả năng trả lãi của ngành xây dựng",
+   "value": "≈ 1,9 lần",
+   "note": "EBIT/lãi vay giảm từ 2,7 lần cuối 2025",
+   "as_of": "quý 2/2026",
+   "src": "VIS Rating, qua Thị trường Tài chính Tiền tệ"
+  },
+  {
+   "label": "Tín dụng cho hạ tầng",
+   "value": "18 dự án",
+   "note": "dự án mục tiêu quốc gia được loại trừ room tín dụng (APEC, một số PPP, đường sắt tốc độ cao, Gia Bình)",
+   "as_of": "quý 2/2026",
+   "src": "S&I Ratings"
+  }
  ],
  "policy": [
-  {"title": "Luật 90/2025/QH15 sửa Luật PPP", "date": "hiệu lực 1/7/2025", "effect": "Trần vốn nhà nước trong PPP đường bộ có thu phí tăng từ 50% lên 70%, đưa nhiều dự án trở lại vùng khả thi tài chính.", "src": "VIS Rating"},
-  {"title": "Nghị định 243/2025/NĐ-CP", "date": "hiệu lực 11/9/2025", "effect": "Quy định chi tiết Luật PPP: chuẩn bị, phê duyệt, chọn nhà đầu tư, thực hiện hợp đồng.", "src": "VIS Rating"},
-  {"title": "Giới hạn cấp tín dụng một khách hàng", "date": "thu hẹp theo lộ trình từ 2026", "effect": "Ngân hàng khó tiếp tục là nguồn vốn chính của dự án lớn; trái phiếu doanh nghiệp được kỳ vọng thành kênh chủ lực cho PPP mới.", "src": "VIS Rating"},
-  {"title": "Dự thảo nghị định trái phiếu doanh nghiệp dự án PPP", "date": "đang lấy ý kiến", "effect": "Cho chào bán ra công chúng theo mô hình tài trợ dự án: xét dòng tiền tương lai, dùng quyền thu phí làm tài sản bảo đảm, bắt buộc xếp hạng tín nhiệm.", "src": "VIS Rating"},
-  {"title": "Nghị quyết 21-NQ/TW", "date": "28/7/2026", "effect": "Tách bồi thường, tái định cư thành dự án độc lập làm trước; cho thu hồi phần đất còn lại khi đã thoả thuận được phần lớn diện tích.", "src": "S&I Ratings"},
-  {"title": "Luật Đất đai (sửa đổi)", "date": "dự kiến thông qua 10/2026, hiệu lực 1/3/2027", "effect": "Thể chế hoá các định hướng của Nghị quyết 21; có thể rút ngắn vòng đời giải phóng mặt bằng.", "src": "S&I Ratings"},
-  {"title": "Luật Xây dựng 2025", "date": "hiệu lực 1/7/2026", "effect": "Khung pháp lý mới cho hoạt động xây dựng.", "src": "VIS Rating, qua Thị trường Tài chính Tiền tệ"}
+  {
+   "title": "Luật 90/2025/QH15 sửa Luật PPP",
+   "date": "hiệu lực 1/7/2025",
+   "effect": "Trần vốn nhà nước trong PPP đường bộ có thu phí tăng từ 50% lên 70%, đưa nhiều dự án trở lại vùng khả thi tài chính.",
+   "src": "VIS Rating"
+  },
+  {
+   "title": "Nghị định 243/2025/NĐ-CP",
+   "date": "hiệu lực 11/9/2025",
+   "effect": "Quy định chi tiết Luật PPP: chuẩn bị, phê duyệt, chọn nhà đầu tư, thực hiện hợp đồng.",
+   "src": "VIS Rating"
+  },
+  {
+   "title": "Giới hạn cấp tín dụng một khách hàng",
+   "date": "thu hẹp theo lộ trình từ 2026",
+   "effect": "Ngân hàng khó tiếp tục là nguồn vốn chính của dự án lớn; trái phiếu doanh nghiệp được kỳ vọng thành kênh chủ lực cho PPP mới.",
+   "src": "VIS Rating"
+  },
+  {
+   "title": "Dự thảo nghị định trái phiếu doanh nghiệp dự án PPP",
+   "date": "đang lấy ý kiến",
+   "effect": "Cho chào bán ra công chúng theo mô hình tài trợ dự án: xét dòng tiền tương lai, dùng quyền thu phí làm tài sản bảo đảm, bắt buộc xếp hạng tín nhiệm.",
+   "src": "VIS Rating"
+  },
+  {
+   "title": "Nghị quyết 21-NQ/TW",
+   "date": "28/7/2026",
+   "effect": "Tách bồi thường, tái định cư thành dự án độc lập làm trước; cho thu hồi phần đất còn lại khi đã thoả thuận được phần lớn diện tích.",
+   "src": "S&I Ratings"
+  },
+  {
+   "title": "Luật Đất đai (sửa đổi)",
+   "date": "dự kiến thông qua 10/2026, hiệu lực 1/3/2027",
+   "effect": "Thể chế hoá các định hướng của Nghị quyết 21; có thể rút ngắn vòng đời giải phóng mặt bằng.",
+   "src": "S&I Ratings"
+  },
+  {
+   "title": "Luật Xây dựng 2025",
+   "date": "hiệu lực 1/7/2026",
+   "effect": "Khung pháp lý mới cho hoạt động xây dựng.",
+   "src": "VIS Rating, qua Thị trường Tài chính Tiền tệ"
+  }
  ],
  "targets": [
-  {"label": "Đường bộ cao tốc", "unit": "km", "done": 3345, "building": 1252, "preparing": 1721, "target": 5000, "target_year": 2030,
-   "note": "Nếu toàn bộ dự án trong chương trình hoàn thành, tổng chiều dài đạt khoảng 5.962 km, vượt mục tiêu.", "as_of": "hết 2025", "src": "Bộ Xây dựng, qua VIS Rating"}
+  {
+   "label": "Đường bộ cao tốc",
+   "unit": "km",
+   "done": 3345,
+   "building": 1252,
+   "preparing": 1721,
+   "target": 5000,
+   "target_year": 2030,
+   "note": "Nếu toàn bộ dự án trong chương trình hoàn thành, tổng chiều dài đạt khoảng 5.962 km, vượt mục tiêu.",
+   "as_of": "hết 2025",
+   "src": "Bộ Xây dựng, qua VIS Rating"
+  }
  ],
  "target_notes": [
-  {"label": "Cảng hàng không", "text": "Quy hoạch đến 2030 hình thành 36 cảng hàng không, trong đó 19 cảng quốc tế; nhu cầu vốn khoảng 514.000 tỷ đồng.", "as_of": "5/2026", "src": "Quyết định 657/QĐ-BXD, qua VIS Rating"},
-  {"label": "Đường sắt", "text": "Mạng hiện hữu khoảng 2.703 km; hai tuyến mới đang chuẩn bị là đường sắt tốc độ cao Bắc – Nam (1.541 km) và Lào Cai – Hà Nội – Hải Phòng (363 km tuyến chính, 63 km nhánh).", "as_of": "9/2026", "src": "VIS Rating"},
-  {"label": "Cảng trung chuyển Cần Giờ", "text": "Công suất thiết kế khoảng 4,8 triệu TEU vào 2030 và 16,9 triệu TEU vào 2047.", "as_of": "4/2026", "src": "VIS Rating"}
+  {
+   "label": "Cảng hàng không",
+   "text": "Quy hoạch đến 2030 hình thành 36 cảng hàng không, trong đó 19 cảng quốc tế; nhu cầu vốn khoảng 514.000 tỷ đồng.",
+   "as_of": "5/2026",
+   "src": "Quyết định 657/QĐ-BXD, qua VIS Rating"
+  },
+  {
+   "label": "Đường sắt",
+   "text": "Mạng hiện hữu khoảng 2.703 km; hai tuyến mới đang chuẩn bị là đường sắt tốc độ cao Bắc – Nam (1.541 km) và Lào Cai – Hà Nội – Hải Phòng (363 km tuyến chính, 63 km nhánh).",
+   "as_of": "9/2026",
+   "src": "VIS Rating"
+  },
+  {
+   "label": "Cảng trung chuyển Cần Giờ",
+   "text": "Công suất thiết kế khoảng 4,8 triệu TEU vào 2030 và 16,9 triệu TEU vào 2047.",
+   "as_of": "4/2026",
+   "src": "VIS Rating"
+  }
  ],
- "benefit_src": "S&I Ratings, Cập nhật thị trường bất động sản quý 2/2026 (Bảng 2)",
+ "benefit_src": "tổng hợp các dự án bất động sản quy mô lớn đã công bố, quý 2/2026",
  "benefit": [
-  {"tid": 11, "infra": "Cảng hàng không quốc tế Gia Bình", "bds": [{"name": "KĐT mới phía Tây Bắc TP Bắc Ninh – Khu I", "owner": "Vingroup", "ha": 277, "tmdt": 41271}]},
-  {"tid": 21, "infra": "Đường sắt Lào Cai – Hà Nội – Hải Phòng", "bds": [{"name": "Bến cảng và Trung tâm logistics Nam Đồ Sơn", "owner": "Vingroup", "ha": 4319, "tmdt": 373841}]},
-  {"tid": null, "infra": "Cao tốc Bắc – Nam phía Đông giai đoạn 2", "bds": [{"name": "KĐT mới Cam Lâm", "owner": "Vingroup", "ha": 10357, "tmdt": 285267}, {"name": "KĐT ven vịnh Cam Ranh", "owner": "Vinhomes", "ha": 1254, "tmdt": 85293}, {"name": "KĐT cao cấp Tu Bông", "owner": "Sun Group", "ha": 2579, "tmdt": 40190}, {"name": "KĐT du lịch nghỉ dưỡng Mekong", "owner": "Vingroup", "ha": 2945, "tmdt": 163000}]},
-  {"tid": 19, "infra": "Sân bay Long Thành giai đoạn 1", "bds": [{"name": "Sunshine Rivernia City", "owner": "Sunshine", "ha": 2000, "tmdt": 818000}, {"name": "Aqua City", "owner": "Novaland", "ha": 1000, "tmdt": 210400}, {"name": "Gem Sky World", "owner": "DXG", "ha": 92, "tmdt": 5725}]},
-  {"tid": 10, "infra": "Đường sắt tốc độ cao Hà Nội – Quảng Ninh", "bds": [{"name": "Vinhomes Global Gate Cổ Loa", "owner": "Vingroup", "ha": 385, "tmdt": 42215}, {"name": "Thành phố thông minh Bắc Hà Nội", "owner": "BRG – Sumitomo", "ha": 270, "tmdt": 94000}, {"name": "Vinhomes Hạ Long Xanh", "owner": "Vingroup", "ha": 4119, "tmdt": 456639}]},
-  {"tid": 113, "infra": "Quốc lộ 1A (Kim Liên – Cầu Giẽ)", "bds": [{"name": "KĐT thể thao Olympic (Vinhomes Global Sportia)", "owner": "Vingroup", "ha": 9171, "tmdt": 925000}]},
-  {"tid": 56, "infra": "Vành đai 4 Vùng Thủ đô", "bds": [{"name": "Vinhomes Wonder City Đan Phượng", "owner": "Vinhomes", "ha": 133, "tmdt": 18400}]},
-  {"tid": 32, "infra": "Metro Hà Nội tuyến 5 (Văn Cao – Hoà Lạc)", "bds": [{"name": "Noble Crystal Tây Hồ", "owner": "Sunshine", "ha": 5, "tmdt": 12286}]},
-  {"tid": 112, "infra": "Metro Hà Nội tuyến 3 (Nhổn – Ga Hà Nội)", "bds": [{"name": "Vinhomes Wonder City Đan Phượng", "owner": "Vinhomes", "ha": 133, "tmdt": 18400}]},
-  {"tid": null, "infra": "Cầu Thượng Cát (vượt sông Hồng)", "bds": [{"name": "Vinhomes Wonder City Đan Phượng", "owner": "Vinhomes", "ha": 133, "tmdt": 18400}, {"name": "KĐT đa mục tiêu Thư Lâm – Đông Anh", "owner": "Red River Future Group", "ha": 696, "tmdt": 60558}, {"name": "Grand Riveria", "owner": "", "ha": 268, "tmdt": null}, {"name": "Handico Sunshine Metropolis", "owner": "", "ha": 700, "tmdt": null}]},
-  {"tid": 57, "infra": "Cảng trung chuyển quốc tế Cần Giờ", "bds": [{"name": "KĐT du lịch lấn biển Cần Giờ", "owner": "Vingroup", "ha": 2870, "tmdt": 217000}]},
-  {"tid": 55, "infra": "Vành đai 3 TP.HCM", "bds": [{"name": "KĐT hỗn hợp Châu Thới", "owner": "", "ha": 109, "tmdt": 27347}, {"name": "KĐT mới Phước Vĩnh Tây", "owner": "Vinhomes – VIG", "ha": 1100, "tmdt": 80000}]},
-  {"tid": 61, "infra": "Metro số 2 TP.HCM (Bến Thành – Tham Lương)", "bds": [{"name": "Vinhomes Sài Gòn Park (Hóc Môn)", "owner": "Vinhomes", "ha": 1080, "tmdt": 59000}]},
-  {"tid": 90, "infra": "Metro số 1 (Bến Thành – Suối Tiên)", "bds": [{"name": "Khu liên hợp TDTT Quốc gia Rạch Chiếc", "owner": "Sun Group", "ha": 186, "tmdt": 145629}]},
-  {"tid": 268, "infra": "Cao tốc TP.HCM – Thủ Dầu Một – Chơn Thành", "bds": [{"name": "KĐT hỗn hợp Châu Thới", "owner": "", "ha": 109, "tmdt": 27347}]},
-  {"tid": 24, "infra": "Cao tốc Biên Hoà – Vũng Tàu", "bds": [{"name": "Gem Sky World", "owner": "DXG", "ha": 92, "tmdt": 5725}, {"name": "Blanca City Vũng Tàu", "owner": "Sun Group", "ha": 96, "tmdt": 37000}]},
-  {"tid": 102, "infra": "Cầu Cần Giờ", "bds": [{"name": "Vinhomes Green Paradise Cần Giờ", "owner": "Vingroup", "ha": 2870, "tmdt": 217000}]},
-  {"tid": 83, "infra": "Cảng Cái Mép – Thị Vải mở rộng (bến 14–15)", "bds": [{"name": "KĐT mới Gò Găng (Long Sơn)", "owner": "Khải Hoàn – Vũng Tàu", "ha": 1470, "tmdt": 317199}]},
-  {"tid": 22, "infra": "Bến cảng container Liên Chiểu", "bds": [{"name": "Khu phức hợp du lịch và đô thị nghỉ dưỡng Làng Vân", "owner": "Vingroup", "ha": 512, "tmdt": 44000}]},
-  {"tid": 269, "infra": "Sân bay Vân Đồn mở rộng giai đoạn 2", "bds": [{"name": "Khu phức hợp cao cấp tại KKT Vân Đồn", "owner": "Sun Group", "ha": 244, "tmdt": 51555}]},
-  {"tid": null, "infra": "Cao tốc Quảng Ngãi – Măng Đen", "bds": [{"name": "KĐT số 1 Măng Đen", "owner": "Sun Group", "ha": 264, "tmdt": 6700}]},
-  {"tid": 2, "infra": "Cảng hàng không quốc tế Phú Quốc (nhà ga T2)", "bds": [{"name": "KĐT hỗn hợp Bãi Đất Đỏ", "owner": "Sun Group", "ha": 88, "tmdt": 64000}]}
+  {
+   "tid": 11,
+   "infra": "Cảng hàng không quốc tế Gia Bình",
+   "bds": [
+    {
+     "name": "KĐT mới phía Tây Bắc TP Bắc Ninh – Khu I",
+     "owner": "Vingroup",
+     "ha": 277,
+     "tmdt": 41271
+    }
+   ]
+  },
+  {
+   "tid": 21,
+   "infra": "Đường sắt Lào Cai – Hà Nội – Hải Phòng",
+   "bds": [
+    {
+     "name": "Bến cảng và Trung tâm logistics Nam Đồ Sơn",
+     "owner": "Vingroup",
+     "ha": 4319,
+     "tmdt": 373841
+    }
+   ]
+  },
+  {
+   "tid": null,
+   "infra": "Cao tốc Bắc – Nam phía Đông giai đoạn 2",
+   "bds": [
+    {
+     "name": "KĐT mới Cam Lâm",
+     "owner": "Vingroup",
+     "ha": 10357,
+     "tmdt": 285267
+    },
+    {
+     "name": "KĐT ven vịnh Cam Ranh",
+     "owner": "Vinhomes",
+     "ha": 1254,
+     "tmdt": 85293
+    },
+    {
+     "name": "KĐT cao cấp Tu Bông",
+     "owner": "Sun Group",
+     "ha": 2579,
+     "tmdt": 40190
+    },
+    {
+     "name": "KĐT du lịch nghỉ dưỡng Mekong",
+     "owner": "Vingroup",
+     "ha": 2945,
+     "tmdt": 163000
+    }
+   ]
+  },
+  {
+   "tid": 19,
+   "infra": "Sân bay Long Thành giai đoạn 1",
+   "bds": [
+    {
+     "name": "Sunshine Rivernia City",
+     "owner": "Sunshine",
+     "ha": 2000,
+     "tmdt": 818000
+    },
+    {
+     "name": "Aqua City",
+     "owner": "Novaland",
+     "ha": 1000,
+     "tmdt": 210400
+    },
+    {
+     "name": "Gem Sky World",
+     "owner": "DXG",
+     "ha": 92,
+     "tmdt": 5725
+    }
+   ]
+  },
+  {
+   "tid": 10,
+   "infra": "Đường sắt tốc độ cao Hà Nội – Quảng Ninh",
+   "bds": [
+    {
+     "name": "Vinhomes Global Gate Cổ Loa",
+     "owner": "Vingroup",
+     "ha": 385,
+     "tmdt": 42215
+    },
+    {
+     "name": "Thành phố thông minh Bắc Hà Nội",
+     "owner": "BRG – Sumitomo",
+     "ha": 270,
+     "tmdt": 94000
+    },
+    {
+     "name": "Vinhomes Hạ Long Xanh",
+     "owner": "Vingroup",
+     "ha": 4119,
+     "tmdt": 456639
+    }
+   ]
+  },
+  {
+   "tid": 113,
+   "infra": "Quốc lộ 1A (Kim Liên – Cầu Giẽ)",
+   "bds": [
+    {
+     "name": "KĐT thể thao Olympic (Vinhomes Global Sportia)",
+     "owner": "Vingroup",
+     "ha": 9171,
+     "tmdt": 925000
+    }
+   ]
+  },
+  {
+   "tid": 56,
+   "infra": "Vành đai 4 Vùng Thủ đô",
+   "bds": [
+    {
+     "name": "Vinhomes Wonder City Đan Phượng",
+     "owner": "Vinhomes",
+     "ha": 133,
+     "tmdt": 18400
+    }
+   ]
+  },
+  {
+   "tid": 32,
+   "infra": "Metro Hà Nội tuyến 5 (Văn Cao – Hoà Lạc)",
+   "bds": [
+    {
+     "name": "Noble Crystal Tây Hồ",
+     "owner": "Sunshine",
+     "ha": 5,
+     "tmdt": 12286
+    }
+   ]
+  },
+  {
+   "tid": 112,
+   "infra": "Metro Hà Nội tuyến 3 (Nhổn – Ga Hà Nội)",
+   "bds": [
+    {
+     "name": "Vinhomes Wonder City Đan Phượng",
+     "owner": "Vinhomes",
+     "ha": 133,
+     "tmdt": 18400
+    }
+   ]
+  },
+  {
+   "tid": null,
+   "infra": "Cầu Thượng Cát (vượt sông Hồng)",
+   "bds": [
+    {
+     "name": "Vinhomes Wonder City Đan Phượng",
+     "owner": "Vinhomes",
+     "ha": 133,
+     "tmdt": 18400
+    },
+    {
+     "name": "KĐT đa mục tiêu Thư Lâm – Đông Anh",
+     "owner": "Red River Future Group",
+     "ha": 696,
+     "tmdt": 60558
+    },
+    {
+     "name": "Grand Riveria",
+     "owner": "",
+     "ha": 268,
+     "tmdt": null
+    },
+    {
+     "name": "Handico Sunshine Metropolis",
+     "owner": "",
+     "ha": 700,
+     "tmdt": null
+    }
+   ]
+  },
+  {
+   "tid": 57,
+   "infra": "Cảng trung chuyển quốc tế Cần Giờ",
+   "bds": [
+    {
+     "name": "KĐT du lịch lấn biển Cần Giờ",
+     "owner": "Vingroup",
+     "ha": 2870,
+     "tmdt": 217000
+    }
+   ]
+  },
+  {
+   "tid": 55,
+   "infra": "Vành đai 3 TP.HCM",
+   "bds": [
+    {
+     "name": "KĐT hỗn hợp Châu Thới",
+     "owner": "",
+     "ha": 109,
+     "tmdt": 27347
+    },
+    {
+     "name": "KĐT mới Phước Vĩnh Tây",
+     "owner": "Vinhomes – VIG",
+     "ha": 1100,
+     "tmdt": 80000
+    }
+   ]
+  },
+  {
+   "tid": 61,
+   "infra": "Metro số 2 TP.HCM (Bến Thành – Tham Lương)",
+   "bds": [
+    {
+     "name": "Vinhomes Sài Gòn Park (Hóc Môn)",
+     "owner": "Vinhomes",
+     "ha": 1080,
+     "tmdt": 59000
+    }
+   ]
+  },
+  {
+   "tid": 90,
+   "infra": "Metro số 1 (Bến Thành – Suối Tiên)",
+   "bds": [
+    {
+     "name": "Khu liên hợp TDTT Quốc gia Rạch Chiếc",
+     "owner": "Sun Group",
+     "ha": 186,
+     "tmdt": 145629
+    }
+   ]
+  },
+  {
+   "tid": 268,
+   "infra": "Cao tốc TP.HCM – Thủ Dầu Một – Chơn Thành",
+   "bds": [
+    {
+     "name": "KĐT hỗn hợp Châu Thới",
+     "owner": "",
+     "ha": 109,
+     "tmdt": 27347
+    }
+   ]
+  },
+  {
+   "tid": 24,
+   "infra": "Cao tốc Biên Hoà – Vũng Tàu",
+   "bds": [
+    {
+     "name": "Gem Sky World",
+     "owner": "DXG",
+     "ha": 92,
+     "tmdt": 5725
+    },
+    {
+     "name": "Blanca City Vũng Tàu",
+     "owner": "Sun Group",
+     "ha": 96,
+     "tmdt": 37000
+    }
+   ]
+  },
+  {
+   "tid": 102,
+   "infra": "Cầu Cần Giờ",
+   "bds": [
+    {
+     "name": "Vinhomes Green Paradise Cần Giờ",
+     "owner": "Vingroup",
+     "ha": 2870,
+     "tmdt": 217000
+    }
+   ]
+  },
+  {
+   "tid": 83,
+   "infra": "Cảng Cái Mép – Thị Vải mở rộng (bến 14–15)",
+   "bds": [
+    {
+     "name": "KĐT mới Gò Găng (Long Sơn)",
+     "owner": "Khải Hoàn – Vũng Tàu",
+     "ha": 1470,
+     "tmdt": 317199
+    }
+   ]
+  },
+  {
+   "tid": 22,
+   "infra": "Bến cảng container Liên Chiểu",
+   "bds": [
+    {
+     "name": "Khu phức hợp du lịch và đô thị nghỉ dưỡng Làng Vân",
+     "owner": "Vingroup",
+     "ha": 512,
+     "tmdt": 44000
+    }
+   ]
+  },
+  {
+   "tid": 269,
+   "infra": "Sân bay Vân Đồn mở rộng giai đoạn 2",
+   "bds": [
+    {
+     "name": "Khu phức hợp cao cấp tại KKT Vân Đồn",
+     "owner": "Sun Group",
+     "ha": 244,
+     "tmdt": 51555
+    }
+   ]
+  },
+  {
+   "tid": null,
+   "infra": "Cao tốc Quảng Ngãi – Măng Đen",
+   "bds": [
+    {
+     "name": "KĐT số 1 Măng Đen",
+     "owner": "Sun Group",
+     "ha": 264,
+     "tmdt": 6700
+    }
+   ]
+  },
+  {
+   "tid": 2,
+   "infra": "Cảng hàng không quốc tế Phú Quốc (nhà ga T2)",
+   "bds": [
+    {
+     "name": "KĐT hỗn hợp Bãi Đất Đỏ",
+     "owner": "Sun Group",
+     "ha": 88,
+     "tmdt": 64000
+    }
+   ]
+  }
  ]
 }

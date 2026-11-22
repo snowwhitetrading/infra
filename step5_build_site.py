@@ -569,13 +569,9 @@ def build_auto_rows(client, projects):
     return auto
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(HERE, "vn-infra-tracker.built.html"))
-    args = ap.parse_args()
-
-    c = MongoClient(MONGO_URI, serverSelectionTimeoutMS=20000)
-    c.admin.command("ping")
+def build_projects(c):
+    """Danh sách dự án ĐÃ XỬ LÝ như trên trang (lọc active, hạn, TMĐT, chủ đầu tư, nhóm) + groups + tid2cat.
+    Tách khỏi main() để các script khác (vd overview_commentary.py) dùng CÙNG dữ liệu với trang."""
     col = c[DB][COLL]
 
     projects = list(col.find({"_key": "project"}, {"_id": 0, "_key": 0}).sort("id", 1))
@@ -680,6 +676,18 @@ def main():
         if p.get("id") in _GRP_FIX:
             p["g"] = _GRP_FIX[p["id"]]
 
+    return projects, groups, tid2cat
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=os.path.join(HERE, "vn-infra-tracker.built.html"))
+    args = ap.parse_args()
+
+    c = MongoClient(MONGO_URI, serverSelectionTimeoutMS=20000)
+    c.admin.command("ping")
+    projects, groups, tid2cat = build_projects(c)
+
     tpl = open(TEMPLATE, encoding="utf-8").read()
     old_g = extract_array(tpl, "const GROUPS")
     old_p = extract_array(tpl, "const P =")
@@ -756,6 +764,9 @@ def main():
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
+    # NHẬN XÉT TỔNG QUAN + CHÍNH SÁCH do Claude viết (overview_commentary.py ghi vào Infra_Overview)
+    ov = {d["_id"]: {k: v for k, v in d.items() if k != "_id"} for d in c[DB]["Infra_Overview"].find({})}
+    out = out.replace("const OVERVIEW = {}", "const OVERVIEW = " + json.dumps(ov, ensure_ascii=False, default=str), 1)
     ctx_path = os.path.join(HERE, "overview_context.json")          # bối cảnh curate tay (vĩ mô, chính sách, mục tiêu, BĐS hưởng lợi)
     if os.path.exists(ctx_path):
         with open(ctx_path, encoding="utf-8") as f:
