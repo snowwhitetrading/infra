@@ -467,6 +467,45 @@ table.fin td:last-child{text-align:right;font-family:"Manrope",monospace;font-we
   border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;color:var(--ink2)}
 .narr b{color:var(--ink);font-weight:600}
 .sum-sec{margin:0 0 22px}
+/* Tổng quan — điểm chính, bảng gọn, thanh ngang */
+.keyp{margin:0 0 18px;padding:12px 16px 12px 14px;background:var(--card);border:1px solid var(--rule2);border-left:3px solid var(--brand);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.keyp h3{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 6px}
+.keyp ul{margin:0;padding-left:18px}
+.keyp li{font-size:13px;line-height:1.6;color:var(--ink2);margin:2px 0}
+.keyp li b{color:var(--ink);font-weight:600}
+.sum-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 28px;margin:0 0 6px}
+@media(max-width:960px){.sum-2{grid-template-columns:1fr}}
+.sum-note{font-size:11px;color:var(--ink3);margin:6px 0 0;line-height:1.5}
+.hb{display:grid;grid-template-columns:170px 1fr 104px;gap:10px;align-items:center;padding:4px 0;font-size:12px;color:var(--ink2)}
+.hb .t{height:12px;background:var(--sunk);border-radius:2px;overflow:hidden}
+.hb .t i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.hb .t i.mut{background:var(--ink3)} .hb .t i.neg{background:var(--alert)}
+.hb .n{font-family:"Manrope",monospace;font-size:11px;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hb .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb{width:100%;border-collapse:collapse;font-size:12px}
+.tb th{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:5px 8px 5px 0;border-bottom:1px solid var(--rule2)}
+.tb td{padding:6px 8px 6px 0;border-bottom:1px dotted var(--rule2);color:var(--ink2);vertical-align:top;line-height:1.4}
+.tb td.n,.tb th.n{text-align:right;font-family:"Manrope",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;padding-right:14px}
+.tb td:last-child,.tb th:last-child{padding-right:0}
+.tb td b{color:var(--ink);font-weight:600}
+.tb .cap{display:block}
+.pill{font-family:"Manrope",monospace;font-size:10px;padding:1px 6px;border-radius:2px;border:1px solid var(--rule2);white-space:nowrap;color:var(--ink2)}
+.pill.neg{color:var(--alert);border-color:var(--alert)} .pill.mid{color:var(--gold);border-color:var(--gold)} .pill.pos{color:var(--done);border-color:var(--done)}
+.matcap{font-size:10px;color:var(--ink3);line-height:1.2}
+.ctx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:960px){.ctx{grid-template-columns:1fr 1fr}} @media(max-width:620px){.ctx{grid-template-columns:1fr}}
+.ctx-c{border:1px solid var(--rule2);border-radius:var(--radius-sm);padding:9px 12px;background:var(--card)}
+.ctx-k{font-size:10.5px;color:var(--ink3);margin:0 0 3px}
+.ctx-v{font-family:"Manrope",monospace;font-size:15px;font-weight:700;color:var(--ink);margin:0 0 3px}
+.ctx-n{font-size:11.5px;color:var(--ink2);line-height:1.45;margin:0}
+.ctx-s{font-size:10px;color:var(--ink3);margin:4px 0 0}
+.tgt{display:flex;height:18px;border-radius:3px;overflow:hidden;background:var(--sunk);position:relative;margin:6px 0 4px}
+.tgt i{display:block;height:100%} .tgt .d{background:var(--brand)} .tgt .b{background:var(--accent);opacity:.6} .tgt .p{background:var(--ink3);opacity:.45}
+.tgt-m{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--alert)}
+.tgt-lg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--ink2)}
+.tgt-lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.linkbtn{font:inherit;font-size:10.5px;color:var(--build);background:none;border:1px solid var(--rule2);border-radius:3px;padding:0 5px;cursor:pointer;white-space:nowrap}
+.linkbtn:hover{border-color:var(--build)}
 .sum-h{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
 .sumt{width:100%;border-collapse:collapse;font-size:12.5px}
 .sumt th{text-align:right;font-weight:500;color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:5px 8px;border-bottom:1px solid var(--rule2)}
@@ -852,6 +891,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 const NEWSFLOW = [];
 const SATELLITE = {};
 const DISB = {};
+const CONTEXT = {};     // bối cảnh curate tay cho Tổng quan (overview_context.json): macro, policy, targets, benefit
 const DISB_META = {};   // {ky: {title, url, source, as_of}} — báo cáo nguồn của từng kỳ giải ngân
 const PACE_HIST = {};   // {tid:[[YYYY-MM, score -5..+5|null, progress 0..100|null], ...]} — lịch sử nhịp độ + % hoàn thành theo tháng
 const MAPPTS = [];
@@ -1807,7 +1847,7 @@ function render(){
       h += `<div class="row">
           <div class="lbl"><button class="pname ${isOpen?'open':''}" data-id="${p.id}" aria-expanded="${isOpen}">
             <span class="caret">▶</span><span class="ptxt">${esc(p.name)}</span></button>${jumps?`<div class="pjumps">${jumps}</div>`:''}</div>
-          <div class="gcell gc-stat"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span></div>
+          <div class="gcell gc-stat"><span class="sched s-${SCHED_CLS2[sc]}" title="${esc(schedWhyOf(p))}">${esc(sc)}</span>${stageOf(p)==='done'?'':`<span class="matcap" title="Mức độ trưởng thành của dự án">${MAT_VN[_maturity(p)].toLowerCase()}</span>`}</div>
           <div class="gcell">${_form(p)}</div>
           <div class="gcell">${esc(p.g||'—')}</div>
           <div class="gcell" title="${esc(p.owner||'')}">${esc(p.owner||'—')}</div>
@@ -2389,6 +2429,203 @@ function _narrGroups(intro,groups){
   }
   return s;
 }
+/* ============================================================
+   TỔNG QUAN — nhóm bảng/biểu đồ dựng từ dữ liệu sẵn có
+   ============================================================ */
+/* MỨC ĐỘ TRƯỞNG THÀNH (chi tiết hơn 3 giai đoạn): suy từ giai đoạn + thành phần A (chuẩn bị) và C (xây lắp) */
+const MAT_VN=['Đề xuất','Có chủ trương đầu tư','Đã chọn nhà đầu tư','Khởi công, mặt bằng','Thi công','Hoàn thiện, chạy thử','Đã khai thác'];
+function _maturity(p){
+  const st=stageOf(p), pt=(p.paceParts&&typeof p.paceParts==='object')?p.paceParts:{}, pr=_progLatest(p);
+  if(st==='done') return 6;
+  if(st==='notyet'){ if(p.proposal || pt.A===0) return 0; return pt.A>=1 ? 2 : 1; }
+  const C = typeof pt.C==='number' ? pt.C : (pr!==null ? Math.max(0,(pr-15)/80) : null);
+  if(C===null) return 4;
+  return C<0.1 ? 3 : (C>=0.9 ? 5 : 4);
+}
+/* LỆCH GIỮA CÁC CẤU PHẦN: chênh % giữa hạng mục thi công nhanh nhất và chậm nhất của cùng dự án.
+   Bỏ hạng mục mặt bằng/tái định cư/thủ tục (đo khác bản chất) — chỉ là lọc theo tên để so đúng loại. */
+const _RX_NOBUILD=/gpmb|mặt bằng|tái định cư|thủ tục|chuẩn bị đầu tư|nhà đầu tư|vốn|pháp lý/i;
+function _spread(p){
+  const it=(p.items||[]).filter(function(i){return typeof i.pct==='number' && !_RX_NOBUILD.test(i.name||'');});
+  if(it.length<2) return null;
+  const s2=it.slice().sort(function(a,b){return a.pct-b.pct;});
+  return {lo:s2[0], hi:s2[s2.length-1], d:Math.round(s2[s2.length-1].pct-s2[0].pct), n:it.length};
+}
+/* MỐC CAM KẾT: đã lỡ (3 tháng gần đây) và sắp tới (6 tháng) — so mức cần đạt với mức thực tế và tốc độ gần đây */
+function _milestones(list){
+  const now=_mi(NOW_M), out=[];
+  list.forEach(function(p){
+    if(stageOf(p)!=='active' || !Array.isArray(p.pacePlanPoints)) return;
+    const s=_pstat(p); if(s.act===null) return;
+    p.pacePlanPoints.forEach(function(q){
+      if(!q || !/^\d{4}-\d{2}$/.test(q.month||'') || typeof q.pct!=='number') return;
+      const k=_mi(q.month), left=k-now;
+      if(left<-3 || left>6) return;
+      const gap=Math.round(q.pct-s.act);
+      let st, cls;
+      if(left<0){ if(gap<=3) return; st='đã lỡ'; cls='neg'; }
+      else if(gap<=2){ st='trong tầm'; cls='pos'; }
+      else{
+        const rate = s.mom && s.mom.n ? s.mom.d/s.mom.n : 0, need = gap/Math.max(1,left+0.5);
+        if(rate<=0 || need>2*rate){ st='khó kịp'; cls='neg'; } else if(need>1.2*rate){ st='cần tăng tốc'; cls='mid'; } else { st='trong tầm'; cls='pos'; }
+      }
+      out.push({p:p, q:q, k:k, left:left, gap:gap, act:s.act, st:st, cls:cls});
+    });
+  });
+  return out.sort(function(a,b){return a.k-b.k || (b.p.tmdt||0)-(a.p.tmdt||0);});
+}
+function _hbars(rows, max, cls){      // rows: [label, value, text]
+  return rows.map(function(r){ return '<div class="hb"><span class="l" title="'+esc(r[0])+'">'+esc(r[0])+'</span><span class="t"><i class="'+(r[3]||cls||'')+'" style="width:'+(max?Math.max(0.5,r[1]/max*100):0).toFixed(1)+'%"></i></span><span class="n">'+r[2]+'</span></div>'; }).join('');
+}
+function _keyPoints(all){             // "Điểm chính": 5–6 kết luận ngắn, mỗi ý một con số
+  const a=_agg(all), o=_overall(a), li=[];
+  const slow=all.filter(function(p){return _paceB(p)==='chậm';}), act=all.filter(function(p){return stageOf(p)==='active';});
+  li.push('<b>'+_sh(a,'chậm')+'% vốn đang thực hiện bị chấm chậm</b> ('+a['chậm'].n+' dự án), '+_sh(a,'đúng')+'% bám tiến độ — đánh giá chung '+o.l+'.');
+  const big=_byCap(all)[0];
+  if(big && a.tmdt) li.push('<b>Danh mục rất tập trung</b>: riêng '+esc(big.name)+' chiếm '+_pc(big.tmdt||0,a.tmdt)+'% tổng vốn'
+    +(slow.length>=3?'; 3 dự án chậm lớn nhất chiếm '+_pc(_capOf(_byCap(slow).slice(0,3)),_capOf(slow))+'% vốn chậm':'')+'.');
+  const cmp=act.filter(function(p){return _pstat(p).gap!==null;});
+  const over=cmp.filter(function(p){return _pstat(p).overM;}), soon=cmp.filter(function(p){const st=_pstat(p);return !st.overM && st.sp.t1-NOW_I<=12 && st.act<70;});
+  if(cmp.length) li.push('<b>Về đích</b>: '+over.length+' dự án đã quá hạn và '+soon.length+' dự án có hạn trong 12 tháng tới nhưng mới đạt dưới 70% khối lượng.');
+  const ms=_milestones(all), miss=ms.filter(function(x){return x.st==='đã lỡ';}), hard=ms.filter(function(x){return x.st==='khó kịp';}), up=ms.filter(function(x){return x.left>=0;});
+  if(ms.length) li.push('<b>Mốc cam kết</b>: '+up.length+' mốc đến hạn trong 6 tháng tới, trong đó '+hard.length+' mốc khó kịp; '+miss.length+' mốc trong 3 tháng qua đã lỡ.');
+  const slip=all.filter(function(p){return /^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && _dlEff(p) && p.paceDeadlineFirst<_dlEff(p);});
+  if(slip.length){ const mm=_median(slip.map(function(p){return _mi(_dlEff(p))-_mi(p.paceDeadlineFirst);}));
+    li.push('<b>Lùi hạn</b>: '+slip.length+' dự án ('+_kt(_capOf(slip))+' nghìn tỷ) đã lùi hạn so với mốc ban đầu, trung vị '+mm+' tháng.'); }
+  const sp=act.map(function(p){return {p:p,s:_spread(p)};}).filter(function(x){return x.s && x.s.d>=40;});
+  if(sp.length) li.push('<b>Lệch giữa các cấu phần</b>: '+sp.length+' dự án có hạng mục nhanh nhất và chậm nhất chênh nhau từ 40 điểm — công trình chính xong chưa chắc vận hành được.');
+  const mb=slow.filter(function(p){return (p.paceBlockers||[]).indexOf('mặt bằng')>=0;});
+  if(mb.length) li.push('<b>Vướng mắc lớn nhất là mặt bằng</b>: '+mb.length+' dự án chậm ('+_pc(_capOf(mb),_capOf(slow))+'% vốn chậm).');
+  return '<div class="keyp"><h3>Điểm chính</h3><ul>'+li.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>';
+}
+function _sumExtras(all){             // mức độ trưởng thành · về đích theo năm · top 10 · mốc · lùi hạn · lệch cấu phần
+  let h='';
+  // 1) mức độ trưởng thành + 2) vốn theo năm về đích
+  const mat=MAT_VN.map(function(){return [];}); all.forEach(function(p){ mat[_maturity(p)].push(p); });
+  const mMax=Math.max.apply(null, mat.map(_capOf));
+  const matRows=MAT_VN.map(function(l,i){ return [l, _capOf(mat[i]), mat[i].length+' dự án · '+_kt(_capOf(mat[i]))]; });
+  const yrs={}, yKey=function(p){ if(stageOf(p)==='done'){ const m=_doneMonth(p); return m?m.slice(0,4):'chưa rõ'; }
+    const d=_dlEff(p); if(!d) return 'chưa rõ'; const y=+d.slice(0,4); return y>2030?'sau 2030':String(y); };
+  all.forEach(function(p){ const k=yKey(p); (yrs[k]=yrs[k]||[]).push(p); });
+  const yOrder=Object.keys(yrs).filter(function(k){return /^\d{4}$/.test(k);}).sort().concat(['sau 2030','chưa rõ'].filter(function(k){return yrs[k];}));
+  const yMax=Math.max.apply(null, yOrder.map(function(k){return _capOf(yrs[k]);}));
+  const yRows=yOrder.map(function(k){ const L=yrs[k], late=L.filter(function(p){return _paceB(p)==='chậm';});
+    return [k==='chưa rõ'?'Chưa rõ hạn':k, _capOf(L), L.length+' dự án · '+_kt(_capOf(L)), k==='chưa rõ'?'mut':'']; });
+  h+='<div class="sum-2"><div class="sum-sec"><h3 class="sum-h">Mức độ trưởng thành của danh mục</h3>'+_hbars(matRows,mMax)
+    +'<p class="sum-note">Thanh = tổng mức đầu tư ở từng chặng (nghìn tỷ đồng). Dự án càng ở chặng đầu thì rủi ro càng nằm ở thủ tục, mặt bằng và thu xếp vốn hơn là thi công.</p></div>'
+    +'<div class="sum-sec"><h3 class="sum-h">Vốn theo năm dự kiến về đích</h3>'+_hbars(yRows,yMax)
+    +'<p class="sum-note">Theo hạn hoàn thành toàn bộ có nguồn; dự án đã xong tính theo năm đưa vào khai thác.</p></div></div>';
+  // 3) top 10 theo TMĐT
+  const top=_byCap(all).filter(function(p){return p.tmdt;}).slice(0,10), tMax=top.length?top[0].tmdt:0;
+  h+='<div class="sum-sec"><h3 class="sum-h">10 dự án lớn nhất theo tổng mức đầu tư</h3>'
+    +_hbars(top.map(function(p){ const b=_paceB(p), s=_pstat(p);
+        return [p.name, p.tmdt, _kt(p.tmdt)+(s.act!==null?' · '+Math.round(s.act)+'%':''), b==='chậm'?'neg':(stageOf(p)==='active'?'':'mut')]; }), tMax)
+    +'<p class="sum-note">Thanh đỏ = đang bị chấm chậm · xanh = đang thực hiện, không chậm · xám = chưa thực hiện hoặc đã hoàn thành. Số sau dấu chấm là % hoàn thành. '
+    +(top.length&&a_tm(all)?'10 dự án này chiếm '+_pc(_capOf(top),a_tm(all))+'% tổng vốn danh mục.':'')+'</p></div>';
+  // 4) mốc cam kết
+  const ms=_milestones(all).filter(function(x){return x.st!=='trong tầm';}).slice(0,16);
+  const msAll=_milestones(all);
+  if(msAll.length){
+    h+='<div class="sum-sec"><h3 class="sum-h">Mốc cam kết: đã lỡ và sắp đến hạn (6 tháng tới)</h3>';
+    if(ms.length) h+='<table class="tb"><tr><th>Hạn</th><th>Dự án</th><th>Mốc</th><th class="n">Cần đạt</th><th class="n">Thực tế</th><th class="n">Đánh giá</th></tr>'
+      +ms.map(function(x){ return '<tr><td>'+_ymVN(x.q.month)+'</td><td><b>'+esc(x.p.name)+'</b></td><td>'+esc(x.q.label||'')+(x.q.kind?' <span class="cap">'+esc(x.q.kind)+'</span>':'')+'</td><td class="n">'+Math.round(x.q.pct)+'%</td><td class="n">'+Math.round(x.act)+'%</td><td class="n"><span class="pill '+x.cls+'">'+x.st+'</span></td></tr>'; }).join('')+'</table>';
+    h+='<p class="sum-note">'+msAll.length+' mốc trong khoảng 3 tháng qua đến 6 tháng tới; bảng chỉ liệt kê mốc đã lỡ, khó kịp hoặc cần tăng tốc ('+(msAll.length-_milestones(all).filter(function(x){return x.st!=="trong tầm";}).length)+' mốc còn lại đang trong tầm). “Cần đạt” là % toàn dự án tương ứng với mốc; “khó kịp” khi tốc độ cần có lớn hơn gấp đôi tốc độ ba tháng gần nhất.</p></div>';
+  }
+  // 5) lùi hạn + 6) lệch cấu phần
+  const slip=all.filter(function(p){return /^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && _dlEff(p) && p.paceDeadlineFirst<_dlEff(p);})
+    .map(function(p){return {p:p, m:_mi(_dlEff(p))-_mi(p.paceDeadlineFirst)};}).sort(function(a,b){return b.m-a.m || (b.p.tmdt||0)-(a.p.tmdt||0);});
+  const spr=all.filter(function(p){return stageOf(p)==='active';}).map(function(p){return {p:p,s:_spread(p)};}).filter(function(x){return x.s && x.s.d>=25;})
+    .sort(function(a,b){return b.s.d-a.s.d;});
+  let c1='', c2='';
+  if(slip.length) c1='<div class="sum-sec"><h3 class="sum-h">Dự án đã lùi hạn ('+slip.length+')</h3><table class="tb"><tr><th>Dự án</th><th>Hạn ban đầu → hiện tại</th><th class="n">Lùi</th></tr>'
+    +slip.slice(0,12).map(function(x){ return '<tr><td><b>'+esc(x.p.name)+'</b><span class="cap">'+_kt(x.p.tmdt||0)+' nghìn tỷ · '+esc(schedOf(x.p))+'</span></td><td>'+_ymVN(x.p.paceDeadlineFirst)+' → '+_ymVN(_dlEff(x.p))+'</td><td class="n"><span class="pill '+(x.m>=12?'neg':'mid')+'">+'+x.m+' tháng</span></td></tr>'; }).join('')
+    +'</table>'+(slip.length>12?'<p class="sum-note">Hiển thị 12 dự án lùi nhiều nhất trong '+slip.length+'.</p>':'')+'</div>';
+  if(spr.length) c2='<div class="sum-sec"><h3 class="sum-h">Lệch tiến độ giữa các cấu phần ('+spr.length+')</h3><table class="tb"><tr><th>Dự án</th><th>Nhanh nhất · chậm nhất</th><th class="n">Chênh</th></tr>'
+    +spr.slice(0,12).map(function(x){ return '<tr><td><b>'+esc(x.p.name)+'</b><span class="cap">'+x.s.n+' hạng mục thi công</span></td><td>'+esc(x.s.hi.name)+' '+Math.round(x.s.hi.pct)+'%<span class="cap">'+esc(x.s.lo.name)+' '+Math.round(x.s.lo.pct)+'%</span></td><td class="n"><span class="pill '+(x.s.d>=50?'neg':'mid')+'">'+x.s.d+' điểm</span></td></tr>'; }).join('')
+    +'</table><p class="sum-note">So các hạng mục thi công của cùng một dự án (không tính mặt bằng, thủ tục). Chênh lớn nghĩa là phần xong trước phải chờ phần còn lại mới khai thác được.</p></div>';
+  if(c1||c2) h+='<div class="sum-2">'+c1+c2+'</div>';
+  return h;
+}
+function a_tm(list){ return _capOf(list); }
+/* ---------- NHÓM 3: ai hưởng lợi / chịu rủi ro · bối cảnh · mục tiêu quốc gia ---------- */
+function _kmDist(a,b,c,d){ const R=6371, x=(d-b)*Math.PI/180*Math.cos((a+c)/2*Math.PI/180), y=(c-a)*Math.PI/180; return Math.sqrt(x*x+y*y)*R; }
+function _nearRE(tid, km){            // số dự án bất động sản trên tab Bản đồ quanh điểm đại diện của dự án hạ tầng
+  const e=_mapByPid()[tid]; if(!e || e.lat==null) return null;
+  let n=0; CAF_PROJECTS.forEach(function(d){ if(d.a!=null && _kmDist(e.lat,e.lng,d.a,d.o)<=km) n++; });
+  return n;
+}
+function _ownerExposure(all){         // ai gánh rủi ro: theo chủ đầu tư / nhóm doanh nghiệp (không tính Nhà nước)
+  const m={}; all.forEach(function(p){ const o=p.owner||''; if(!o || o==='Nhà nước') return; (m[o]=m[o]||[]).push(p); });
+  const ms=_milestones(all);
+  return Object.keys(m).map(function(o){ const L=m[o], slow=L.filter(function(p){return _paceB(p)==='chậm';});
+    const act=L.filter(function(p){return stageOf(p)==='active';}), cmp=act.filter(function(p){return _pstat(p).gap!==null;});
+    return {o:o, L:L, cap:_capOf(L), slowCap:_capOf(slow), nSlow:slow.length,
+      noty:L.filter(function(p){return stageOf(p)==='notyet';}).length,
+      slip:L.filter(function(p){return /^\d{4}-\d{2}$/.test(p.paceDeadlineFirst||'') && _dlEff(p) && p.paceDeadlineFirst<_dlEff(p);}).length,
+      hard:ms.filter(function(x){return x.p.owner===o && (x.st==='khó kịp'||x.st==='đã lỡ');}).length,
+      med:cmp.length?_median(cmp.map(function(p){return _pstat(p).gap;})):null}; })
+    .filter(function(r){return r.L.length>=2 || r.cap>=20000;}).sort(function(a,b){return b.cap-a.cap;});
+}
+function _sumGroup3(all){
+  let h='';
+  // A) AI CHỊU RỦI RO — theo chủ đầu tư
+  const ex=_ownerExposure(all);
+  if(ex.length){
+    h+='<div class="sum-sec"><h3 class="sum-h">Ai gánh rủi ro tiến độ — theo chủ đầu tư ngoài Nhà nước</h3><table class="tb"><tr><th>Chủ đầu tư</th><th class="n">Dự án</th><th class="n">Tổng vốn</th><th class="n">Vốn bị chấm chậm</th><th class="n">Chưa khởi công</th><th class="n">Đã lùi hạn</th><th class="n">Mốc lỡ / khó kịp</th><th class="n">Lệch kế hoạch (trung vị)</th></tr>'
+      +ex.slice(0,12).map(function(r){ const sh=_pc(r.slowCap,r.cap);
+        return '<tr><td><b>'+esc(r.o)+'</b></td><td class="n">'+r.L.length+'</td><td class="n">'+_kt(r.cap)+'</td><td class="n">'+(r.nSlow?'<span class="pill '+(sh>=50?'neg':'mid')+'">'+sh+'% · '+r.nSlow+' dự án</span>':'—')+'</td><td class="n">'+(r.noty||'—')+'</td><td class="n">'+(r.slip||'—')+'</td><td class="n">'+(r.hard||'—')+'</td><td class="n">'+(r.med===null?'—':(r.med>0?'+':'')+r.med+' điểm')+'</td></tr>'; }).join('')
+      +'</table><p class="sum-note">Tổng vốn tính bằng nghìn tỷ đồng (K). Chỉ gồm chủ đầu tư có từ 2 dự án hoặc từ 20 nghìn tỷ. Dự án do Nhà nước làm chủ đầu tư xem ở các bảng theo phạm vi và loại hình bên dưới. Dữ liệu nhà thầu thi công chưa đủ để lập bảng tương tự.</p></div>';
+  }
+  // B) AI HƯỞNG LỢI — bất động sản gắn với từng dự án hạ tầng
+  const bl=(CONTEXT.benefit||[]);
+  if(bl.length){
+    const rows=bl.map(function(b){ const p=b.tid!=null?P.find(function(x){return x.id===b.tid;}):null;
+      return {b:b, p:p, cap:(b.bds||[]).reduce(function(s,x){return s+(x.tmdt||0);},0), pace:p?_paceB(p):'', st:p?_pstat(p):null}; });
+    const seen={}, atRisk=[]; let tot=0, risk=0;
+    rows.forEach(function(r){ (r.b.bds||[]).forEach(function(x){ if(seen[x.name]) return; seen[x.name]=1; tot+=x.tmdt||0;
+      if(r.pace==='chậm'){ risk+=x.tmdt||0; atRisk.push(x.name); } }); });
+    h+='<div class="sum-sec"><h3 class="sum-h">Ai hưởng lợi — bất động sản gắn với hạ tầng</h3>'
+      +'<p class="narr" style="margin-bottom:10px"><b>'+Object.keys(seen).length+' dự án bất động sản</b> quy mô lớn (tổng '+_kt(tot)+' nghìn tỷ đồng) được gắn với '+rows.length+' dự án hạ tầng. '
+      +(risk?'Trong đó <b>'+_kt(risk)+' nghìn tỷ ('+_pc(risk,tot)+'%)</b> gắn với hạ tầng đang bị chấm chậm — giá trị của các dự án này phụ thuộc vào việc hạ tầng về đích đúng hạn.':'Chưa có dự án nào gắn với hạ tầng đang bị chấm chậm.')+'</p>'
+      +'<table class="tb"><tr><th>Dự án hạ tầng</th><th>Tình trạng</th><th class="n">Hạn</th><th>Bất động sản hưởng lợi</th><th class="n">Vốn BĐS</th><th class="n">BĐS quanh đó trên Bản đồ</th></tr>'
+      +rows.sort(function(a,b){return b.cap-a.cap;}).map(function(r){ const p=r.p, sc=p?schedOf(p):'';
+        const near=p?_nearRE(p.id,5):null;
+        return '<tr><td><b>'+esc(p?p.name:r.b.infra)+'</b>'+(p?'':'<span class="cap">chưa nằm trong danh mục theo dõi</span>')+'</td>'
+          +'<td>'+(p?'<span class="sched s-'+SCHED_CLS2[sc]+'">'+esc(sc)+'</span>'+(r.st&&r.st.act!==null?' '+Math.round(r.st.act)+'%':''):'—')+'</td>'
+          +'<td class="n">'+(p&&_dlEff(p)?_ymVN(_dlEff(p)):'—')+'</td>'
+          +'<td>'+(r.b.bds||[]).map(function(x){return esc(x.name)+(x.owner?' <span class="cap" style="display:inline">('+esc(x.owner)+')</span>':'');}).join('<br>')+'</td>'
+          +'<td class="n">'+(r.cap?_kt(r.cap):'—')+'</td>'
+          +'<td class="n">'+(near===null?'—':near+' dự án '+(p?'<button class="linkbtn" onclick="_focusMap('+p.id+')">Bản đồ</button>':''))+'</td></tr>'; }).join('')
+      +'</table><p class="sum-note">Cặp hạ tầng – bất động sản theo '+esc(CONTEXT.benefit_src||'báo cáo bên ngoài')+'; tình trạng và hạn lấy từ dữ liệu theo dõi của trang. Cột cuối đếm dự án bất động sản trong bán kính 5 km quanh điểm đại diện của dự án hạ tầng trên tab Bản đồ (với tuyến dài chỉ là một điểm trên tuyến).</p></div>';
+  }
+  // C) MỤC TIÊU QUỐC GIA
+  const tg=(CONTEXT.targets||[]), tn=(CONTEXT.target_notes||[]);
+  if(tg.length||tn.length){
+    h+='<div class="sum-sec"><h3 class="sum-h">Mục tiêu quốc gia so với thực tế</h3>';
+    tg.forEach(function(t){ const tot=(t.done||0)+(t.building||0)+(t.preparing||0), mx=Math.max(tot,t.target||0), W=function(v){return (v/mx*100).toFixed(2)+'%';};
+      h+='<p style="margin:0;font-size:12.5px;color:var(--ink)"><b>'+esc(t.label)+'</b> — mục tiêu '+nf(t.target)+' '+esc(t.unit)+' vào '+t.target_year+'</p>'
+        +'<div class="tgt"><i class="d" style="width:'+W(t.done)+'"></i><i class="b" style="width:'+W(t.building)+'"></i><i class="p" style="width:'+W(t.preparing)+'"></i><span class="tgt-m" style="left:'+W(t.target)+'" title="Mục tiêu '+nf(t.target)+' '+esc(t.unit)+'"></span></div>'
+        +'<div class="tgt-lg"><span><i style="background:var(--brand)"></i>đã khai thác '+nf(t.done)+' '+esc(t.unit)+' ('+_pc(t.done,t.target)+'% mục tiêu)</span><span><i style="background:var(--accent);opacity:.6"></i>đang thi công '+nf(t.building)+'</span><span><i style="background:var(--ink3);opacity:.45"></i>đang chuẩn bị '+nf(t.preparing)+'</span><span><i style="background:var(--alert);width:2px"></i>mục tiêu</span></div>'
+        +'<p class="sum-note">Để đạt mục tiêu cần thêm '+nf(Math.max(0,t.target-t.done))+' '+esc(t.unit)+', tức phải hoàn thành toàn bộ phần đang thi công và '+nf(Math.max(0,t.target-t.done-t.building))+' '+esc(t.unit)+' trong phần đang chuẩn bị. '+esc(t.note||'')+' Số liệu '+esc(t.as_of)+', nguồn '+esc(t.src)+'.</p>';
+      // đối chiếu với danh mục cao tốc đang theo dõi
+      const hw=all.filter(function(p){return /cao tốc/i.test(p.name);});
+      if(hw.length){ const by=function(st){return hw.filter(function(p){return stageOf(p)===st;});};
+        const a2=by('active'), slow=a2.filter(function(p){return _paceB(p)==='chậm';});
+        h+='<p class="sum-note" style="color:var(--ink2)">Trong danh mục theo dõi có <b>'+hw.length+' dự án cao tốc</b>: '+by('done').length+' đã hoàn thành trong năm, '+a2.length+' đang thực hiện (trong đó '+slow.length+' bị chấm chậm, chiếm '+_pc(_capOf(slow),_capOf(a2))+'% vốn), '+by('notyet').length+' chưa khởi công.</p>'; }
+    });
+    if(tn.length) h+='<div class="ctx" style="margin-top:10px">'+tn.map(function(x){return '<div class="ctx-c"><p class="ctx-k">'+esc(x.label)+'</p><p class="ctx-n">'+esc(x.text)+'</p><p class="ctx-s">'+esc(x.as_of)+' · '+esc(x.src)+'</p></div>';}).join('')+'</div>';
+    h+='</div>';
+  }
+  // D) BỐI CẢNH VĨ MÔ + CHÍNH SÁCH
+  const mc=(CONTEXT.macro||[]), pl=(CONTEXT.policy||[]);
+  if(mc.length) h+='<div class="sum-sec"><h3 class="sum-h">Bối cảnh vĩ mô</h3><div class="ctx">'
+    +mc.map(function(x){return '<div class="ctx-c"><p class="ctx-k">'+esc(x.label)+'</p><p class="ctx-v">'+esc(x.value)+'</p><p class="ctx-n">'+esc(x.note||'')+'</p><p class="ctx-s">'+esc(x.as_of)+' · '+esc(x.src)+'</p></div>';}).join('')
+    +'</div></div>';
+  if(pl.length) h+='<div class="sum-sec"><h3 class="sum-h">Chính sách tác động tới dự án hạ tầng</h3><table class="tb"><tr><th>Văn bản</th><th>Thời điểm</th><th>Tác động</th><th>Nguồn</th></tr>'
+    +pl.map(function(x){return '<tr><td><b>'+esc(x.title)+'</b></td><td style="white-space:nowrap">'+esc(x.date)+'</td><td>'+esc(x.effect)+'</td><td><span class="cap">'+esc(x.src)+'</span></td></tr>';}).join('')
+    +'</table><p class="sum-note">Bối cảnh và chính sách được tổng hợp tay từ báo cáo bên ngoài, cập nhật lần cuối '+esc(CONTEXT.updated||'')+'; không tự động.</p></div>';
+  return h;
+}
 function renderSummary(){
   const el=document.getElementById('view-summary'); if(!el) return;
   const all=P.filter(p=>newsN(p)>=5 && !_isOldDone(p));   // đồng bộ với tab Tiến độ: ≥5 tin, bỏ dự án hoàn thành từ năm trước
@@ -2412,7 +2649,10 @@ function renderSummary(){
   const gComp=[...CH.map(n=>[n,tu.filter(p=>p.owner===n)]),['Khác (non-chaebol)',tu.filter(p=>CH.indexOf(p.owner)<0)]];
   const gReg=[['TP. Hà Nội',byProv('Hà Nội')],['TP.HCM',byProv('TP.HCM')],['Liên tỉnh',byProv('Liên tỉnh')],['Nội tỉnh',byProv('Nội tỉnh')]];
   const gType=[['Đường bộ',byType('Đường bộ')],['Đường sắt/Metro',byType('Đường sắt/Metro')],['Sân bay',byType('Sân bay')],['Loại hình khác',byType('Loại hình khác')]];
+  h+=_keyPoints(all);
   h+=_narrPortfolio(all);
+  h+=_sumExtras(all);
+  h+=_sumGroup3(all);
   h+=`<p class="narr">Theo hình thức, ${_narrGroups('',gForm)}</p>`;
   h+=_sumTable('Toàn bộ dự án hạ tầng',[['Tất cả',all],...gForm]);
   h+=`<p class="narr">Trong khối tư nhân, ${_narrGroups('',gComp)}</p>`;

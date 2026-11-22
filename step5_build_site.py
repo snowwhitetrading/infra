@@ -756,6 +756,12 @@ def main():
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
+    ctx_path = os.path.join(HERE, "overview_context.json")          # bối cảnh curate tay (vĩ mô, chính sách, mục tiêu, BĐS hưởng lợi)
+    if os.path.exists(ctx_path):
+        with open(ctx_path, encoding="utf-8") as f:
+            ctx = json.load(f)
+        ctx.pop("_doc", None)
+        out = out.replace("const CONTEXT = {}", "const CONTEXT = " + json.dumps(ctx, ensure_ascii=False), 1)
     out = out.replace("const DISB_META = {}", "const DISB_META = " + json.dumps(fetch_disb_reports(c), ensure_ascii=False), 1)
     out = out.replace("const PACE_HIST = {}", "const PACE_HIST = " + json.dumps(pace_hist, ensure_ascii=False), 1)
     # dấu vết build để biết trang đang chạy bằng dữ liệu DB
