@@ -49,6 +49,8 @@ W_PARTS = {"A": 5, "G": 10, "C": 80, "F": 5}     # trọng số thang vòng đ�
 _BASIS = {"reported", "items", "milestone", "activity"}   # activity = ước lượng theo cường độ thi công + thời gian
 _CONF = {"cao", "vừa", "thấp"}
 _STAGE = {"chưa thực hiện", "đang thực hiện", "đã hoàn thành"}   # giai đoạn dự án — tách khỏi nhịp độ
+_REMEDY = {"bàn giao mặt bằng", "bổ sung vốn", "điều chỉnh chủ trương/hạn", "tăng nhân lực thiết bị", "cấp mỏ vật liệu",
+           "thay/bổ sung nhà thầu", "chỉ đạo cấp cao", "khác"}
 _BLOCK = {"mặt bằng", "vốn", "vật liệu", "thủ tục", "nhà thầu", "kỹ thuật", "khác"}   # nhóm vướng mắc (Tổng quan tổng hợp)
 
 
@@ -133,6 +135,11 @@ def run(inp, month=None, hist_only=False):
             st["paceBlockers"] = [b for b in dict.fromkeys(str(x).strip().lower() for x in bl) if b in _BLOCK]
         else:
             unset["paceBlockers"] = ""
+        rm = v.get("remedies")                           # biện pháp tháo gỡ đang áp dụng (enum cố định) → mục "Tháo gỡ" ở Tổng quan
+        if isinstance(rm, list):
+            st["paceRemedies"] = [b for b in dict.fromkeys(str(x).strip().lower() for x in rm) if b in _REMEDY]
+        else:
+            unset["paceRemedies"] = ""
 
         score = _score_of(v, pace)                        # điểm -5..+5, snapshot theo tháng
         prog, parts = progress_of(v)                      # % hoàn thành 0..100 (thang vòng đời chuẩn)

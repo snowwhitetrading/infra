@@ -63,6 +63,8 @@ A) NHỊP ĐỘ (pace): "vượt tiến độ" / "đúng tiến độ" / "chậm
      * Ví dụ SAI: "Baodauthau 28/10/2026 nêu phải hủy 2 gói thầu tư vấn khiến 'áp lực tiến độ lớn dần'". Ví dụ ĐÚNG: "Sản lượng mới khoảng 30% khi đã qua hai phần ba thời gian hợp đồng, mặt bằng còn 6% chưa bàn giao và ba tháng gần đây gần như không tăng; giải ngân 41% vốn năm tới hết tháng 10 và ảnh vệ tinh ít thay đổi cùng xác nhận chậm."
    - VƯỚNG MẮC (blockers): danh sách nhóm vướng mắc ĐANG cản tiến độ, chọn trong: "mặt bằng" · "vốn" · "vật liệu" · "thủ tục" · "nhà thầu" · "kỹ thuật" · "khác". Chỉ ghi nhóm có căn cứ trong dữ liệu; không vướng → [].
 
+   - THÁO GỠ (remedies): danh sách biện pháp ĐANG được áp dụng để gỡ vướng/bù tiến độ, chọn trong: "bàn giao mặt bằng" · "bổ sung vốn" · "điều chỉnh chủ trương/hạn" · "tăng nhân lực thiết bị" · "cấp mỏ vật liệu" · "thay/bổ sung nhà thầu" · "chỉ đạo cấp cao" · "khác". Chỉ ghi biện pháp có căn cứ trong dữ liệu; không có → [].
+
 B) HẠN HOÀN THÀNH (deadline) — dạng "YYYY-MM", hoặc "" nếu tin không nêu.
    - CHỈ lấy hạn HOÀN THÀNH/khai thác toàn dự án (KHÔNG lấy ngày khởi công, ngày khởi công giai đoạn, mốc trung gian). Nếu nhiều tin nêu hạn khác nhau → lấy hạn TIN MỚI NHẤT/chính thức nhất. Ví dụ "dự kiến hoàn thành quý II/2027" → "2027-06"; "cuối năm 2026" → "2026-12".
 
@@ -93,6 +95,7 @@ E) MỐC KẾ HOẠCH THẬT (plan_points) — tiến độ mà chủ đầu tư
   "items": [{"name": "<đúng tên hạng mục trong dữ liệu>", "pct": <0..100 hoặc null>, "basis": "reported|milestone|activity|"}],
   "why": "<1–2 câu tổng hợp đa chiều theo hướng dẫn LÝ DO; không tên báo, không trích một bài>",
   "blockers": ["mặt bằng|vốn|vật liệu|thủ tục|nhà thầu|kỹ thuật|khác", ...],
+  "remedies": ["bàn giao mặt bằng|bổ sung vốn|điều chỉnh chủ trương/hạn|tăng nhân lực thiết bị|cấp mỏ vật liệu|thay/bổ sung nhà thầu|chỉ đạo cấp cao|khác", ...],
   "src": "<source> <YYYY-MM>",
   "confidence": "cao|vừa|thấp",
   "plan_points": [{"month": "YYYY-MM", "pct": <0..100>, "label": "...", "kind": "hợp đồng|chỉ đạo|cam kết"}, ...],
