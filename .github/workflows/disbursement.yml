@@ -1,30 +1,53 @@
-name: Giải ngân · Tự động từ mof.gov.vn (hằng tháng · Claude Pro/Max)
+name: Giải ngân · Tự động khi có báo cáo mới (kiểm tra hằng ngày · Claude Pro/Max)
 
 on:
   schedule:
-    - cron: '0 2 5 * *'       # 02:00 UTC ngày 5 hàng tháng = 09:00 VN (chờ BTC công bố đầu tháng)
+    - cron: '0 2 * * *'       # 02:00 UTC = 09:00 VN MỖI NGÀY: chỉ dò xem có báo cáo kỳ mới (vài giây, không tốn Claude)
   workflow_dispatch:
+
+concurrency:
+  group: disbursement
+  cancel-in-progress: false
 
 jobs:
   disb:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -r requirements.txt pymupdf
-      - uses: actions/setup-node@v4
+      - run: pip install -r requirements.txt
+
+      # CỔNG CHẶN RẺ: dò vanban.chinhphu.vn + mof.gov.vn, so với kỳ mới nhất đã có trong Mongo.
+      # Không có kỳ mới → các bước nặng phía dưới bị bỏ qua.
+      - name: Dò báo cáo kỳ mới (đa nguồn)
+        id: check
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          PYTHONIOENCODING: utf-8
+        run: |
+          NEW="$(python fetch_disb_report.py --check --list)"
+          echo "Kỳ mới: ${NEW:-(không có)}"
+          if [ -n "$NEW" ]; then echo "new=true" >> "$GITHUB_OUTPUT"; else echo "new=false" >> "$GITHUB_OUTPUT"; fi
+
+      - if: steps.check.outputs.new == 'true'
+        run: pip install pymupdf
+      - if: steps.check.outputs.new == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install -g @anthropic-ai/claude-code
+      - if: steps.check.outputs.new == 'true'
+        run: npm install -g @anthropic-ai/claude-code
 
       - name: Trust workspace (để Claude Read ảnh)
+        if: steps.check.outputs.new == 'true'
         run: |
           python -c "import json,os,pathlib;p=pathlib.Path.home()/'.claude.json';d=json.loads(p.read_text()) if p.exists() else {};d.setdefault('projects',{})[os.getcwd()]={'hasTrustDialogAccepted':True};p.write_text(json.dumps(d))"
 
-      - name: Tải báo cáo BTC + trích + ghi Mongo
+      - name: Tải báo cáo + trích + ghi Mongo
+        if: steps.check.outputs.new == 'true'
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

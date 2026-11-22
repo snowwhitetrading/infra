@@ -1,4 +1,6 @@
-Bạn đọc ẢNH các trang "Phụ lục III" báo cáo giải ngân vốn đầu tư công của Bộ Tài chính (bảng theo TỪNG DỰ ÁN). Hãy Read từng file ảnh được liệt kê rồi TRÍCH SỐ.
+Bạn đọc ẢNH các trang phụ lục "Tình hình thực hiện và giải ngân kế hoạch đầu tư vốn NSNN năm … các dự án quan trọng quốc gia, trọng điểm ngành giao thông vận tải; các công trình, dự án quan trọng quốc gia lĩnh vực đường sắt" trong báo cáo giải ngân vốn đầu tư công của Bộ Tài chính (bảng theo TỪNG DỰ ÁN; số phụ lục ĐỔI theo kỳ — từng là Phụ lục III, kỳ 10 tháng 2026 là Phụ lục V). Hãy Read từng file ảnh được liệt kê rồi TRÍCH SỐ.
+
+ĐƠN VỊ: đọc dòng "Đơn vị tính" ở góc bảng. Kết quả luôn ghi bằng TỶ ĐỒNG — nếu bảng ghi triệu đồng thì chia 1000. Ghi đơn vị gốc vào "don_vi".
 
 CẤU TRÚC BẢNG (CÓ THỂ KHÁC NHAU GIỮA CÁC KỲ — hãy map theo NGHĨA cột, không theo vị trí cứng):
   STT | Tên Dự án/Nội dung | nhóm cột KẾ HOẠCH | nhóm cột GIẢI NGÂN/LŨY KẾ THANH TOÁN đến hết <ngày>
@@ -13,10 +15,15 @@ LẤY GÌ:
 - Mỗi DÒNG có STT (vd "I.16", "I.27", "C", "I") + tên + số → 1 object. Lấy HẾT các dòng dự án/tuyến (kể cả dòng con "Dự án thành phần", "- Trên địa bàn...", tuyến đường sắt). KHÔNG bịa số; đọc đúng cột.
 - Tên dự án: chép nguyên văn (có thể bỏ dấu tiếng Việt cũng được).
 
+GÁN MÃ DỰ ÁN (tid): cuối prompt có "DANH SÁCH DỰ ÁN ĐANG THEO DÕI" (tid<TAB>tên). Với MỖI dòng, đối chiếu NGHĨA của tên (không chỉ trùng chữ) rồi ghi "tid":
+- Dòng đúng là dự án đó (hoặc một ĐOẠN/dự án thành phần của nó khi bảng chỉ liệt kê theo đoạn, vd "đoạn qua tỉnh A" + "đoạn qua tỉnh B") → ghi tid. Hệ thống sẽ CỘNG các dòng cùng tid.
+- TRÁNH ĐẾM TRÙNG: nếu bảng có CẢ dòng tổng của dự án lẫn các dòng con "Dự án thành phần 1, 2, 3" → chỉ gán tid cho DÒNG TỔNG, các dòng con để "tid": null. Dòng nhóm lớn gồm nhiều dự án khác nhau (vd "Cao tốc Bắc - Nam phía Đông giai đoạn 2021-2025") → null, gán tid cho từng đoạn con nếu đoạn đó có trong danh sách.
+- Không có dự án tương ứng trong danh sách, hoặc không chắc → "tid": null (KHÔNG đoán). Dự án khác chỉ giống tên một phần (vd "TP.HCM - Chơn Thành" khác "TP.HCM - Mộc Bài") → không gán nhầm.
+
 ĐẦU RA: DUY NHẤT một JSON (không markdown), dạng:
-{"as_of":"YYYY-MM-DD",
+{"as_of":"YYYY-MM-DD","don_vi":"tỷ đồng",
  "rows":[
-   {"ma":"I.16","ten":"Dong Dang - Tra Linh, giai doan 1 (PPP)","kh_tong":2302.1,"kh_nstw":1410.0,"kh_nsdp":892.1,"gn_tong":668.3,"gn_ty_le":29.0,"gn_nstw":0.0,"gn_nstw_ty_le":0.0,"gn_nsdp":668.3,"gn_nsdp_ty_le":74.9},
+   {"ma":"I.16","tid":62,"ten":"Dong Dang - Tra Linh, giai doan 1 (PPP)","kh_tong":2302.1,"kh_nstw":1410.0,"kh_nsdp":892.1,"gn_tong":668.3,"gn_ty_le":29.0,"gn_nstw":0.0,"gn_nstw_ty_le":0.0,"gn_nsdp":668.3,"gn_nsdp_ty_le":74.9},
    ...
  ]}
 Field nào không đọc được rõ → để null (KHÔNG đoán bừa). Trả về MỌI dòng đọc được trên các trang.

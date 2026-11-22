@@ -7,13 +7,16 @@ export PYTHONIOENCODING=utf-8
 cd "$(dirname "$0")"
 echo "==== $(date '+%F %T') · GIẢI NGÂN TỰ ĐỘNG ===="
 
-# 1) Tải báo cáo chi tiết GTVT mới nhất (API mof.gov.vn)
+# 1) Tìm + tải báo cáo kỳ MỚI HƠN kỳ đã nạp, từ NHIỀU NGUỒN (vanban.chinhphu.vn → mof.gov.vn).
+#    Không có kỳ mới → dừng ngay (không tốn lượt Claude).
 FETCH="$(python3 fetch_disb_report.py --out disbursement_data || true)"
 PDF="$(printf '%s' "$FETCH" | cut -f1)"
 KY_HINT="$(printf '%s' "$FETCH" | cut -f2)"
 TITLE="$(printf '%s' "$FETCH" | cut -f3)"
-if [ -z "$PDF" ] || [ ! -f "$PDF" ]; then echo "Không tải được báo cáo mới — dừng."; exit 0; fi
-echo "Báo cáo: $TITLE  ($KY_HINT) → $PDF"
+SRC_URL="$(printf '%s' "$FETCH" | cut -f4)"
+SRC_NAME="$(printf '%s' "$FETCH" | cut -f5)"
+if [ -z "$PDF" ] || [ ! -f "$PDF" ]; then echo "Không có báo cáo kỳ mới (hoặc không tải được) — dừng."; exit 0; fi
+echo "Báo cáo: $TITLE  ($KY_HINT, nguồn $SRC_NAME) → $PDF"
 
 # 2) Render trang (dpi thấp cho bước QUÉT để nhanh/rẻ)
 python3 prepare_disb_pages.py "$PDF" --out _disb_pages --dpi 100
@@ -60,8 +63,23 @@ for n, i in enumerate(range(0, len(pg), B)):
 print("lô đọc:", -(-len(pg)//B))
 PY
 
-# 3) Mỗi lô: claude -p (Pro/Max) đọc ảnh → JSON
-PROMPT="$(cat disb_agent_prompt.txt)"
+# 3) Mỗi lô: claude -p (Pro/Max) đọc ảnh → JSON. Kèm DANH SÁCH DỰ ÁN ĐANG THEO DÕI để agent tự gán tid
+#    (đọc-hiểu tên, thay cho khớp mờ theo token vốn hay gán nhầm).
+python3 - <<'PY'
+from pymongo import MongoClient
+from lib_db import mongo_uri
+db = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)["dc_commodity"]
+act = {d["tid"] for d in db["Infra_Projects_Registry"].find({"active": True}, {"tid": 1}) if d.get("tid")}
+ps = sorted((p["id"], p.get("name", "")) for p in db["Infra_Project_Tracker"].find({"_key": "project"}, {"id": 1, "name": 1})
+            if p["id"] in act)
+open('disb_out/tracker_list.txt', 'w', encoding='utf-8').write("
+".join(f"{i}	{n}" for i, n in ps))
+print("danh sách tracker:", len(ps), "dự án")
+PY
+PROMPT="$(cat disb_agent_prompt.txt)
+
+DANH SÁCH DỰ ÁN ĐANG THEO DÕI (tid<TAB>tên):
+$(cat disb_out/tracker_list.txt)"
 for f in disb_out/batch_*.json; do
   i=$(basename "$f" | tr -dc '0-9')
   imgs=$(python3 -c "import json;print(chr(10).join('  - '+p for p in json.load(open('$f'))))")
@@ -92,5 +110,6 @@ print("gộp:", len(rows), "dòng · as_of", as_of)
 PY
 
 # 5) Ghi thẳng Mongo (ky suy từ as_of; dedup theo kỳ)
-python3 apply_disb_mongo.py --verdicts disb_verdicts.json
+#    --expect-ky: kỳ đọc trên bảng phải khớp kỳ ghi ở tiêu đề báo cáo, lệch thì DỪNG không ghi.
+python3 apply_disb_mongo.py --verdicts disb_verdicts.json --expect-ky "$KY_HINT"   --source "$SRC_NAME" --source-url "$SRC_URL" --source-title "$TITLE"
 echo "==== $(date '+%F %T') XONG ===="
