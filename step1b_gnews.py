@@ -75,6 +75,17 @@ def _windows(start):
     return out
 
 
+def _pick_aliases(aliases, n=2):
+    """Alias để tìm trên Google News (tìm CỤM CHÍNH XÁC trong ngoặc kép).
+    Tên đầy đủ kèm ngoặc đơn kiểu 'Metro số 3 TP.HCM (An Hạ - Hiệp Bình Phước)' không báo nào viết y như vậy
+    → 0 kết quả. Ưu tiên alias NGẮN, không ngoặc, ≥3 từ (đủ đặc trưng); lấy tối đa n alias."""
+    clean = sorted({a.strip() for a in aliases if a and "(" not in a},
+                   key=lambda a: (len(a.split()), len(a)))
+    good = [a for a in clean if len(a.split()) >= 3]
+    pick = (good or clean)[:n]
+    return pick or [re.sub(r"\s*\(.*?\)", "", max(aliases, key=len)).strip()]
+
+
 def query_gnews(client, alias, after=None, before=None):
     q = f'"{alias}"'
     if after:
@@ -110,14 +121,14 @@ def run(a):
     docs = {}
     with httpx.Client(headers=UA, follow_redirects=True) as cl:
         for i, p in enumerate(projects, 1):
-            alias = max((p.get("aliases") or [p["name"]]), key=len)   # alias dài nhất (đặc trưng nhất)
-            for after, before in windows:
-                for r in query_gnews(cl, alias, after, before):
-                    if not r["url"] or not _relevant(alias, r["title"] + " " + r["description"]):
-                        continue
-                    r["projects"] = [p["tid"]]
-                    docs.setdefault(r["url"], r)
-                time.sleep(0.15)
+            for alias in _pick_aliases(p.get("aliases") or [p["name"]]):
+                for after, before in windows:
+                    for r in query_gnews(cl, alias, after, before):
+                        if not r["url"] or not _relevant(alias, r["title"] + " " + r["description"]):
+                            continue
+                        r["projects"] = [p["tid"]]
+                        docs.setdefault(r["url"], r)
+                    time.sleep(0.15)
             if i % 25 == 0 or i == len(projects):
                 print(f"  {i}/{len(projects)} dự án · {len(docs)} tin (unique)")
 
