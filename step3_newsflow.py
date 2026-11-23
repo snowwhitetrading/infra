@@ -12,7 +12,7 @@ ghi dc_commodity.Infra_Newsflow (1 doc/bài, upsert theo url).
 import argparse
 import datetime as dt
 
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 
 from lib_db import mongo_uri
 from lib_marks import is_relevant, news_tag
@@ -30,6 +30,14 @@ def run(days=None, dry=False):
     cutoff = (dt.date.today() - dt.timedelta(days=days)).isoformat() if days else None
 
     matched = added = 0
+    ops = []
+
+    def flush():
+        nonlocal added
+        if ops:
+            added += coll.bulk_write(ops, ordered=False).upserted_count
+            ops.clear()
+
     for doc in src.find({}):
         date = (doc.get("date") or "")[:10]
         if cutoff and date and date < cutoff:
@@ -50,8 +58,10 @@ def run(days=None, dry=False):
                "title": title, "projects": tids, "tag": news_tag(title)}
         if not dry:
             # $set để REFRESH projects (sau khi thêm alias / re-match); upsert bài mới
-            if coll.update_one({"url": url}, {"$set": rec}, upsert=True).upserted_id:
-                added += 1
+            ops.append(UpdateOne({"url": url}, {"$set": rec}, upsert=True))
+            if len(ops) >= 1000:
+                flush()
+    flush()
     total = "dry" if dry else coll.estimated_document_count()
     print(f"Cột mốc: {matched} bài · thêm mới: {added} · tổng Infra_Newsflow: {total}")
 

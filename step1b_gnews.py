@@ -116,18 +116,27 @@ def run(a):
     if a.limit:
         projects = projects[:a.limit]
     windows = _windows(a.history) if a.history else [(None, None)]
+    # --auto: tin GẦN ĐÂY cho mọi dự án + BACKFILL LỊCH SỬ cho dự án chưa từng quét (cờ gnews_hist),
+    # tối đa --max-new dự án mỗi lượt (dự án mới thêm được ưu tiên: tid lớn trước) → không cần ai nhớ chạy tay.
+    fresh, hist_windows = set(), []
+    if a.auto:
+        done = {d["tid"] for d in reg.find({"gnews_hist": {"$exists": True}}, {"tid": 1}) if d.get("tid")}
+        fresh = set(sorted((p["tid"] for p in projects if p["tid"] not in done), reverse=True)[:a.max_new])
+        hist_windows = _windows(a.auto)
+        print(f"auto: {len(fresh)} dự án quét lịch sử từ {a.auto} · còn {len(projects) - len(done) - len(fresh)} dự án chờ lượt sau")
     print(f"{len(projects)} dự án × {len(windows)} cửa sổ" + (f" (history từ {a.history})" if a.history else " (gần đây)"))
 
     docs = {}
     with httpx.Client(headers=UA, follow_redirects=True) as cl:
         for i, p in enumerate(projects, 1):
             for alias in _pick_aliases(p.get("aliases") or [p["name"]]):
-                for after, before in windows:
+                for after, before in (windows + hist_windows if p["tid"] in fresh else windows):
                     for r in query_gnews(cl, alias, after, before):
                         if not r["url"] or not _relevant(alias, r["title"] + " " + r["description"]):
                             continue
-                        r["projects"] = [p["tid"]]
-                        docs.setdefault(r["url"], r)
+                        d0 = docs.setdefault(r["url"], {**r, "projects": []})
+                        if p["tid"] not in d0["projects"]:
+                            d0["projects"].append(p["tid"])
                     time.sleep(0.15)
             if i % 25 == 0 or i == len(projects):
                 print(f"  {i}/{len(projects)} dự án · {len(docs)} tin (unique)")
@@ -140,16 +149,24 @@ def run(a):
     col = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB][COLL]
     col.create_index("url", unique=True)
     now = dt.datetime.now(dt.timezone.utc).isoformat()
-    ops = [UpdateOne({"url": d["url"]}, {"$setOnInsert": {**d, "scraped_at": now}}, upsert=True)
+    # bài đã có trong kho (cùng link) vẫn được GẮN THÊM dự án ($addToSet) — trước đây chỉ $setOnInsert nên bỏ sót
+    ops = [UpdateOne({"url": d["url"]},
+                     {"$setOnInsert": {**{k: v for k, v in d.items() if k != "projects"}, "scraped_at": now},
+                      "$addToSet": {"projects": {"$each": d["projects"]}}}, upsert=True)
            for d in docs.values()]
     if ops:
-        res = col.bulk_write(ops)
+        res = col.bulk_write(ops, ordered=False)
         print(f"Ghi mới {res.upserted_count} tin vào {DB}.{COLL} (tổng {col.estimated_document_count()}).")
+    if fresh:
+        reg.update_many({"tid": {"$in": list(fresh)}}, {"$set": {"gnews_hist": now}})
+        print(f"Đánh dấu {len(fresh)} dự án đã quét lịch sử.")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--history", metavar="YYYY-MM", help="Backfill lịch sử từ tháng này (cửa sổ 3 tháng)")
+    ap.add_argument("--auto", metavar="YYYY-MM", help="Gần đây cho mọi dự án + lịch sử (từ tháng này) cho dự án chưa từng quét")
+    ap.add_argument("--max-new", type=int, default=40, help="--auto: số dự án quét lịch sử tối đa mỗi lượt")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
     run(ap.parse_args())

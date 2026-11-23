@@ -1,0 +1,44 @@
+name: Tin · Google News theo tên dự án (hằng ngày)
+
+# Lượt hằng giờ (deploy.yml) chỉ quét ~16 báo cố định theo từ khoá chung → dự án ít lên các báo đó bị thiếu tin.
+# Lượt này tìm Google News THEO TÊN từng dự án (gom mọi báo, kể cả báo tỉnh):
+#   • tin GẦN ĐÂY cho mọi dự án;
+#   • LỊCH SỬ từ 2025-01 cho dự án chưa từng quét (mới thêm) — tối đa 40 dự án/lượt, tự đánh dấu, lượt sau làm tiếp.
+# Sau đó gắn lại tin cũ cho dự án mới / bí danh đổi và dựng lại toàn bộ dòng tin. Trang tự hiện ở lượt dựng hằng giờ.
+on:
+  schedule:
+    - cron: '30 19 * * *'     # 19:30 UTC = 02:30 VN
+  workflow_dispatch:           # cho phép bấm chạy tay
+
+concurrency:
+  group: gnews-daily
+  cancel-in-progress: false
+
+jobs:
+  gnews:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+
+      - name: Google News (gần đây + lịch sử cho dự án mới)
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          PYTHONIOENCODING: utf-8
+        run: timeout 3600 python step1b_gnews.py --auto 2025-01 --max-new 40 || echo "gnews skipped/timeout"
+
+      - name: Gắn lại tin cũ cho dự án mới / bí danh đổi
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          PYTHONIOENCODING: utf-8
+        run: timeout 300 python retag_news.py || echo "retag skipped/timeout"
+
+      - name: Dựng lại toàn bộ dòng tin (không giới hạn 30 ngày)
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          PYTHONIOENCODING: utf-8
+        run: python step3_newsflow.py || echo "newsflow skipped"

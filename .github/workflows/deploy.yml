@@ -46,6 +46,13 @@ jobs:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
         run: timeout 180 python step2_radar.py --top 0 --auto-add || echo "radar skipped/timeout"
 
+      # Dự án MỚI (radar vừa add / thêm tay) hoặc bí danh vừa SỬA → gắn lại tin cũ trong kho + đưa vào dòng tin.
+      # Thường 0 dự án → thoát ngay. Không có bước này, dự án thêm sau trông như "không có tin".
+      - name: Retag old news for new/changed projects
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+        run: timeout 300 python retag_news.py || echo "retag skipped/timeout"
+
       # Newsflow daily: quét dc_news → lọc cột mốc → Infra_Newsflow (deterministic)
       - name: Ingest newsflow
         env:
