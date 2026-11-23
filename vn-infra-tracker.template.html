@@ -2554,7 +2554,7 @@ function _benefitHTML(){            // bảng BĐS hưởng lợi theo từng d�
     rows.forEach(function(r){ (r.b.bds||[]).forEach(function(x){ if(seen[x.name]) return; seen[x.name]=1; tot+=x.tmdt||0;
       if(r.pace==='chậm'){ risk+=x.tmdt||0; atRisk.push(x.name); } }); });
     h+='<div class="sum-sec" style="margin:0">'
-      +'<p class="narr" style="margin-bottom:10px"><b>'+Object.keys(seen).length+' dự án bất động sản</b> quy mô lớn (tổng '+_kt(tot)+' nghìn tỷ đồng) được gắn với '+rows.length+' dự án hạ tầng. '
+      +'<p class="narr" style="margin-bottom:10px"><b>'+Object.keys(seen).length+' dự án bất động sản</b> quy mô lớn (tổng '+_kt(tot)+' nghìn tỷ đồng) được gắn với '+rows.length+' dự án hạ tầng'+(function(){ let n=0; rows.forEach(function(r){(r.b.bds||[]).forEach(function(x){ if(x.by) n++; });}); return n?' (trong đó '+n+' cặp ghép theo vị trí trên bản đồ)':''; })()+'. '
       +(risk?'Trong đó <b>'+_kt(risk)+' nghìn tỷ ('+_pc(risk,tot)+'%)</b> gắn với hạ tầng đang bị chấm chậm — giá trị của các dự án này phụ thuộc vào việc hạ tầng về đích đúng hạn.':'Chưa có dự án nào gắn với hạ tầng đang bị chấm chậm.')+'</p>'
       +'<table class="tb"><tr><th>Dự án hạ tầng</th><th>Tình trạng</th><th class="n">Hạn</th><th>Bất động sản hưởng lợi</th><th class="n">Vốn BĐS</th><th class="n">BĐS quanh đó trên Bản đồ</th></tr>'
       +rows.sort(function(a,b){return b.cap-a.cap;}).map(function(r){ const p=r.p, sc=p?schedOf(p):'';
@@ -2562,10 +2562,11 @@ function _benefitHTML(){            // bảng BĐS hưởng lợi theo từng d�
         return '<tr><td><b>'+esc(p?p.name:r.b.infra)+'</b>'+(p?'':'<span class="cap">chưa nằm trong danh mục theo dõi</span>')+'</td>'
           +'<td>'+(p?'<span class="sched s-'+SCHED_CLS2[sc]+'">'+esc(sc)+'</span>'+(r.st&&r.st.act!==null?' '+Math.round(r.st.act)+'%':''):'—')+'</td>'
           +'<td class="n">'+(p&&_dlEff(p)?_ymVN(_dlEff(p)):'—')+'</td>'
-          +'<td>'+(r.b.bds||[]).map(function(x){return esc(x.name)+(x.owner?' <span class="cap" style="display:inline">('+esc(x.owner)+')</span>':'');}).join('<br>')+'</td>'
+          +'<td>'+(r.b.bds||[]).map(function(x){return esc(x.name)+(x.owner?' <span class="cap" style="display:inline">('+esc(x.owner)+')</span>':'')
+            +(x.by?' <span class="pill" title="'+esc('Ghép theo vị trí'+(x.km!=null?': cách dự án hạ tầng khoảng '+String(x.km).replace('.',',')+' km trên Bản đồ':'')+(x.why?' — '+x.why:''))+'">theo vị trí'+(x.km!=null?' ~'+String(x.km).replace('.',',')+' km':'')+'</span>':'');}).join('<br>')+'</td>'
           +'<td class="n">'+(r.cap?_kt(r.cap):'—')+'</td>'
           +'<td class="n">'+(near===null?'—':near+' dự án '+(p?'<button class="linkbtn" onclick="_focusMap('+p.id+')">Xem trên bản đồ</button>':''))+'</td></tr>'; }).join('')
-      +'</table><p class="sum-note">Cặp hạ tầng – bất động sản theo '+esc(CONTEXT.benefit_src||'báo cáo bên ngoài')+'; tình trạng và hạn lấy từ dữ liệu theo dõi của trang. Cột cuối đếm dự án bất động sản trong bán kính 5 km quanh điểm đại diện của dự án hạ tầng trên tab Bản đồ (với tuyến dài chỉ là một điểm trên tuyến).</p></div>';
+      +'</table><p class="sum-note">Cặp hạ tầng – bất động sản theo '+esc(CONTEXT.benefit_src||'báo cáo bên ngoài')+'; cặp có nhãn “theo vị trí” do trang tự ghép với dự án hạ tầng đang theo dõi gần nhất, hoặc theo tên, địa bàn khi không có toạ độ (rê chuột vào nhãn để xem căn cứ). Tình trạng và hạn lấy từ dữ liệu theo dõi của trang.'+((CONTEXT.benefit_unlinked||[]).length?' Chưa ghép được vì không xác định được vị trí hoặc không có hạ tầng đang theo dõi ở gần: '+esc(CONTEXT.benefit_unlinked.join(', '))+'.':'')+' Cột cuối đếm dự án bất động sản trong bán kính 5 km quanh điểm đại diện của dự án hạ tầng trên tab Bản đồ (với tuyến dài chỉ là một điểm trên tuyến).</p></div>';
   }
   return h;
 }

@@ -248,6 +248,15 @@
      "owner": "Vinhomes",
      "ha": 133,
      "tmdt": 18400
+    },
+    {
+     "name": "Phân khu A – KĐT phía Bắc QL5 (Phố Nối)",
+     "owner": "CTCP Phát triển Khu đô thị Xanh",
+     "ha": 262,
+     "tmdt": 34979,
+     "by": "vị trí",
+     "km": 4.9,
+     "why": "theo vị trí khu Phố Nối"
     }
    ]
   },
@@ -446,6 +455,14 @@
      "owner": "Sun Group",
      "ha": 264,
      "tmdt": 6700
+    },
+    {
+     "name": "KĐT số 5 Măng Đen (Sun World)",
+     "owner": "Sun Group",
+     "ha": 277,
+     "tmdt": 9777,
+     "by": "vị trí",
+     "why": "theo địa bàn Măng Đen"
     }
    ]
   },
@@ -458,8 +475,233 @@
      "owner": "Sun Group",
      "ha": 88,
      "tmdt": 64000
+    },
+    {
+     "name": "KĐT hỗn hợp du lịch sinh thái Núi Ông Quán",
+     "owner": "Sun Group",
+     "ha": 21.2,
+     "tmdt": 26185,
+     "by": "vị trí",
+     "km": 15.7,
+     "why": "cùng đảo Phú Quốc"
+    }
+   ]
+  },
+  {
+   "tid": 184,
+   "infra": "Cầu Trần Hưng Đạo",
+   "bds": [
+    {
+     "name": "Trục đại lộ cảnh quan sông Hồng",
+     "owner": "Đại Quang Minh – THACO – Hòa Phát",
+     "ha": 11418,
+     "tmdt": 736963,
+     "by": "vị trí",
+     "why": "dự án chạy dọc sông Hồng qua Hà Nội, nơi cầu bắc qua"
+    },
+    {
+     "name": "Noble Crystal Long Biên",
+     "owner": "Sunshine",
+     "ha": 3,
+     "tmdt": 16000,
+     "by": "vị trí",
+     "km": 0.4
+    }
+   ]
+  },
+  {
+   "tid": 115,
+   "infra": "Vành đai 2.5 Hà Nội",
+   "bds": [
+    {
+     "name": "Dự án tái thiết đô thị Vĩnh Hưng",
+     "owner": "Sun Group",
+     "ha": 447,
+     "tmdt": 186000,
+     "by": "vị trí",
+     "km": 1.5
+    }
+   ]
+  },
+  {
+   "tid": 89,
+   "infra": "Mở rộng Quốc lộ 13",
+   "bds": [
+    {
+     "name": "KĐT mới Bình Quới – Thanh Đa",
+     "owner": "Liên danh do Sun Group đứng đầu",
+     "ha": 426,
+     "tmdt": 98710,
+     "by": "vị trí",
+     "km": 3.0
+    }
+   ]
+  },
+  {
+   "tid": 93,
+   "infra": "Cao tốc Bến Lức - Long Thành",
+   "bds": [
+    {
+     "name": "T&T City Millennia",
+     "owner": "T&T Group",
+     "ha": 267,
+     "tmdt": 41133,
+     "by": "vị trí",
+     "km": 2.0
+    }
+   ]
+  },
+  {
+   "tid": 48,
+   "infra": "Cao tốc Hà Nội - Hải Phòng (mở rộng)",
+   "bds": [
+    {
+     "name": "Khu phức hợp golf, du lịch sinh thái Khoái Châu (Trump International Hưng Yên)",
+     "owner": "Kinh Bắc – Trump Organization",
+     "ha": 1000,
+     "tmdt": 39800,
+     "by": "vị trí",
+     "km": 1.9
+    }
+   ]
+  },
+  {
+   "tid": 33,
+   "infra": "Vành đai 5 Hà Nội",
+   "bds": [
+    {
+     "name": "Sun Urban City Hà Nam",
+     "owner": "Sun Group",
+     "ha": 420,
+     "tmdt": 35000,
+     "by": "vị trí",
+     "km": 1.1
+    }
+   ]
+  },
+  {
+   "tid": 139,
+   "infra": "Tuyến đường kết nối di sản văn hoá du lịch dọc sông Hồng (Hưng Yên)",
+   "bds": [
+    {
+     "name": "KĐT nhà vườn sinh thái Alluvia City",
+     "owner": "Xuân Cầu Holdings",
+     "ha": 200,
+     "tmdt": 31000,
+     "by": "vị trí",
+     "km": 1.1
+    }
+   ]
+  },
+  {
+   "tid": 23,
+   "infra": "Vành đai 4 TP.HCM",
+   "bds": [
+    {
+     "name": "KĐT phía Bắc đường vành đai 4",
+     "owner": "",
+     "ha": 281,
+     "tmdt": 29647,
+     "by": "vị trí",
+     "why": "theo tên dự án"
+    },
+    {
+     "name": "Vinhomes Green City",
+     "owner": "Vingroup",
+     "ha": 197,
+     "tmdt": 28000,
+     "by": "vị trí",
+     "km": 3.4
+    }
+   ]
+  },
+  {
+   "tid": 241,
+   "infra": "Đường ven biển Dung Quất - Sa Huỳnh",
+   "bds": [
+    {
+     "name": "KĐT mới Đông Nam Dung Quất – Phía Nam",
+     "owner": "",
+     "ha": 1378,
+     "tmdt": 27462,
+     "by": "vị trí",
+     "why": "theo địa bàn Dung Quất"
+    },
+    {
+     "name": "KĐT mới Đông Nam Dung Quất – Phía Bắc",
+     "owner": "",
+     "ha": 1320,
+     "tmdt": 27191,
+     "by": "vị trí",
+     "why": "theo địa bàn Dung Quất"
+    }
+   ]
+  },
+  {
+   "tid": 146,
+   "infra": "Trục giao thông đô thị TP.HCM - Long An - Tiền Giang",
+   "bds": [
+    {
+     "name": "KĐT Đông Bắc thành phố Mỹ Tho",
+     "owner": "",
+     "ha": 184,
+     "tmdt": 26211,
+     "by": "vị trí",
+     "km": 1.6
+    }
+   ]
+  },
+  {
+   "tid": 161,
+   "infra": "Cao tốc Sơn La - Điện Biên - cửa khẩu Tây Trang",
+   "bds": [
+    {
+     "name": "Vinhomes Điện Biên",
+     "owner": "Vinhomes",
+     "ha": 229,
+     "tmdt": 23700,
+     "by": "vị trí",
+     "why": "theo địa bàn Điện Biên"
+    }
+   ]
+  },
+  {
+   "tid": 92,
+   "infra": "Vành đai 2 TP.HCM",
+   "bds": [
+    {
+     "name": "Gladia by the Waters (Gladia City)",
+     "owner": "Khang Điền & Keppel",
+     "ha": 12,
+     "tmdt": 10200,
+     "by": "vị trí",
+     "km": 0.9
+    }
+   ]
+  },
+  {
+   "tid": 135,
+   "infra": "Cầu Trà Khúc 1",
+   "bds": [
+    {
+     "name": "KĐT mới An Phú (Đảo Ngọc)",
+     "owner": "Sun Group",
+     "ha": 162,
+     "tmdt": 9727,
+     "by": "vị trí",
+     "km": 1.5
     }
    ]
   }
+ ],
+ "benefit_unlinked": [
+  "Tổ hợp Thaispace (Ninh Bình)",
+  "KĐT phức hợp sinh thái Phú Thọ",
+  "Da Nang Downtown",
+  "Tổ hợp đô thị nghỉ dưỡng Bà Nà – Suối Mơ",
+  "KĐT mới Tân Bình (TP.HCM)",
+  "Sun Porta Town (Khánh Hoà)",
+  "Ecopark Ninh Bình",
+  "Xanh Island (Cát Bà)"
  ]
 }
