@@ -478,6 +478,23 @@ def fetch_cafeland_map(client):
                 if d.get("tid"):                            # tuyến tracker → gắn thẳng pid (khỏi re-match)
                     line["pid"] = d["tid"]
                 lines.append(line)
+    for d in db["Cafeland_Metro"].find({}):                # mạng metro từ lớp quy hoạch giao thông cafeland
+        icon_shown = False
+        det = {"Nguồn": "Cafeland · lớp quy hoạch giao thông", "Loại": "Metro"}
+        if d.get("status"):
+            det["Trạng thái"] = d["status"]
+        if d.get("km"):
+            det["Chiều dài"] = f"{d['km']} km"
+        for seg in d.get("segments", []):
+            if len(seg) > 1:
+                line = {"title": d.get("title", ""), "coords": seg, "color": "#7c3aed", "detail": det,
+                        "prov": cp(d.get("prov", "")), "cat": "Đường sắt/Metro", "noicon": icon_shown}
+                icon_shown = True
+                if d.get("tid"):
+                    line["pid"] = d["tid"]
+                else:
+                    line["nomatch"] = True               # tuyến quy hoạch chưa theo dõi → không dò tên (tránh gắn nhầm)
+                lines.append(line)
     points, projects = [], []
     for d in db["Cafeland_Points"].find(
             {"lat": {"$ne": None}},
@@ -723,7 +740,7 @@ def main():
 
     nmatch = 0
     for it in caf_lines + caf_points:
-        if it.get("pid"):                 # đã gắn sẵn (tuyến OSM tracker) → giữ nguyên
+        if it.get("pid") or it.pop("nomatch", None):   # đã gắn sẵn (tuyến OSM tracker) / cấm dò tên → giữ nguyên
             continue
         tid = _pid_of(it.get("title"))
         if tid:
