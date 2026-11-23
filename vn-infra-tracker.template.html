@@ -851,6 +851,7 @@ footer code{font-family:"Manrope",monospace;background:var(--sunk);padding:1px 4
   </div>
   <p class="db-notebox" id="db-note"></p>
   <div id="disb-list"></div>
+  <div id="disb-fc" style="margin-top:28px"></div>
 </div>
 
 <div id="view-map" class="hidden">
@@ -2692,6 +2693,7 @@ function _dbDetail(r, avg){
 }
 function renderDisb(){
   const el=document.getElementById('disb-list'); if(!el) return;
+  _renderFc();
   const sortEl=document.getElementById('db-sort'), qEl=document.getElementById('db-search'), yEl=document.getElementById('db-year'), pEl=document.getElementById('db-proj');
   if(!sortEl.dataset.init){
     const years=[...new Set([].concat(...Object.keys(DISB).map(t=>(DISB[t].series||[]).map(s=>(_kyP(s.ky)||{}).y))).filter(Boolean))].sort((a,b)=>b-a);
@@ -2778,6 +2780,86 @@ function renderDisb(){
   el.innerHTML=(C.rows.length?sum+tbl:'<div class="mp-empty">Chưa có dữ liệu giải ngân.</div>');
   el.querySelectorAll('.db-chip').forEach(function(b){ b.onclick=function(){ _dbCls=b.dataset.cls; renderDisb(); }; });
   el.querySelectorAll('.dbr-h').forEach(function(b){ b.onclick=function(){ const t=+b.dataset.tid; _dbOpen.has(t)?_dbOpen.delete(t):_dbOpen.add(t); renderDisb(); }; });
+}
+/* ============================================================
+   ƯỚC TÍNH VỐN CÒN PHẢI GIẢI NGÂN: 2026–2030 và SAU 2030  (mọi dự án có TMĐT, không riêng vốn ngân sách)
+   Là PHÉP TÍNH từ số liệu sẵn có của trang, không phải số công bố:
+     vốn đã thực hiện ≈ TMĐT × % hoàn thành  ·  vốn còn lại = TMĐT × (100 − % hiện tại)
+     phần còn lại rải ĐỀU theo tháng từ nay tới HẠN CÓ NGUỒN → cắt tại 31/12/2030.
+   Dự án có lịch vốn theo năm đã curate (p.capex) thì dùng thẳng lịch đó.
+   Chưa có hạn có nguồn → KHÔNG đoán: để ở cột "chưa xác định thời điểm".
+   ============================================================ */
+const FC_CUT = _mi('2030-12')+1;
+function _fcOf(p){
+  const T=+p.tmdt||0; if(!(T>0)) return null;
+  const st=stageOf(p), end=_dlEff(p);
+  const r={p:p, T:T, end:end, before:0, in:0, out:0, unk:0, basis:''};
+  const cx=(p.capex && typeof p.capex==='object') ? Object.keys(p.capex).filter(function(y){return /^\d{4}$/.test(y);}) : [];
+  const cxSum=cx.reduce(function(s,y){return s+(+p.capex[y]||0);},0);
+  if(cx.length && cxSum>=0.8*T && cxSum<=1.2*T){     // lịch vốn theo năm chỉ dùng khi khớp TMĐT (±20%); lệch thì là lịch của 1 phần dự án
+    cx.forEach(function(y){ const v=+p.capex[y]||0;
+      if(+y<2026) r.before+=v; else if(+y<=2030) r.in+=v; else r.out+=v; });
+    r.basis='lịch vốn theo năm'; r.cur=st==='done'?100:_progLatest(p); return r;
+  }
+  const now=st==='done'?100:(_progLatest(p)||0);
+  // % tại cuối 2025: điểm lịch sử gần nhất ≤ 12/2025; chuỗi bắt đầu trong 2026 thì lấy điểm đầu nếu dự án khởi động trước 2026
+  const mp=_progData(p.id), ks=Object.keys(mp).sort(); let p25=0;
+  const le=ks.filter(function(k){return k<='2025-12';});
+  if(st==='done' && (_doneMonth(p)||'9999')<'2026-01') p25=100;
+  else if(le.length) p25=mp[le[le.length-1]];
+  else if(ks.length && (_startPlan(p)||'9999')<'2026-01') p25=mp[ks[0]];
+  p25=Math.min(p25,now);
+  r.cur=now; r.before=T*p25/100;
+  const a26=T*(now-p25)/100, R=T*(100-now)/100;
+  r.in=a26;
+  if(R>0){
+    if(!end){ r.unk=R; r.basis='chưa có hạn có nguồn'; }
+    else{ const e=_mi(end)+1;
+      if(e<=FC_CUT || e<=NOW_I){ r.in+=R; r.basis=(e<=NOW_I?'đã quá hạn '+_ymVN(end)+' — phần còn lại tính vào 2026–2030':'hạn '+_ymVN(end)); }
+      else{ const f=(FC_CUT-NOW_I)/(e-NOW_I); r.in+=R*f; r.out=R*(1-f); r.basis='hạn '+_ymVN(end)+' — rải đều tới hạn'; } }
+  } else r.basis='đã hoàn thành';
+  return r;
+}
+let _fcAll=false;
+function _renderFc(){
+  const el=document.getElementById('disb-fc'); if(!el) return;
+  const rows=P.filter(function(p){ return !_isOldDone(p) && !p.autoRow; }).map(_fcOf)
+    .filter(function(r){ return r && (r.in+r.out+r.unk)>0; })
+    .sort(function(a,b){ return (b.in+b.out+b.unk)-(a.in+a.out+a.unk); });
+  if(!rows.length){ el.innerHTML=''; return; }
+  const S=function(L,k){ return L.reduce(function(s,r){return s+r[k];},0); };
+  const tin=S(rows,'in'), tout=S(rows,'out'), tunk=S(rows,'unk'), tot=tin+tout+tunk;
+  const byForm=['Công','Tư','PPP'].map(function(f){ const L=rows.filter(function(r){return _form(r.p)===f;});
+    return {f:f, n:L.length, in:S(L,'in'), out:S(L,'out'), unk:S(L,'unk')}; }).filter(function(x){return x.n;});
+  const big=rows.filter(function(r){return r.out>0;}).slice().sort(function(a,b){return b.out-a.out;}).slice(0,3)
+    .map(function(r){return esc(r.p.name)+' ('+nf(Math.round(r.out/1000))+' nghìn tỷ)';}).join(', ');
+  const N=function(v){ return v>0.5?_kt(v):'—'; };
+  const NT=function(v){ return nf(Math.round(v/1000))+' nghìn tỷ đồng'; };
+  const tr=function(r){ const p=r.p, sc=schedOf(p);
+    return '<tr><td><b>'+esc(p.name)+'</b></td><td>'+_form(p)+'</td>'
+      +'<td class="n">'+_kt(r.T)+'</td>'
+      +'<td class="n">'+(r.cur!=null?Math.round(r.cur)+'%':'—')+'</td>'
+      +'<td class="n">'+(r.end?_ymVN(r.end):'—')+'</td>'
+      +'<td class="n">'+N(r.before)+'</td><td class="n"><b>'+N(r.in)+'</b></td><td class="n"><b>'+N(r.out)+'</b></td><td class="n">'+N(r.unk)+'</td>'
+      +'<td><span class="cap" style="display:inline">'+esc(r.basis)+'</span></td></tr>'; };
+  const head='<tr><th>Dự án</th><th>Hình thức</th><th class="n">TMĐT</th><th class="n">% hiện tại</th><th class="n">Hạn</th>'
+    +'<th class="n">Trước 2026</th><th class="n">2026–2030</th><th class="n">Sau 2030</th><th class="n">Chưa xác định</th><th>Căn cứ</th></tr>';
+  const TOP=25, show=_fcAll?rows:rows.slice(0,TOP);
+  el.innerHTML='<div class="sum-sec" style="margin:0"><h3 class="sum-h" style="margin:0 0 8px">Ước tính vốn còn phải giải ngân: 2026–2030 và sau 2030</h3>'
+    +'<p class="narr">Trong '+rows.length+' dự án có tổng mức đầu tư, ước tính <b>'+NT(tin)+'</b> rơi vào giai đoạn <b>2026–2030</b> ('+_pc(tin,tot)+'%), '
+    +'<b>'+NT(tout)+'</b> phải chuyển sang <b>sau 2030</b> ('+_pc(tout,tot)+'%)'
+    +(tunk>0?', và <b>'+NT(tunk)+'</b> ('+_pc(tunk,tot)+'%) chưa xếp được vào giai đoạn nào vì dự án chưa có hạn hoàn thành có nguồn':'')+'.'
+    +(big?' Phần sau 2030 tập trung ở: '+big+'.':'')+'</p>'
+    +'<table class="tb" style="max-width:560px;margin-bottom:14px"><tr><th>Hình thức</th><th class="n">Số dự án</th><th class="n">2026–2030</th><th class="n">Sau 2030</th><th class="n">Chưa xác định</th></tr>'
+    +byForm.map(function(x){ return '<tr><td><b>'+x.f+'</b></td><td class="n">'+x.n+'</td><td class="n">'+N(x.in)+'</td><td class="n">'+N(x.out)+'</td><td class="n">'+N(x.unk)+'</td></tr>'; }).join('')
+    +'<tr><td><b>Tổng</b></td><td class="n">'+rows.length+'</td><td class="n"><b>'+N(tin)+'</b></td><td class="n"><b>'+N(tout)+'</b></td><td class="n"><b>'+N(tunk)+'</b></td></tr></table>'
+    +'<table class="tb">'+head+show.map(tr).join('')+'</table>'
+    +(rows.length>TOP?'<p style="margin:8px 0 0"><button class="linkbtn" id="fc-more">'+(_fcAll?'Thu gọn':'Xem tất cả '+rows.length+' dự án')+'</button></p>':'')
+    +'<p class="sum-note">Đơn vị: tỷ đồng (K = nghìn tỷ). Đây là <b>ước tính của trang</b>, không phải số công bố: vốn đã thực hiện ≈ tổng mức đầu tư × % hoàn thành; '
+    +'phần còn lại rải đều theo tháng từ nay tới hạn hoàn thành có nguồn rồi cắt tại 31/12/2030. Dự án có lịch vốn theo năm thì dùng lịch đó. '
+    +'Tính trên toàn bộ vốn dự án (cả tư nhân, PPP), khác với phần trên của tab chỉ là vốn ngân sách theo báo cáo Bộ Tài chính. '
+    +'Hạn hoàn thành là hạn cam kết, thực tế thường trượt — nên phần “sau 2030” nhiều khả năng còn lớn hơn.</p></div>';
+  const mb=document.getElementById('fc-more'); if(mb) mb.onclick=function(){ _fcAll=!_fcAll; _renderFc(); };
 }
 // "7T2026" → nhãn kỳ. T = luỹ kế tới hết tháng đó.
 function _kyShort(k){const m=/(\d+)T(\d{4})/.exec(k||'');return m?`T${+m[1]}/${(''+m[2]).slice(2)}`:(k||'');}
