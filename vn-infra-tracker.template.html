@@ -1303,8 +1303,9 @@ const SCHED_CLS2 = {'vượt tiến độ':'ahead','đúng tiến độ':'ontime
                     'đã hoàn thành':'done','chưa thực hiện':'notyet','chưa có thông tin':'unknown'};
 const _SCHED_ORDER = ['chậm tiến độ','đúng tiến độ','vượt tiến độ','chưa thực hiện','đã hoàn thành','chưa có thông tin'];
 function newsN(p){ return _NEWSN[p.name] || 0; }
-// Hiện ở Tiến độ/Tổng quan: ≥5 tin (đủ tín hiệu); dự án LỚN (TMĐT ≥10.000 tỷ) chỉ cần ≥2 tin — quy mô lớn thì không ẩn vì báo ít viết
-function _shown(p){ const n=newsN(p); return n>=5 || (n>=2 && (+p.tmdt||0)>=10000); }
+// Hiện ở Tiến độ/Tổng quan: ≥5 tin (đủ tín hiệu); dự án LỚN (TMĐT ≥10.000 tỷ) chỉ cần ≥2 tin — quy mô lớn thì không ẩn vì báo ít viết;
+// dự án được yêu cầu theo dõi đích danh (pinned trong hồ sơ) luôn hiện dù chưa có tin
+function _shown(p){ const n=newsN(p); return !!p.pinned || n>=5 || (n>=2 && (+p.tmdt||0)>=10000); }
 // Nhãn tiến độ CHỈ 4 giá trị: vượt/đúng/chậm tiến độ · "chưa có thông tin" (hạn chế dùng).
 // Ưu tiên đánh giá từ tin/agent (paceAuto/paceLLM). Không có → SUY từ LỊCH THI CÔNG DỰ KIẾN
 // (đã curate, grounded): quá hạn kế hoạch / lẽ ra đã khởi công mà chưa → chậm; đang trong

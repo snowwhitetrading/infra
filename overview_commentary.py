@@ -193,13 +193,13 @@ def compute_stats(client):
         return {"pct": float(d["pct"]), "time": int(m.group(1)) / 12 * 100, "kh": d.get("kh") or 0, "gn": d.get("gn") or 0,
                 "ky": f"{m.group(1)}T{m.group(2)}"}
 
-    def shown(p):            # cùng quy tắc _shown() của trang: ≥5 tin, hoặc dự án lớn (TMĐT ≥10.000 tỷ) có ≥2 tin
+    def shown(p):            # cùng quy tắc _shown() của trang: ≥5 tin, dự án lớn (TMĐT ≥10.000 tỷ) có ≥2 tin, hoặc được ghim (pinned)
         n = nf.get(p["name"], 0)
         try:
             big = float(p.get("tmdt") or 0) >= 10000
         except (TypeError, ValueError):
             big = False
-        return n >= 5 or (n >= 2 and big)
+        return bool(p.get("pinned")) or n >= 5 or (n >= 2 and big)
     vis = [p for p in projects if shown(p) and not old_done(p)]
     cap = lambda L: sum(p.get("tmdt") or 0 for p in L)        # noqa: E731
     K = lambda v: round(v / 1000)                             # noqa: E731  (nghìn tỷ đồng)

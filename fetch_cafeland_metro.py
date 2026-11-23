@@ -29,7 +29,8 @@ DB = "dc_commodity"
 PROVS = [("tp-ho-chi-minh", {"is_new": "1"}, "Hồ Chí Minh")]
 
 # route_key → tid dự án trong registry (None = chỉ vẽ bản đồ)
-TID_OF = {"GISXD_H3": 1262, "GISXD_H4": 27, "GISXD_H5": 1290, "GISXD_H6a": 1291, "GISXD_B1": 34}
+TID_OF = {"GISXD_H3": 1262, "GISXD_H4": 27, "GISXD_H5": 1290, "GISXD_H6a": 1291, "GISXD_B1": 34,
+          "GISXD_H7a": 1292, "GISXD_H7b": 1292, "GISXD_H8": 1293, "GISXD_H9": 1294, "GISXD_H10": 1295}
 # đã có hình trong Cafeland_Lines (Metro 1, 2/2A, Bến Thành – Cần Giờ, Thủ Thiêm – Long Thành)
 SKIP = {"GISXD_H1a", "GISXD_H2a", "GISXD_H12", "GISXD_TLT"}
 # tên hiển thị (mặc định: ten_tuyen + " TP.HCM")
