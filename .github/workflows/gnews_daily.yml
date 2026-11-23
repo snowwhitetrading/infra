@@ -29,7 +29,8 @@ jobs:
         env:
           IRIS_MONGO_URI: ${{ secrets.DATABASE }}
           PYTHONIOENCODING: utf-8
-        run: timeout 3600 python step1b_gnews.py --auto 2025-01 --max-new 40 || echo "gnews skipped/timeout"
+        # --budget-min: tự dừng gọn sau 45 phút (đã ghi dần), lượt sau quét tiếp dự án lâu chưa quét nhất
+        run: timeout 3300 python step1b_gnews.py --auto 2025-01 --max-new 40 --budget-min 45 || echo "gnews skipped/timeout"
 
       - name: Gắn lại tin cũ cho dự án mới / bí danh đổi
         env:

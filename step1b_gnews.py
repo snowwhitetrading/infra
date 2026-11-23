@@ -121,7 +121,7 @@ def query_gnews(client, alias, after=None, before=None):
     if after:
         q += f" after:{after} before:{before}"
     try:
-        r = client.get(GNEWS.format(q=quote(q)), timeout=25, follow_redirects=True, headers=UA)
+        r = client.get(GNEWS.format(q=quote(q)), timeout=12, follow_redirects=True, headers=UA)
         items = ET.fromstring(r.text).findall(".//item")
     except Exception:
         return None                       # None = Google không trả lời (lỗi / bị chặn) — khác với [] (không có bài)
@@ -140,9 +140,12 @@ def query_gnews(client, alias, after=None, before=None):
 
 
 def run(a):
+    """Quét theo từng dự án, GHI DẦN mỗi --flush dự án (bị cắt giữa chừng không mất phần đã làm), dừng gọn khi hết
+    --budget-min, và lượt sau chạy TIẾP từ dự án lâu chưa quét nhất (cờ gnews_at) — chịu được máy chủ chậm/bị giới hạn."""
+    t0 = time.time()
     reg = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)["dc_commodity"]["Infra_Projects_Registry"]
-    projects = [p for p in reg.find({"active": True}, {"tid": 1, "name": 1, "aliases": 1}).sort("tid", 1)
-                if p.get("tid")]
+    projects = [p for p in reg.find({"active": True}, {"tid": 1, "name": 1, "aliases": 1, "gnews_at": 1, "gnews_hist": 1})
+                .sort("tid", 1) if p.get("tid")]
     if a.limit:
         projects = projects[:a.limit]
     windows = _windows(a.history) if a.history else [(None, None)]
@@ -150,25 +153,73 @@ def run(a):
     # tối đa --max-new dự án mỗi lượt (dự án mới thêm được ưu tiên: tid lớn trước) → không cần ai nhớ chạy tay.
     fresh, hist_windows = set(), []
     if a.auto:
-        done = {d["tid"] for d in reg.find({"gnews_hist": {"$exists": True}}, {"tid": 1}) if d.get("tid")}
-        fresh = set(sorted((p["tid"] for p in projects if p["tid"] not in done), reverse=True)[:a.max_new])
+        todo = sorted((p["tid"] for p in projects if not p.get("gnews_hist")), reverse=True)
+        fresh = set(todo[:a.max_new])
         hist_windows = _windows(a.auto)
-        print(f"auto: {len(fresh)} dự án quét lịch sử từ {a.auto} · còn {len(projects) - len(done) - len(fresh)} dự án chờ lượt sau")
-    print(f"{len(projects)} dự án × {len(windows)} cửa sổ" + (f" (history từ {a.history})" if a.history else " (gần đây)"))
+        print(f"auto: {len(fresh)} dự án quét lịch sử từ {a.auto} · còn {len(todo) - len(fresh)} dự án chờ lượt sau", flush=True)
+    # thứ tự: dự án cần quét lịch sử trước (mới nhất trước), rồi dự án LÂU CHƯA QUÉT nhất → lượt bị cắt thì lượt sau làm tiếp
+    projects.sort(key=lambda p: (p["tid"] not in fresh, p.get("gnews_at") or "", -p["tid"] if p["tid"] in fresh else p["tid"]))
+    print(f"{len(projects)} dự án × {len(windows)} cửa sổ" + (f" (history từ {a.history})" if a.history else " (gần đây)"), flush=True)
 
-    docs, by_title = {}, {}
-    ncall = nfail = 0
-    failed = set()                        # dự án có truy vấn KHÔNG được trả lời → chưa coi là đã quét lịch sử
+    col = None
+    have = {}                              # tiêu đề đã có trong kho → _id (khử trùng: cùng bài, khác link)
+    if not a.dry_run:
+        col = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB][COLL]
+        col.create_index("url", unique=True)
+        since = (a.auto or a.history or (dt.date.today() - dt.timedelta(days=400)).isoformat()[:7]) + "-01"
+        for x in col.find({"date": {"$gte": since}}, {"title": 1}):
+            have.setdefault(_tkey(x.get("title")), x["_id"])
+
+    docs, by_title, dirty = {}, {}, set()   # dirty = url cần ghi ở lần flush tới
+    ncall = nfail = streak = nnew = ndup = nproj = 0
+    scanned, failed = [], set()            # dự án đã quét trong lô hiện tại · dự án có truy vấn KHÔNG được trả lời
+
+    def flush():
+        nonlocal nnew, ndup
+        now = dt.datetime.now(dt.timezone.utc).isoformat()
+        if col is not None:
+            ops = []
+            for u in dirty:
+                d = docs[u]
+                _id = have.get(_tkey(d["title"]))
+                if _id is not None:          # bài đã có trong kho → chỉ gắn thêm dự án, không tạo bản thứ hai
+                    ndup += 1
+                    ops.append(UpdateOne({"_id": _id}, {"$addToSet": {"projects": {"$each": d["projects"]}}}))
+                else:
+                    ops.append(UpdateOne({"url": u}, {
+                        "$setOnInsert": {**{k: v for k, v in d.items() if k != "projects"}, "scraped_at": now},
+                        "$addToSet": {"projects": {"$each": d["projects"]}}}, upsert=True))
+            if ops:
+                nnew += col.bulk_write(ops, ordered=False).upserted_count
+            ok = [t for t in scanned if t not in failed]     # chỉ đánh dấu dự án mà MỌI truy vấn đều được trả lời
+            if ok:
+                reg.update_many({"tid": {"$in": ok}}, {"$set": {"gnews_at": now}})
+                okh = [t for t in ok if t in fresh]
+                if okh:
+                    reg.update_many({"tid": {"$in": okh}}, {"$set": {"gnews_hist": now}})
+        dirty.clear()
+        scanned.clear()
+
+    stop = ""
     with httpx.Client(headers=UA, follow_redirects=True) as cl:
         for i, p in enumerate(projects, 1):
+            if a.budget_min and time.time() - t0 > a.budget_min * 60:
+                stop = f"hết ngân sách {a.budget_min} phút"
+                break
+            if streak >= 15:
+                stop = "15 truy vấn liên tiếp không được trả lời (nhiều khả năng bị chặn)"
+                break
             for alias in _pick_aliases(p.get("aliases") or [p["name"]]):
                 for after, before in (windows + hist_windows if p["tid"] in fresh else windows):
                     res = query_gnews(cl, alias, after, before)
                     ncall += 1
                     if res is None:
                         nfail += 1
+                        streak += 1
                         failed.add(p["tid"])
                         res = []
+                    else:
+                        streak = 0
                     for r in res:
                         if not r["url"] or not _relevant(alias, r["title"]):
                             continue
@@ -178,48 +229,28 @@ def run(a):
                             d0 = by_title[k] = docs[r["url"]] = {**r, "projects": []}
                         if p["tid"] not in d0["projects"]:
                             d0["projects"].append(p["tid"])
+                            dirty.add(d0["url"])
                     time.sleep(0.15)
-            if i % 25 == 0 or i == len(projects):
-                print(f"  {i}/{len(projects)} dự án · {len(docs)} tin (unique)")
+            scanned.append(p["tid"])
+            nproj += 1
+            if i % a.flush == 0 or i == len(projects):
+                flush()
+                print(f"  {i}/{len(projects)} dự án · {len(docs)} tin · {ncall} truy vấn ({nfail} hỏng) · "
+                      f"{int(time.time() - t0)}s", flush=True)
+    flush()
 
-    print(f"Tổng tin gnews: {len(docs)} · {ncall} truy vấn, {nfail} không được trả lời")
+    print(f"Tổng tin gnews: {len(docs)} · {nproj}/{len(projects)} dự án · {ncall} truy vấn, {nfail} không được trả lời · "
+          f"{int(time.time() - t0)}s", flush=True)
+    if stop:
+        print(f"::warning::Dừng sớm: {stop}. Đã quét {nproj}/{len(projects)} dự án; lượt sau chạy tiếp phần còn lại.", flush=True)
     if ncall and nfail / ncall > 0.2:
-        print(f"::warning::Google News không trả lời {nfail}/{ncall} truy vấn — có thể đang bị giới hạn/chặn.")
+        print(f"::warning::Google News không trả lời {nfail}/{ncall} truy vấn — có thể đang bị giới hạn/chặn.", flush=True)
     if a.dry_run:
         for d in list(docs.values())[:15]:
             print(f"  {d['date']:10} {d['source'][:22]:22} {d['title'][:52]}")
         return
-    col = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB][COLL]
-    col.create_index("url", unique=True)
-    now = dt.datetime.now(dt.timezone.utc).isoformat()
-    # bài đã có trong kho (cùng link) vẫn được GẮN THÊM dự án ($addToSet) — trước đây chỉ $setOnInsert nên bỏ sót
-    # Khử trùng với KHO theo tiêu đề: bài đã có (do quét trực tiếp báo, hoặc gnews lượt trước với link khác)
-    # → chỉ GẮN THÊM dự án vào bài sẵn có, không tạo bản thứ hai.
-    dates = [d["date"] for d in docs.values() if d.get("date")]
-    have = {}
-    if dates:
-        for x in col.find({"date": {"$gte": min(dates)}}, {"title": 1}):
-            have.setdefault(_tkey(x.get("title")), x["_id"])
-    ops, ndup = [], 0
-    for d in docs.values():
-        _id = have.get(_tkey(d["title"]))
-        if _id is not None:
-            ndup += 1
-            ops.append(UpdateOne({"_id": _id}, {"$addToSet": {"projects": {"$each": d["projects"]}}}))
-        else:
-            ops.append(UpdateOne({"url": d["url"]},
-                                 {"$setOnInsert": {**{k: v for k, v in d.items() if k != "projects"}, "scraped_at": now},
-                                  "$addToSet": {"projects": {"$each": d["projects"]}}}, upsert=True))
-    if ops:
-        res = col.bulk_write(ops, ordered=False)
-        print(f"Ghi mới {res.upserted_count} tin vào {DB}.{COLL} · {ndup} bài đã có trong kho chỉ gắn thêm dự án "
-              f"(tổng {col.estimated_document_count()}).")
-    ok = fresh - failed                   # chỉ đánh dấu dự án mà MỌI truy vấn đều được Google trả lời
-    if ok:
-        reg.update_many({"tid": {"$in": list(ok)}}, {"$set": {"gnews_hist": now}})
-    if fresh:
-        print(f"Đánh dấu {len(ok)}/{len(fresh)} dự án đã quét lịch sử"
-              + (f" · {len(fresh - ok)} dự án quét lại lượt sau" if fresh - ok else "") + ".")
+    print(f"Ghi mới {nnew} tin vào {DB}.{COLL} · {ndup} lượt gắn thêm dự án vào bài đã có trong kho "
+          f"(tổng {col.estimated_document_count()}).", flush=True)
 
 
 if __name__ == "__main__":
@@ -227,6 +258,8 @@ if __name__ == "__main__":
     ap.add_argument("--history", metavar="YYYY-MM", help="Backfill lịch sử từ tháng này (cửa sổ 3 tháng)")
     ap.add_argument("--auto", metavar="YYYY-MM", help="Gần đây cho mọi dự án + lịch sử (từ tháng này) cho dự án chưa từng quét")
     ap.add_argument("--max-new", type=int, default=40, help="--auto: số dự án quét lịch sử tối đa mỗi lượt")
+    ap.add_argument("--flush", type=int, default=20, help="ghi vào kho sau mỗi N dự án")
+    ap.add_argument("--budget-min", type=float, default=0, help="dừng gọn sau N phút (0 = không giới hạn); lượt sau chạy tiếp")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
     run(ap.parse_args())
