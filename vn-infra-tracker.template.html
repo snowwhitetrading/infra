@@ -2714,12 +2714,8 @@ function renderDisb(){
   pEl.value=_dbProj;
 
   // ---- dòng nguồn ----
-  const meta=DISB_META[C.latest+'T'+_dbYear];
-  const doc=meta&&meta.title?esc(meta.title.split(':')[0].trim()):'';
   document.getElementById('db-note').innerHTML=
-    `Kế hoạch vốn năm <b>${_dbYear}</b> · số liệu luỹ kế tới hết <b>tháng ${C.latest}/${_dbYear}</b>`
-    +(doc?` · theo báo cáo <b>${doc}</b> của Bộ Tài chính`:' · nguồn Bộ Tài chính')
-    +(meta&&meta.url?` · <a href="${esc(meta.url)}" target="_blank" rel="noopener">xem văn bản gốc${meta.source?' ('+esc(meta.source)+')':''} ↗</a>`:'')
+    `Kế hoạch vốn năm <b>${_dbYear}</b>`
     +`<br>Vạch đen trên mỗi thanh là mốc so sánh: bình quân cả danh mục đã giải ngân <b>${C.exp.toFixed(1)}%</b> kế hoạch vốn cả năm${C.fromRep?' (dòng tổng của báo cáo)':' (cộng từ các dự án trong kỳ)'}. Tỷ lệ = vốn đã giải ngân / kế hoạch vốn cả năm, không phải % hoàn thành công trình.`;
 
   // ---- tổng hợp (chỉ dự án có trong kỳ mới nhất) ----
