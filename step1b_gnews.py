@@ -167,8 +167,8 @@ def run(a):
         col = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)[DB][COLL]
         col.create_index("url", unique=True)
         since = (a.auto or a.history or (dt.date.today() - dt.timedelta(days=400)).isoformat()[:7]) + "-01"
-        for x in col.find({"date": {"$gte": since}}, {"title": 1}):
-            have.setdefault(_tkey(x.get("title")), x["_id"])
+        for x in col.find({"date": {"$gte": since}}, {"title": 1, "not_projects": 1}):
+            have.setdefault(_tkey(x.get("title")), (x["_id"], set(x.get("not_projects") or [])))
 
     docs, by_title, dirty = {}, {}, set()   # dirty = url cần ghi ở lần flush tới
     ncall = nfail = streak = nnew = ndup = nproj = 0
@@ -181,10 +181,13 @@ def run(a):
             ops = []
             for u in dirty:
                 d = docs[u]
-                _id = have.get(_tkey(d["title"]))
-                if _id is not None:          # bài đã có trong kho → chỉ gắn thêm dự án, không tạo bản thứ hai
+                hit = have.get(_tkey(d["title"]))
+                if hit is not None:          # bài đã có trong kho → chỉ gắn thêm dự án, không tạo bản thứ hai
+                    _id, banned = hit        # banned = dự án đã bị soát là KHÔNG liên quan bài này (clean_news_noise.py)
+                    add = [t for t in d["projects"] if t not in banned]
                     ndup += 1
-                    ops.append(UpdateOne({"_id": _id}, {"$addToSet": {"projects": {"$each": d["projects"]}}}))
+                    if add:
+                        ops.append(UpdateOne({"_id": _id}, {"$addToSet": {"projects": {"$each": add}}}))
                 else:
                     ops.append(UpdateOne({"url": u}, {
                         "$setOnInsert": {**{k: v for k, v in d.items() if k != "projects"}, "scraped_at": now},

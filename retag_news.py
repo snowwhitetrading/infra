@@ -65,8 +65,9 @@ def run(a):
     raw, unm = c["dc_news"]["project_news_raw"], c["dc_news"]["unmatched_raw"]
     per, ops, touched, moved = {}, [], [], []
     now = dt.datetime.now(dt.timezone.utc).isoformat()
-    for x in raw.find({"date": {"$gte": SINCE}}, {"title": 1, "projects": 1}):
-        cur, t = set(x.get("projects") or []), x.get("title") or ""
+    for x in raw.find({"date": {"$gte": SINCE}}, {"title": 1, "projects": 1, "not_projects": 1}):
+        # not_projects = dự án đã bị soát là KHÔNG liên quan bài này (clean_news_noise.py) → không gắn lại
+        cur, t = set(x.get("projects") or []) | set(x.get("not_projects") or []), x.get("title") or ""
         add = [tid for tid, (_, _, _, rx) in pend.items() if tid not in cur and rx.search(t)]
         if add:
             ops.append(UpdateOne({"_id": x["_id"]}, {"$addToSet": {"projects": {"$each": add}}}))

@@ -4,7 +4,7 @@ name: Tin · Google News theo tên dự án (hằng ngày)
 # Lượt này tìm Google News THEO TÊN từng dự án (gom mọi báo, kể cả báo tỉnh):
 #   • tin GẦN ĐÂY cho mọi dự án;
 #   • LỊCH SỬ từ 2025-01 cho dự án chưa từng quét (mới thêm) — tối đa 40 dự án/lượt, tự đánh dấu, lượt sau làm tiếp.
-# Sau đó gắn lại tin cũ cho dự án mới / bí danh đổi và dựng lại toàn bộ dòng tin. Trang tự hiện ở lượt dựng hằng giờ.
+# Sau đó Claude soát tin nhiễu, gắn lại tin cũ cho dự án mới / bí danh đổi và dựng lại toàn bộ dòng tin. Trang tự hiện ở lượt dựng hằng giờ.
 on:
   schedule:
     - cron: '30 19 * * *'     # 19:30 UTC = 02:30 VN
@@ -31,6 +31,20 @@ jobs:
           PYTHONIOENCODING: utf-8
         # --budget-min: tự dừng gọn sau 45 phút (đã ghi dần), lượt sau quét tiếp dự án lâu chưa quét nhất
         run: timeout 3300 python step1b_gnews.py --auto 2025-01 --max-new 40 --budget-min 45 || echo "gnews skipped/timeout"
+
+      # Tin lấy theo TÊN dự án hay dính bài chỉ nhắc địa danh (xổ số, tai nạn, lễ hội...) hoặc dự án khác trùng tên.
+      # Claude đọc tiêu đề và phán từng cặp (bài, dự án); bài bị bỏ được ghi nhớ để không gắn lại. Không regex.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
+
+      - name: Soát tin nhiễu (Claude Pro/Max)
+        env:
+          IRIS_MONGO_URI: ${{ secrets.DATABASE }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          PYTHONIOENCODING: utf-8
+        run: timeout 1500 bash run_news_noise.sh || echo "noise check skipped/timeout"
 
       - name: Gắn lại tin cũ cho dự án mới / bí danh đổi
         env:
