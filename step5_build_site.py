@@ -54,7 +54,7 @@ NEWSFLOW_COLL = "Infra_Newsflow"   # nguồn ĐỘC LẬP với progress (do ste
 # (chủ đầu tư/vận hành, không phải đề xuất/nghiên cứu hay liên danh nhà thầu). Còn lại mặc định "Nhà nước".
 OWNER_OVERRIDE = {
     # Vingroup / VinSpeed  (id88 Vượt biển Cần Giờ–Vũng Tàu là PPP TP.HCM, chưa chọn NĐT tư → Nhà nước)
-    9: "Vingroup", 10: "Vingroup", 236: "Vingroup",
+    9: "Vingroup", 10: "Vingroup", 236: "Vingroup", 1280: "Vingroup",   # 1280 = Khu đô thị thể thao Olympic (Vinhomes)
     # Sun Group (vận hành sân bay / dự án du lịch)
     1: "Sun Group", 2: "Sun Group", 6: "Sun Group",
     73: "Sun Group", 184: "Sun Group", 269: "Sun Group",
@@ -219,6 +219,68 @@ def fetch_disbursement(client):
                               "pct": d.get("pct"), "as_of": d.get("as_of", ""),
                               "series": d.get("series", [])}
     return out
+
+
+# Ghép dự án trên trang (tid) ↔ tên trong dc_realestate. CHỈ ghép khi chắc chắn là cùng dự án
+# (vd "Vinhomes Global Gate" là dự án ở Cổ Loa, Hà Nội — KHÔNG phải Hạ Long Xanh / Global Gate Hạ Long).
+RE_MAP = {
+    1296: {"rnav": "Vinhomes Ha Long Xanh (Global Gate Ha Long)", "presales": ["Vinhomes Ha Long Xanh (Global Gate Ha Long)"]},
+    1297: {"rnav": "Vinhomes Long Beach Can Gio", "presales": ["Vinhomes Long Beach Can Gio", "Green Paradise Can Gio"],
+           "price": ["Vinhomes Green Paradise Cần Giờ", "Vinhomes Green Paradise"], "listing": "Vinhomes Green Paradise"},
+    1303: {"rnav": "Vinhomes Cam Lam"},
+    1280: {"rnav": "Vinhomes Olympics"},
+    1306: {"listing": "Vinhomes Saigon Park"},
+}
+
+
+def fetch_realestate(client):
+    """Dữ liệu bất động sản nội bộ (dc_realestate) cho các khu đô thị đối ứng: {tid: {rnav, presales, price, listing}}.
+    rnav = mô hình định giá từng dự án · presales = doanh số bán hàng · price = giá rao bán · listing = số tin rao đang hoạt động."""
+    try:
+        R = client["dc_realestate"]
+        out = {}
+        for tid, m in RE_MAP.items():
+            o = {}
+            if m.get("rnav"):
+                d = R["RE_Company_Project_RNAV_Detail"].find_one({"project_name": m["rnav"]}, {"_id": 0})
+                if d:
+                    o["rnav"] = {"name": d.get("project_name"), "ticker": d.get("ticker"), "status": d.get("status"),
+                                 "tmdt": round(d["total_investment"]) if d.get("total_investment") else None,
+                                 "revenue": round(d["total_revenue"]) if d.get("total_revenue") else None,
+                                 "launch": d.get("launch_year"), "done": d.get("completion_year"),
+                                 "asof": str(d.get("last_updated") or "")[:10], "model": d.get("model_version")}
+            if m.get("presales"):
+                rows = list(R["RE_Company_Presales_Quarterly"].find(
+                    {"project_name": {"$in": m["presales"]}, "level": "project", "channel": "total"}, {"_id": 0}))
+                q = sorted((r for r in rows if r.get("basis") == "quarterly" and r.get("value_vnd_bn") is not None),
+                           key=lambda r: r.get("period_key") or "")
+                if q:
+                    o["presales"] = [{"k": r["period_key"], "v": round(r["value_vnd_bn"]), "conf": r.get("confidence")} for r in q[-6:]]
+            if m.get("price"):
+                rows = list(R["RE_Project_Price_History_Clean"].find(
+                    {"project": {"$in": m["price"]}, "deal_type": "sale", "unit": "million_vnd_per_m2"},
+                    {"_id": 0, "period_key": 1, "period_sort": 1, "price_min": 1, "price_avg": 1, "price_max": 1, "last_refreshed": 1}))
+                best = {}
+                for r in rows:                         # mỗi kỳ 1 dòng (ưu tiên dòng có giá trung bình)
+                    if r.get("price_avg") is not None:
+                        best.setdefault(r["period_key"], r)
+                ser = sorted(best.values(), key=lambda r: r.get("period_sort") or 0)
+                if ser:
+                    o["price"] = [{"k": r["period_key"], "min": r.get("price_min"), "avg": r.get("price_avg"), "max": r.get("price_max")}
+                                  for r in ser[-6:]]
+            if m.get("listing"):
+                rows = list(R["RE_Project_Listing_Counts"].find(
+                    {"project": m["listing"], "segment": "sale"}, {"_id": 0, "snapshot_date": 1, "total_listings": 1})
+                    .sort("snapshot_date", -1).limit(40))
+                if rows:
+                    o["listing"] = {"date": rows[0]["snapshot_date"], "n": rows[0]["total_listings"],
+                                    "prev": rows[-1]["total_listings"], "prevDate": rows[-1]["snapshot_date"]}
+            if o:
+                out[str(tid)] = o
+        return out
+    except Exception as e:                           # thiếu quyền dc_realestate → trang vẫn dựng, chỉ không có khối BĐS
+        print(f"  (bỏ qua dữ liệu bất động sản: {str(e)[:80]})")
+        return {}
 
 
 def fetch_disb_reports(client):
@@ -634,6 +696,8 @@ def build_projects(c):
         p["region"], p["prov"] = _geo_of(p.get("name", ""), p.get("loc") or p.get("location") or "")
         # CHỦ ĐẦU TƯ: override thủ công > LLM (có nguồn) > curated > regex
         p["owner"] = OWNER_OVERRIDE.get(p.get("id"), "Nhà nước")                  # whitelist Claude thẩm định, KHÔNG regex
+        if p.get("kind") == "township" and p.get("developer_groups"):           # khu đô thị đối ứng: chủ đầu tư = hệ sinh thái đã nhập tay
+            p["owner"] = p["developer_groups"][0]
         if p.get("id") in PROPOSAL_OWNER:                                          # đề xuất bởi 1 đơn vị tư nhân
             p["owner"] = PROPOSAL_OWNER[p["id"]]; p["proposal"] = True
         p["ppp"] = p.get("id") in PPP_TIDS                                         # đối tác công-tư (tab Tổng quan)
@@ -723,6 +787,8 @@ def main():
     satellite = fetch_satellite(c)
     print(f"Vệ tinh: {len(satellite)} dự án có ảnh")
     disb = fetch_disbursement(c)
+    re_data = fetch_realestate(c)
+    print(f"Bất động sản (dc_realestate): {len(re_data)} dự án có dữ liệu")
     print(f"Giải ngân: {len(disb)} dự án")
     pace_hist = fetch_pace_history(c)
     print(f"Lịch sử nhịp độ: {len(pace_hist)} dự án · {sum(len(v) for v in pace_hist.values())} điểm")
@@ -788,6 +854,7 @@ def main():
     out = out.replace("const CAF_PROJECTS = []", "const CAF_PROJECTS = " + json.dumps(caf_projects, ensure_ascii=False), 1)
     out = out.replace("const PROV_REGION = {}", "const PROV_REGION = " + json.dumps(PROV_REGION, ensure_ascii=False), 1)
     out = out.replace("const DISB = {}", "const DISB = " + json.dumps(disb, ensure_ascii=False), 1)
+    out = out.replace("const RE_DATA = {}", "const RE_DATA = " + json.dumps(re_data, ensure_ascii=False, default=str), 1)
     # NHẬN XÉT TỔNG QUAN + CHÍNH SÁCH do Claude viết (overview_commentary.py ghi vào Infra_Overview)
     ov = {d["_id"]: {k: v for k, v in d.items() if k != "_id"} for d in c[DB]["Infra_Overview"].find({})}
     out = out.replace("const OVERVIEW = {}", "const OVERVIEW = " + json.dumps(ov, ensure_ascii=False, default=str), 1)
