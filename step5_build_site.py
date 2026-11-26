@@ -224,31 +224,22 @@ def fetch_disbursement(client):
 # Ghép dự án trên trang (tid) ↔ tên trong dc_realestate. CHỈ ghép khi chắc chắn là cùng dự án
 # (vd "Vinhomes Global Gate" là dự án ở Cổ Loa, Hà Nội — KHÔNG phải Hạ Long Xanh / Global Gate Hạ Long).
 RE_MAP = {
-    1296: {"rnav": "Vinhomes Ha Long Xanh (Global Gate Ha Long)", "presales": ["Vinhomes Ha Long Xanh (Global Gate Ha Long)"]},
-    1297: {"rnav": "Vinhomes Long Beach Can Gio", "presales": ["Vinhomes Long Beach Can Gio", "Green Paradise Can Gio"],
+    1296: {"presales": ["Vinhomes Ha Long Xanh (Global Gate Ha Long)"]},
+    1297: {"presales": ["Vinhomes Long Beach Can Gio", "Green Paradise Can Gio"],
            "price": ["Vinhomes Green Paradise Cần Giờ", "Vinhomes Green Paradise"], "listing": "Vinhomes Green Paradise"},
-    1303: {"rnav": "Vinhomes Cam Lam"},
-    1280: {"rnav": "Vinhomes Olympics"},
     1306: {"listing": "Vinhomes Saigon Park"},
 }
 
 
 def fetch_realestate(client):
-    """Dữ liệu bất động sản nội bộ (dc_realestate) cho các khu đô thị đối ứng: {tid: {rnav, presales, price, listing}}.
-    rnav = mô hình định giá từng dự án · presales = doanh số bán hàng · price = giá rao bán · listing = số tin rao đang hoạt động."""
+    """Dữ liệu bất động sản (dc_realestate) cho các khu đô thị đối ứng: {tid: {presales, price, listing}}.
+    presales = doanh số bán hàng (công bố IR) · price = giá rao bán · listing = số tin rao đang hoạt động.
+    KHÔNG đọc mô hình định giá RNAV (tổng vốn, doanh thu dự kiến...): số liệu nghiên cứu nội bộ, trang này công khai."""
     try:
         R = client["dc_realestate"]
         out = {}
         for tid, m in RE_MAP.items():
             o = {}
-            if m.get("rnav"):
-                d = R["RE_Company_Project_RNAV_Detail"].find_one({"project_name": m["rnav"]}, {"_id": 0})
-                if d:
-                    o["rnav"] = {"name": d.get("project_name"), "ticker": d.get("ticker"), "status": d.get("status"),
-                                 "tmdt": round(d["total_investment"]) if d.get("total_investment") else None,
-                                 "revenue": round(d["total_revenue"]) if d.get("total_revenue") else None,
-                                 "launch": d.get("launch_year"), "done": d.get("completion_year"),
-                                 "asof": str(d.get("last_updated") or "")[:10], "model": d.get("model_version")}
             if m.get("presales"):
                 rows = list(R["RE_Company_Presales_Quarterly"].find(
                     {"project_name": {"$in": m["presales"]}, "level": "project", "channel": "total"}, {"_id": 0}))

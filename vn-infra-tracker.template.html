@@ -907,7 +907,7 @@ const TIER_VN  = {actual:'đã xảy ra', contract:'hợp đồng', directive:'c
 const NEWSFLOW = [];
 const SATELLITE = {};
 const DISB = {};
-const RE_DATA = {};   // {tid:{rnav,presales,price,listing}} — dữ liệu bất động sản nội bộ (dc_realestate) cho khu đô thị đối ứng
+const RE_DATA = {};   // {tid:{presales,price,listing}} — doanh số bán hàng, giá rao bán, số tin rao (dc_realestate); KHÔNG có mô hình định giá nội bộ
 const OVERVIEW = {};    // {commentary:{sections,headline,as_of}, policy:{items}, macro:{items}} — Claude viết, tự cập nhật (overview_commentary.py)
 const CONTEXT = {};     // bối cảnh curate tay cho Tổng quan (overview_context.json): macro, policy, targets, benefit
 const DISB_META = {};   // {ky: {title, url, source, as_of}} — báo cáo nguồn của từng kỳ giải ngân
@@ -1683,11 +1683,6 @@ function _bigChart(p){          // biểu đồ đầy đủ khi mở dòng: t�
   const re=RE_DATA[p.id];
   if(re){                             // dữ liệu bất động sản nội bộ (dc_realestate) của khu đô thị đối ứng
     side+='<p class="bc-note" style="margin-top:8px"><b>Dữ liệu bất động sản</b> (cơ sở dữ liệu DC)</p>';
-    if(re.rnav){ const v=re.rnav;
-      side+='<div class="bc-kv"><span>Tổng vốn theo mô hình định giá <span class="cap">('+esc(v.ticker||'')+(v.asof?', cập nhật '+esc(v.asof):'')+')</span></span><b>'+(v.tmdt?_kt(v.tmdt)+' tỷ':'—')+'</b></div>';
-      if(v.tmdt && p.tmdt && Math.abs(v.tmdt-p.tmdt)/p.tmdt>0.15) side+='<p class="bc-note">Lệch '+Math.round(Math.abs(v.tmdt-p.tmdt)/p.tmdt*100)+'% so với tổng mức đầu tư trang đang dùng ('+_kt(p.tmdt)+' tỷ): hai nguồn tính trên phạm vi khác nhau.</p>';
-      if(v.launch||v.done) side+='<div class="bc-kv"><span>Mở bán → hoàn thành <span class="cap">(mô hình)</span></span><b>'+(v.launch||'?')+' → '+(v.done||'?')+'</b></div>';
-      if(v.revenue) side+='<div class="bc-kv"><span>Doanh thu dự kiến cả dự án</span><b>'+_kt(v.revenue)+' tỷ</b></div>'; }
     if(re.presales && re.presales.length){ const a=re.presales, l=a[a.length-1];
       side+='<div class="bc-kv"><span>Doanh số bán hàng quý gần nhất <span class="cap">('+esc(l.k)+(l.conf&&l.conf!=='high'?', độ tin cậy '+(l.conf==='low'?'thấp':'trung bình'):'')+')</span></span><b>'+_kt(l.v)+' tỷ</b></div>';
       if(a.length>1) side+='<div class="bc-kv"><span>Các quý trước</span><b style="font-weight:600">'+a.slice(0,-1).map(function(x){return esc(x.k)+': '+_kt(x.v);}).join(' · ')+'</b></div>'; }
