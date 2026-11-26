@@ -127,7 +127,11 @@ def proper_case(name):
     out = []
     for i, w in enumerate(ws):
         core = re.sub(r"[^\wÀ-ỹ]", "", w).lower()
-        out.append(w.lower() if i > 0 and core in _LOWER_WORDS else w)
+        low = i > 0 and core in _LOWER_WORDS
+        if low and core == "hạ":           # "hạ tầng" viết thường, nhưng "Hạ Long", "An Hạ", "Cái Mép Hạ" là tên riêng
+            nxt = re.sub(r"[^\wÀ-ỹ]", "", ws[i + 1]).lower() if i + 1 < len(ws) else ""
+            low = nxt == "tầng"
+        out.append(w.lower() if low else w)
     s = " ".join(out)
     return (s[:1].upper() + s[1:]) if s else s
 
@@ -146,6 +150,7 @@ CAT_META = [   # (id, tên hiển thị, meta) — thứ tự hiển thị loạ
     ("Nút giao", "Nút giao", "nút giao, ngã tư"),
     ("Cảng", "Cảng biển", "cảng biển, cảng sông"),
     ("Toà nhà", "Toà nhà", "trung tâm hội nghị, sân vận động, nhà thi đấu, công trình công cộng"),
+    ("Khu đô thị", "Khu đô thị đối ứng", "khu đô thị, nghỉ dưỡng gắn với hệ sinh thái nhà đầu tư hạ tầng"),
 ]
 
 
@@ -620,6 +625,8 @@ def build_projects(c):
                       8: "Đường bộ", 189: "Toà nhà"}
     for p in projects:                    # phân 18 dự án gốc vào 8 nhóm như các dự án khác (bỏ I-IV)
         p["g"] = GROUP_OVERRIDE.get(p["id"]) or tid2cat.get(p["id"]) or categorize(p.get("name", ""), p.get("loc", ""))
+        if p.get("kind") == "township":   # khu đô thị / BĐS đối ứng (không phải công trình hạ tầng) → nhóm riêng
+            p["g"] = "Khu đô thị"
     print(f"Đọc từ DB: {len(projects)} dự án curated")
 
     projects = projects + build_auto_rows(c, projects)

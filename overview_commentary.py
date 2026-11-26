@@ -200,7 +200,8 @@ def compute_stats(client):
         except (TypeError, ValueError):
             big = False
         return bool(p.get("pinned")) or n >= 5 or (n >= 2 and big)
-    vis = [p for p in projects if shown(p) and not old_done(p)]
+    # khu đô thị đối ứng (kind=township) là bất động sản, không tính vào số liệu danh mục HẠ TẦNG
+    vis = [p for p in projects if shown(p) and not old_done(p) and p.get("kind") != "township"]
     cap = lambda L: sum(p.get("tmdt") or 0 for p in L)        # noqa: E731
     K = lambda v: round(v / 1000)                             # noqa: E731  (nghìn tỷ đồng)
     pct = lambda a, b: round(a / b * 100) if b else 0         # noqa: E731
