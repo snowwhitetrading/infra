@@ -33,6 +33,8 @@ jobs:
         run: |
           mkdir -p dist
           python step5_build_site.py --out dist/index.html
+          # trang chị em: theo dõi dự án bất động sản (dc_realestate) → /bds/ ; lỗi thì bỏ qua, không chặn trang chính
+          python build_re_site.py --out dist/bds/index.html || echo "re site skipped"
           if [ -d satellite_export ]; then cp -r satellite_export dist/satellite_export; fi
           if [ -n "${{ vars.CUSTOM_DOMAIN }}" ]; then
             echo "${{ vars.CUSTOM_DOMAIN }}" > dist/CNAME

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Theo dõi dự án bất động sản</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>/*__BASE_CSS__*/</style>
+<style>
+/* ---- riêng trang Bất động sản (phần còn lại dùng chung giao diện với trang Hạ tầng) ---- */
+.re-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.re-top a{font-size:12.5px;color:var(--build);text-underline-offset:2px}
+.re-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:0 0 18px}
+.re-kpi{border:1px solid var(--rule);border-radius:var(--radius);padding:10px 12px;background:var(--paper,#fff)}
+.re-kpi b{display:block;font-family:"Manrope",monospace;font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.re-kpi span{font-size:11.5px;color:var(--ink2);line-height:1.35;display:block;margin-top:2px}
+.re-kpi b.pos{color:var(--done)} .re-kpi b.neg{color:var(--alert)}
+.pos{color:var(--done)} .neg{color:var(--alert)}
+.rb{display:flex;align-items:flex-end;gap:3px;height:46px}
+.rb i{flex:1;min-width:9px;max-width:20px;background:var(--build);opacity:.38;border-radius:2px 2px 0 0;position:relative;display:block}
+.rb i.last{opacity:1}
+.rb i em{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-style:normal;font-size:9px;color:var(--ink2);font-family:"Manrope",monospace;white-space:nowrap}
+.rb.ls i{background:var(--ink3)}
+.re-tb td{vertical-align:middle}
+.re-tb tr.re-row{cursor:pointer}
+.re-tb tr.re-row:hover{background:var(--hover)}
+.re-det td{background:var(--callout);padding:12px 14px !important}
+.re-det .tb{font-size:11.5px}
+.re-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.nw{border:1px solid var(--rule);border-radius:var(--radius);padding:12px 14px;margin:0 0 10px;background:var(--paper,#fff)}
+.nw h4{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.45}
+.nw .meta{font-size:11px;color:var(--ink3);margin:0 0 6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nw p{margin:6px 0;font-size:12.5px;color:var(--ink2);line-height:1.55}
+.nw ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink2);line-height:1.5}
+.nw li{margin:3px 0}
+.nw a{color:var(--build);text-underline-offset:2px;font-size:11px}
+.tone{font-size:10.5px;padding:1px 7px;border-radius:10px;border:1px solid var(--rule2);color:var(--ink2)}
+.tone.positive{color:var(--done);border-color:var(--done)} .tone.negative{color:var(--alert);border-color:var(--alert)}
+details.more summary{cursor:pointer;font-size:12px;color:var(--build);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="re-top">
+  <h1>Theo dõi dự án bất động sản</h1>
+  <a href="../">← Trang dự án hạ tầng</a>
+</header>
+
+<div class="tabs">
+  <button class="tab" data-view="sum" aria-pressed="true">Tổng quan</button>
+  <button class="tab" data-view="proj" aria-pressed="false">Dự án</button>
+  <button class="tab" data-view="news" aria-pressed="false">Dòng tin</button>
+  <button class="tab" data-view="sales" aria-pressed="false">Bán hàng</button>
+</div>
+
+<div id="view-sum"></div>
+
+<div id="view-proj" class="hidden">
+  <div class="map-bar">
+    <div class="mf"><span>Sắp xếp</span><select id="p-sort">
+      <option value="list" selected>Số tin rao (mặc định)</option>
+      <option value="up">Giá tăng mạnh nhất (1 năm)</option>
+      <option value="down">Giá giảm mạnh nhất (1 năm)</option>
+      <option value="price">Giá bán cao → thấp</option>
+      <option value="dlist">Tin rao tăng nhiều nhất (4 tuần)</option>
+      <option value="name">Tên dự án</option>
+    </select></div>
+    <div class="mf"><span>Tỉnh thành</span><select id="p-city"></select></div>
+    <div class="mf"><span>Chủ đầu tư</span><select id="p-dev"></select></div>
+    <div class="mf"><span>Tìm</span><input id="p-q" type="search" placeholder="Tên dự án / chủ đầu tư" autocomplete="off"></div>
+  </div>
+  <p class="db-notebox" id="p-note"></p>
+  <div id="proj-list"></div>
+</div>
+
+<div id="view-news" class="hidden">
+  <div class="map-bar">
+    <div class="mf"><span>Phân khúc</span><select id="n-seg">
+      <option value="">Tất cả</option><option value="residential">Nhà ở</option>
+      <option value="industrial">Khu công nghiệp</option><option value="construction">Xây dựng</option>
+    </select></div>
+  </div>
+  <div id="news-list"></div>
+</div>
+
+<div id="view-sales" class="hidden"></div>
+
+<p class="sum-note" id="foot" style="margin-top:26px"></p>
+</div>
+
+<script>
+const RE = {};
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf = n => (Math.round(n)).toLocaleString('vi-VN');
+const f1 = n => (Math.round(n*10)/10).toLocaleString('vi-VN');
+const SEG = {residential:'Nhà ở', industrial:'Khu công nghiệp', construction:'Xây dựng'};
+const TONE = {positive:'tích cực', negative:'tiêu cực', mixed:'trái chiều', neutral:'trung tính'};
+const qLab = k => { const m=/(\d{4})-Q(\d)/.exec(k||''); return m?'Q'+m[2]+'/'+m[1].slice(2):(k||''); };
+const dLab = d => { const m=/(\d{4})-(\d{2})-(\d{2})/.exec(d||''); return m?(+m[3])+'/'+(+m[2]):(d||''); };
+const median = a => { if(!a.length) return null; const s=a.slice().sort((x,y)=>x-y), i=s.length>>1; return s.length%2?s[i]:(s[i-1]+s[i])/2; };
+
+/* ---------- chỉ số dẫn xuất của từng dự án ---------- */
+RE.projects.forEach(function(p){
+  const s=p.sale||[], l=p.list||[];
+  p.price = s.length ? s[s.length-1][1] : null;               // giá bán trung bình quý gần nhất (triệu đồng/m²)
+  p.pq = s.length ? s[s.length-1][0] : '';
+  const prev = s.length>=5 ? s[s.length-5] : null;            // cùng quý năm trước
+  p.yoy = (prev && prev[1]) ? (p.price-prev[1])/prev[1]*100 : null;
+  const pq = s.length>=2 ? s[s.length-2] : null;
+  p.qoq = (pq && pq[1]) ? (p.price-pq[1])/pq[1]*100 : null;
+  p.rentv = (p.rent&&p.rent.length) ? p.rent[p.rent.length-1][1] : null;
+  p.nlist = l.length ? l[l.length-1][1] : null;
+  p.ldate = l.length ? l[l.length-1][0] : '';
+  const l4 = l.length>=5 ? l[l.length-5] : null;              // 4 tuần trước
+  p.dlist = (l4 && l4[1]) ? (p.nlist-l4[1])/l4[1]*100 : null;
+});
+const pct = (v,d) => v===null||v===undefined ? '—' : '<span class="'+(v>0.5?'pos':(v<-0.5?'neg':''))+'">'+(v>0?'+':'')+(d?f1(v):Math.round(v))+'%</span>';
+function bars(rows, cls, fmt){                                  // rows=[[nhãn, giá trị]]
+  if(!rows.length) return '<span class="cap" style="display:inline">—</span>';
+  const mx=Math.max.apply(null, rows.map(r=>r[1]||0)) || 1;
+  return '<div class="rb '+(cls||'')+'">'+rows.map(function(r,i){
+    return '<i class="'+(i===rows.length-1?'last':'')+'" style="height:'+Math.max(6,(r[1]||0)/mx*100).toFixed(0)+'%" title="'+esc(r[0])+': '+esc(fmt?fmt(r[1]):r[1])+'">'
+      +(i===rows.length-1||i===0?'<em>'+esc(fmt?fmt(r[1]):r[1])+'</em>':'')+'</i>'; }).join('')+'</div>';
+}
+
+/* ---------- TỔNG QUAN ---------- */
+function renderSum(){
+  const P=RE.projects, wp=P.filter(p=>p.price!==null), wy=P.filter(p=>p.yoy!==null), wl=P.filter(p=>p.nlist!==null);
+  const up=wy.filter(p=>p.yoy>2).length, dn=wy.filter(p=>p.yoy<-2).length, flat=wy.length-up-dn;
+  const medY=median(wy.map(p=>p.yoy)), medQ=median(P.filter(p=>p.qoq!==null).map(p=>p.qoq));
+  const totL=wl.reduce((s,p)=>s+p.nlist,0), wl4=wl.filter(p=>p.dlist!==null);
+  const tot4=wl4.reduce((s,p)=>s+p.nlist/(1+p.dlist/100),0), totNow4=wl4.reduce((s,p)=>s+p.nlist,0);
+  const dL = tot4 ? (totNow4-tot4)/tot4*100 : null;
+  const latestQ = wp.map(p=>p.pq).sort().pop()||'';
+  let h='';
+  // nhận xét
+  const lead = medY===null ? '' :
+    (medY>3 ? 'Mặt bằng giá rao bán vẫn đi lên' : (medY<-3 ? 'Mặt bằng giá rao bán đang lùi' : 'Mặt bằng giá rao bán gần như đi ngang'))
+    +': dự án trung vị '+(medY>=0?'tăng ':'giảm ')+f1(Math.abs(medY))+'% so với cùng quý năm trước'
+    +(medQ!==null?', và '+(medQ>=0?'tăng ':'giảm ')+f1(Math.abs(medQ))+'% so với quý liền trước':'')+'. ';
+  const breadth = wy.length ? 'Trong '+wy.length+' dự án đủ chuỗi giá, '+up+' dự án tăng trên 2%, '+dn+' dự án giảm trên 2%, '+flat+' dự án đi ngang'
+    +(dn>up?' — số dự án giảm giá đã nhiều hơn số tăng':(up>dn*2?' — đà tăng vẫn lan rộng':''))+'. ' : '';
+  const liq = dL===null ? '' : 'Lượng tin rao bán đang hoạt động '+(dL>3?'tăng':(dL<-3?'giảm':'gần như không đổi'))+' '+f1(Math.abs(dL))+'% trong 4 tuần'
+    +(dL>3&&medY!==null&&medY<=0?': nguồn hàng rao bán nhiều lên trong khi giá không tăng, dấu hiệu bên bán chịu áp lực hơn':'')
+    +(dL<-3&&medY!==null&&medY>0?': hàng rao bán rút bớt trong khi giá còn tăng, bên bán chưa vội':'')+'.';
+  h+='<p class="narr">'+lead+breadth+liq+'</p>';
+  h+='<div class="re-kpis">'
+    +'<div class="re-kpi"><b>'+P.length+'</b><span>dự án đang theo dõi ('+wp.length+' có giá bán, '+wl.length+' có số tin rao)</span></div>'
+    +'<div class="re-kpi"><b class="'+(medY>0.5?'pos':(medY<-0.5?'neg':''))+'">'+(medY===null?'—':(medY>0?'+':'')+f1(medY)+'%')+'</b><span>thay đổi giá rao bán trung vị so với cùng quý năm trước ('+esc(qLab(latestQ))+')</span></div>'
+    +'<div class="re-kpi"><b>'+up+' / '+dn+'</b><span>số dự án tăng giá / giảm giá trên 2% trong một năm</span></div>'
+    +'<div class="re-kpi"><b>'+nf(totL)+'</b><span>tin rao bán đang hoạt động'+(dL!==null?' · '+(dL>0?'+':'')+f1(dL)+'% trong 4 tuần':'')+'</span></div>'
+    +'</div>';
+  // tăng / giảm mạnh nhất
+  const top = (arr,n) => arr.slice(0,n).map(function(p){ return '<tr><td><b>'+esc(p.n)+'</b><span class="cap">'+esc(p.dev||'')+(p.city?' · '+esc(p.city):'')+'</span></td><td class="n">'+f1(p.price)+'</td><td class="n">'+pct(p.yoy)+'</td></tr>'; }).join('');
+  const sane=wy.filter(p=>Math.abs(p.yoy)<=50);       // biến động >50%/năm gần như luôn do cơ cấu tin rao đổi, không phải giá thật
+  const byUp=sane.slice().sort((a,b)=>b.yoy-a.yoy), byDn=sane.slice().sort((a,b)=>a.yoy-b.yoy);
+  h+='<div class="re-grid">'
+    +'<div class="sum-sec"><h3 class="sum-h">Giá tăng mạnh nhất trong một năm</h3><table class="tb"><tr><th>Dự án</th><th class="n">Giá (tr/m²)</th><th class="n">1 năm</th></tr>'+top(byUp,8)+'</table></div>'
+    +'<div class="sum-sec"><h3 class="sum-h">Giá giảm mạnh nhất trong một năm</h3><table class="tb"><tr><th>Dự án</th><th class="n">Giá (tr/m²)</th><th class="n">1 năm</th></tr>'+top(byDn.filter(p=>p.yoy<0),8)+'</table></div>'
+    +'</div><p class="sum-note" style="margin:-10px 0 18px">Giá rao bán trung bình phụ thuộc cơ cấu căn đang rao: một đợt mở bán phân khu mới có thể làm con số nhảy mạnh. Hai bảng trên đã loại các dự án biến động trên 50% trong một năm.</p>';
+  // theo chủ đầu tư
+  const devs={}; P.forEach(function(p){ const k=p.dev||'(chưa rõ chủ đầu tư)'; (devs[k]=devs[k]||[]).push(p); });
+  const rows=Object.keys(devs).map(function(k){ const L=devs[k];
+    return {k:k, n:L.length, price:median(L.filter(p=>p.price!==null).map(p=>p.price)), yoy:median(L.filter(p=>p.yoy!==null).map(p=>p.yoy)),
+            list:L.reduce((s,p)=>s+(p.nlist||0),0)}; }).filter(r=>r.n>=2).sort((a,b)=>b.n-a.n);
+  h+='<div class="sum-sec"><h3 class="sum-h">Theo chủ đầu tư</h3><table class="tb" style="max-width:760px"><tr><th>Chủ đầu tư</th><th class="n">Số dự án</th><th class="n">Giá trung vị (tr/m²)</th><th class="n">Thay đổi 1 năm (trung vị)</th><th class="n">Tin rao</th></tr>'
+    +rows.map(r=>'<tr><td><b>'+esc(r.k)+'</b></td><td class="n">'+r.n+'</td><td class="n">'+(r.price===null?'—':f1(r.price))+'</td><td class="n">'+pct(r.yoy)+'</td><td class="n">'+(r.list?nf(r.list):'—')+'</td></tr>').join('')
+    +'</table><p class="sum-note">Chỉ liệt kê chủ đầu tư có từ 2 dự án trở lên trong dữ liệu.</p></div>';
+  // bản tin tuần
+  const W=RE.weekly||{};
+  const sec=(t,a)=>a&&a.length?'<p style="margin:10px 0 2px"><b>'+t+'</b></p><ul>'+a.map(x=>'<li>'+esc(x.t)+(x.src&&x.src.length?' '+x.src.map(s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.source||'nguồn')+' ↗</a>').join(' '):'')+'</li>').join('')+'</ul>':'';
+  h+='<div class="sum-sec"><h3 class="sum-h">Thị trường trong tuần</h3>'
+    +['residential','industrial','construction'].filter(s=>W[s]).map(function(s){ const w=W[s];
+      return '<div class="nw"><div class="meta"><span class="pill">'+SEG[s]+'</span><span>'+esc(w.period||w.week)+'</span><span>'+w.n+' bài</span>'
+        +(w.tone?'<span class="tone '+esc(w.tone)+'">'+(TONE[w.tone]||esc(w.tone))+'</span>':'')+'</div>'
+        +'<p>'+esc(w.summary)+'</p><details class="more"><summary>Tín hiệu giá, chính sách, tín dụng</summary>'
+        +sec('Tín hiệu giá',w.price)+sec('Chính sách',w.policy)+sec('Tín dụng, ngân hàng',w.fin)+sec('Định hướng của Chính phủ',w.gov)+'</details></div>'; }).join('')
+    +'</div>';
+  document.getElementById('view-sum').innerHTML=h;
+}
+
+/* ---------- DỰ ÁN ---------- */
+let pOpen=new Set(), pAll=false;
+function renderProj(){
+  const so=document.getElementById('p-sort').value, ci=document.getElementById('p-city').value, de=document.getElementById('p-dev').value,
+        q=document.getElementById('p-q').value.trim().toLowerCase();
+  let L=RE.projects.filter(p=>(!ci||p.city===ci)&&(!de||p.dev===de)&&(!q||(p.n+' '+p.dev).toLowerCase().includes(q)));
+  const nz=(v,d)=>v===null||v===undefined?d:v;
+  const S={list:(a,b)=>nz(b.nlist,-1)-nz(a.nlist,-1), up:(a,b)=>nz(b.yoy,-1e9)-nz(a.yoy,-1e9), down:(a,b)=>nz(a.yoy,1e9)-nz(b.yoy,1e9),
+           price:(a,b)=>nz(b.price,-1)-nz(a.price,-1), dlist:(a,b)=>nz(b.dlist,-1e9)-nz(a.dlist,-1e9), name:(a,b)=>a.n.localeCompare(b.n,'vi')};
+  L.sort(function(a,b){ return S[so](a,b) || a.n.localeCompare(b.n,'vi'); });
+  const TOP=60, show=pAll?L:L.slice(0,TOP);
+  document.getElementById('p-note').innerHTML='<b>'+L.length+'</b> dự án. Giá là giá <b>rao bán</b> trung bình theo quý (triệu đồng/m²), không phải giá giao dịch. '
+    +'Cột “1 năm” so với cùng quý năm trước. Tin rao là số tin đang hoạt động; cột “4 tuần” là thay đổi so với 4 tuần trước. Bấm vào một dòng để xem chi tiết.';
+  const row=function(p){ const i=RE.projects.indexOf(p), op=pOpen.has(i);
+    let h='<tr class="re-row" data-i="'+i+'"><td><b>'+esc(p.n)+'</b><span class="cap">'+esc(p.dev||'chưa rõ chủ đầu tư')+(p.ticker?' · '+esc(p.ticker):'')+'</span></td>'
+      +'<td>'+esc(p.city||'—')+'</td>'
+      +'<td class="n"><b>'+(p.price===null?'—':f1(p.price))+'</b>'+(p.pq?'<span class="cap">'+esc(qLab(p.pq))+'</span>':'')+'</td>'
+      +'<td class="n">'+pct(p.yoy)+'</td>'
+      +'<td style="min-width:170px">'+bars((p.sale||[]).slice(-8).map(r=>[qLab(r[0]),r[1]]),'',f1)+'</td>'
+      +'<td class="n">'+(p.rentv===null?'—':f1(p.rentv))+'</td>'
+      +'<td class="n"><b>'+(p.nlist===null?'—':nf(p.nlist))+'</b></td>'
+      +'<td class="n">'+pct(p.dlist)+'</td></tr>';
+    if(op){
+      const s=p.sale||[], r=p.rent||[], l=p.list||[];
+      h+='<tr class="re-det"><td colspan="8"><div class="re-grid">'
+        +'<div><p style="margin:0 0 6px"><b>Giá rao bán theo quý</b> <span class="cap" style="display:inline">(triệu đồng/m²)</span></p>'
+        +(s.length?'<table class="tb"><tr><th>Quý</th><th class="n">Thấp nhất</th><th class="n">Trung bình</th><th class="n">Cao nhất</th></tr>'
+          +s.slice().reverse().map(x=>'<tr><td>'+esc(qLab(x[0]))+'</td><td class="n">'+(x[2]==null?'—':f1(x[2]))+'</td><td class="n"><b>'+f1(x[1])+'</b></td><td class="n">'+(x[3]==null?'—':f1(x[3]))+'</td></tr>').join('')+'</table>':'<p class="cap">Chưa có dữ liệu giá bán.</p>')+'</div>'
+        +'<div><p style="margin:0 0 18px"><b>Giá thuê theo quý</b> <span class="cap" style="display:inline">(triệu đồng/tháng)</span></p>'+bars(r.slice(-10).map(x=>[qLab(x[0]),x[1]]),'',f1)
+        +'<p style="margin:22px 0 18px"><b>Tin rao bán đang hoạt động</b> <span class="cap" style="display:inline">(theo tuần, tới '+esc(dLab(p.ldate))+')</span></p>'+bars(l.slice(-14).map(x=>[dLab(x[0]),x[1]]),'ls',nf)+'</div>'
+        +'</div></td></tr>';
+    }
+    return h; };
+  document.getElementById('proj-list').innerHTML = L.length
+    ? '<table class="tb re-tb"><tr><th>Dự án</th><th>Tỉnh thành</th><th class="n">Giá bán (tr/m²)</th><th class="n">1 năm</th><th>Giá theo quý</th><th class="n">Giá thuê (tr/tháng)</th><th class="n">Tin rao</th><th class="n">4 tuần</th></tr>'
+      +show.map(row).join('')+'</table>'
+      +(L.length>TOP?'<p style="margin:8px 0 0"><button class="linkbtn" id="p-more">'+(pAll?'Thu gọn':'Xem tất cả '+L.length+' dự án')+'</button></p>':'')
+    : '<div class="mp-empty">Không có dự án khớp bộ lọc.</div>';
+  document.querySelectorAll('#proj-list tr.re-row').forEach(function(tr){ tr.onclick=function(){ const i=+tr.dataset.i; pOpen.has(i)?pOpen.delete(i):pOpen.add(i); renderProj(); }; });
+  const mb=document.getElementById('p-more'); if(mb) mb.onclick=function(){ pAll=!pAll; renderProj(); };
+}
+
+/* ---------- DÒNG TIN ---------- */
+function renderNews(){
+  const sg=document.getElementById('n-seg').value, L=(RE.daily||[]).filter(x=>!sg||x.seg===sg);
+  const li=a=>a&&a.length?'<ul>'+a.map(x=>'<li>'+esc(x.t)+'</li>').join('')+'</ul>':'';
+  document.getElementById('news-list').innerHTML = L.length ? L.map(function(x){
+    return '<div class="nw"><div class="meta"><b>'+esc(x.d)+'</b><span class="pill">'+(SEG[x.seg]||esc(x.seg))+'</span><span>'+x.n+' bài</span>'
+      +(x.tone?'<span class="tone '+esc(x.tone)+'">'+(TONE[x.tone]||esc(x.tone))+'</span>':'')+'</div>'
+      +'<h4>'+esc(x.h)+'</h4>'
+      +'<details class="more"><summary>Diễn giải, tín hiệu và rủi ro</summary><p>'+esc(x.s)+'</p>'
+      +(x.sig&&x.sig.length?'<p style="margin:10px 0 2px"><b>Tín hiệu đáng chú ý</b></p>'+li(x.sig):'')
+      +(x.risk&&x.risk.length?'<p style="margin:10px 0 2px"><b>Rủi ro</b></p>'+li(x.risk):'')+'</details></div>'; }).join('')
+    : '<div class="mp-empty">Chưa có bản tin.</div>';
+}
+
+/* ---------- BÁN HÀNG ---------- */
+function renderSales(){
+  const C=RE.presales||{}, tk=Object.keys(C).sort((a,b)=>{ const la=C[a][C[a].length-1], lb=C[b][C[b].length-1]; return (lb?lb[1]:0)-(la?la[1]:0); });
+  const per=[...new Set([].concat(...tk.map(t=>C[t].map(r=>r[0]))))].sort().slice(-8);
+  const kLab=k=>{ const m=/(\d{4})Q(\d)/.exec(k); return m?'Q'+m[2]+'/'+m[1].slice(2):k; };
+  let h='<p class="narr">Doanh số bán hàng (giá trị hợp đồng ký mới) theo quý của các doanh nghiệp niêm yết có công bố. Đây là thước đo sớm nhất của sức cầu: nó đi trước doanh thu ghi nhận từ một đến ba năm.</p>';
+  h+='<div class="sum-sec"><h3 class="sum-h">Theo doanh nghiệp</h3><table class="tb re-tb"><tr><th>Mã</th>'+per.map(k=>'<th class="n">'+kLab(k)+'</th>').join('')+'<th>Xu hướng</th></tr>'
+    +tk.map(function(t){ const m={}; C[t].forEach(r=>m[r[0]]=r);
+      return '<tr><td><b>'+esc(t)+'</b></td>'+per.map(k=>'<td class="n">'+(m[k]?nf(m[k][1])+(m[k][2]&&m[k][2]!=='high'?'<span class="cap">ước</span>':''):'—')+'</td>').join('')
+        +'<td style="min-width:150px">'+bars(C[t].slice(-8).map(r=>[kLab(r[0]),r[1]]),'',nf)+'</td></tr>'; }).join('')
+    +'</table><p class="sum-note">Đơn vị: tỷ đồng. “ước” = số do suy ra từ công bố luỹ kế hoặc có độ tin cậy chưa cao.</p></div>';
+  const PJ=(RE.presalesProj||[]), lastK=[...new Set(PJ.map(x=>x.k))].sort().slice(-2);
+  const rows=PJ.filter(x=>lastK.indexOf(x.k)>=0).sort((a,b)=>b.k.localeCompare(a.k)||b.v-a.v);
+  if(rows.length) h+='<div class="sum-sec"><h3 class="sum-h">Theo dự án — hai quý gần nhất</h3><table class="tb" style="max-width:760px"><tr><th>Dự án</th><th>Mã</th><th class="n">Quý</th><th class="n">Doanh số (tỷ)</th></tr>'
+    +rows.map(x=>'<tr><td><b>'+esc(x.n)+'</b></td><td>'+esc(x.t)+'</td><td class="n">'+kLab(x.k)+'</td><td class="n">'+nf(x.v)+(x.c&&x.c!=='high'?'<span class="cap">ước</span>':'')+'</td></tr>').join('')+'</table></div>';
+  document.getElementById('view-sales').innerHTML=h;
+}
+
+/* ---------- khởi tạo ---------- */
+(function(){
+  const opt=(id,vals,all)=>{ document.getElementById(id).innerHTML='<option value="">'+all+'</option>'+vals.map(v=>'<option>'+esc(v)+'</option>').join(''); };
+  opt('p-city',[...new Set(RE.projects.map(p=>p.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi')),'Tất cả tỉnh');
+  const dc={}; RE.projects.forEach(p=>{ if(p.dev) dc[p.dev]=(dc[p.dev]||0)+1; });
+  opt('p-dev',Object.keys(dc).sort((a,b)=>dc[b]-dc[a]||a.localeCompare(b,'vi')),'Tất cả');
+  ['p-sort','p-city','p-dev'].forEach(id=>document.getElementById(id).onchange=function(){ pAll=false; renderProj(); });
+  document.getElementById('p-q').oninput=function(){ pAll=false; renderProj(); };
+  document.getElementById('n-seg').onchange=renderNews;
+  const R={sum:renderSum, proj:renderProj, news:renderNews, sales:renderSales}, done={};
+  function go(v){ document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-pressed', b.dataset.view===v));
+    Object.keys(R).forEach(k=>document.getElementById('view-'+k).classList.toggle('hidden',k!==v));
+    if(!done[v]){ R[v](); done[v]=1; } try{ history.replaceState(null,'','#'+v); }catch(e){} }
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>go(b.dataset.view));
+  go(R[location.hash.slice(1)]?location.hash.slice(1):'sum');
+  document.getElementById('foot').innerHTML='Cập nhật '+esc(RE.asof)+'. Nguồn: giá rao bán, giá thuê và số tin rao từ batdongsan.com.vn; doanh số bán hàng từ công bố của doanh nghiệp; '
+    +'bản tin thị trường tổng hợp từ báo chí. Giá rao bán không phải giá giao dịch và thường cao hơn giá chốt thực tế.';
+})();
+</script>
+</body>
+</html>
