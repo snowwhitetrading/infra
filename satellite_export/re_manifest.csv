@@ -1,0 +1,231 @@
+name,site_key,lat,lon,radius_km,month,capture_date,aoi_cloud_pct,status,file
+Akari City,akari_city,10.7181,106.60872,1.0,2025-12,2025-12-30,11.9,OK,re/akari_city/2025-12_2025-12-30_cloud12pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-01,2026-01-26,0.0,OK,re/akari_city/2026-01_2026-01-26_cloud0pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-02,2026-02-08,0.0,OK,re/akari_city/2026-02_2026-02-08_cloud0pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-03,2026-03-17,0.0,OK,re/akari_city/2026-03_2026-03-17_cloud0pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-04,2026-04-24,0.0,OK,re/akari_city/2026-04_2026-04-24_cloud0pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-05,2026-05-13,1.6,OK,re/akari_city/2026-05_2026-05-13_cloud2pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-06,2026-06-22,53.1,CLOUDY,re/akari_city/2026-06_2026-06-22_cloud53pct_CLOUDY.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-07,2026-07-20,0.5,OK,re/akari_city/2026-07_2026-07-20_cloud0pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-08,2026-08-04,15.1,OK,re/akari_city/2026-08_2026-08-04_cloud15pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-09,2026-09-28,31.9,CLOUDY,re/akari_city/2026-09_2026-09-28_cloud32pct_CLOUDY.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-10,2026-10-20,1.7,OK,re/akari_city/2026-10_2026-10-20_cloud2pct_OK.png
+Akari City,akari_city,10.7181,106.60872,1.0,2026-11,2026-11-22,0.0,OK,re/akari_city/2026-11_2026-11-22_cloud0pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2025-12,2026-01-01,0.0,OK,re/aqua_city/2025-12_2026-01-01_cloud0pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-01,2026-01-26,0.0,OK,re/aqua_city/2026-01_2026-01-26_cloud0pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-02,2026-02-10,100.0,CLOUDY,re/aqua_city/2026-02_2026-02-10_cloud100pct_CLOUDY.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-03,2026-04-01,1.8,OK,re/aqua_city/2026-03_2026-04-01_cloud2pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-04,2026-05-01,0.0,OK,re/aqua_city/2026-04_2026-05-01_cloud0pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-05,2026-05-06,74.7,CLOUDY,re/aqua_city/2026-05_2026-05-06_cloud75pct_CLOUDY.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-06,2026-06-05,43.1,CLOUDY,re/aqua_city/2026-06_2026-06-05_cloud43pct_CLOUDY.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-07,2026-07-20,42.8,CLOUDY,re/aqua_city/2026-07_2026-07-20_cloud43pct_CLOUDY.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-08,2026-08-21,27.2,OK,re/aqua_city/2026-08_2026-08-21_cloud27pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-09,2026-09-28,28.2,OK,re/aqua_city/2026-09_2026-09-28_cloud28pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-10,2026-10-28,6.6,OK,re/aqua_city/2026-10_2026-10-28_cloud7pct_OK.png
+Aqua City,aqua_city,10.84488,106.86139,3.0,2026-11,2026-11-22,0.0,OK,re/aqua_city/2026-11_2026-11-22_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2025-12,2025-12-17,0.0,OK,re/bcons_city/2025-12_2025-12-17_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-01,2026-01-26,0.0,OK,re/bcons_city/2026-01_2026-01-26_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-02,2026-02-25,98.8,CLOUDY,re/bcons_city/2026-02_2026-02-25_cloud99pct_CLOUDY.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-03,2026-04-01,0.0,OK,re/bcons_city/2026-03_2026-04-01_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-04,2026-04-01,0.0,OK,re/bcons_city/2026-04_2026-04-01_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-05,2026-05-01,0.0,OK,re/bcons_city/2026-05_2026-05-01_cloud0pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-06,2026-06-05,79.0,CLOUDY,re/bcons_city/2026-06_2026-06-05_cloud79pct_CLOUDY.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-07,2026-07-20,77.2,CLOUDY,re/bcons_city/2026-07_2026-07-20_cloud77pct_CLOUDY.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-09,2026-09-30,14.4,OK,re/bcons_city/2026-09_2026-09-30_cloud14pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-10,2026-10-28,2.5,OK,re/bcons_city/2026-10_2026-10-28_cloud2pct_OK.png
+Bcons City,bcons_city,10.89249,106.79382,1.0,2026-11,2026-11-22,0.0,OK,re/bcons_city/2026-11_2026-11-22_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2025-12,2026-01-01,74.3,CLOUDY,re/celadon_city/2025-12_2026-01-01_cloud74pct_CLOUDY.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-01,2026-01-26,0.0,OK,re/celadon_city/2026-01_2026-01-26_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-02,2026-02-08,0.0,OK,re/celadon_city/2026-02_2026-02-08_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-03,2026-04-01,0.0,OK,re/celadon_city/2026-03_2026-04-01_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-04,2026-04-24,0.0,OK,re/celadon_city/2026-04_2026-04-24_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-05,2026-05-01,16.4,OK,re/celadon_city/2026-05_2026-05-01_cloud16pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-06,2026-06-22,47.1,CLOUDY,re/celadon_city/2026-06_2026-06-22_cloud47pct_CLOUDY.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-07,2026-07-20,55.5,CLOUDY,re/celadon_city/2026-07_2026-07-20_cloud56pct_CLOUDY.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-08,2026-08-22,50.7,CLOUDY,re/celadon_city/2026-08_2026-08-22_cloud51pct_CLOUDY.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-09,2026-10-01,27.8,OK,re/celadon_city/2026-09_2026-10-01_cloud28pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-10,2026-10-26,0.0,OK,re/celadon_city/2026-10_2026-10-26_cloud0pct_OK.png
+Celadon City,celadon_city,10.8047,106.62048,1.5,2026-11,2026-11-22,0.0,OK,re/celadon_city/2026-11_2026-11-22_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2025-12,2025-12-18,0.0,OK,re/gamuda_city/2025-12_2025-12-18_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-01,2026-01-07,0.0,OK,re/gamuda_city/2026-01_2026-01-07_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-03,2026-03-13,11.5,OK,re/gamuda_city/2026-03_2026-03-13_cloud11pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-04,2026-04-07,0.2,OK,re/gamuda_city/2026-04_2026-04-07_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-05,2026-06-01,36.7,CLOUDY,re/gamuda_city/2026-05_2026-06-01_cloud37pct_CLOUDY.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-06,2026-06-01,36.7,CLOUDY,re/gamuda_city/2026-06_2026-06-01_cloud37pct_CLOUDY.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-07,2026-07-18,0.0,OK,re/gamuda_city/2026-07_2026-07-18_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-08,2026-08-10,0.0,OK,re/gamuda_city/2026-08_2026-08-10_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-09,2026-09-29,0.0,OK,re/gamuda_city/2026-09_2026-09-29_cloud0pct_OK.png
+Gamuda City,gamuda_city,20.96187,105.86083,1.5,2026-10,2026-10-06,0.0,OK,re/gamuda_city/2026-10_2026-10-06_cloud0pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2025-12,2026-01-01,0.7,OK,re/izumi_city/2025-12_2026-01-01_cloud1pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-01,2026-01-26,0.0,OK,re/izumi_city/2026-01_2026-01-26_cloud0pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-02,2026-02-10,100.0,CLOUDY,re/izumi_city/2026-02_2026-02-10_cloud100pct_CLOUDY.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-03,2026-04-01,0.0,OK,re/izumi_city/2026-03_2026-04-01_cloud0pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-04,2026-05-01,0.0,OK,re/izumi_city/2026-04_2026-05-01_cloud0pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-05,2026-05-06,62.8,CLOUDY,re/izumi_city/2026-05_2026-05-06_cloud63pct_CLOUDY.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-06,2026-06-05,27.7,OK,re/izumi_city/2026-06_2026-06-05_cloud28pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-07,2026-07-20,39.2,CLOUDY,re/izumi_city/2026-07_2026-07-20_cloud39pct_CLOUDY.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-08,2026-08-21,21.4,OK,re/izumi_city/2026-08_2026-08-21_cloud21pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-09,2026-09-28,34.6,CLOUDY,re/izumi_city/2026-09_2026-09-28_cloud35pct_CLOUDY.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-10,2026-10-28,5.7,OK,re/izumi_city/2026-10_2026-10-28_cloud6pct_OK.png
+Izumi City,izumi_city,10.8585,106.85506,2.0,2026-11,2026-11-22,0.0,OK,re/izumi_city/2026-11_2026-11-22_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2025-12,2025-12-18,0.0,OK,re/khu_do_thi_ecopark/2025-12_2025-12-18_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-01,2026-01-07,0.0,OK,re/khu_do_thi_ecopark/2026-01_2026-01-07_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-03,2026-03-13,31.1,CLOUDY,re/khu_do_thi_ecopark/2026-03_2026-03-13_cloud31pct_CLOUDY.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-04,2026-04-07,0.0,OK,re/khu_do_thi_ecopark/2026-04_2026-04-07_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-05,2026-06-01,34.6,CLOUDY,re/khu_do_thi_ecopark/2026-05_2026-06-01_cloud35pct_CLOUDY.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-06,2026-06-01,34.6,CLOUDY,re/khu_do_thi_ecopark/2026-06_2026-06-01_cloud35pct_CLOUDY.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-07,2026-07-18,76.3,CLOUDY,re/khu_do_thi_ecopark/2026-07_2026-07-18_cloud76pct_CLOUDY.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-08,2026-08-10,0.0,OK,re/khu_do_thi_ecopark/2026-08_2026-08-10_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-09,2026-09-29,0.1,OK,re/khu_do_thi_ecopark/2026-09_2026-09-29_cloud0pct_OK.png
+Khu đô thị Ecopark,khu_do_thi_ecopark,20.96196,105.9322,2.5,2026-10,2026-10-06,0.0,OK,re/khu_do_thi_ecopark/2026-10_2026-10-06_cloud0pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2025-12,2025-12-08,0.0,OK,re/khu_do_thi_nam_thang_long_ciputra/2025-12_2025-12-08_cloud0pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-01,2026-01-07,0.0,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-01_2026-01-07_cloud0pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-03,2026-03-13,0.6,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-03_2026-03-13_cloud1pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-04,2026-04-07,3.9,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-04_2026-04-07_cloud4pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-05,2026-05-27,30.2,CLOUDY,re/khu_do_thi_nam_thang_long_ciputra/2026-05_2026-05-27_cloud30pct_CLOUDY.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-06,2026-06-01,41.7,CLOUDY,re/khu_do_thi_nam_thang_long_ciputra/2026-06_2026-06-01_cloud42pct_CLOUDY.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-07,2026-07-26,17.6,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-07_2026-07-26_cloud18pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-08,2026-08-10,0.0,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-08_2026-08-10_cloud0pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-09,2026-09-29,10.5,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-09_2026-09-29_cloud10pct_OK.png
+Khu đô thị Nam Thăng Long - Ciputra,khu_do_thi_nam_thang_long_ciputra,21.0615,105.80775,2.0,2026-10,2026-10-09,0.0,OK,re/khu_do_thi_nam_thang_long_ciputra/2026-10_2026-10-09_cloud0pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2025-12,2025-12-20,21.4,OK,re/khu_do_thi_waterpoint/2025-12_2025-12-20_cloud21pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-01,2026-01-09,0.0,OK,re/khu_do_thi_waterpoint/2026-01_2026-01-09_cloud0pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-02,2026-02-08,0.0,OK,re/khu_do_thi_waterpoint/2026-02_2026-02-08_cloud0pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-03,2026-03-25,6.5,OK,re/khu_do_thi_waterpoint/2026-03_2026-03-25_cloud7pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-04,2026-04-24,9.7,OK,re/khu_do_thi_waterpoint/2026-04_2026-04-24_cloud10pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-05,2026-05-26,50.2,CLOUDY,re/khu_do_thi_waterpoint/2026-05_2026-05-26_cloud50pct_CLOUDY.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-06,2026-06-13,35.1,CLOUDY,re/khu_do_thi_waterpoint/2026-06_2026-06-13_cloud35pct_CLOUDY.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-07,2026-07-23,50.4,CLOUDY,re/khu_do_thi_waterpoint/2026-07_2026-07-23_cloud50pct_CLOUDY.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-08,2026-08-22,44.5,CLOUDY,re/khu_do_thi_waterpoint/2026-08_2026-08-22_cloud44pct_CLOUDY.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-09,2026-10-01,16.7,OK,re/khu_do_thi_waterpoint/2026-09_2026-10-01_cloud17pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-10,2026-10-26,12.7,OK,re/khu_do_thi_waterpoint/2026-10_2026-10-26_cloud13pct_OK.png
+Khu đô thị Waterpoint,khu_do_thi_waterpoint,10.65945,106.45399,2.5,2026-11,2026-11-05,0.0,OK,re/khu_do_thi_waterpoint/2026-11_2026-11-05_cloud0pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2025-12,2026-01-01,0.0,OK,re/novaworld_ho_tram/2025-12_2026-01-01_cloud0pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-01,2026-01-26,0.0,OK,re/novaworld_ho_tram/2026-01_2026-01-26_cloud0pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-02,2026-02-20,0.7,OK,re/novaworld_ho_tram/2026-02_2026-02-20_cloud1pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-03,2026-03-22,0.4,OK,re/novaworld_ho_tram/2026-03_2026-03-22_cloud0pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-04,2026-05-01,0.9,OK,re/novaworld_ho_tram/2026-04_2026-05-01_cloud1pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-05,2026-05-01,0.9,OK,re/novaworld_ho_tram/2026-05_2026-05-01_cloud1pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-07,2026-07-10,31.7,CLOUDY,re/novaworld_ho_tram/2026-07_2026-07-10_cloud32pct_CLOUDY.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-08,2026-08-14,74.0,CLOUDY,re/novaworld_ho_tram/2026-08_2026-08-14_cloud74pct_CLOUDY.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-09,2026-09-30,55.8,CLOUDY,re/novaworld_ho_tram/2026-09_2026-09-30_cloud56pct_CLOUDY.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-10,2026-10-20,0.0,OK,re/novaworld_ho_tram/2026-10_2026-10-20_cloud0pct_OK.png
+NovaWorld Hồ Tràm,novaworld_ho_tram,10.53433,107.53639,2.5,2026-11,2026-11-22,0.0,OK,re/novaworld_ho_tram/2026-11_2026-11-22_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2025-12,2025-12-18,1.1,OK,re/splendora_an_khanh/2025-12_2025-12-18_cloud1pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-01,2026-01-07,5.9,OK,re/splendora_an_khanh/2026-01_2026-01-07_cloud6pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-03,2026-03-13,81.0,CLOUDY,re/splendora_an_khanh/2026-03_2026-03-13_cloud81pct_CLOUDY.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-04,2026-04-12,0.0,OK,re/splendora_an_khanh/2026-04_2026-04-12_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-05,2026-05-27,0.0,OK,re/splendora_an_khanh/2026-05_2026-05-27_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-06,2026-06-01,3.3,OK,re/splendora_an_khanh/2026-06_2026-06-01_cloud3pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-07,2026-07-18,0.0,OK,re/splendora_an_khanh/2026-07_2026-07-18_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-08,2026-08-10,0.0,OK,re/splendora_an_khanh/2026-08_2026-08-10_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-09,2026-09-29,0.0,OK,re/splendora_an_khanh/2026-09_2026-09-29_cloud0pct_OK.png
+Splendora An Khánh,splendora_an_khanh,21.02196,105.72564,2.0,2026-10,2026-10-09,0.0,OK,re/splendora_an_khanh/2026-10_2026-10-09_cloud0pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2025-12,2026-01-01,8.8,OK,re/the_global_city/2025-12_2026-01-01_cloud9pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-01,2026-01-26,0.0,OK,re/the_global_city/2026-01_2026-01-26_cloud0pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-02,2026-02-10,73.8,CLOUDY,re/the_global_city/2026-02_2026-02-10_cloud74pct_CLOUDY.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-03,2026-04-01,0.0,OK,re/the_global_city/2026-03_2026-04-01_cloud0pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-04,2026-05-01,0.0,OK,re/the_global_city/2026-04_2026-05-01_cloud0pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-05,2026-05-01,0.0,OK,re/the_global_city/2026-05_2026-05-01_cloud0pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-06,2026-06-22,26.7,OK,re/the_global_city/2026-06_2026-06-22_cloud27pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-07,2026-07-20,38.6,CLOUDY,re/the_global_city/2026-07_2026-07-20_cloud39pct_CLOUDY.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-08,2026-08-21,97.2,CLOUDY,re/the_global_city/2026-08_2026-08-21_cloud97pct_CLOUDY.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-09,2026-09-30,4.0,OK,re/the_global_city/2026-09_2026-09-30_cloud4pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-10,2026-10-20,20.6,OK,re/the_global_city/2026-10_2026-10-20_cloud21pct_OK.png
+The Global City,the_global_city,10.80152,106.77861,1.5,2026-11,2026-11-22,0.0,OK,re/the_global_city/2026-11_2026-11-22_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2025-12,2025-12-20,41.1,CLOUDY,re/van_phuc_city/2025-12_2025-12-20_cloud41pct_CLOUDY.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-01,2026-01-26,0.0,OK,re/van_phuc_city/2026-01_2026-01-26_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-02,2026-02-08,0.0,OK,re/van_phuc_city/2026-02_2026-02-08_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-03,2026-03-25,0.0,OK,re/van_phuc_city/2026-03_2026-03-25_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-04,2026-04-24,0.7,OK,re/van_phuc_city/2026-04_2026-04-24_cloud1pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-05,2026-05-01,0.2,OK,re/van_phuc_city/2026-05_2026-05-01_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-06,2026-06-13,28.8,OK,re/van_phuc_city/2026-06_2026-06-13_cloud29pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-07,2026-07-20,65.8,CLOUDY,re/van_phuc_city/2026-07_2026-07-20_cloud66pct_CLOUDY.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-08,2026-08-22,41.9,CLOUDY,re/van_phuc_city/2026-08_2026-08-22_cloud42pct_CLOUDY.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-09,2026-09-28,18.6,OK,re/van_phuc_city/2026-09_2026-09-28_cloud19pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-10,2026-10-26,0.0,OK,re/van_phuc_city/2026-10_2026-10-26_cloud0pct_OK.png
+Vạn Phúc City,van_phuc_city,10.84966,106.71189,1.5,2026-11,2026-11-22,0.0,OK,re/van_phuc_city/2026-11_2026-11-22_cloud0pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2025-12,2025-12-18,0.0,OK,re/vinhomes_global_gate/2025-12_2025-12-18_cloud0pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-01,2026-01-07,0.0,OK,re/vinhomes_global_gate/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-03,2026-03-13,4.8,OK,re/vinhomes_global_gate/2026-03_2026-03-13_cloud5pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-04,2026-04-12,0.1,OK,re/vinhomes_global_gate/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-05,2026-05-27,9.3,OK,re/vinhomes_global_gate/2026-05_2026-05-27_cloud9pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-06,2026-06-01,49.8,CLOUDY,re/vinhomes_global_gate/2026-06_2026-06-01_cloud50pct_CLOUDY.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-07,2026-07-26,39.4,CLOUDY,re/vinhomes_global_gate/2026-07_2026-07-26_cloud39pct_CLOUDY.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-08,2026-08-10,0.0,OK,re/vinhomes_global_gate/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-09,2026-09-29,3.9,OK,re/vinhomes_global_gate/2026-09_2026-09-29_cloud4pct_OK.png
+Vinhomes Global Gate,vinhomes_global_gate,21.08727,105.86527,2.0,2026-10,2026-10-09,0.0,OK,re/vinhomes_global_gate/2026-10_2026-10-09_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2025-12,2025-12-20,100.0,CLOUDY,re/vinhomes_golden_city/2025-12_2025-12-20_cloud100pct_CLOUDY.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-01,2026-01-09,0.0,OK,re/vinhomes_golden_city/2026-01_2026-01-09_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-02,2026-02-03,0.0,OK,re/vinhomes_golden_city/2026-02_2026-02-03_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-03,2026-03-10,0.0,OK,re/vinhomes_golden_city/2026-03_2026-03-10_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-04,2026-04-09,100.0,CLOUDY,re/vinhomes_golden_city/2026-04_2026-04-09_cloud100pct_CLOUDY.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-05,2026-05-26,0.0,OK,re/vinhomes_golden_city/2026-05_2026-05-26_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-06,2026-06-23,90.5,CLOUDY,re/vinhomes_golden_city/2026-06_2026-06-23_cloud91pct_CLOUDY.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-07,2026-07-18,24.3,OK,re/vinhomes_golden_city/2026-07_2026-07-18_cloud24pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-08,2026-08-12,26.6,OK,re/vinhomes_golden_city/2026-08_2026-08-12_cloud27pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-09,2026-09-21,0.0,OK,re/vinhomes_golden_city/2026-09_2026-09-21_cloud0pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-10,2026-10-13,2.8,OK,re/vinhomes_golden_city/2026-10_2026-10-13_cloud3pct_OK.png
+Vinhomes Golden City,vinhomes_golden_city,20.7875,106.70418,2.0,2026-11,2026-11-02,3.8,OK,re/vinhomes_golden_city/2026-11_2026-11-02_cloud4pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2025-12,2026-01-01,0.0,OK,re/vinhomes_grand_park/2025-12_2026-01-01_cloud0pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-01,2026-01-26,0.0,OK,re/vinhomes_grand_park/2026-01_2026-01-26_cloud0pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-02,2026-02-10,100.0,CLOUDY,re/vinhomes_grand_park/2026-02_2026-02-10_cloud100pct_CLOUDY.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-03,2026-04-01,4.1,OK,re/vinhomes_grand_park/2026-03_2026-04-01_cloud4pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-04,2026-05-01,0.0,OK,re/vinhomes_grand_park/2026-04_2026-05-01_cloud0pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-05,2026-05-06,71.2,CLOUDY,re/vinhomes_grand_park/2026-05_2026-05-06_cloud71pct_CLOUDY.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-06,2026-06-05,27.8,OK,re/vinhomes_grand_park/2026-06_2026-06-05_cloud28pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-07,2026-07-20,25.6,OK,re/vinhomes_grand_park/2026-07_2026-07-20_cloud26pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-08,2026-08-21,23.0,OK,re/vinhomes_grand_park/2026-08_2026-08-21_cloud23pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-09,2026-09-28,53.2,CLOUDY,re/vinhomes_grand_park/2026-09_2026-09-28_cloud53pct_CLOUDY.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-10,2026-10-28,6.0,OK,re/vinhomes_grand_park/2026-10_2026-10-28_cloud6pct_OK.png
+Vinhomes Grand Park,vinhomes_grand_park,10.84394,106.8451,2.0,2026-11,2026-11-22,0.0,OK,re/vinhomes_grand_park/2026-11_2026-11-22_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2025-12,2025-12-08,2.0,OK,re/vinhomes_ocean_park_2/2025-12_2025-12-08_cloud2pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-01,2026-01-07,0.0,OK,re/vinhomes_ocean_park_2/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-03,2026-03-13,0.0,OK,re/vinhomes_ocean_park_2/2026-03_2026-03-13_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-04,2026-04-12,0.0,OK,re/vinhomes_ocean_park_2/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-05,2026-05-27,2.6,OK,re/vinhomes_ocean_park_2/2026-05_2026-05-27_cloud3pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-06,2026-06-01,33.5,CLOUDY,re/vinhomes_ocean_park_2/2026-06_2026-06-01_cloud34pct_CLOUDY.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-07,2026-07-18,100.0,CLOUDY,re/vinhomes_ocean_park_2/2026-07_2026-07-18_cloud100pct_CLOUDY.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-08,2026-08-10,0.0,OK,re/vinhomes_ocean_park_2/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-09,2026-09-29,0.0,OK,re/vinhomes_ocean_park_2/2026-09_2026-09-29_cloud0pct_OK.png
+Vinhomes Ocean Park 2,vinhomes_ocean_park_2,20.94248,105.98021,2.5,2026-10,2026-10-06,0.0,OK,re/vinhomes_ocean_park_2/2026-10_2026-10-06_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2025-12,2025-12-18,0.0,OK,re/vinhomes_ocean_park_3/2025-12_2025-12-18_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-01,2026-01-07,0.0,OK,re/vinhomes_ocean_park_3/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-03,2026-03-13,0.0,OK,re/vinhomes_ocean_park_3/2026-03_2026-03-13_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-04,2026-04-12,0.0,OK,re/vinhomes_ocean_park_3/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-05,2026-05-27,25.1,OK,re/vinhomes_ocean_park_3/2026-05_2026-05-27_cloud25pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-06,2026-06-01,40.3,CLOUDY,re/vinhomes_ocean_park_3/2026-06_2026-06-01_cloud40pct_CLOUDY.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-07,2026-07-18,100.0,CLOUDY,re/vinhomes_ocean_park_3/2026-07_2026-07-18_cloud100pct_CLOUDY.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-08,2026-08-10,0.0,OK,re/vinhomes_ocean_park_3/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-09,2026-09-29,0.0,OK,re/vinhomes_ocean_park_3/2026-09_2026-09-29_cloud0pct_OK.png
+Vinhomes Ocean Park 3,vinhomes_ocean_park_3,20.96483,105.97256,2.5,2026-10,2026-10-06,0.0,OK,re/vinhomes_ocean_park_3/2026-10_2026-10-06_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2025-12,2025-12-18,0.0,OK,re/vinhomes_ocean_park_gia_lam/2025-12_2025-12-18_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-01,2026-01-07,0.0,OK,re/vinhomes_ocean_park_gia_lam/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-03,2026-03-13,0.0,OK,re/vinhomes_ocean_park_gia_lam/2026-03_2026-03-13_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-04,2026-04-12,0.0,OK,re/vinhomes_ocean_park_gia_lam/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-05,2026-05-27,62.5,CLOUDY,re/vinhomes_ocean_park_gia_lam/2026-05_2026-05-27_cloud63pct_CLOUDY.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-06,2026-06-01,65.6,CLOUDY,re/vinhomes_ocean_park_gia_lam/2026-06_2026-06-01_cloud66pct_CLOUDY.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-07,2026-07-18,79.2,CLOUDY,re/vinhomes_ocean_park_gia_lam/2026-07_2026-07-18_cloud79pct_CLOUDY.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-08,2026-08-10,0.0,OK,re/vinhomes_ocean_park_gia_lam/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-09,2026-09-29,1.8,OK,re/vinhomes_ocean_park_gia_lam/2026-09_2026-09-29_cloud2pct_OK.png
+Vinhomes Ocean Park Gia Lâm,vinhomes_ocean_park_gia_lam,20.99426,105.94848,2.0,2026-10,2026-10-06,0.0,OK,re/vinhomes_ocean_park_gia_lam/2026-10_2026-10-06_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2025-12,2025-12-18,3.1,OK,re/vinhomes_smart_city/2025-12_2025-12-18_cloud3pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-01,2026-01-07,0.0,OK,re/vinhomes_smart_city/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-03,2026-03-13,56.2,CLOUDY,re/vinhomes_smart_city/2026-03_2026-03-13_cloud56pct_CLOUDY.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-04,2026-04-12,0.0,OK,re/vinhomes_smart_city/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-05,2026-05-27,0.0,OK,re/vinhomes_smart_city/2026-05_2026-05-27_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-06,2026-06-01,1.3,OK,re/vinhomes_smart_city/2026-06_2026-06-01_cloud1pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-07,2026-07-18,0.0,OK,re/vinhomes_smart_city/2026-07_2026-07-18_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-08,2026-08-10,0.0,OK,re/vinhomes_smart_city/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-09,2026-09-29,0.0,OK,re/vinhomes_smart_city/2026-09_2026-09-29_cloud0pct_OK.png
+Vinhomes Smart City,vinhomes_smart_city,21.00513,105.73892,1.5,2026-10,2026-10-09,0.0,OK,re/vinhomes_smart_city/2026-10_2026-10-09_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2025-12,2025-12-08,0.0,OK,re/vinhomes_wonder_city_dan_phuong/2025-12_2025-12-08_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-01,2026-01-07,0.1,OK,re/vinhomes_wonder_city_dan_phuong/2026-01_2026-01-07_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-03,2026-03-13,11.2,OK,re/vinhomes_wonder_city_dan_phuong/2026-03_2026-03-13_cloud11pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-04,2026-04-12,0.0,OK,re/vinhomes_wonder_city_dan_phuong/2026-04_2026-04-12_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-05,2026-06-01,1.7,OK,re/vinhomes_wonder_city_dan_phuong/2026-05_2026-06-01_cloud2pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-06,2026-06-01,1.7,OK,re/vinhomes_wonder_city_dan_phuong/2026-06_2026-06-01_cloud2pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-07,2026-07-18,2.0,OK,re/vinhomes_wonder_city_dan_phuong/2026-07_2026-07-18_cloud2pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-08,2026-08-10,0.0,OK,re/vinhomes_wonder_city_dan_phuong/2026-08_2026-08-10_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-09,2026-09-04,0.3,OK,re/vinhomes_wonder_city_dan_phuong/2026-09_2026-09-04_cloud0pct_OK.png
+Vinhomes Wonder City Đan Phượng,vinhomes_wonder_city_dan_phuong,21.0967,105.71212,2.0,2026-10,2026-10-09,0.0,OK,re/vinhomes_wonder_city_dan_phuong/2026-10_2026-10-09_cloud0pct_OK.png

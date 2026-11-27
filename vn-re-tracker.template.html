@@ -125,6 +125,10 @@ details.more summary{cursor:pointer;font-size:12px;color:var(--build);margin-top
       <option value="proj">Chỉ dự án có giá / tin rao</option>
       <option value="town">Chỉ khu đô thị đối ứng</option>
     </select></div>
+    <div class="mf"><span>Lớp nền</span><select id="m-bg">
+      <option value="1" selected>Hiện mọi dự án trên Cafeland</option>
+      <option value="0">Ẩn</option>
+    </select></div>
   </div>
   <div id="re-map"></div>
   <div class="lg" id="m-lg"></div>
@@ -304,12 +308,15 @@ function renderSales(){
 let sCur=null, sIdx=-1;
 const mLab = m => { const a=(m||'').split('-'); return a.length>1?(+a[1])+'/'+a[0]:m; };
 function renderSat(){
-  const T=(RE.towns||[]).filter(t=>t.sat&&t.sat.length), sel=document.getElementById('s-proj'), body=document.getElementById('sat-body');
+  const TA=(RE.towns||[]).filter(t=>t.sat&&t.sat.length), TB=(RE.satx||[]);
+  const T=TA.concat(TB), sel=document.getElementById('s-proj'), body=document.getElementById('sat-body');
   if(!T.length){ body.innerHTML='<div class="mp-empty">Chưa có ảnh vệ tinh.</div>'; return; }
   if(!sel.dataset.init){ sel.dataset.init=1;
-    sel.innerHTML=T.map(t=>'<option value="'+t.id+'">'+esc(t.n)+' ('+t.sat.length+' ảnh)</option>').join('');
-    sel.onchange=function(){ sCur=+sel.value; sIdx=-1; renderSat(); }; sCur=T[0].id; }
-  const t=T.find(x=>x.id===sCur)||T[0], A=t.sat, ok=A.filter(x=>x.ok);
+    const og=(lab,L)=>L.length?'<optgroup label="'+lab+' ('+L.length+')">'+L.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.n)+' ('+t.sat.length+' ảnh)</option>').join('')+'</optgroup>':'';
+    sel.innerHTML=og('Khu đô thị đối ứng',TA)+og('Khu đô thị lớn có giá, tin rao',TB);
+    sel.onchange=function(){ sCur=sel.value; sIdx=-1; renderSat(); }; sCur=String(T[0].id); }
+  const t=T.find(x=>String(x.id)===String(sCur))||T[0], A=t.sat, ok=A.filter(x=>x.ok);
+  const pj=t.re?RE.projects.find(p=>p.n===t.n):null;
   if(sIdx<0||sIdx>=A.length) sIdx=A.indexOf(ok.length?ok[ok.length-1]:A[A.length-1]);
   const cur=A[sIdx], src=x=>'../satellite_export/'+x.f;
   const first=ok[0], last=ok[ok.length-1];
@@ -320,7 +327,9 @@ function renderSat(){
     +'<div class="sat-strip">'+A.map((x,i)=>'<button class="'+(i===sIdx?'on':'')+(x.ok?'':' cl')+'" data-i="'+i+'" title="'+esc(x.d)+' · mây '+Math.round(x.c)+'%"><img loading="lazy" src="'+esc(src(x))+'" alt=""><span>'+esc(mLab(x.m))+'</span></button>').join('')+'</div>'
     +'</div><div>'
     +'<h3 class="sum-h" style="margin-top:0">'+esc(t.n)+'</h3>'
-    +'<table class="tb"><tr><td>Chủ đầu tư</td><td class="n"><b>'+esc(t.dev)+'</b></td></tr>'
+    +'<table class="tb"><tr><td>Chủ đầu tư</td><td class="n"><b>'+esc(t.dev||'—')+'</b></td></tr>'
+    +(pj&&pj.price!==null?'<tr><td>Giá rao bán ('+esc(qLab(pj.pq))+')</td><td class="n"><b>'+f1(pj.price)+' tr/m²</b> · 1 năm '+pct(pj.yoy)+'</td></tr>':'')
+    +(pj&&pj.nlist!==null?'<tr><td>Tin rao bán</td><td class="n"><b>'+nf(pj.nlist)+'</b> · 4 tuần '+pct(pj.dlist)+'</td></tr>':'')
     +'<tr><td>Vị trí</td><td class="n">'+esc(t.loc||'—')+'</td></tr>'
     +(t.tmdt?'<tr><td>Quy mô vốn</td><td class="n"><b>'+nf(t.tmdt/1000)+' nghìn tỷ</b></td></tr>':'')
     +(t.win&&t.win[0]?'<tr><td>Khoảng thi công dự kiến</td><td class="n">'+esc(mLab(t.win[0]))+' → '+esc(mLab(t.win[1]||''))+'</td></tr>':'')
@@ -337,18 +346,25 @@ function renderSat(){
 }
 
 /* ---------- BẢN ĐỒ ---------- */
-let MAP=null, MLAY=null;
+let MAP=null, MLAY=null, MBG=null, MBGdone=false;
+const MCAN = (typeof L!=='undefined') ? L.canvas({padding:.3}) : null;   // hàng nghìn điểm nền vẽ bằng canvas cho nhẹ
 function renderMap(){
   if(!MAP){
     MAP=L.map('re-map',{scrollWheelZoom:true}).setView([16.2,106.6],6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP);
-    MLAY=L.layerGroup().addTo(MAP);
+    MBG=L.layerGroup().addTo(MAP); MLAY=L.layerGroup().addTo(MAP);
+    document.getElementById('m-bg').onchange=renderMap;
     document.getElementById('m-color').onchange=renderMap; document.getElementById('m-show').onchange=renderMap;
     // khung bản đồ đổi kích thước (đổi tab, xoay máy, co giãn cửa sổ) → vẽ lại, tránh bản đồ chỉ hiện một dải
     if(window.ResizeObserver) new ResizeObserver(function(){ MAP.invalidateSize(); }).observe(document.getElementById('re-map'));
     window.addEventListener('resize', function(){ MAP.invalidateSize(); });
   }
   MLAY.clearLayers();
+  const bgOn=document.getElementById('m-bg').value==='1';
+  if(bgOn && !MBGdone){ MBGdone=true;
+    (RE.bg||[]).forEach(function(b){ L.circleMarker([b[1],b[2]],{renderer:MCAN,radius:3,stroke:false,fillColor:'#64748b',fillOpacity:.45}).addTo(MBG)
+      .bindPopup('<b>'+esc(b[0])+'</b><br><span style="color:#64748b">'+esc(b[3])+(b[4]?' · '+esc(b[4]):'')+'</span>'+(b[5]?'<br>Giá: '+esc(b[5]):'')+'<br><span style="color:#94a3b8;font-size:11px">Chưa có chuỗi giá, tin rao trong cơ sở dữ liệu</span>'); }); }
+  if(bgOn){ if(!MAP.hasLayer(MBG)) MAP.addLayer(MBG); } else if(MAP.hasLayer(MBG)) MAP.removeLayer(MBG);
   const mode=document.getElementById('m-color').value, show=document.getElementById('m-show').value;
   const P=RE.projects.filter(p=>p.lat&&p.lng), T=(RE.towns||[]).filter(t=>t.lat&&t.lng);
   const G='#16a34a', R='#dc2626', N='#94a3b8', B='#2563eb';
@@ -369,14 +385,14 @@ function renderMap(){
     L.circleMarker([t.lat,t.lng],{radius:11,color:B,weight:3,fillColor:'#fff',fillOpacity:.9}).addTo(MLAY)
       .bindPopup('<b>'+esc(t.n)+'</b><br><span style="color:#64748b">Khu đô thị đối ứng · '+esc(t.dev)+'</span>'
         +(t.tmdt?'<br>Quy mô vốn: <b>'+nf(t.tmdt/1000)+' nghìn tỷ</b>':'')
-        +(t.sat&&t.sat.length?'<br><a href="#sat" onclick="sCur='+t.id+';sIdx=-1;document.querySelector(\'[data-view=sat]\').click();const s=document.getElementById(\'s-proj\');if(s)s.value='+t.id+';renderSat();return false;">Xem ảnh vệ tinh ('+t.sat.length+' tháng)</a>':''));
+        +(t.sat&&t.sat.length?'<br><a href="#sat" onclick="sCur=\''+t.id+'\';sIdx=-1;document.querySelector(\'[data-view=sat]\').click();const s=document.getElementById(\'s-proj\');if(s)s.value='+t.id+';renderSat();return false;">Xem ảnh vệ tinh ('+t.sat.length+' tháng)</a>':''));
     pts.push([t.lat,t.lng]); });
   const lg={yoy:[[G,'tăng trên 2%'],['#eab308','đi ngang'],[R,'giảm trên 2%'],[N,'chưa đủ chuỗi giá']],
             dlist:[[G,'tin rao giảm trên 5% (hàng rút bớt)'],['#eab308','gần như không đổi'],[R,'tin rao tăng trên 5% (hàng ra nhiều)'],[N,'không có số tin rao']],
             price:[['#fde68a','dưới 50 tr/m²'],['#f59e0b','50–80'],['#c2410c','80–120'],['#7c2d12','từ 120 tr/m²'],[N,'chưa có giá']]}[mode];
   document.getElementById('m-lg').innerHTML=lg.map(x=>'<span><i style="background:'+x[0]+'"></i>'+x[1]+'</span>').join('')
-    +'<span><i style="background:#fff;border:3px solid '+B+';width:8px;height:8px"></i>khu đô thị đối ứng</span><span>· vòng tròn to hơn = nhiều tin rao hơn</span>';
-  document.getElementById('m-note').innerHTML='Trên bản đồ có '+P.length+' / '+RE.projects.length+' dự án và '+T.length+' / '+(RE.towns||[]).length+' khu đô thị đối ứng. '
+    +'<span><i style="background:#fff;border:3px solid '+B+';width:8px;height:8px"></i>khu đô thị đối ứng</span><span><i style="background:#64748b;opacity:.5;width:6px;height:6px"></i>dự án khác trên Cafeland (chưa có chuỗi giá)</span><span>· vòng tròn to hơn = nhiều tin rao hơn</span>';
+  document.getElementById('m-note').innerHTML='Lớp nền: '+nf((RE.bg||[]).length)+' dự án bất động sản trên map.cafeland.vn. Có chuỗi giá, tin rao: '+P.length+' / '+RE.projects.length+' dự án và '+T.length+' / '+(RE.towns||[]).length+' khu đô thị đối ứng. '
     +'Vị trí lấy bằng cách ghép tên với dữ liệu map.cafeland.vn; dự án không ghép được chắc chắn thì không hiện, trang không đoán vị trí.';
   setTimeout(function(){ MAP.invalidateSize(); if(pts.length && !MAP._fit){ MAP.fitBounds(pts,{padding:[30,30]}); MAP._fit=1; } },60);
 }

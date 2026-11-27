@@ -175,7 +175,7 @@ def _lat_ok(city, lat):
     return True
 
 
-def geo_match(client, projects):
+def geo_match(client, projects, use_cache=True):
     """Gắn toạ độ cho dự án theo tên trên map.cafeland.vn (Infra_RealEstate). Chỉ nhận khi tên dự án nằm trọn
     trong tên Cafeland (≥2 từ đặc trưng) và vĩ độ hợp với tỉnh của dự án; không khớp thì để trống, KHÔNG đoán."""
     caf = [(_n(x.get("title")), x) for x in client["dc_commodity"]["Infra_RealEstate"].find(
@@ -196,6 +196,12 @@ def geo_match(client, projects):
                     best = (sc, x)
         if best:
             p["lat"], p["lng"] = round(best[1]["lat"], 5), round(best[1]["lng"], 5); n += 1
+    if use_cache:                                       # bù chỗ trống bằng kết quả geocode_re.py (chạy tay, lưu Infra_RE_Geo)
+        cache = {d["n"]: d for d in client["dc_commodity"]["Infra_RE_Geo"].find({"lat": {"$ne": None}}, {"_id": 0, "n": 1, "lat": 1, "lng": 1})}
+        for p in projects:
+            g = cache.get(p["n"])
+            if not p.get("lat") and g:
+                p["lat"], p["lng"] = round(g["lat"], 5), round(g["lng"], 5); n += 1
     return n
 
 
@@ -224,6 +230,40 @@ def townships(client):
     return out
 
 
+def re_sat_sites(projects):
+    """Ảnh vệ tinh của các khu đô thị lớn có giá/tin rao (export_re_satellite.py → satellite_export/re_manifest.csv)."""
+    mf = os.path.join(HERE, "satellite_export", "re_manifest.csv")
+    if not os.path.exists(mf):
+        return []
+    by = {}
+    for r in csv.DictReader(open(mf, encoding="utf-8")):
+        by.setdefault(r["name"], []).append({"m": r["month"], "d": r["capture_date"], "f": r["file"],
+                                             "c": float(r["aoi_cloud_pct"] or 0), "ok": r["status"] == "OK"})
+    pj = {p["n"]: p for p in projects}
+    out = []
+    for name, imgs in by.items():
+        p = pj.get(name)
+        if p:
+            out.append({"id": "re:" + name, "n": name, "dev": p.get("dev") or "", "loc": p.get("city") or "", "re": 1,
+                        "sat": sorted(imgs, key=lambda x: x["m"])})
+    return sorted(out, key=lambda x: x["n"])
+
+
+_TYPE_VN = {"can_ho_chung_cu": "Căn hộ", "khu_do_thi": "Khu đô thị", "dat_nen_du_an": "Đất nền", "nha_pho_biet_thu": "Nhà phố, biệt thự",
+            "bat_dong_san_nghi_duong": "Nghỉ dưỡng", "nha_o_xa_hoi": "Nhà ở xã hội", "khu_cong_nghiep": "Khu công nghiệp"}
+
+
+def cafeland_bg(client):
+    """Lớp nền bản đồ: toàn bộ dự án bất động sản trên map.cafeland.vn (không có chuỗi giá trong cơ sở dữ liệu).
+    Mỗi dự án: [tên, vĩ độ, kinh độ, loại, tình trạng, giá/m² (chuỗi nguồn)] — gọn để trang nhẹ."""
+    out = []
+    for d in client["dc_commodity"]["Infra_RealEstate"].find(
+            {"lat": {"$ne": None}}, {"_id": 0, "title": 1, "lat": 1, "lng": 1, "type_name": 1, "status_name": 1, "price_m2": 1}):
+        out.append([(d.get("title") or "")[:80], round(d["lat"], 4), round(d["lng"], 4), _TYPE_VN.get(d.get("type_name"), "Khác"),
+                    d.get("status_name") or "", (d.get("price_m2") or "").strip()])
+    return out
+
+
 def build():
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)
     R = c["dc_realestate"]
@@ -237,15 +277,18 @@ def build():
                          "list": l.get("list") or []})
     ngeo = geo_match(c, projects)
     towns = townships(c)
+    satx = re_sat_sites(projects)
+    bg = cafeland_bg(c)
     comp, proj = presales(R)
     daily, weekly = news(R)
     # dự án hạ tầng đang theo dõi có khối BĐS → liên kết ngược (chỉ tên, không số mô hình)
     data = {"asof": dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).strftime("%d/%m/%Y %H:%M"),
-            "projects": projects, "towns": towns, "presales": comp, "presalesProj": proj, "daily": daily, "weekly": weekly}
+            "projects": projects, "towns": towns, "satx": satx, "bg": bg, "presales": comp, "presalesProj": proj, "daily": daily, "weekly": weekly}
     print(f"Bất động sản: {len(projects)} dự án ({sum(1 for p in projects if p['sale'])} có giá bán, "
           f"{sum(1 for p in projects if p['list'])} có tin rao) · {len(comp)} doanh nghiệp có doanh số · "
           f"{len(daily)} bản tin ngày · {len(weekly)} bản tin tuần · {ngeo} dự án có toạ độ · "
-          f"{len(towns)} khu đô thị ({sum(1 for t in towns if t['sat'])} có ảnh vệ tinh)")
+          f"{len(towns)} khu đô thị đối ứng ({sum(1 for t in towns if t['sat'])} có ảnh vệ tinh) · "
+          f"{len(satx)} khu đô thị có giá có ảnh vệ tinh · lớp nền {len(bg)} dự án Cafeland")
     return data
 
 

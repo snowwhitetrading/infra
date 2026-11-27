@@ -39,6 +39,8 @@ jobs:
           ARGS="--radius-km ${{ github.event.inputs.radius_km || '1.5' }}"
           if [ -n "${{ github.event.inputs.from }}" ]; then ARGS="$ARGS --from ${{ github.event.inputs.from }}"; fi
           timeout 5400 python export_satellite.py $ARGS || echo "export dừng/timeout (incremental, tháng sau tiếp tục)"
+          # khu đô thị lớn có giá/tin rao của trang Bất động sản (satellite_export/re/ + re_manifest.csv)
+          timeout 2400 python export_re_satellite.py || echo "export BĐS dừng/timeout (incremental)"
 
       - name: Commit ảnh mới
         run: |
