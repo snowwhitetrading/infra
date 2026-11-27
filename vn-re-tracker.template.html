@@ -308,19 +308,23 @@ function renderSales(){
 let sCur=null, sIdx=-1;
 const mLab = m => { const a=(m||'').split('-'); return a.length>1?(+a[1])+'/'+a[0]:m; };
 function renderSat(){
-  const TA=(RE.towns||[]).filter(t=>t.sat&&t.sat.length), TB=(RE.satx||[]);
+  // CHỈ dự án đang triển khai: khu đô thị đối ứng đã khởi công + dự án có giá đang xây (RE.satx đã lọc ở bước dựng)
+  const TA=(RE.towns||[]).filter(t=>t.sat&&t.sat.length&&t.st==='thi công'), TB=(RE.satx||[]);
   const T=TA.concat(TB), sel=document.getElementById('s-proj'), body=document.getElementById('sat-body');
   if(!T.length){ body.innerHTML='<div class="mp-empty">Chưa có ảnh vệ tinh.</div>'; return; }
   if(!sel.dataset.init){ sel.dataset.init=1;
     const og=(lab,L)=>L.length?'<optgroup label="'+lab+' ('+L.length+')">'+L.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.n)+' ('+t.sat.length+' ảnh)</option>').join('')+'</optgroup>':'';
-    sel.innerHTML=og('Khu đô thị đối ứng',TA)+og('Khu đô thị lớn có giá, tin rao',TB);
+    sel.innerHTML=og('Khu đô thị đối ứng đã khởi công',TA)+og('Khu đô thị lớn còn đang xây',TB.filter(t=>t.big))+og('Dự án mới mở bán từ 2024',TB.filter(t=>!t.big));
     sel.onchange=function(){ sCur=sel.value; sIdx=-1; renderSat(); }; sCur=String(T[0].id); }
   const t=T.find(x=>String(x.id)===String(sCur))||T[0], A=t.sat, ok=A.filter(x=>x.ok);
   const pj=t.re?RE.projects.find(p=>p.n===t.n):null;
   if(sIdx<0||sIdx>=A.length) sIdx=A.indexOf(ok.length?ok[ok.length-1]:A[A.length-1]);
   const cur=A[sIdx], src=x=>'../satellite_export/'+x.f;
   const first=ok[0], last=ok[ok.length-1];
-  const miss=(RE.towns||[]).filter(x=>!(x.sat&&x.sat.length));
+  const miss=(RE.towns||[]).filter(x=>x.st==='thi công'&&!(x.sat&&x.sat.length));
+  const notYet=(RE.towns||[]).filter(x=>x.st!=='thi công');
+  const shown={}; TB.forEach(x=>{ shown[x.n]=1; (x.members||[]).forEach(m=>shown[m]=1); });
+  const devNo=RE.projects.filter(p=>p.devp&&!shown[p.n]&&!p.lat);
   body.innerHTML='<div class="sat-wrap"><div>'
     +'<img class="sat-big" src="'+esc(src(cur))+'" alt="Ảnh vệ tinh '+esc(t.n)+' '+esc(cur.m)+'">'
     +'<p class="cap" style="margin:6px 0 0">Ảnh chụp '+esc(cur.d)+' · mây che '+Math.round(cur.c)+'% vùng ảnh'+(cur.ok?'':' — ảnh nhiều mây, chỉ để tham khảo')+'</p>'
@@ -334,14 +338,19 @@ function renderSat(){
     +(t.tmdt?'<tr><td>Quy mô vốn</td><td class="n"><b>'+nf(t.tmdt/1000)+' nghìn tỷ</b></td></tr>':'')
     +(t.win&&t.win[0]?'<tr><td>Khoảng thi công dự kiến</td><td class="n">'+esc(mLab(t.win[0]))+' → '+esc(mLab(t.win[1]||''))+'</td></tr>':'')
     +'<tr><td>Số ảnh dùng được</td><td class="n">'+ok.length+' / '+A.length+' tháng</td></tr></table>'
-    +(t.why?'<p class="narr" style="margin-top:12px">'+esc(t.why)+'</p>':'')
+    +(t.re&&t.why?'<p class="cap" style="margin:8px 0 0">Xếp vào nhóm đang triển khai vì: '+esc(t.why)+'.</p>':'')
+    +(t.members&&t.members.length?'<p class="cap" style="margin:6px 0 0">Khung ảnh này gồm cả: '+t.members.map(esc).join(', ')+'.</p>':'')
+    +(!t.re&&t.why?'<p class="narr" style="margin-top:12px">'+esc(t.why)+'</p>':'')
     +(first&&last&&first!==last?'<p style="margin:14px 0 0"><b>So sánh đầu kỳ và cuối kỳ</b></p><div class="sat-cmp">'
       +'<div><img loading="lazy" src="'+esc(src(first))+'" alt=""><p class="cap" style="margin:4px 0 0">'+esc(first.d)+'</p></div>'
       +'<div><img loading="lazy" src="'+esc(src(last))+'" alt=""><p class="cap" style="margin:4px 0 0">'+esc(last.d)+'</p></div></div>':'')
     +'</div></div>'
     +'<p class="sum-note" style="margin-top:16px">Ảnh Sentinel-2 (ESA/Copernicus), độ phân giải 10 m: thấy được san nền, đường nội khu, lấn biển, khối công trình lớn; không thấy được chi tiết từng toà nhà. '
     +'Mỗi tháng lấy ảnh ít mây nhất; tháng nào mây che trên 30% thì đánh dấu mờ. Khung ảnh giữ cố định qua các tháng để so sánh. Trang chỉ đưa ảnh, chưa có nhận xét tự động về tiến độ.'
-    +(miss.length?' Chưa có ảnh cho '+miss.length+' khu vì chưa xác định được toạ độ đáng tin: '+miss.map(x=>esc(x.n.replace(/\s*\(.*?\)/,''))).join(', ')+'.':'')+'</p>';
+    +' <b>Chỉ hiện dự án đang triển khai</b>: khu đô thị đối ứng đã khởi công, khu đô thị lớn còn đang xây các phân khu (danh sách soát tay), và dự án có giá rao xuất hiện lần đầu từ 2024 trở lại đây. Dự án đã bàn giao không hiện ở đây.'
+    +(notYet.length?' '+notYet.length+' khu đô thị đối ứng chưa khởi công nên chưa hiện: '+notYet.map(x=>esc(x.n.replace(/\s*\(.*?\)/,''))).join(', ')+'.':'')
+    +(devNo.length?' '+devNo.length+' dự án đang triển khai chưa có ảnh vì chưa có toạ độ: '+devNo.map(x=>esc(x.n)).join(', ')+'.':'')
+    +(miss.length?' Chưa có ảnh cho '+miss.length+' khu đô thị đối ứng đã khởi công vì chưa xác định được toạ độ đáng tin: '+miss.map(x=>esc(x.n.replace(/\s*\(.*?\)/,''))).join(', ')+'.':'')+'</p>';
   body.querySelectorAll('.sat-strip button').forEach(b=>b.onclick=function(){ sIdx=+b.dataset.i; renderSat(); });
 }
 

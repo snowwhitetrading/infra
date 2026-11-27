@@ -218,16 +218,80 @@ def townships(client):
                                                       "c": float(r["aoi_cloud_pct"] or 0), "ok": r["status"] == "OK"})
     out = []
     for d in db["Infra_Project_Tracker"].find({"_key": "project", "$or": [{"kind": "township"}, {"id": 1280}]},
-                                              {"_id": 0, "id": 1, "name": 1, "loc": 1, "developer_groups": 1, "tmdt": 1,
+                                              {"_id": 0, "id": 1, "name": 1, "loc": 1, "developer_groups": 1, "tmdt": 1, "status": 1,
                                                "planWin": 1, "paceWhyLLM": 1, "paceStage": 1}):
         r = reg.get(d["id"], {})
         imgs = sorted(sat.get(r.get("id"), []), key=lambda x: x["m"])
         out.append({"id": d["id"], "n": d["name"], "loc": d.get("loc") or "", "dev": ", ".join(d.get("developer_groups") or []) or "Vingroup",
                     "tmdt": d.get("tmdt"), "win": [(d.get("planWin") or {}).get("from"), (d.get("planWin") or {}).get("to")],
-                    "stage": d.get("paceStage") or "", "why": d.get("paceWhyLLM") or "",
+                    "stage": d.get("paceStage") or "", "why": d.get("paceWhyLLM") or "", "st": d.get("status") or "",
                     "lat": r.get("lat"), "lng": r.get("lon"), "sat": imgs})
     out.sort(key=lambda x: -(x["tmdt"] or 0))
     return out
+
+
+# ---------------------------------------------------------------- dự án ĐANG TRIỂN KHAI
+# Tab Vệ tinh chỉ hiện dự án đang triển khai. Cơ sở dữ liệu không có trường "tình trạng thi công" đáng tin
+# (tình trạng trên Cafeland hay ghi "đang mở bán" cho cả dự án bàn giao nhiều năm), nên dùng hai căn cứ:
+#   (1) dự án XUẤT HIỆN GIÁ RAO lần đầu từ DEV_SINCE trở lại đây → mới mở bán, còn đang xây;
+#   (2) khu đô thị lớn còn đang xây các phân khu — danh sách soát tay DEV_BIG (tên → bán kính khung ảnh, km).
+# Khu đã xây xong phần lớn (Smart City, Ocean Park Gia Lâm, Splendora...) KHÔNG nằm trong danh sách.
+DEV_SINCE = 2024
+DEV_BIG = {"Vinhomes Ocean Park 2": 2.5, "Vinhomes Ocean Park 3": 2.5, "Vinhomes Grand Park": 2.0,
+           "Vinhomes Wonder City Đan Phượng": 2.0, "Vinhomes Global Gate": 2.0, "Vinhomes Golden City": 2.0,
+           "Vinhomes Royal Island": 2.5,
+           "Khu đô thị Ecopark": 2.5, "Khu đô thị Waterpoint": 2.5, "Izumi City": 2.0, "Aqua City": 3.0,
+           "Gamuda City": 1.5, "Celadon City": 1.5, "The Global City": 1.5, "Vạn Phúc City": 1.5, "Akari City": 1.0,
+           "NovaWorld Hồ Tràm": 2.5, "Khu đô thị Nam Thăng Long - Ciputra": 2.0, "Bcons City": 1.0}
+_NOT_PROJECT = {"Cổ Loa", "Phường Linh Xuân, Thành Phố Thủ Đức"}      # tên địa danh lẫn trong bảng giá, không phải dự án
+# đã có ảnh trong nhóm "khu đô thị đối ứng" (xuất bởi export_satellite.py) → không xuất/hiện lần hai
+_SAT_VIA_TOWN = {"Vinhomes Green Paradise", "Vinhomes Green Paradise Cần Giờ", "Vinhomes Saigon Park"}
+
+
+def first_price(R):
+    """{dự án: (năm, quý)} — quý đầu tiên dự án có giá rao trong cơ sở dữ liệu (≈ thời điểm mở bán)."""
+    first = {}
+    for x in R["RE_Project_Price_History_Clean"].find({"price_avg": {"$ne": None}}, {"_id": 0, "project": 1, "period_key": 1}):
+        q = _qkey(x.get("period_key")); n = _canon(x.get("project") or "")
+        if q and n and (n not in first or q < first[n]):
+            first[n] = q
+    return first
+
+
+def is_dev(name, first):
+    """Dự án đang triển khai? → (True/False, căn cứ)."""
+    if name in _NOT_PROJECT:
+        return False, ""
+    if name in DEV_BIG:
+        return True, "khu đô thị lớn còn đang xây các phân khu"
+    f = first.get(name)
+    if f and f[0] >= DEV_SINCE:
+        return True, f"mở bán từ quý {f[1]}/{f[0]}"
+    return False, ""
+
+
+def _near(a, b, m=350):
+    return ((a[0] - b[0]) * 111000) ** 2 + ((a[1] - b[1]) * 105000) ** 2 <= m * m
+
+
+def sat_sites(projects, first):
+    """Danh sách khung ảnh vệ tinh cho dự án đang triển khai có toạ độ: khu lớn trước, rồi dự án mới mở bán.
+    Phân khu nằm trong khung của một khu đã có (cách tâm ≤ 350 m) thì dùng chung ảnh với khu đó (không xuất trùng)."""
+    pj = {p["n"]: p for p in projects}
+    sites = []
+    for n, rad in DEV_BIG.items():
+        p = pj.get(n)
+        if p and p.get("lat"):
+            sites.append({"name": n, "lat": p["lat"], "lon": p["lng"], "radius_km": rad, "members": [n]})
+    for p in sorted(projects, key=lambda x: x["n"]):
+        if p["n"] in DEV_BIG or p["n"] in _SAT_VIA_TOWN or not p.get("lat") or not is_dev(p["n"], first)[0]:
+            continue
+        host = next((s for s in sites if _near((p["lat"], p["lng"]), (s["lat"], s["lon"]))), None)
+        if host:
+            host["members"].append(p["n"])
+        else:
+            sites.append({"name": p["n"], "lat": p["lat"], "lon": p["lng"], "radius_km": 1.0, "members": [p["n"]]})
+    return sites
 
 
 def re_sat_sites(projects):
@@ -240,13 +304,17 @@ def re_sat_sites(projects):
         by.setdefault(r["name"], []).append({"m": r["month"], "d": r["capture_date"], "f": r["file"],
                                              "c": float(r["aoi_cloud_pct"] or 0), "ok": r["status"] == "OK"})
     pj = {p["n"]: p for p in projects}
+    first = {p["n"]: p["_first"] for p in projects if p.get("_first")}
     out = []
-    for name, imgs in by.items():
-        p = pj.get(name)
-        if p:
-            out.append({"id": "re:" + name, "n": name, "dev": p.get("dev") or "", "loc": p.get("city") or "", "re": 1,
+    for s in sat_sites(projects, first):              # CHỈ dự án đang triển khai; ảnh của khu đã xong (nếu còn trên đĩa) không hiện
+        imgs = by.get(s["name"])
+        p = pj.get(s["name"])
+        if imgs and p:
+            out.append({"id": "re:" + s["name"], "n": s["name"], "dev": p.get("dev") or "", "loc": p.get("city") or "", "re": 1,
+                        "why": is_dev(s["name"], first)[1], "big": s["name"] in DEV_BIG,
+                        "members": [m for m in s["members"] if m != s["name"]],
                         "sat": sorted(imgs, key=lambda x: x["m"])})
-    return sorted(out, key=lambda x: x["n"])
+    return sorted(out, key=lambda x: (not x["big"], x["n"]))
 
 
 _TYPE_VN = {"can_ho_chung_cu": "Căn hộ", "khu_do_thi": "Khu đô thị", "dat_nen_du_an": "Đất nền", "nha_pho_biet_thu": "Nhà phố, biệt thự",
@@ -275,10 +343,18 @@ def build():
         projects.append({"n": nm, "dev": p.get("dev") or l.get("brand") or "", "ticker": p.get("ticker") or "",
                          "city": p.get("city") or l.get("prov") or "", "sale": p.get("sale") or [], "rent": p.get("rent") or [],
                          "list": l.get("list") or []})
+    first = first_price(R)
+    for p in projects:
+        f = first.get(p["n"])
+        p["_first"] = f
+        p["first"] = f"{f[0]}-Q{f[1]}" if f else ""
+        p["devp"] = 1 if is_dev(p["n"], first)[0] else 0
     ngeo = geo_match(c, projects)
     towns = townships(c)
     satx = re_sat_sites(projects)
     bg = cafeland_bg(c)
+    for p in projects:
+        p.pop("_first", None)
     comp, proj = presales(R)
     daily, weekly = news(R)
     # dự án hạ tầng đang theo dõi có khối BĐS → liên kết ngược (chỉ tên, không số mô hình)

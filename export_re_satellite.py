@@ -30,12 +30,8 @@ from lib_db import mongo_uri
 OUT = os.path.join(X.OUT_DIR, "re")
 MANIFEST = os.path.join(X.OUT_DIR, "re_manifest.csv")
 FIELDS = ["name", "site_key", "lat", "lon", "radius_km", "month", "capture_date", "aoi_cloud_pct", "status", "file"]
-# tên dự án (đúng như trên trang Bất động sản) → bán kính khung ảnh (km)
-BIG = {"Vinhomes Ocean Park 2": 2.5, "Vinhomes Ocean Park 3": 2.5, "Vinhomes Ocean Park Gia Lâm": 2.0, "Vinhomes Smart City": 1.5,
-       "Vinhomes Grand Park": 2.0, "Vinhomes Wonder City Đan Phượng": 2.0, "Vinhomes Global Gate": 2.0, "Vinhomes Golden City": 2.0,
-       "Vinhomes Royal Island": 2.5, "Khu đô thị Ecopark": 2.5, "Khu đô thị Waterpoint": 2.5, "Izumi City": 2.0, "Aqua City": 3.0,
-       "Gamuda City": 1.5, "Celadon City": 1.5, "The Global City": 1.5, "Vạn Phúc City": 1.5, "Akari City": 1.0,
-       "NovaWorld Hồ Tràm": 2.5, "Khu đô thị Nam Thăng Long - Ciputra": 2.0, "Splendora An Khánh": 2.0, "Bcons City": 1.0}
+# Danh sách khung ảnh = build_re_site.sat_sites(): CHỈ dự án đang triển khai (khu đô thị lớn còn đang xây + dự án
+# mới mở bán từ build_re_site.DEV_SINCE). Một nguồn duy nhất để trang và bộ xuất ảnh không lệch nhau.
 
 
 def slug(s):
@@ -48,13 +44,14 @@ def sites(client):
     P, L = B.price_series(R), B.listing_series(R)
     projects = [{"n": nm, "city": (P.get(nm, {}).get("city") or L.get(nm, {}).get("prov") or "")} for nm in sorted(set(P) | set(L))]
     B.geo_match(client, projects)
-    out = []
-    for p in projects:
-        if p["n"] in BIG and p.get("lat"):
-            out.append({"name": p["n"], "site_key": slug(p["n"]), "lat": p["lat"], "lon": p["lng"], "radius_km": BIG[p["n"]]})
-    miss = sorted(set(BIG) - {s["name"] for s in out})
-    if miss:
-        print("Chưa có toạ độ / không có trong dữ liệu, bỏ qua:", ", ".join(miss))
+    first = B.first_price(R)
+    out = [{"name": s["name"], "site_key": slug(s["name"]), "lat": s["lat"], "lon": s["lon"], "radius_km": s["radius_km"]}
+           for s in B.sat_sites(projects, first)]
+    dev = [p["n"] for p in projects if B.is_dev(p["n"], first)[0]]
+    nogeo = sorted(n for n in dev if not next((p for p in projects if p["n"] == n and p.get("lat")), None))
+    print(f"{len(dev)} dự án đang triển khai → {len(out)} khung ảnh (phân khu dùng chung khung với khu mẹ)")
+    if nogeo:
+        print("Chưa có toạ độ, bỏ qua:", ", ".join(nogeo))
     return out
 
 
@@ -64,6 +61,7 @@ def main():
     ap.add_argument("--from", dest="date_from", default=f"{six:%Y-%m}")
     ap.add_argument("--to", dest="date_to", default=f"{dt.date.today():%Y-%m}")
     ap.add_argument("--px", type=int, default=360)
+    ap.add_argument("--prune", action="store_true", help="xoá ảnh + dòng manifest của khu không còn trong danh sách")
     ap.add_argument("--candidates", type=int, default=3)
     ap.add_argument("--max-cloud", type=float, default=30.0)
     ap.add_argument("--force", action="store_true")
@@ -73,6 +71,18 @@ def main():
     print(f"{len(S)} khu đô thị × {len(mlist)} tháng ({a.date_from}→{a.date_to})", flush=True)
     rows = list(csv.DictReader(open(MANIFEST, encoding="utf-8"))) if os.path.exists(MANIFEST) else []
     have = {(r["site_key"], r["month"]) for r in rows}
+    if a.prune:                                              # khu đã xong / bị loại khỏi danh sách → dọn khỏi repo
+        keep = {s["site_key"] for s in S}
+        gone = sorted({r["site_key"] for r in rows} - keep)
+        for sk in gone:
+            d = os.path.join(OUT, sk)
+            if os.path.isdir(d):
+                for f in os.listdir(d):
+                    os.remove(os.path.join(d, f))
+                os.rmdir(d)
+        rows[:] = [r for r in rows if r["site_key"] in keep]
+        have = {(r["site_key"], r["month"]) for r in rows}
+        print("Đã dọn:", ", ".join(gone) or "không có gì")
     client = Client.open(X.STAC)
     added = 0
 
