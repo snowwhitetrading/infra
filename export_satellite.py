@@ -93,14 +93,20 @@ def pick_scene(client, bbox_ll, month, candidates):
     if not items:
         return None, None
     items.sort(key=lambda it: it.properties.get("eo:cloud_cover", 100))
-    best, best_c = None, 101.0
-    for it in items[:candidates]:                            # chấm mây AOI cho vài ứng viên ít mây nhất
+    best, best_c, best_s = None, 101.0, 1e9
+    for it in items[:candidates * 2]:                        # chấm mây AOI cho vài ứng viên ít mây nhất
         try:
-            c = aoi_cloud_pct(it.assets["scl"].href, bbox_ll)
+            scl = read_band(it.assets["scl"].href, bbox_ll, 64, Resampling.nearest)
         except Exception:
             continue
-        if c < best_c:
-            best, best_c = it, c
+        valid = scl > 0
+        cover = float(valid.mean())                          # phần AOI mà scene phủ tới (AOI nằm ở mép ô lưới → scene chỉ phủ một phần)
+        c = 100.0 * np.isin(scl, list(CLOUD_SCL)).sum() / valid.sum() if valid.any() else 100.0
+        score = c + (0 if cover >= 0.98 else 1000 * (1 - cover))   # scene phủ thiếu AOI (ảnh đen một nửa) xếp sau mọi scene phủ đủ
+        if score < best_s:
+            best, best_c, best_s = it, c, score
+        if cover >= 0.98 and c < 2 and len(items) > candidates:
+            break                                            # đã có scene phủ đủ, gần như không mây → khỏi đọc thêm
     return best, best_c
 
 
@@ -223,7 +229,9 @@ def run(a):
     have = {(r["site_key"], r["month"]) for r in rows}       # (site, tháng) đã có trong manifest
     for p in projects:
         pid, tid, name = p["id"], p["tid"], p.get("name", "")
-        bbox = aoi_bbox(p["lat"], p["lon"], a.radius_km)
+        # khung ảnh riêng của dự án (khu đô thị vài nghìn ha cần khung rộng hơn 1 km) — giữ nguyên qua các tháng
+        rad, px = float(p.get("sat_radius_km") or a.radius_km), int(p.get("sat_px") or a.px)
+        bbox = aoi_bbox(p["lat"], p["lon"], rad)
         folder = os.path.join(OUT_DIR, pid)
         for month in mlist:
             existing = os.path.exists(folder) and any(f.startswith(month + "_") for f in os.listdir(folder))
@@ -245,7 +253,7 @@ def run(a):
             if not a.dry_run:
                 os.makedirs(folder, exist_ok=True)
                 try:
-                    img = render_rgb(item, bbox, a.px)
+                    img = render_rgb(item, bbox, px)
                 except Exception as e:
                     print(f"    ! render lỗi: {e}")
                     continue

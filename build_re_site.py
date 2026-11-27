@@ -3,7 +3,7 @@
 build_re_site.py — Dựng trang THEO DÕI DỰ ÁN BẤT ĐỘNG SẢN (bds/index.html) từ cơ sở dữ liệu dc_realestate.
 
 Trang chị em của trang hạ tầng (cùng giao diện: lấy khối <style> của vn-infra-tracker.template.html), các tab:
-  Tổng quan · Dự án (giá + tin rao) · Dòng tin · Bán hàng · (liên kết ngược về trang Hạ tầng)
+  Tổng quan · Dự án (giá + tin rao) · Dòng tin · Bán hàng · Vệ tinh · Bản đồ
 
 CHỈ dùng dữ liệu có nguồn công khai / công bố của doanh nghiệp:
   RE_Project_Price_History_Clean  giá rao bán, giá thuê theo dự án (batdongsan.com.vn)
@@ -15,10 +15,12 @@ KHÔNG đưa lên trang (trang công khai): mô hình định giá RNAV, giá m�
   python build_re_site.py --out dist/bds/index.html
 """
 import argparse
+import csv
 import datetime as dt
 import json
 import os
 import re
+import unicodedata
 from collections import defaultdict
 
 from pymongo import MongoClient
@@ -152,6 +154,76 @@ def news(R):
     return daily, weekly
 
 
+# ---------------------------------------------------------------- vị trí + ảnh vệ tinh
+def _n(s):
+    t = unicodedata.normalize("NFD", (s or "").lower().replace("đ", "d")).encode("ascii", "ignore").decode()
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", t)).strip()
+
+
+_GEO_STOP = set("khu do thi du an chung cu can ho the kdt tai to hop moi phuc nha o va city".split())
+# dải vĩ độ hợp lệ theo tỉnh/thành của dự án — chặn ghép nhầm sang dự án trùng tên ở vùng khác
+_LAT_BAND = [(r"ha noi|hung yen|hai phong|bac ninh|quang ninh|vinh phuc|ha nam|thai nguyen", 20.2, 21.6),
+             (r"hcm|ho chi minh|binh duong|vung tau|dong nai|long an|tay ninh", 10.2, 11.5),
+             (r"da nang|quang nam", 15.4, 16.3), (r"khanh hoa", 11.6, 12.9)]
+
+
+def _lat_ok(city, lat):
+    c = _n(city)
+    for rx, lo, hi in _LAT_BAND:
+        if re.search(rx, c):
+            return lo <= lat <= hi
+    return True
+
+
+def geo_match(client, projects):
+    """Gắn toạ độ cho dự án theo tên trên map.cafeland.vn (Infra_RealEstate). Chỉ nhận khi tên dự án nằm trọn
+    trong tên Cafeland (≥2 từ đặc trưng) và vĩ độ hợp với tỉnh của dự án; không khớp thì để trống, KHÔNG đoán."""
+    caf = [(_n(x.get("title")), x) for x in client["dc_commodity"]["Infra_RealEstate"].find(
+        {"lat": {"$ne": None}}, {"_id": 0, "title": 1, "lat": 1, "lng": 1})]
+    n = 0
+    for p in projects:
+        k = _n(p["n"]); kt = set(k.split()) - _GEO_STOP
+        best = None
+        for t, x in caf:
+            if not _lat_ok(p.get("city"), x["lat"]):
+                continue
+            if t == k:
+                best = (99, x); break
+            tt = set(t.split())
+            if len(kt) >= 2 and kt <= tt:
+                sc = 2 - 0.01 * len(tt)                 # tên Cafeland càng ngắn càng sát
+                if not best or sc > best[0]:
+                    best = (sc, x)
+        if best:
+            p["lat"], p["lng"] = round(best[1]["lat"], 5), round(best[1]["lng"], 5); n += 1
+    return n
+
+
+def townships(client):
+    """Khu đô thị đối ứng đang theo dõi ở trang hạ tầng (kind=township + Khu đô thị Olympic): tên, chủ đầu tư,
+    quy mô vốn, toạ độ (registry, lấy từ đúng dự án trên Cafeland) và ảnh vệ tinh theo tháng (manifest)."""
+    db = client["dc_commodity"]
+    reg = {d["tid"]: d for d in db["Infra_Projects_Registry"].find({"tid": {"$ne": None}}, {"_id": 0, "tid": 1, "id": 1, "lat": 1, "lon": 1})}
+    sat = {}
+    mf = os.path.join(HERE, "satellite_export", "manifest.csv")
+    if os.path.exists(mf):
+        for r in csv.DictReader(open(mf, encoding="utf-8")):
+            sat.setdefault(r["site_key"], []).append({"m": r["month"], "d": r["capture_date"], "f": r["file"],
+                                                      "c": float(r["aoi_cloud_pct"] or 0), "ok": r["status"] == "OK"})
+    out = []
+    for d in db["Infra_Project_Tracker"].find({"_key": "project", "$or": [{"kind": "township"}, {"id": 1280}]},
+                                              {"_id": 0, "id": 1, "name": 1, "loc": 1, "developer_groups": 1, "tmdt": 1,
+                                               "planWin": 1, "paceWhyLLM": 1, "paceStage": 1}):
+        r = reg.get(d["id"], {})
+        imgs = sorted(sat.get(r.get("id"), []), key=lambda x: x["m"])
+        out.append({"id": d["id"], "n": d["name"], "loc": d.get("loc") or "", "dev": ", ".join(d.get("developer_groups") or []) or "Vingroup",
+                    "tmdt": d.get("tmdt"), "win": [(d.get("planWin") or {}).get("from"), (d.get("planWin") or {}).get("to")],
+                    "stage": d.get("paceStage") or "", "why": d.get("paceWhyLLM") or "",
+                    "lat": r.get("lat"), "lng": r.get("lon"), "sat": imgs})
+    out.sort(key=lambda x: -(x["tmdt"] or 0))
+    return out
+
+
 def build():
     c = MongoClient(mongo_uri(), serverSelectionTimeoutMS=20000)
     R = c["dc_realestate"]
@@ -163,14 +235,17 @@ def build():
         projects.append({"n": nm, "dev": p.get("dev") or l.get("brand") or "", "ticker": p.get("ticker") or "",
                          "city": p.get("city") or l.get("prov") or "", "sale": p.get("sale") or [], "rent": p.get("rent") or [],
                          "list": l.get("list") or []})
+    ngeo = geo_match(c, projects)
+    towns = townships(c)
     comp, proj = presales(R)
     daily, weekly = news(R)
     # dự án hạ tầng đang theo dõi có khối BĐS → liên kết ngược (chỉ tên, không số mô hình)
     data = {"asof": dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).strftime("%d/%m/%Y %H:%M"),
-            "projects": projects, "presales": comp, "presalesProj": proj, "daily": daily, "weekly": weekly}
+            "projects": projects, "towns": towns, "presales": comp, "presalesProj": proj, "daily": daily, "weekly": weekly}
     print(f"Bất động sản: {len(projects)} dự án ({sum(1 for p in projects if p['sale'])} có giá bán, "
           f"{sum(1 for p in projects if p['list'])} có tin rao) · {len(comp)} doanh nghiệp có doanh số · "
-          f"{len(daily)} bản tin ngày · {len(weekly)} bản tin tuần")
+          f"{len(daily)} bản tin ngày · {len(weekly)} bản tin tuần · {ngeo} dự án có toạ độ · "
+          f"{len(towns)} khu đô thị ({sum(1 for t in towns if t['sat'])} có ảnh vệ tinh)")
     return data
 
 
